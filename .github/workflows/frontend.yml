@@ -15,9 +15,10 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - name: print todo
-        run: |
-          echo "todo"
+    - uses: actions/checkout@v4
+    - name: Print todo
+      run:
+        echo "todo"
 
   test:
     runs-on: ubuntu-24.04
