@@ -8,7 +8,6 @@ app.get("/", (_, res: Response) => {
 })
 
 app.get("/ping", (_, res: Response) => {
-  console.log("testing")
   res.send("Pong!")
 })
 
