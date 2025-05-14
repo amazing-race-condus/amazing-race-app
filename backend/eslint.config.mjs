@@ -8,7 +8,7 @@ export default defineConfig([
   { files: ["**/*.{js,mjs,cjs,ts}"], languageOptions: { globals: globals.browser } },
   tseslint.configs.recommended,
 
-  { ignores: ["node_modules", "eslint.config.mjs", "dist"] },
+  { ignores: ["node_modules", "eslint.config.mjs", "dist", "prisma"] },
 
   {
     rules: {
