@@ -16,13 +16,18 @@
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@types/express": "^5.0.1",
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.18",
     "eslint": "^9.26.0",
     "express": "^5.1.0",
     "globals": "^16.1.0",
     "nodemon": "^3.1.10",
+    "prisma": "^6.7.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0"
   }
 }
