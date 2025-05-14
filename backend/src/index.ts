@@ -24,3 +24,6 @@ app.get("/pipeline", async (_, res: Response) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+export default app;
