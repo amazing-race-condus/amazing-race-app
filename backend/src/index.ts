@@ -8,9 +8,13 @@ app.get("/", (_, res: Response) => {
 })
 
 app.get("/ping", (_, res: Response) => {
+  console.log("testing")
   res.send("Pong!")
 })
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+export default app;

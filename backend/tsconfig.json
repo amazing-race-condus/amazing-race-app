@@ -3,11 +3,12 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
+    "types": ["jest"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.test.ts"],
   "exclude": ["node_modules"]
 }
