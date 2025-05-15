@@ -7,6 +7,8 @@ import Constants from 'expo-constants'
 
 const url = process.env.EXPO_PUBLIC_BACKEND_URL
 
+// const urli = Constants.expoConfig.extra.EXPO_PUBLIC_BACKEND_URL;
+
 const pipeline = async () => {
   // try {
   //   const response = await fetch(`${url}/pipeline`);
