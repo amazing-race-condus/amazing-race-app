@@ -36,8 +36,14 @@ export default defineConfig([
     rules: {
       // Disable outdated JSX rule (not needed in React 17+)
       indent: ["error", 2],
+      semi: ["error", "never"],
+      eqeqeq: ['error'],
+      'no-trailing-spaces': ['error'],
+      'no-duplicate-imports': ['error'],
+      'no-multiple-empty-lines': ['error', { 'max': 1 }],
+      'no-var': ['error'],
+      'prefer-const': ['error'],
       'react/react-in-jsx-scope': 'off',
-      
     },
     settings: {
       react: {
