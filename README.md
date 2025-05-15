@@ -24,6 +24,8 @@ Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovellu
 
 [Lisenssi](https://github.com/amazing-race-condus/amazing-race-app/blob/main/LICENSE)
 
+[Timelogs](https://study.cs.helsinki.fi/projekti/timelogs)
+
 
 
 
