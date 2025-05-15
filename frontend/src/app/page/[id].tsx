@@ -1,6 +1,6 @@
 import { View, Text } from "react-native"
 import { useLocalSearchParams, Stack } from "expo-router"
-import { styles } from "../../styles/commonStyles"
+import { styles } from "@/styles/commonStyles"
 
 const Page = () => {
   const { id } = useLocalSearchParams()

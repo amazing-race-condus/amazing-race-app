@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Button } from 'react-native'
 import { Link, Stack } from 'expo-router'
-import { styles } from "../styles/commonStyles"
-// import AppBar from './components/AppBar'
+import { styles } from "@/styles/commonStyles"
+// import AppBar from '@/components/AppBar'
 
 const url = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -45,16 +45,17 @@ const App = () => {
       <Stack.Screen
         options={{ headerShown: false }}
       />
+      {/* <AppBar /> */}
       <Text style={styles.header}>Condus Amazing Race App</Text>
       <Text>Frontpage-komponentti</Text>
-      <Text>Hello ARNi!</Text>
       <Text>{data ? `Response: ${data}` : 'Loading...'}</Text>
       <Button
         title="Test Pipeline" onPress={pipeline}
       />
       <Text>Palvelimen vastaus: {data}</Text>
-      <Link style={styles.link} href="/page/3">Sivu 3</Link>
       <Link style={styles.link} href="/page/1">Sivu 1</Link>
+      <Link style={styles.link} href="/page/2">Sivu 2</Link>
+      <Link style={styles.link} href="/page/3">Sivu 3</Link>
     </View>
   )
 }
