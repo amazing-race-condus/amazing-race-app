@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Button } from 'react-native'
+import { Text, View, Button, Platform } from 'react-native'
 import { Link, Stack } from 'expo-router'
 import { styles } from "@/styles/commonStyles"
 // import AppBar from '@/components/AppBar'
 
-const url = process.env.EXPO_PUBLIC_BACKEND_URL
+const url =
+  Platform.OS === 'web'
+    ? process.env.EXPO_PUBLIC_BACKEND_URL_WEB
+    : process.env.EXPO_PUBLIC_BACKEND_URL
 
 const pipeline = async () => {
   try {
