@@ -2,6 +2,8 @@
 
  Backend CI ![CI](https://github.com/amazing-race-condus/amazing-race-app/blob/main/.github/workflows/backend.yml)
 
+ [![CI](https://github.com/john-dev/my-project/actions/workflows/ci.yml/badge.svg)](https://github.com/amazing-race-condus/amazing-race-app/blob/main/.github/workflows/backend.yml)
+
 Frontend CI ![CI](https://github.com/amazing-race-condus/amazing-race-app/blob/main/.github/workflows/frontend.yml)
 ## Amazing Race
 
