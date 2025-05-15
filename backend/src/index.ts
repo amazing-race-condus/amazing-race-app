@@ -1,9 +1,11 @@
 import express, { Response } from "express"
 import { PrismaClient } from "../prisma/prisma/"
+import cors from "cors"
 
 const prisma = new PrismaClient
 
 const app = express()
+app.use(cors())
 const port = 3000
 
 app.get("/", (_, res: Response) => {
