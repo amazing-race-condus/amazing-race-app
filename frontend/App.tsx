@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Platform } from 'react-native';
 
 import { NativeRouter, Route, Routes, Navigate, Link } from 'react-router-native'
 import Constants from 'expo-constants'
-import { Platform } from 'react-native'
 
 const url =
   Platform.OS === 'web'
@@ -12,8 +11,6 @@ const url =
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
 console.log(url)
-
-// const urli = Constants.expoConfig.extra.EXPO_PUBLIC_BACKEND_URL;
 
 const pipeline = async () => {
   // try {
