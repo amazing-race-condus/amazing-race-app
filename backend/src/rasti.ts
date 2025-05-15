@@ -1,6 +1,6 @@
 import { PrismaClient } from "../prisma/prisma/"
 
-const prisma = new PrismaClient
+const prisma = new PrismaClient()
 
 async function main() {
   await prisma.rasti.create({
