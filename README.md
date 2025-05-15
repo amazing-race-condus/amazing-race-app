@@ -10,7 +10,11 @@ Vihjeisiin perustuva vauhdikas kaupunkisuunnistus, jossa kisaillaan muita joukku
 
 ## Sovelluksen toiminta
 
-Tämän sovelluksen avulla voidaan ylläpitää Amazing Race pelin kulkua. Sovellus tarjoaa mahdollisuuden pelaajien pisteytykseen ja reittien laatimiseen.
+Sovellus mahdollistaa Amazing Race -tyyppisen pelin hallinnoinnin, tarjoten toiminnallisuudet muun muassa pelaajien pisteytykseen ja reittien suunnitteluun.
+
+## Sovelluksen käyttö
+
+Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovelluksena että Android-sovelluksena Google Play -kaupassa.
 
 ## Linkit
 
