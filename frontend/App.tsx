@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 
 import { NativeRouter, Route, Routes, Navigate, Link } from 'react-router-native'
 import Constants from 'expo-constants'
+import AppBar from './components/AppBar';
 
 const url = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -78,6 +79,7 @@ const DefaultPage = () => {
 const Main = ({data=null}) => {
   return (
     <View style={styles.container}>
+      <AppBar />
       <Text style={styles.header}>Condus Amazing Race App</Text>
       <Routes>
         <Route path="/" element={<Frontpage data={data} />} />
