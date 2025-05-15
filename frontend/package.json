@@ -29,6 +29,7 @@
     "@babel/core": "^7.25.2",
     "@eslint/js": "^9.26.0",
     "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.18",
     "@types/react": "~19.0.10",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
