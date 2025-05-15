@@ -4,8 +4,14 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 
 import { NativeRouter, Route, Routes, Navigate, Link } from 'react-router-native'
 import Constants from 'expo-constants'
+import { Platform } from 'react-native'
 
-const url = process.env.EXPO_PUBLIC_BACKEND_URL
+const url =
+  Platform.OS === 'web'
+    ? process.env.EXPO_PUBLIC_BACKEND_URL_WEB
+    : process.env.EXPO_PUBLIC_BACKEND_URL
+
+console.log(url)
 
 const pipeline = async () => {
   // try {
@@ -81,7 +87,7 @@ const Main = ({data=null}) => {
       <Text style={styles.header}>Condus Amazing Race App</Text>
       <Routes>
         <Route path="/" element={<Frontpage data={data} />} />
-        <Route path="/frontpage" element={<Frontpage />} />
+        <Route path="/frontpage" element={<Frontpage data={data} />} />
         <Route path="/page2" element={<Page2 />} />
         <Route path="/page3" element={<Page3 />} />
         <Route path="/defaultpage" element={<DefaultPage />} />
