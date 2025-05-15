@@ -21,6 +21,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.18",
     "@types/supertest": "^6.0.3",
+    "dotenv": "^16.5.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.26.0",
     "express": "^5.1.0",
