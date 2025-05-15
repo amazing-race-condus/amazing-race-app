@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
+import { Text, View, Button } from 'react-native'
 import { Link, Stack } from 'expo-router'
+import { styles } from "../styles/commonStyles"
 // import AppBar from './components/AppBar'
 
 const url = process.env.EXPO_PUBLIC_BACKEND_URL
@@ -59,26 +60,3 @@ const App = () => {
 }
 
 export default App
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 20,
-    backgroundColor: '#2d3f5c',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    margin: 10,
-    fontSize: 30,
-    fontWeight: '600',
-    color: '#fcba03',
-  },
-  link: {
-    margin: 1,
-    padding: 6,
-    borderWidth: 1,
-    backgroundColor: '#abbbd4',
-    width: '90%',
-  }
-})
