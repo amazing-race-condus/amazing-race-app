@@ -18,3 +18,8 @@ model Rasti {
   id    Int     @id @default(autoincrement())
   name  String?
 }
+
+model Checkpoint {
+  id    Int     @id @default(autoincrement())
+  name  String?
+}
