@@ -23,9 +23,8 @@ app.get("/pipeline", async (_, res: Response) => {
   res.send(allRastit)
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+const server = app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
 
-
-export default app;
+export { app, server, prisma };
