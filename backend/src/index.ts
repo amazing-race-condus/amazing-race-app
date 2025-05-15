@@ -52,6 +52,16 @@ app.delete("/checkpoints/:id", async (req: Request, res: Response) => {
   res.status(204).end()
 })
 
+app.post("/pipeline", async (req: Request, res: Response) => {
+  const body = req.body
+  const savedRasti = await prisma.rasti.create({
+    data: {
+      name: body.name
+    }
+  })
+  res.status(201).json(savedRasti)
+})
+
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

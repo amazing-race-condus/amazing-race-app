@@ -3,3 +3,4 @@ dist
 
 /prisma/prisma
 .env
+.env.test
