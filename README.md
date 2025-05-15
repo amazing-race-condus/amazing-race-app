@@ -6,7 +6,11 @@
 
 ## Amazing Race
 
-Vihjeisiin perustuva vauhdikas kaupunkisuunnistus, jossa kisaillaan muita joukkueita vastaan 4-6 henkilön tiimeissä. Rasteilla tulee vastaan kaikenlaisia hauskoja tehtäviä, joista nopeasti selviytymällä ja uuden vihjeen näppärästi ratkaisemalla pääsee jatkamaan matkaa kohti maalia. Nopeinten maaliin päässyt joukkue voittaa huikean palkinnon
+Vihjeisiin perustuva vauhdikas kaupunkisuunnistus, jossa kisaillaan muita joukkueita vastaan 4-6 henkilön tiimeissä. Rasteilla tulee vastaan kaikenlaisia hauskoja tehtäviä, joista nopeasti selviytymällä ja uuden vihjeen näppärästi ratkaisemalla pääsee jatkamaan matkaa kohti maalia.
+
+## Sovelluksen toiminta
+
+Tämän sovelluksen avulla voidaan ylläpitää Amazing Race pelin kulkua. Sovellus tarjoaa mahdollisuuden pelaajien pisteytykseen ja reittien laatimiseen.
 
 ## Linkit
 
