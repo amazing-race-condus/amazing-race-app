@@ -81,7 +81,7 @@ const Main = ({data=null}) => {
       <Text style={styles.header}>Condus Amazing Race App</Text>
       <Routes>
         <Route path="/" element={<Frontpage data={data} />} />
-        <Route path="/frontpage" element={<Frontpage />} />
+        <Route path="/frontpage" element={<Frontpage data={data} />} />
         <Route path="/page2" element={<Page2 />} />
         <Route path="/page3" element={<Page3 />} />
         <Route path="/defaultpage" element={<DefaultPage />} />
