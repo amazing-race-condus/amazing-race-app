@@ -14,7 +14,7 @@ Sovellus mahdollistaa Amazing Race -tyyppisen pelin hallinnoinnin, tarjoten toim
 
 ## Sovelluksen käyttö
 
-Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovelluksena että Android-sovelluksena Google Play -kaupassa.
+Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovelluksena että Android-sovelluksena.
 
 ## Linkit
 
