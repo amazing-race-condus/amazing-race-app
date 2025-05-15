@@ -1,8 +1,8 @@
 # Amazing Race Sovellus
 
- Backend CI [![CI](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/backend.yml/badge.svg)](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/backend.yml)
+[![Frontend CI](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/frontend.yml/badge.svg)](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/frontend.yml)
 
-Frontend CI ![CI](https://github.com/amazing-race-condus/amazing-race-app/blob/main/.github/workflows/frontend.yml)
+[![CI](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/backend.yml/badge.svg)](https://github.com/amazing-race-condus/amazing-race-app/actions/workflows/backend.yml)
 ## Amazing Race
 
 [Product backlog ja sprint backlogit](https://github.com/orgs/amazing-race-condus/projects/1)
