@@ -1,4 +1,5 @@
-import { View, StyleSheet, Text, Pressable } from "react-native"
+import { useState } from 'react'
+import { View, StyleSheet, Text, Pressable, Modal } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import Constants from "expo-constants"
 
@@ -24,30 +25,76 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     alignItems: "center"
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'flex-start',
+    paddingTop: 70,
+  },
+  menu: {
+    backgroundColor: '#2d3f5c',
+    borderRadius: 0,
+    padding: 10,
+    elevation: 4,
+  },
+  menuItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  text: {
+    color: 'white'
   }
 })
 
 const AppBar = () => {
+  const [menuVisible, setMenuVisible] = useState(false)
+
   return (
-    <View style={styles.appBar}>
-      {/* Menu Button */}
-      <Pressable onPress={() => alert("Menu")} style={styles.iconButton}>
-        <Ionicons name="menu" size={24} color="white" />
-      </Pressable>
-
-      {/* Title */}
-      <Text style={styles.title}>Title</Text>
-
-      {/* Action buttons */}
-      <View style={styles.actions}>
-        <Pressable onPress={() => alert("Notification")} style={styles.iconButton}>
-          <Ionicons name="notifications-outline" size={24} color="white" />
+    <>
+      <View style={styles.appBar}>
+        {/* Menu Button */}
+        <Pressable onPress={() => setMenuVisible(true)} style={styles.iconButton}>
+          <Ionicons name="menu" size={24} color="white" />
         </Pressable>
-        <Pressable onPress={() => alert("Settings")} style={styles.iconButton}>
-          <Ionicons name="settings-outline" size={24} color="white" />
-        </Pressable>
+
+        {/* Title */}
+        <Text style={styles.title}>Title</Text>
+
+        {/* Action buttons */}
+        <View style={styles.actions}>
+          <Pressable onPress={() => alert("Notification")} style={styles.iconButton}>
+            <Ionicons name="notifications-outline" size={24} color="white" />
+          </Pressable>
+          <Pressable onPress={() => alert("Settings")} style={styles.iconButton}>
+            <Ionicons name="settings-outline" size={24} color="white" />
+          </Pressable>
+        </View>
       </View>
-    </View>
+
+      {/* Menu */}
+      <Modal
+        visible={menuVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
+          <View style={styles.menu}>
+            <Pressable onPress={() => alert("Home")} style={styles.menuItem}>
+              <Text style={styles.text}>Home</Text>
+            </Pressable>
+            <Pressable onPress={() => alert("Profile")} style={styles.menuItem}>
+              <Text style={styles.text}>Profile</Text>
+            </Pressable>
+            <Pressable onPress={() => alert("Logout")} style={styles.menuItem}>
+              <Text style={styles.text}>Logout</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+    </>
   )
 }
 

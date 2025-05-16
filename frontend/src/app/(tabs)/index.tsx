@@ -47,9 +47,10 @@ const App = () => {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          header: () => <AppBar />,
+          headerShown: false,
         }}
       />
+      <AppBar />
       <View style={styles.content}>
         <Text style={styles.header}>Condus Amazing Race App</Text>
         <Text>Frontpage-komponentti</Text>
