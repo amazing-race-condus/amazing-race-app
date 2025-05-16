@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native'
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 20,
     backgroundColor: '#2d3f5c',
     alignItems: 'center',
     justifyContent: 'center',
@@ -54,5 +53,36 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  item: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    width: 400,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    fontSize: 20,
+  },
+  title: {
+    fontSize: 35,
+    margin: 10,
+    fontWeight: '600',
+    color: '#fcba03',
+    textAlign: 'center'
+  },
+  separator: {
+    height: 5,
+  },
+  listcontainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  checkpointName: {
+    fontSize: 25,
+    fontWeight: '600',
+    margin: 10,
+    color: '#000',
   },
 })
