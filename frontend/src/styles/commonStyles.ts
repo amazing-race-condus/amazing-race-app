@@ -30,4 +30,29 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
   },
+  inputField: {
+    borderWidth: 1,
+    width: 355,
+    paddingVertical: 7,
+    textAlignVertical: 'auto',
+    marginBottom:10
+  },
+  button: {
+    height: 30,
+    width: 355,
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 })
