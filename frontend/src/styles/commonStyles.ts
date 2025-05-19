@@ -5,11 +5,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2d3f5c',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   header: {
     margin: 10,
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: '600',
     color: '#fcba03',
   },
@@ -22,12 +22,13 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginBottom: 10,
-    borderWidth: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+  },
+  links: {
     width: '90%',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
   inputField: {
     borderWidth: 1,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, Button, Platform } from 'react-native'
 import { Link, Stack } from 'expo-router'
 import { styles } from "@/styles/commonStyles"
-// import AppBar from '@/components/AppBar'
+import AppBar from '@/components/AppBar'
 
 const url =
   Platform.OS === 'web'
@@ -46,21 +46,27 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
-      {/* <AppBar /> */}
-      <Text style={styles.header}>Condus Amazing Race App</Text>
-      <Text>Frontpage-komponentti</Text>
-      <Text>{data ? `Response: ${data}` : 'Loading...'}</Text>
-      <Button
-        title="Test Pipeline" onPress={pipeline}
-      />
-      <Text>Palvelimen vastaus: {data}</Text>
-      <Link style={styles.link} href="/page/1">Sivu 1</Link>
-      <Link style={styles.link} href="/page/2">Sivu 2</Link>
-      <Link style={styles.link} href="/page/3">Sivu 3</Link>
-      <Link style={styles.link} href="/add_checkpoint">Lisää rasti</Link>
-      <Link style={styles.link} href="/checkpoints">Tarkastele rasteja</Link>
+      <AppBar />
+      <View style={styles.content}>
+        <Text style={styles.header}>Condus Amazing Race App</Text>
+        <Text>Frontpage-komponentti</Text>
+        <Text>{data ? `Response: ${data}` : 'Loading...'}</Text>
+        <Button
+          title="Test Pipeline" onPress={pipeline}
+        />
+        <Text>Palvelimen vastaus: {data}</Text>
+      </View>
+      <View style={styles.links}>
+        <Link style={styles.link} href="/page/1">Sivu 1</Link>
+        <Link style={styles.link} href="/page/2">Sivu 2</Link>
+        <Link style={styles.link} href="/page/3">Sivu 3</Link>
+        <Link style={styles.link} href="/add_checkpoint">Lisää rasti</Link>
+        <Link style={styles.link} href="/checkpoints">Tarkastele rasteja</Link>
+      </View>
     </View>
   )
 }
