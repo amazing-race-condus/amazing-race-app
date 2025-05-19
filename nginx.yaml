@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: condus-nginx-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: condus-amazing-race-app
+      component: nginx 
+  template:
+    metadata:
+      labels:
+        app: condus-amazing-race-app
+        component: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginxinc/nginx-unprivileged:stable-alpine-slim
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-proxy-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: condus-amazing-race-app
+    component: nginx
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    pid /tmp/nginx.pid;
+    worker_processes 1;
+
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        upstream backend {
+            server condus-backend-svc:2345;
+        }
+
+        upstream frontend {
+            server condus-frontend-svc:2346;
+        }
+
+        server {
+            listen 8080;
+            server_name _;
+
+            location /api/ {
+                rewrite ^/api/(.*) /$1 break;
+                proxy_pass http://backend;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location / {
+                proxy_pass http://frontend;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+        }
+    }
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: condus-route
+  labels:
+    app: condus-amazing-race-app
+    component: nginx
+    type: external
+spec:
+  host: condus-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi 
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: nginx-proxy-svc
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+
+
+
+
+# ---- FOR TESTING LOCALLY WITH OWN k3d ----
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: nginx-ingress
+# spec:
+#   rules:
+#   - http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: nginx-proxy-svc
+#             port:
+#               number: 80

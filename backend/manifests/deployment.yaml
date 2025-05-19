@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: condus-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: condus-amazing-race-app
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: condus-amazing-race-app
+        component: backend
+    spec:
+      containers:
+      - name: condus-backend
+        image: BACKEND/IMAGE
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: condus-db-url
+              key: API_KEY
+        resources:
+          limits:
+            cpu: 250m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 3

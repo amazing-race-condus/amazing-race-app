@@ -1,0 +1,12 @@
+.vscode
+README.md
+.gitignore
+.dockerignore
+node_modules
+dist
+tests
+jest.config.js
+.env*
+.git
+coverage
+*.log

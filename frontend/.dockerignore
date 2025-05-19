@@ -1,0 +1,14 @@
+node_modules
+Dockerfile
+.gitignore
+.dockerignore
+README.md
+eslint.config.mjs
+__tests__
+.vscode
+dist
+.env*
+.git
+coverage
+*.log
+.expo
