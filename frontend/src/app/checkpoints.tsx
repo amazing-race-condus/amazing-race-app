@@ -1,36 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, FlatList, Pressable} from "react-native"
+import { useDispatch, useSelector, Provider } from 'react-redux'
+import store from '@/store/store'
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import { Checkpoint } from '@/types'
-import { getAllCheckpoints, removeCheckpoint } from '@/services/checkpointService'
+import { fetchCheckpoints, removeCheckpointReducer } from '@/reducers/checkpointsSlice'
+// eslint-disable-next-line no-duplicate-imports
+import type { RootState, AppDispatch } from '@/store/store'
 
 const Checkpoints = () => {
-  const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
+  const checkpoints = useSelector((state: RootState) => state.checkpoints)
 
   useEffect(() => {
-    const fetchCheckpoints = async () => {
-      const allCheckpoints = await getAllCheckpoints()
-      setCheckpoints(allCheckpoints)
-    }
-    fetchCheckpoints()
+    dispatch(fetchCheckpoints())
   }, [])
-
-  const handleRemoveCheckpoint = (id: string) => {
-    try {
-      removeCheckpoint(id).then(() => {
-        setCheckpoints(checkpoints.filter(checkpoint => checkpoint.id !== id))
-      })
-    } catch (error) {
-      alert('Something went wrong!')
-      console.error(error)
-    }
-  }
 
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View style={styles.item}>
       <Text style={styles.checkpointName}>{name}</Text>
-      <Pressable style={styles.button} onPress={() => { handleRemoveCheckpoint(id) }}>
+      <Pressable style={styles.button} onPress={() => { dispatch(removeCheckpointReducer(id)) }}>
         <Text style={styles.buttonText}>Poista</Text>
       </Pressable>
     </View>
@@ -58,4 +47,10 @@ const Checkpoints = () => {
   )
 }
 
-export default Checkpoints
+const CheckpointProvider = () => (
+  <Provider store={store}>
+    <Checkpoints />
+  </Provider>
+)
+
+export default CheckpointProvider
