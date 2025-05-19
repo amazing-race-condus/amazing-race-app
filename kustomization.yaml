@@ -6,13 +6,7 @@ resources:
 - nginx.yaml
 - backend/manifests/deployment.yaml
 - backend/manifests/service.yaml
+- backend/manifests/imagestream.yaml
 - frontend/manifests/deployment.yaml
 - frontend/manifests/service.yaml
-
-images:
-- name: BACKEND/IMAGE
-  newName: eeritvan/condus-backend
-  newTag: latest
-- name: FRONTEND/IMAGE
-  newName: eeritvan/condus-frontend
-  newTag: latest
+- frontend/manifests/imagestream.yaml

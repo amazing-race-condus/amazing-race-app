@@ -6,3 +6,4 @@ dist
 .env.test
 key.txt
 secret.yaml
+*.log

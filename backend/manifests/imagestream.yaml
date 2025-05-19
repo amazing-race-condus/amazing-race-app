@@ -1,0 +1,19 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: condus-backend
+  labels:
+    app: condus-amazing-race-app
+    component: backend
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: ghcr.io/amazing-race-condus/condus-backend:latest
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local

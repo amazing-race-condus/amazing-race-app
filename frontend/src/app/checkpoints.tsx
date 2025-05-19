@@ -16,6 +16,7 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
+
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View style={styles.item}>
       <Text style={styles.checkpointName}>{name}</Text>
@@ -28,8 +29,9 @@ const Checkpoints = () => {
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <View style={styles.checkpointcontainer}>
-      <Stack.Screen options={{ title: `Tarkastele rasteja` }} />
+    <View style={styles.content}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <AppBar pageTitle='Rastit' />
       <Text style={styles.title}>Rastit:</Text>
       <FlatList
         contentContainerStyle={styles.listcontainer}

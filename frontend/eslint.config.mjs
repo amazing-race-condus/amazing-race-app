@@ -35,6 +35,7 @@ export default defineConfig([
     },
     rules: {
       // Disable outdated JSX rule (not needed in React 17+)
+      quotes: ['error', 'double'],
       indent: ["error", 2],
       semi: ["error", "never"],
       eqeqeq: ['error'],

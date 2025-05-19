@@ -15,7 +15,6 @@ const AddCheckpoint = () => {
   const router = useRouter()
 
   const checkpointCreation = async () => {
-    // try {
     const newCheckpoint: Checkpoint = {
       name: name,
       id: "0"
@@ -24,19 +23,16 @@ const AddCheckpoint = () => {
     dispatch(addCheckpoitReducer(newCheckpoint))
     setName('')
     router.navigate(`/checkpoints`)
-    // } catch (error) {
-    //   alert('Something went wrong!')
-    //   console.error(error)
-    // }
   }
 
   return (
     <View style={styles.content}>
       <Stack.Screen
-        options={{title: `Lisää rasti`}}
+        options={{ headerShown: false }}
       />
+      <AppBar pageTitle="Lisää rasti" />
       <Text style={styles.header}>Lisää rasti:</Text>
-      <Text>Rastin nimi: </Text><TextInput
+      <Text style={styles.breadText}>Rastin nimi: </Text><TextInput
         style={styles.inputField}
         value={name}
         onChangeText={setName}

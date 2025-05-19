@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"condus-backend:latest","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"condus-backend\")].image","pause":"false"}]
   name: condus-backend
 spec:
   replicas: 1
@@ -16,7 +20,8 @@ spec:
     spec:
       containers:
       - name: condus-backend
-        image: BACKEND/IMAGE
+        image: condus-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
