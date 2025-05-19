@@ -13,7 +13,7 @@ interface Distances {
   [start:number]: {[end:number]: number}
 }
 
-const route_distance = (route: number[], distances: Distances): number => {
+export const route_distance = (route: number[], distances: Distances): number => {
   const array_length = route.length;
 
   // Start to checkpoint 1.
