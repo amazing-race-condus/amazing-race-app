@@ -9,7 +9,7 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - name: condus-backend-staging
+    - name: latest
       from:
         kind: DockerImage
         name: ghcr.io/amazing-race-condus/condus-backend:latest
