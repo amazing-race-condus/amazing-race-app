@@ -14,7 +14,7 @@ const url =
 
 const pipeline = async () => {
   try {
-    const response = await fetch(`${url}/pipeline`)
+    const response = await fetch(`${url}/checkpoints`)
     const result = await response.json()
 
     if (Array.isArray(result)) {

@@ -17,13 +17,6 @@ app.get("/ping", (_, res: Response) => {
   res.send("Pongee!")
 })
 
-app.get("/pipeline", async (_, res: Response) => {
-
-  const allRastit = await prisma.rasti.findMany()
-
-  res.send(allRastit)
-})
-
 app.get("/checkpoints", async (_, res: Response) => {
 
   const allCheckpoints = await prisma.checkpoint.findMany()
@@ -38,6 +31,7 @@ app.post("/checkpoints", async (req: Request, res: Response) => {
       name: body.name
     }
   })
+  console.log(savedCheckpoint)
   res.status(201).json(savedCheckpoint)
 })
 
@@ -50,16 +44,6 @@ app.delete("/checkpoints/:id", async (req: Request, res: Response) => {
     },
   })
   res.status(204).end()
-})
-
-app.post("/pipeline", async (req: Request, res: Response) => {
-  const body = req.body
-  const savedRasti = await prisma.rasti.create({
-    data: {
-      name: body.name
-    }
-  })
-  res.status(201).json(savedRasti)
 })
 
 const server = app.listen(port, () => {
