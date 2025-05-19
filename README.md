@@ -24,6 +24,3 @@ Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovellu
 
 [Lisenssi](https://github.com/amazing-race-condus/amazing-race-app/blob/main/LICENSE)
 
-
-
-

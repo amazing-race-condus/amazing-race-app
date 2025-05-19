@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "js-combinatorics": "^2.1.2"
   }
 }

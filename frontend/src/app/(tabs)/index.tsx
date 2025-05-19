@@ -64,6 +64,8 @@ const App = () => {
         <Link style={styles.link} href="/page/1">Sivu 1</Link>
         <Link style={styles.link} href="/page/2">Sivu 2</Link>
         <Link style={styles.link} href="/page/3">Sivu 3</Link>
+        <Link style={styles.link} href="/add_checkpoint">Lisää rasti</Link>
+        <Link style={styles.link} href="/checkpoints">Tarkastele rasteja</Link>
       </View>
     </View>
   )
