@@ -49,7 +49,11 @@ const styles = StyleSheet.create({
   }
 })
 
-const AppBar = () => {
+type AppBarProps = {
+  pageTitle: string
+}
+
+const AppBar = ({ pageTitle }: AppBarProps) => {
   const [menuVisible, setMenuVisible] = useState(false)
   const router = useRouter()
 
@@ -67,7 +71,7 @@ const AppBar = () => {
         </Pressable>
 
         {/* Title */}
-        <Text style={styles.title}>Title</Text>
+        <Text style={styles.title}>{ pageTitle }</Text>
 
         {/* Action buttons */}
         <View style={styles.actions}>

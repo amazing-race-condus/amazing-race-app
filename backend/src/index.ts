@@ -31,7 +31,6 @@ app.post("/checkpoints", async (req: Request, res: Response) => {
       name: body.name
     }
   })
-  console.log(savedCheckpoint)
   res.status(201).json(savedCheckpoint)
 })
 

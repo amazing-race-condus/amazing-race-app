@@ -4,6 +4,7 @@ import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { Checkpoint } from '@/types'
 import { getAllCheckpoints, removeCheckpoint } from '@/services/checkpointService'
+import AppBar from '@/components/AppBar'
 
 const Checkpoints = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
@@ -39,8 +40,9 @@ const Checkpoints = () => {
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <View style={styles.checkpointcontainer}>
-      <Stack.Screen options={{ title: `Tarkastele rasteja` }} />
+    <View style={styles.content}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <AppBar pageTitle='Rastit' />
       <Text style={styles.title}>Rastit:</Text>
       <FlatList
         contentContainerStyle={styles.listcontainer}
