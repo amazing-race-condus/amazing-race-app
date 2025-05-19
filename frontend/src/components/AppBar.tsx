@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState } from "react"
 import { View, StyleSheet, Text, Pressable, Modal, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { useRouter } from 'expo-router'
+import { useRouter } from "expo-router"
 import Constants from "expo-constants"
 
 const styles = StyleSheet.create({
@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'flex-start',
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "flex-start",
     paddingTop: Constants.statusBarHeight + 56,
   },
   menu: {
-    backgroundColor: '#2d3f5c',
+    backgroundColor: "#2d3f5c",
     borderRadius: 0,
     padding: 10,
     elevation: 4,
@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
   menuItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   text: {
-    color: 'white'
+    color: "white"
   }
 })
 
@@ -93,13 +93,13 @@ const AppBar = ({ pageTitle }: AppBarProps) => {
       >
         <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menu}>
-            <TouchableOpacity onPress={() => handlePress('/')} style={styles.menuItem}>
+            <TouchableOpacity onPress={() => handlePress("/")} style={styles.menuItem}>
               <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handlePress('/add_checkpoint')} style={styles.menuItem}>
+            <TouchableOpacity onPress={() => handlePress("/add_checkpoint")} style={styles.menuItem}>
               <Text style={styles.text}>Lisää rasti</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handlePress('/checkpoints')} style={styles.menuItem}>
+            <TouchableOpacity onPress={() => handlePress("/checkpoints")} style={styles.menuItem}>
               <Text style={styles.text}>Rastit</Text>
             </TouchableOpacity>
           </View>

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react"
 import { View, Text, FlatList, Pressable} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import { Checkpoint } from '@/types'
-import { getAllCheckpoints, removeCheckpoint } from '@/services/checkpointService'
-import AppBar from '@/components/AppBar'
+import { Checkpoint } from "@/types"
+import { getAllCheckpoints, removeCheckpoint } from "@/services/checkpointService"
+import AppBar from "@/components/AppBar"
 
 const Checkpoints = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
@@ -23,7 +23,7 @@ const Checkpoints = () => {
         setCheckpoints(checkpoints.filter(checkpoint => checkpoint.id !== id))
       })
     } catch (error) {
-      alert('Something went wrong!')
+      alert("Something went wrong!")
       console.error(error)
     }
   }

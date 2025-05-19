@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, Button, Platform } from 'react-native'
-import { useDispatch, useSelector, Provider } from 'react-redux'
-import { Link, Stack } from 'expo-router'
+import React, { useEffect, useState } from "react"
+import { Text, View, Button, Platform } from "react-native"
+import { useDispatch, useSelector, Provider } from "react-redux"
+import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import AppBar from '@/components/AppBar'
-import store from '@/store/store'
-import { setMessage } from '@/reducers/responseSlice'
+import AppBar from "@/components/AppBar"
+import store from "@/store/store"
+import { setMessage } from "@/reducers/responseSlice"
 
 const url =
-  Platform.OS === 'web'
+  Platform.OS === "web"
     ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -18,13 +18,13 @@ const pipeline = async () => {
     const result = await response.json()
 
     if (Array.isArray(result)) {
-      const messages = result.map(item => item.message || JSON.stringify(item)).join('\n')
+      const messages = result.map(item => item.message || JSON.stringify(item)).join("\n")
       alert(messages)
     } else {
       alert(result.message || JSON.stringify(result))
     }
   } catch (error) {
-    alert('Error fetching pipeline')
+    alert("Error fetching pipeline")
     console.error(error)
   }
 }

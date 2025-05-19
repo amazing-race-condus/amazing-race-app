@@ -1,9 +1,9 @@
-import axios from 'axios'
+import axios from "axios"
 import { Platform } from "react-native"
-import { Checkpoint } from '@/types'
+import { Checkpoint } from "@/types"
 
 const url =
-  Platform.OS === 'web'
+  Platform.OS === "web"
     ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
