@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { AppDispatch, RootState } from '@/store/store'
-import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from '@/services/checkpointService'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import type { AppDispatch, RootState } from "@/store/store"
+import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
 
 export interface checkpointState {
     id : string,
@@ -10,7 +10,7 @@ export interface checkpointState {
 const initialState: checkpointState[] = []
 
 const checkpointSlice = createSlice({
-  name: 'checkpoints',
+  name: "checkpoints",
   initialState,
   reducers: {
     setCheckpoints(state, action: PayloadAction<checkpointState[]>) {
@@ -27,7 +27,7 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
     const allCheckpoints = await getAllCheckpoints()
     dispatch(setCheckpoints(allCheckpoints))
   } catch (error) {
-    console.error('Failed to fetch checkpoints:', error)
+    console.error("Failed to fetch checkpoints:", error)
   }
 }
 
@@ -36,7 +36,7 @@ export const addCheckpoitReducer = (newObject: checkpointState) => async (dispat
     const newCheckpoint = await createCheckpoint(newObject)
     dispatch(appendCheckpoint(newCheckpoint))
   } catch (error) {
-    console.error('Failed to add checkpoint:', error)
+    console.error("Failed to add checkpoint:", error)
   }
 }
 
@@ -51,7 +51,7 @@ export const removeCheckpointReducer =
 
       dispatch(setCheckpoints(updated))
     } catch (error) {
-      console.error('Failed to remove checkpoint:', error)
+      console.error("Failed to remove checkpoint:", error)
     }
   }
 

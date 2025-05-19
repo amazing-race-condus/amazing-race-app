@@ -1,17 +1,18 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { useDispatch, Provider } from 'react-redux'
-import type { AppDispatch } from '@/store/store'
+import { useDispatch, Provider } from "react-redux"
+import type { AppDispatch } from "@/store/store"
 // eslint-disable-next-line no-duplicate-imports
-import store from '@/store/store'
+import store from "@/store/store"
 import { Stack, useRouter } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import React, { useState } from 'react'
-import { Checkpoint } from '@/types'
-import { addCheckpoitReducer } from '@/reducers/checkpointsSlice'
+import React, { useState } from "react"
+import { Checkpoint } from "@/types"
+import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
+import AppBar from "@/components/AppBar"
 
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const [name, setName] = useState('')
+  const [name, setName] = useState("")
   const router = useRouter()
 
   const checkpointCreation = async () => {
@@ -21,8 +22,8 @@ const AddCheckpoint = () => {
     }
 
     dispatch(addCheckpoitReducer(newCheckpoint))
-    setName('')
-    router.navigate(`/checkpoints`)
+    setName("")
+    router.navigate("/checkpoints")
   }
 
   return (

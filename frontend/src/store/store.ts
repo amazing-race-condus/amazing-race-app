@@ -1,6 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit'
-import messageSlice from '../reducers/responseSlice'
-import checkpointSlice from '../reducers/checkpointsSlice'
+import { configureStore } from "@reduxjs/toolkit"
+import messageSlice from "../reducers/responseSlice"
+import checkpointSlice from "../reducers/checkpointsSlice"
 
 const store = configureStore({
   reducer: {
