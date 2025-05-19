@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View, Text, FlatList, Pressable} from "react-native"
-import { Stack } from "expo-router"
+import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { Checkpoint } from "@/types"
 import { getAllCheckpoints, removeCheckpoint } from "@/services/checkpointService"
@@ -30,7 +30,7 @@ const Checkpoints = () => {
 
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View style={styles.item}>
-      <Text style={styles.checkpointName}>{name}</Text>
+      <Link style={styles.checkpointName} href={`/checkpoints/${id}`}>{name}</Link>
       <Pressable style={styles.button} onPress={() => { handleRemoveCheckpoint(id) }}>
         <Text style={styles.buttonText}>Poista</Text>
       </Pressable>
