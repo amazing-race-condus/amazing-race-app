@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react"
-import { Text, View, Button, Platform } from "react-native"
+import { Text, View, Platform } from "react-native"
 import { useDispatch, useSelector, Provider } from "react-redux"
 import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
@@ -12,40 +11,9 @@ const url =
     ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
-const pipeline = async () => {
-  try {
-    const response = await fetch(`${url}/checkpoints`)
-    const result = await response.json()
-
-    if (Array.isArray(result)) {
-      const messages = result.map(item => item.message || JSON.stringify(item)).join("\n")
-      alert(messages)
-    } else {
-      alert(result.message || JSON.stringify(result))
-    }
-  } catch (error) {
-    alert("Error fetching pipeline")
-    console.error(error)
-  }
-}
-
 const App = () => {
   const dispatch = useDispatch()
   const message = useSelector((state) => state.message)
-
-  useEffect(() => {
-    const getPong = async () => {
-      try {
-        const response = await fetch(`${url}/ping`)
-        const result = await response.text()
-        dispatch(setMessage(result || JSON.stringify(result)))
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    getPong()
-  }, [])
 
   return (
     <View style={styles.container}>
