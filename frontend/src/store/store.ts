@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import messageSlice from "../reducers/responseSlice"
+import checkpointSlice from "../reducers/checkpointsSlice"
 
 const store = configureStore({
   reducer: {
-    message: messageSlice
+    message: messageSlice,
+    checkpoints: checkpointSlice,
   },
 })
 

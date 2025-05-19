@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"condus-frontend:latest","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"condus-frontend\")].image","pause":"false"}]
   name: condus-frontend
 spec:
   replicas: 1
@@ -16,7 +20,8 @@ spec:
     spec:
       containers:
       - name: condus-frontend
-        image: FRONTEND/IMAGE
+        image: condus-frontend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         resources:
