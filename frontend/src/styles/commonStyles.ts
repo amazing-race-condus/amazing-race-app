@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
+
+const screenWidth = Dimensions.get('window').width
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,32 +16,40 @@ export const styles = StyleSheet.create({
     color: '#fcba03',
   },
   link: {
-    margin: 1,
-    padding: 6,
+    margin: 10,
+    padding: 15,
     borderWidth: 1,
     backgroundColor: '#abbbd4',
     width: '90%',
+    borderRadius: 10,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16
   },
   content: {
+    backgroundColor: '#2d3f5c',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   links: {
+    flex: 1,
     width: '90%',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'center'
   },
   inputField: {
     borderWidth: 1,
-    width: 355,
+    borderColor: 'white',
+    borderRadius: 10,
+    width: Math.min(screenWidth * 0.9, 355),
     paddingVertical: 7,
     textAlignVertical: 'auto',
     marginBottom:10
   },
   button: {
     height: 30,
-    width: 355,
+    width: Math.min(screenWidth * 0.9, 355),
     backgroundColor: '#007AFF',
     borderRadius: 8,
     justifyContent: 'center',
@@ -59,9 +69,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     marginVertical: 5,
-    width: 400,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: '#ceddf0',
     alignItems: 'center',
     fontSize: 20,
   },
@@ -88,5 +97,8 @@ export const styles = StyleSheet.create({
   },
   checkpointcontainer: {
     marginBottom: 75
+  },
+  breadText: {
+    color: 'white',
   }
 })

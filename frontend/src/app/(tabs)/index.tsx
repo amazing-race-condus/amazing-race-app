@@ -54,20 +54,13 @@ const App = () => {
           headerShown: false,
         }}
       />
-      <AppBar />
+      <AppBar pageTitle='Home' />
       <View style={styles.content}>
         <Text style={styles.header}>Condus Amazing Race App</Text>
-        <Text>Frontpage-komponentti</Text>
-        <Text>{message ? `Response: ${message}` : 'Loading...'}</Text>
-        <Button
-          title="Test Pipeline" onPress={pipeline}
-        />
-        <Text>Palvelimen vastaus: {message}</Text>
       </View>
       <View style={styles.links}>
-        <Link style={styles.link} href="/page/1">Sivu 1</Link>
-        <Link style={styles.link} href="/page/2">Sivu 2</Link>
-        <Link style={styles.link} href="/page/3">Sivu 3</Link>
+        <Link style={styles.link} href="/add_checkpoint">Lisää rasti</Link>
+        <Link style={styles.link} href="/checkpoints">Rastit</Link>
       </View>
     </View>
   )

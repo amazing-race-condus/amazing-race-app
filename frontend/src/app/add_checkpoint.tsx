@@ -4,6 +4,7 @@ import { styles } from "@/styles/commonStyles"
 import React, { useState } from 'react'
 import { Checkpoint } from '@/types'
 import { createCheckpoint } from '@/services/checkpointService'
+import AppBar from '@/components/AppBar'
 
 const AddCheckpoint = () => {
   const [name, setName] = useState('')
@@ -27,10 +28,11 @@ const AddCheckpoint = () => {
   return (
     <View style={styles.content}>
       <Stack.Screen
-        options={{title: `Lisää rasti`}}
+        options={{ headerShown: false }}
       />
+      <AppBar pageTitle="Lisää rasti" />
       <Text style={styles.header}>Lisää rasti:</Text>
-      <Text>Rastin nimi: </Text><TextInput
+      <Text style={styles.breadText}>Rastin nimi: </Text><TextInput
         style={styles.inputField}
         value={name}
         onChangeText={setName}
