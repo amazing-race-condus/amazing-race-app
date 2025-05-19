@@ -45,7 +45,8 @@ export const styles = StyleSheet.create({
     width: Math.min(screenWidth * 0.9, 355),
     paddingVertical: 7,
     textAlignVertical: "auto",
-    marginBottom:10
+    marginBottom:10,
+    color: "white",
   },
   button: {
     height: 30,
