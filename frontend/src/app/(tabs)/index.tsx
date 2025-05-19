@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Button, Platform } from 'react-native'
+import { useDispatch, useSelector, Provider } from 'react-redux'
 import { Link, Stack } from 'expo-router'
 import { styles } from "@/styles/commonStyles"
 import AppBar from '@/components/AppBar'
+import store from '@/store/store'
+import { setMessage } from '@/reducers/responseSlice'
 
 const url =
   Platform.OS === 'web'
@@ -27,14 +30,15 @@ const pipeline = async () => {
 }
 
 const App = () => {
-  const [data, setData] = useState(null)
+  const dispatch = useDispatch()
+  const message = useSelector((state) => state.message)
 
   useEffect(() => {
     const getPong = async () => {
       try {
         const response = await fetch(`${url}/ping`)
         const result = await response.text()
-        setData(result.message || JSON.stringify(result))
+        dispatch(setMessage(result || JSON.stringify(result)))
       } catch (error) {
         console.error(error)
       }
@@ -54,11 +58,11 @@ const App = () => {
       <View style={styles.content}>
         <Text style={styles.header}>Condus Amazing Race App</Text>
         <Text>Frontpage-komponentti</Text>
-        <Text>{data ? `Response: ${data}` : 'Loading...'}</Text>
+        <Text>{message ? `Response: ${message}` : 'Loading...'}</Text>
         <Button
           title="Test Pipeline" onPress={pipeline}
         />
-        <Text>Palvelimen vastaus: {data}</Text>
+        <Text>Palvelimen vastaus: {message}</Text>
       </View>
       <View style={styles.links}>
         <Link style={styles.link} href="/page/1">Sivu 1</Link>
@@ -69,4 +73,10 @@ const App = () => {
   )
 }
 
-export default App
+const AppProvider = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
+
+export default AppProvider
