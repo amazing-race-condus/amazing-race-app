@@ -7,6 +7,12 @@
       paths:
         - 'frontend/**'
         - 'backend/**'
+    pull_request:
+      branches:
+        - 'main'
+      paths:
+        - 'frontend/**'
+        - 'backend/**'
 
   jobs:
     paths-filter:
