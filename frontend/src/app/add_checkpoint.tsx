@@ -30,7 +30,7 @@ const AddCheckpoint = () => {
         options={{title: `Lisää rasti`}}
       />
       <Text style={styles.header}>Lisää rasti:</Text>
-      Rastin nimi: <TextInput
+      <Text>Rastin nimi: </Text><TextInput
         style={styles.inputField}
         value={name}
         onChangeText={setName}

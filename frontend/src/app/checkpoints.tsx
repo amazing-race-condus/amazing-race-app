@@ -39,7 +39,7 @@ const Checkpoints = () => {
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <ScrollView>
+    <View>
       <Stack.Screen options={{ title: `Tarkastele rasteja` }} />
       <Text style={styles.title}>Rastit:</Text>
       <FlatList
@@ -54,7 +54,7 @@ const Checkpoints = () => {
         }
         keyExtractor={item => item.id}
       />
-    </ScrollView>
+    </View>
   )
 }
 
