@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, Pressable, ScrollView } from "react-native"
+import { View, Text, FlatList, Pressable} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { Checkpoint } from '@/types'
@@ -39,7 +39,7 @@ const Checkpoints = () => {
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <View>
+    <View style={styles.checkpointcontainer}>
       <Stack.Screen options={{ title: `Tarkastele rasteja` }} />
       <Text style={styles.title}>Rastit:</Text>
       <FlatList
