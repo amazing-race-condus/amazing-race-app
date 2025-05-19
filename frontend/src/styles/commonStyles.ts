@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
   listcontainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   checkpointName: {
     fontSize: 25,
@@ -86,4 +86,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     color: '#000',
   },
+  checkpointcontainer: {
+    marginBottom: 75
+  }
 })
