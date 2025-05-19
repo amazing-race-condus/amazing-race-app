@@ -32,6 +32,7 @@ jobs:
         echo "todo"
 
   build-and-push-image:
+    if: github.ref == 'refs/heads/main'
     needs: [lint, test]
     runs-on: ubuntu-24.04
     defaults:
