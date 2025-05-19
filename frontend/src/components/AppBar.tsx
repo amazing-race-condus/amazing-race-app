@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, StyleSheet, Text, Pressable, Modal, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { useRouter } from 'expo-router'
 import Constants from "expo-constants"
 
 const styles = StyleSheet.create({
@@ -50,6 +51,12 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   const [menuVisible, setMenuVisible] = useState(false)
+  const router = useRouter()
+
+  const handlePress = (target: string) => {
+    setMenuVisible(false)
+    router.push(target)
+  }
 
   return (
     <>
@@ -82,14 +89,14 @@ const AppBar = () => {
       >
         <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menu}>
-            <TouchableOpacity onPress={() => alert("Home")} style={styles.menuItem}>
+            <TouchableOpacity onPress={() => handlePress('/')} style={styles.menuItem}>
               <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => alert("Profile")} style={styles.menuItem}>
-              <Text style={styles.text}>Profile</Text>
+            <TouchableOpacity onPress={() => handlePress('/add_checkpoint')} style={styles.menuItem}>
+              <Text style={styles.text}>Lisää rasti</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => alert("Logout")} style={styles.menuItem}>
-              <Text style={styles.text}>Logout</Text>
+            <TouchableOpacity onPress={() => handlePress('/checkpoints')} style={styles.menuItem}>
+              <Text style={styles.text}>Rastit</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
