@@ -6,13 +6,15 @@ resources:
 - nginx.yaml
 - backend/manifests/deployment.yaml
 - backend/manifests/service.yaml
+- backend/manifests/imagestream.yaml
 - frontend/manifests/deployment.yaml
 - frontend/manifests/service.yaml
+- frontend/manifests/imagestream.yaml
 
 images:
 - name: BACKEND/IMAGE
-  newName: eeritvan/condus-backend
+  newName: ghcr.io/amazing-race-condus/condus-backend
   newTag: latest
 - name: FRONTEND/IMAGE
-  newName: eeritvan/condus-frontend
+  newName: ghcr.io/amazing-race-condus/condus-frontend
   newTag: latest
