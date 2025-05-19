@@ -55,6 +55,7 @@ const App = () => {
         }}
       />
       <AppBar pageTitle='Home' />
+      <Text> testing testing yoyoyo </Text>
       <View style={styles.content}>
         <Text style={styles.header}>Condus Amazing Race App</Text>
       </View>
