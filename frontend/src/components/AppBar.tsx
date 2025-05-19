@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, StyleSheet, Text, Pressable, Modal } from "react-native"
+import { View, StyleSheet, Text, Pressable, Modal, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import Constants from "expo-constants"
 
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.3)',
     justifyContent: 'flex-start',
-    paddingTop: 70,
+    paddingTop: Constants.statusBarHeight + 56,
   },
   menu: {
     backgroundColor: '#2d3f5c',
@@ -82,15 +82,15 @@ const AppBar = () => {
       >
         <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menu}>
-            <Pressable onPress={() => alert("Home")} style={styles.menuItem}>
+            <TouchableOpacity onPress={() => alert("Home")} style={styles.menuItem}>
               <Text style={styles.text}>Home</Text>
-            </Pressable>
-            <Pressable onPress={() => alert("Profile")} style={styles.menuItem}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => alert("Profile")} style={styles.menuItem}>
               <Text style={styles.text}>Profile</Text>
-            </Pressable>
-            <Pressable onPress={() => alert("Logout")} style={styles.menuItem}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => alert("Logout")} style={styles.menuItem}>
               <Text style={styles.text}>Logout</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </Pressable>
       </Modal>
