@@ -39,3 +39,6 @@ yarn-error.*
 *.tsbuildinfo
 
 *.tsx.swp
+
+android
+ios
