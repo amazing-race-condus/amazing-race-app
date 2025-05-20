@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
+    paddingBottom: 50
   },
   links: {
     flex: 1,
@@ -101,5 +102,15 @@ export const styles = StyleSheet.create({
   },
   breadText: {
     color: "white",
+  },
+  notification: {
+    backgroundColor: "#1c4f10",
+    borderStyle: "solid",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "black",
+    fontSize: 20,
+    padding: 10,
+    marginBottom: 10
   }
 })

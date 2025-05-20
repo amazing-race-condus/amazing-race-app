@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { View, Text, FlatList, Pressable} from "react-native"
+import { View, Text, FlatList, Pressable, Alert } from "react-native"
 import { Link, Stack } from "expo-router"
 import { useDispatch, useSelector, Provider } from "react-redux"
 import store from "@/store/store"
@@ -8,6 +8,9 @@ import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpoint
 // eslint-disable-next-line no-duplicate-imports
 import type { RootState, AppDispatch } from "@/store/store"
 import AppBar from "@/components/AppBar"
+import Notification from "@/components/Notification"
+import { setNotification } from "@/reducers/responseSlice"
+import { getCheckpoint } from "@/services/checkpointService"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -17,10 +20,24 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
+  const handleRemoveCheckpoint = (id: string, name: string) => {
+    Alert.alert(
+      "Vahvista poisto",
+      "Oletko varma että haluat poistaa tämän rastin?",
+      [
+        { text: "Peru", style: "cancel" },
+        { text: "Poista", style: "destructive", onPress: () => {
+          dispatch(removeCheckpointReducer(id))
+          dispatch(setNotification(`Rasti '${name}' poistettu`))
+        }
+        }]
+    )
+  }
+
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View style={styles.item}>
       <Link style={styles.checkpointName} href={`/checkpoints/${id}`}>{name}</Link>
-      <Pressable style={styles.button} onPress={() => { dispatch(removeCheckpointReducer(id)) }}>
+      <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
         <Text style={styles.buttonText}>Poista</Text>
       </Pressable>
     </View>
@@ -32,6 +49,7 @@ const Checkpoints = () => {
     <View style={styles.content}>
       <Stack.Screen options={{ headerShown: false }} />
       <AppBar pageTitle='Rastit' />
+      <Notification />
       <Text style={styles.title}>Rastit:</Text>
       <FlatList
         contentContainerStyle={styles.listcontainer}

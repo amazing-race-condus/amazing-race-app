@@ -1,3 +1,4 @@
+import { AppDispatch } from "@/store/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 const messageSlice = createSlice({
@@ -9,6 +10,14 @@ const messageSlice = createSlice({
     }
   },
 })
+
+export const setNotification = ( message : string) => async (dispatch: AppDispatch) => {
+  dispatch(setMessage(message))
+
+  setTimeout(() => {
+    dispatch(setMessage(""))
+  }, 5000)
+}
 
 export const { setMessage } = messageSlice.actions
 export default messageSlice.reducer
