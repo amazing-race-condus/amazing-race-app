@@ -1,0 +1,4 @@
+appId: com.condus.amazingrace
+---
+- launchApp
+- tapOn: "settings"
