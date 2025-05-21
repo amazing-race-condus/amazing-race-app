@@ -1,10 +1,10 @@
 import { Text, View, Platform } from "react-native"
-import { useDispatch, useSelector, Provider } from "react-redux"
+import { Provider } from "react-redux"
 import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import AppBar from "@/components/AppBar"
 import store from "@/store/store"
-import { setMessage } from "@/reducers/responseSlice"
+import Notification from "@/components/Notification"
 
 const url =
   Platform.OS === "web"
@@ -12,9 +12,6 @@ const url =
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
 const App = () => {
-  const dispatch = useDispatch()
-  const message = useSelector((state) => state.message)
-
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -23,6 +20,7 @@ const App = () => {
         }}
       />
       <AppBar pageTitle='Home' />
+      <Notification />
       <View style={styles.content}>
         <Text style={styles.header}>Condus Amazing Race App</Text>
       </View>

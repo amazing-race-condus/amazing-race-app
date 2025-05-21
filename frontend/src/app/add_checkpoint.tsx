@@ -1,14 +1,14 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { useDispatch, Provider } from "react-redux"
-import type { AppDispatch } from "@/store/store"
-// eslint-disable-next-line no-duplicate-imports
-import store from "@/store/store"
+import { useDispatch, Provider, useSelector } from "react-redux"
+import store, { AppDispatch } from "@/store/store"
 import { Stack, useRouter } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
 import { Checkpoint } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
+import { setNotification } from "@/reducers/responseSlice"
 import AppBar from "@/components/AppBar"
+import Notification from "@/components/Notification"
 
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -22,6 +22,7 @@ const AddCheckpoint = () => {
     }
 
     dispatch(addCheckpoitReducer(newCheckpoint))
+    dispatch(setNotification(`Rasti '${name}' lisätty`))
     setName("")
     router.navigate("/checkpoints")
   }
@@ -32,6 +33,7 @@ const AddCheckpoint = () => {
         options={{ headerShown: false }}
       />
       <AppBar pageTitle="Lisää rasti" />
+      <Notification />
       <Text style={styles.header}>Lisää rasti:</Text>
       <Text style={styles.breadText}>Rastin nimi: </Text><TextInput
         style={styles.inputField}
