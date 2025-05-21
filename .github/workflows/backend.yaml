@@ -2,6 +2,9 @@ name: "backend pipeline"
 
 on:
   workflow_call:
+    secrets:
+      DATABASE_URL:
+        required: true
 
 jobs:
   lint:
