@@ -39,10 +39,6 @@ jobs:
       run: npm ci
     - name: Generate prisma
       run: npx prisma generate
-
-    - name: Debug ENV
-      run: printenv | grep DATABASE
-      
     - name: Run tests
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
