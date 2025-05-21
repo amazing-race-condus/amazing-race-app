@@ -1,6 +1,7 @@
 import express, { Response } from "express"
 import { PrismaClient } from "../prisma/prisma/"
 import cors from "cors"
+import checkpointsRouter from "../controllers/checkpoints"
 
 const prisma = new PrismaClient()
 
@@ -9,11 +10,14 @@ app.use(cors())
 app.use(express.json())
 const port = 3000
 
-import checkpointsRouter from "../controllers/checkpoints"
 app.use("/checkpoints", checkpointsRouter)
 
 app.get("/", (_, res: Response) => {
   res.send("Hello World!")
+})
+
+app.get("/ping", (_, res: Response) => {
+  res.send("Pongee!")
 })
 
 const server = app.listen(port, () => {
