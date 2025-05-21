@@ -11,5 +11,5 @@ describe("Ping test", () => {
     const response = await request(app).get("/ping");
     expect(response.status).toBe(200);
     expect(response.text).toBe("Pongee!");
-  });
-});
+  })
+})
