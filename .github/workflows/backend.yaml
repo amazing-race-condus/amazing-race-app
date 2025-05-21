@@ -40,6 +40,8 @@ jobs:
     - name: Generate prisma
       run: npx prisma generate
     - name: Run tests
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: npm run test
 
   build-and-push-image:

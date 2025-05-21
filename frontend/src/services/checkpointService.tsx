@@ -9,23 +9,23 @@ const url =
 
 export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> => {
   const response = await axios
-    .get<Checkpoint>(`${url}/api/checkpoints/${id}`)
+    .get<Checkpoint>(`${url}/checkpoints/${id}`)
   return response.data
 }
 
 export const getAllCheckpoints = async (): Promise<Checkpoint[]> => {
   const response = await axios
-    .get<Checkpoint[]>(`${url}/api/checkpoints`)
+    .get<Checkpoint[]>(`${url}/checkpoints`)
   return response.data
 }
 
 export const createCheckpoint = async (newObject: Checkpoint) => {
-  const response = await axios.post<Checkpoint>(`${url}/api/checkpoints`, newObject)
+  const response = await axios.post<Checkpoint>(`${url}/checkpoints`, newObject)
   return response.data
 }
 
 export const removeCheckpoint = async (id: string) => {
-  const request = axios.delete(`${url}/api/checkpoints/${id}`)
+  const request = axios.delete(`${url}/checkpoints/${id}`)
   const response = await request
   return response.data
 }
