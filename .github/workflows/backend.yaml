@@ -38,10 +38,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Generate prisma
-      run: npx prisma generate
-    - name: Run tests
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      run: npx prisma generate
+    - name: Run tests
       run: npm run test
 
   build-and-push-image:
