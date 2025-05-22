@@ -17,11 +17,11 @@ enum Type {
 model Checkpoint {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  type        Type
+  type        Type?
   hint        String?
   event_id    Int?
 
-  event       Event   @relation(fields: [event_id], references: [id])
+  event       Event?   @relation(fields: [event_id], references: [id])
 }
 
 model Event {
@@ -44,7 +44,7 @@ model Group {
   route_id            Int?
   disqualified        Boolean   @default(false)
 
-  event               Event       @relation(fields: [event_id], references: [id])
+  event               Event?      @relation(fields: [event_id], references: [id])
   route               Route?      @relation(fields: [route_id], references: [id])
   next_checkpoint     Checkpoint? @relation(fields: [next_checkpoint_id], references: [id])
 }
@@ -54,7 +54,7 @@ model Route {
   route_time          Int
   event_id            Int?
 
-  event               Event             @relation(fields: [event_id], references: [id])            
+  event               Event?            @relation(fields: [event_id], references: [id])            
   routeSteps          RouteCheckpoint[]
 }
 
@@ -79,7 +79,7 @@ model CheckpointDistance {
 
   from            Checkpoint    @relation("FromCheckpoint", fields: [from_id], references[id])
   to              Checkpoint    @relation("ToCheckpoint", fields: [to_id], references[id])
-  event           Event         @relation(fields: [event_id], references[id])
+  event           Event?        @relation(fields: [event_id], references[id])
 
   @@unique([from_id, to_id, event_id])
 }
@@ -92,7 +92,7 @@ model Penalty {
 
   group           Group         @relation(fields: [group_id], references[id])
   penalty_type    PenaltyType   @relation(fields: [penalty_type_id], references[id])
-  event           Event         @relation(fields: [event_id], references[id])
+  event           Event?        @relation(fields: [event_id], references[id])
 }
 
 model PenaltyType {
@@ -101,5 +101,5 @@ model PenaltyType {
   time            Int
   event_id        Int?
 
-  event           Event         @relation(fields: [event_id], references[id])
+  event           Event?        @relation(fields: [event_id], references[id])
 }
