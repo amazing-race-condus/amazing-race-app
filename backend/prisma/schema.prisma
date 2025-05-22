@@ -64,8 +64,8 @@ model RouteCheckpoint {
   checkpoint_id   Int
   order           Int
 
-  route           Route       @relation(fields: [route_id], references[id])
-  checkpoint      Checkpoint  @relation(fields: [checkpoint_id], references[id])
+  route           Route       @relation(fields: [route_id], references: [id])
+  checkpoint      Checkpoint  @relation(fields: [checkpoint_id], references: [id])
 
   @@unique([route_id, order])
 }
@@ -77,9 +77,9 @@ model CheckpointDistance {
   time            Int
   event_id        Int?
 
-  from            Checkpoint    @relation("FromCheckpoint", fields: [from_id], references[id])
-  to              Checkpoint    @relation("ToCheckpoint", fields: [to_id], references[id])
-  event           Event?        @relation(fields: [event_id], references[id])
+  from            Checkpoint    @relation("FromCheckpoint", fields: [from_id], references: [id])
+  to              Checkpoint    @relation("ToCheckpoint", fields: [to_id], references: [id])
+  event           Event?        @relation(fields: [event_id], references: [id])
 
   @@unique([from_id, to_id, event_id])
 }
@@ -90,9 +90,9 @@ model Penalty {
   penalty_type_id Int
   event_id        Int?
 
-  group           Group         @relation(fields: [group_id], references[id])
-  penalty_type    PenaltyType   @relation(fields: [penalty_type_id], references[id])
-  event           Event?        @relation(fields: [event_id], references[id])
+  group           Group         @relation(fields: [group_id], references: [id])
+  penalty_type    PenaltyType   @relation(fields: [penalty_type_id], references: [id])
+  event           Event?        @relation(fields: [event_id], references: [id])
 }
 
 model PenaltyType {
@@ -101,5 +101,5 @@ model PenaltyType {
   time            Int
   event_id        Int?
 
-  event           Event?        @relation(fields: [event_id], references[id])
+  event           Event?        @relation(fields: [event_id], references: [id])
 }
