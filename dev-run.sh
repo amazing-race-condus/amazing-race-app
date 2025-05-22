@@ -21,9 +21,9 @@ if [[ $1 != "-w" ]]; then
     fi
 
     if grep -q  "EXPO_PUBLIC_BACKEND_URL=" ./frontend/.env; then
-        sed -i "s|EXPO_PUBLIC_BACKEND_URL=.*|EXPO_PUBLIC_BACKEND_URL=$FORWARDING_URL|" ./frontend/.env
+        sed -i "s|EXPO_PUBLIC_BACKEND_URL=.*|EXPO_PUBLIC_BACKEND_URL=$FORWARDING_URL/api|" ./frontend/.env
     else
-        echo "EXPO_PUBLIC_BACKEND_URL=$FORWARDING_URL" >> ./frontend/.env
+        echo "EXPO_PUBLIC_BACKEND_URL=$FORWARDING_URL/api" >> ./frontend/.env
     fi
 fi
 
