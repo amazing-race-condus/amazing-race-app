@@ -1,6 +1,9 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
+import { Type } from "../prisma/prisma/"
+
 const checkpointsRouter = express.Router()
+
 
 checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
 
@@ -9,8 +12,13 @@ checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
   const checkpoint = await prisma.checkpoint.findUnique({
     where: { id },
   })
-  res.json(checkpoint)
+  if (checkpoint) {
+    res.json(checkpoint)
+  } else {
+    res.status(404).end()
+  }
 })
+
 
 checkpointsRouter.get("/", async (_, res: Response) => {
 
@@ -20,10 +28,60 @@ checkpointsRouter.get("/", async (_, res: Response) => {
 })
 
 checkpointsRouter.post("/", async (req: Request, res: Response) => {
+  const allCheckpoints = await prisma.checkpoint.findMany()
+
+  if (allCheckpoints.length >= 8) {
+    res.status(400).json({ error: "Rastien maksimimäärä on 8 rastia."})
+    return
+  }
+
   const body = req.body
+
+  if (!body.name ) {
+    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
+    return
+  }
+
+  if  (body.name.length > 100 ) {
+    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta."})
+    return
+  }
+
+  if (body.name.length < 2 ) {
+    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
+    return
+  }
+
+  if (body.type) {
+    if (!Object.values(Type).includes(body.type)) {
+      res.status(400).json({ error: "Virheellinen tyyppi." })
+      return
+    }
+    if (body.type === "START") {
+      const existingStart = await prisma.checkpoint.findFirst({
+        where: { type: "START" }
+      })
+      if (existingStart) {
+        res.status(400).json({ error: "Lähtörasti on jo luotu." })
+        return
+      }
+    } else if (body.type === "FINISH") {
+      const existingFinish = await prisma.checkpoint.findFirst({
+        where: { type: "FINISH" }
+      })
+      if (existingFinish) {
+        res.status(400).json({ error: "Maali on jo luotu." })
+        return
+      }
+    }
+  }
+
   const savedCheckpoint = await prisma.checkpoint.create({
     data: {
-      name: body.name
+      name: body.name,
+      type: body.type,
+      hint: body.hint,
+      event_id: body.event_id
     }
   })
   res.status(201).json(savedCheckpoint)
