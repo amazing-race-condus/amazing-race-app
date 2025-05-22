@@ -3,6 +3,7 @@ import { PrismaClient } from "../prisma/prisma/"
 import cors from "cors"
 import path from "path"
 import checkpointsRouter from "../controllers/checkpoints"
+import groupsRouter from "../controllers/groups"
 import { unknownEndpoint, errorHandler } from "../utils/middleware"
 
 const prisma = new PrismaClient()
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, "../public/dist")))
 const port = 3000
 
 app.use("/api/checkpoints", checkpointsRouter)
+app.use("/api/groups", groupsRouter)
 
 app.all("{*splat}", (req, res) => {
   if (!req.path.startsWith("/api")) {
