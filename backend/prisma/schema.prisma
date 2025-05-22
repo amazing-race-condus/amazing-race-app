@@ -8,7 +8,110 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Type {
+  START
+  FINISH
+  INTERMEDIATE
+}
+
 model Checkpoint {
-  id   Int     @id @default(autoincrement())
-  name String?
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  type     Type?
+  hint     String?
+  event_id Int?
+
+  event           Event?               @relation(fields: [event_id], references: [id])
+  fromDistances   CheckpointDistance[] @relation("FromCheckpoint")
+  toDistances     CheckpointDistance[] @relation("ToCheckpoint")
+  group           Group[]
+  routeCheckpoint RouteCheckpoint[]
+}
+
+model Event {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  start_time     DateTime?
+  end_time       DateTime?
+  min_route_time Int?
+  max_route_time Int?
+
+  checkpoints        Checkpoint[]
+  group              Group[]
+  route              Route[]
+  checkpointDistance CheckpointDistance[]
+  penalty            Penalty[]
+  penaltyType        PenaltyType[]
+}
+
+model Group {
+  id                 Int       @id @default(autoincrement())
+  name               String    @unique
+  event_id           Int?
+  finish_time        DateTime?
+  next_checkpoint_id Int?
+  route_id           Int?
+  disqualified       Boolean   @default(false)
+
+  event           Event?      @relation(fields: [event_id], references: [id])
+  route           Route?      @relation(fields: [route_id], references: [id])
+  next_checkpoint Checkpoint? @relation(fields: [next_checkpoint_id], references: [id])
+  penalty         Penalty[]
+}
+
+model Route {
+  id         Int  @id @default(autoincrement())
+  route_time Int
+  event_id   Int?
+
+  event      Event?            @relation(fields: [event_id], references: [id])
+  routeSteps RouteCheckpoint[]
+  group      Group[]
+}
+
+model RouteCheckpoint {
+  id            Int @id @default(autoincrement())
+  route_id      Int
+  checkpoint_id Int
+  order         Int
+
+  route      Route      @relation(fields: [route_id], references: [id])
+  checkpoint Checkpoint @relation(fields: [checkpoint_id], references: [id])
+
+  @@unique([route_id, order])
+}
+
+model CheckpointDistance {
+  id       Int  @id @default(autoincrement())
+  from_id  Int
+  to_id    Int
+  time     Int
+  event_id Int?
+
+  from  Checkpoint @relation("FromCheckpoint", fields: [from_id], references: [id])
+  to    Checkpoint @relation("ToCheckpoint", fields: [to_id], references: [id])
+  event Event?     @relation(fields: [event_id], references: [id])
+
+  @@unique([from_id, to_id, event_id])
+}
+
+model Penalty {
+  id              Int  @id @default(autoincrement())
+  group_id        Int
+  penalty_type_id Int
+  event_id        Int?
+
+  group        Group       @relation(fields: [group_id], references: [id])
+  penalty_type PenaltyType @relation(fields: [penalty_type_id], references: [id])
+  event        Event?      @relation(fields: [event_id], references: [id])
+}
+
+model PenaltyType {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  time     Int
+  event_id Int?
+
+  event   Event?    @relation(fields: [event_id], references: [id])
+  penalty Penalty[]
 }
