@@ -44,7 +44,7 @@ export const addCheckpoitReducer = (newObject: checkpointState, name: string) =>
 }
 
 export const removeCheckpointReducer =
-  (id: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (id: string, name: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       await removeCheckpoint(id)
 
@@ -53,8 +53,10 @@ export const removeCheckpointReducer =
       const updated = current.filter((checkpoint) => checkpoint.id !== id)
 
       dispatch(setCheckpoints(updated))
+      dispatch(setNotification(`Rasti '${name}' poistettu`, "success"))
     } catch (error) {
       console.error("Failed to remove checkpoint:", error)
+      dispatch(setNotification(`Rastia ${name} ei voitu poistaa`, "error"))
     }
   }
 
