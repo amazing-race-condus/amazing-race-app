@@ -3,6 +3,7 @@ import { PrismaClient } from "../prisma/prisma/"
 import cors from "cors"
 import path from "path"
 import checkpointsRouter from "../controllers/checkpoints"
+import { unknownEndpoint, errorHandler } from "../utils/middleware"
 
 const prisma = new PrismaClient()
 
@@ -23,5 +24,9 @@ app.all("{*splat}", (req, res) => {
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
+
 
 export { app, server, prisma }

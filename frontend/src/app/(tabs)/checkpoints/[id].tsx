@@ -3,7 +3,6 @@ import { useLocalSearchParams, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { getCheckpoint } from "@/services/checkpointService"
 import { useEffect, useState } from "react"
-import AppBar from "@/components/AppBar"
 
 const Checkpoint = () => {
   const { id } = useLocalSearchParams()
@@ -24,12 +23,14 @@ const Checkpoint = () => {
   }, [id])
 
   return (
-    <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
-      <AppBar pageTitle={name} />
-      <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Stack.Screen
+          options={{ headerShown: false }}
+        />
+        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
+      </View>
     </View>
   )
 }

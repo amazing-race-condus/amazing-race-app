@@ -2,7 +2,6 @@ import { Text, View, Platform } from "react-native"
 import { Provider } from "react-redux"
 import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import AppBar from "@/components/AppBar"
 import store from "@/store/store"
 import Notification from "@/components/Notification"
 
@@ -19,14 +18,9 @@ const App = () => {
           headerShown: false,
         }}
       />
-      <AppBar pageTitle='Home' />
       <Notification />
       <View style={styles.content}>
-        <Text style={styles.header}>Condus Amazing Race App</Text>
-      </View>
-      <View style={styles.links}>
-        <Link style={styles.link} href="/add_checkpoint">Lisää rasti</Link>
-        <Link style={styles.link} href="/checkpoints">Rastit</Link>
+        <Text style={styles.header}>Ryhmät</Text>
       </View>
     </View>
   )
