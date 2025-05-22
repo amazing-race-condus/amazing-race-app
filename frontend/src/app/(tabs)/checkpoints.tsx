@@ -25,8 +25,7 @@ const Checkpoints = () => {
       [
         { text: "Peru", style: "cancel" },
         { text: "Poista", style: "destructive", onPress: () => {
-          dispatch(removeCheckpointReducer(id))
-          dispatch(setNotification(`Rasti '${name}' poistettu`, "success"))
+          dispatch(removeCheckpointReducer(id, name))
         }
         }]
     )
