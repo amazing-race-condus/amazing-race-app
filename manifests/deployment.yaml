@@ -4,26 +4,30 @@ metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: "*"
     image.openshift.io/triggers: >-
-      [{"from":{"kind":"ImageStreamTag","name":"condus-frontend:latest","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"condus-frontend\")].image","pause":"false"}]
-  name: condus-frontend
+      [{"from":{"kind":"ImageStreamTag","name":"condus-amazing-race:latest","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"condus-amazing-race\")].image","pause":"false"}]
+  name: condus-amazing-race-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: condus-amazing-race-app
-      component: frontend
   template:
     metadata:
       labels:
         app: condus-amazing-race-app
-        component: frontend
     spec:
       containers:
-      - name: condus-frontend
-        image: condus-frontend:latest
+      - name: condus-amazing-race
+        image: condus-amazing-race:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: condus-db-secret
+              key: API_KEY
         resources:
           limits:
             cpu: 250m
@@ -34,7 +38,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 3000
           initialDelaySeconds: 30
           periodSeconds: 60
           timeoutSeconds: 5

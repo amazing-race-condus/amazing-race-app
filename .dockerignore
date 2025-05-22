@@ -1,0 +1,32 @@
+# general
+.vscode/
+.git/
+.github/
+README.md
+LICENSE
+*.md
+*.log
+
+## backend
+backend/node_modules/
+backend/dist/
+backend/tests/
+backend/.gitignore
+backend/jest.config.js
+backend/eslint.config.mjs
+backend/.env*
+backend/.git
+backend/coverage
+backend/public/
+
+## frontend
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/.gitignore
+frontend/eslint.config.mjs
+frontend/__tests__
+frontend/.env*
+frontend/coverage
+frontend/android
+frontend/ios

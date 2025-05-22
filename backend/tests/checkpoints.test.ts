@@ -8,7 +8,7 @@ describe("Get checkpoints", () => {
   })
 
   it("checkpoints are returned as json", async () => {
-    const response = await request(app).get("/checkpoints")
+    const response = await request(app).get("/api/checkpoints")
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
