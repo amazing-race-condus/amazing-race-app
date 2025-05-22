@@ -22,6 +22,8 @@ app.all("{*splat}", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/dist", "index.html"))
   }
 })
+app.use("/api/checkpoints", checkpointsRouter)
+app.use("/api/settings", settingsRouter)
 
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
