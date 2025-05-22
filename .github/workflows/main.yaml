@@ -43,3 +43,32 @@
       uses: ./.github/workflows/backend.yaml
       secrets:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    build-and-push-image:
+      if: github.ref == 'refs/heads/main'
+      needs: [paths-filter, frontend, backend]
+      runs-on: ubuntu-24.04
+      permissions:
+        contents: read
+        packages: write
+        attestations: write
+        id-token: write
+      steps:
+        - uses: actions/checkout@v4
+        - name: log in to ghcr
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Setup buildx
+          uses: docker/setup-buildx-action@v3
+        - name: Build and push
+          uses: docker/build-push-action@v6
+          with:
+            push: true
+            tags: |
+              ghcr.io/amazing-race-condus/condus-amazing-race:latest
+              ghcr.io/amazing-race-condus/condus-amazing-race:${{ github.sha }}
+            cache-from: type=registry,ref=ghcr.io/amazing-race-condus/condus-amazing-race:buildcache
+            cache-to: type=registry,ref=ghcr.io/amazing-race-condus/condus-amazing-race:buildcache,mode=max
