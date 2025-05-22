@@ -10,3 +10,4 @@ jest.config.js
 .git
 coverage
 *.log
+public

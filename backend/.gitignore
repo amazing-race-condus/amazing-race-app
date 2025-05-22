@@ -7,3 +7,5 @@ dist
 key.txt
 secret.yaml
 *.log
+
+public
