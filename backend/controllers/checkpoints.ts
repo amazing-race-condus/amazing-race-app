@@ -1,9 +1,6 @@
 import express, { Response, Request } from "express"
-import { PrismaClient } from "../prisma/prisma/"
+import { prisma } from "../src/index"
 const checkpointsRouter = express.Router()
-
-const prisma = new PrismaClient()
-
 
 checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
 
