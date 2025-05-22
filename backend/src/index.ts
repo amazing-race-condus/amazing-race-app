@@ -1,4 +1,4 @@
-import express, { Response } from "express"
+import express from "express"
 import { PrismaClient } from "../prisma/prisma/"
 import cors from "cors"
 import checkpointsRouter from "../controllers/checkpoints"
@@ -12,18 +12,10 @@ const port = 3000
 
 app.use("/checkpoints", checkpointsRouter)
 
-app.get("/", (_, res: Response) => {
-  res.send("Hello World!")
-})
-
-app.get("/ping", (_, res: Response) => {
-  res.send("Pongee!")
-})
-
 const server = app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+  console.log(`Example app listening on port ${port}`)
+})
 
 
 
-export { app, server, prisma };
+export { app, server, prisma }
