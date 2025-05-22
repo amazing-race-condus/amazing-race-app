@@ -46,23 +46,24 @@ const Checkpoints = () => {
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <View style={styles.content}>
-      <Stack.Screen options={{ headerShown: false }} />
-      <AppBar pageTitle='Rastit' />
-      <Notification />
-      <Text style={styles.title}>Rastit:</Text>
-      <FlatList
-        contentContainerStyle={styles.listcontainer}
-        data={checkpoints}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) =>
-          <CheckpointItem
-            name={item.name}
-            id={item.id}
-          />
-        }
-        keyExtractor={item => item.id}
-      />
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Notification />
+        <Text style={styles.title}>Rastit:</Text>
+        <FlatList
+          contentContainerStyle={styles.listcontainer}
+          data={checkpoints}
+          ItemSeparatorComponent={ItemSeparator}
+          renderItem={({ item }) =>
+            <CheckpointItem
+              name={item.name}
+              id={item.id}
+            />
+          }
+          keyExtractor={item => item.id}
+        />
+      </View>
     </View>
   )
 }
