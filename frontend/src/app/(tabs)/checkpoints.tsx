@@ -1,14 +1,14 @@
 import React, { useEffect } from "react"
-import { View, Text, FlatList, Pressable, Alert } from "react-native"
+import { View, Text, FlatList, TouchableOpacity } from "react-native"
 import { Link, Stack } from "expo-router"
 import { useDispatch, useSelector, Provider } from "react-redux"
 import store from "@/store/store"
 import { styles } from "@/styles/commonStyles"
+import { Entypo } from "@expo/vector-icons"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
 // eslint-disable-next-line no-duplicate-imports
 import type { RootState, AppDispatch } from "@/store/store"
 import Notification from "@/components/Notification"
-import { setNotification } from "@/reducers/responseSlice"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -18,25 +18,17 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
-  const handleRemoveCheckpoint = (id: string, name: string) => {
-    Alert.alert(
-      "Vahvista poisto",
-      "Oletko varma että haluat poistaa tämän rastin?",
-      [
-        { text: "Peru", style: "cancel" },
-        { text: "Poista", style: "destructive", onPress: () => {
-          dispatch(removeCheckpointReducer(id, name))
-        }
-        }]
-    )
-  }
-
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
-    <View style={styles.item}>
-      <Link style={styles.checkpointName} href={`/checkpoints/${id}`}>{name}</Link>
-      <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
+    <View>
+      <Link href={`/checkpoints/${id}`} asChild>
+        <TouchableOpacity style={styles.item}>
+          <Text style={styles.checkpointName}>{name}</Text>
+          <Entypo name="chevron-right" size={24} color="black" />
+        </TouchableOpacity>
+      </Link>
+      {/* <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
         <Text style={styles.buttonText}>Poista</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   )
 

@@ -20,7 +20,7 @@ const App = () => {
       />
       <Notification />
       <View style={styles.content}>
-        <Text style={styles.header}>Ryhmät</Text>
+        <Text style={styles.title}>Ryhmät</Text>
       </View>
     </View>
   )
