@@ -4,6 +4,6 @@ dist
 /prisma/prisma
 .env
 .env.test
-key.txt
-secret.yaml
 *.log
+
+public

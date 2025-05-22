@@ -19,8 +19,7 @@ const AddCheckpoint = () => {
       id: "0"
     }
 
-    dispatch(addCheckpoitReducer(newCheckpoint))
-    dispatch(setNotification(`Rasti '${name}' lisätty`))
+    dispatch(addCheckpoitReducer(newCheckpoint, name))
     setName("")
     router.navigate("/checkpoints")
   }

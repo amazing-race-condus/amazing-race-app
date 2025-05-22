@@ -7,10 +7,8 @@ import { styles } from "@/styles/commonStyles"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
 // eslint-disable-next-line no-duplicate-imports
 import type { RootState, AppDispatch } from "@/store/store"
-import AppBar from "@/components/AppBar"
 import Notification from "@/components/Notification"
 import { setNotification } from "@/reducers/responseSlice"
-import { getCheckpoint } from "@/services/checkpointService"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -27,8 +25,7 @@ const Checkpoints = () => {
       [
         { text: "Peru", style: "cancel" },
         { text: "Poista", style: "destructive", onPress: () => {
-          dispatch(removeCheckpointReducer(id))
-          dispatch(setNotification(`Rasti '${name}' poistettu`))
+          dispatch(removeCheckpointReducer(id, name))
         }
         }]
     )

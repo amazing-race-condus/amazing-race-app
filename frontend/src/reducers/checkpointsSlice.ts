@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
 import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
+import { setNotification } from "./responseSlice"
 
 export interface checkpointState {
     id : string,
@@ -31,17 +32,19 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const addCheckpoitReducer = (newObject: checkpointState) => async (dispatch: AppDispatch) => {
+export const addCheckpoitReducer = (newObject: checkpointState, name: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
     dispatch(appendCheckpoint(newCheckpoint))
+    dispatch(setNotification(`Rasti '${name}' lisätty`, "success"))
   } catch (error) {
     console.error("Failed to add checkpoint:", error)
+    dispatch(setNotification(`Rastia '${name}' ei voitu lisätä`, "error"))
   }
 }
 
 export const removeCheckpointReducer =
-  (id: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (id: string, name: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       await removeCheckpoint(id)
 
@@ -50,8 +53,10 @@ export const removeCheckpointReducer =
       const updated = current.filter((checkpoint) => checkpoint.id !== id)
 
       dispatch(setCheckpoints(updated))
+      dispatch(setNotification(`Rasti '${name}' poistettu`, "success"))
     } catch (error) {
       console.error("Failed to remove checkpoint:", error)
+      dispatch(setNotification(`Rastia ${name} ei voitu poistaa`, "error"))
     }
   }
 
