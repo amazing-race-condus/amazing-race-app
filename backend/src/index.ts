@@ -14,13 +14,14 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public/dist")))
 const port = 3000
 
+app.use("/api/checkpoints", checkpointsRouter)
+app.use("/api/settings", settingsRouter)
+
 app.all("{*splat}", (req, res) => {
   if (!req.path.startsWith("/api")) {
     res.sendFile(path.join(__dirname, "../public/dist", "index.html"))
   }
 })
-app.use("/api/checkpoints", checkpointsRouter)
-app.use("/api/settings", settingsRouter)
 
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
