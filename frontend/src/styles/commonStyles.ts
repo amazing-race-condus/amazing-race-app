@@ -1,9 +1,11 @@
 import { StyleSheet, Dimensions } from "react-native"
+import Constants from "expo-constants"
 
 const screenWidth = Dimensions.get("window").width
 
 export const styles = StyleSheet.create({
   container: {
+    paddingTop: Constants.statusBarHeight,
     flex: 1,
     backgroundColor: "#2d3f5c",
     alignItems: "center",
