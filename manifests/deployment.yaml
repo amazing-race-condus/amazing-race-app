@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"condus-amazing-race:latest","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"condus-amazing-race\")].image","pause":"false"}]
+  name: condus-amazing-race-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: condus-amazing-race-app
+  template:
+    metadata:
+      labels:
+        app: condus-amazing-race-app
+    spec:
+      containers:
+      - name: condus-amazing-race
+        image: condus-amazing-race:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: condus-db-secret
+              key: API_KEY
+        resources:
+          limits:
+            cpu: 250m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 3
