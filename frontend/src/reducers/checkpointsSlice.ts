@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
 import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
 import { setNotification } from "./responseSlice"
+import { AxiosError } from "axios"
+import { useRouter } from "expo-router"
 
 export interface checkpointState {
     id : string,
@@ -35,11 +37,17 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
 export const addCheckpoitReducer = (newObject: checkpointState, name: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
+    const router = useRouter()
     dispatch(appendCheckpoint(newCheckpoint))
     dispatch(setNotification(`Rasti '${name}' lisätty`, "success"))
+    router.navigate("/checkpoints")
   } catch (error) {
     console.error("Failed to add checkpoint:", error)
-    dispatch(setNotification(`Rastia '${name}' ei voitu lisätä`, "error"))
+    if (error instanceof AxiosError) {
+      dispatch(setNotification(
+        error.response?.data.error ?? `Rastia '${name}' ei voitu lisätä: ${error.message}`, "error"
+      ))
+    }
   }
 }
 

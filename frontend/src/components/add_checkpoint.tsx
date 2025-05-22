@@ -11,17 +11,15 @@ import { setNotification } from "@/reducers/responseSlice"
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [name, setName] = useState("")
-  const router = useRouter()
 
   const checkpointCreation = async () => {
     const newCheckpoint: Checkpoint = {
       name: name,
       id: "0"
     }
-
     dispatch(addCheckpoitReducer(newCheckpoint, name))
     setName("")
-    router.navigate("/checkpoints")
+
   }
 
   return (

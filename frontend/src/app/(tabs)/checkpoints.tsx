@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { View, Text, FlatList, TouchableOpacity } from "react-native"
+import { View, Text, FlatList, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
 import { Link, Stack } from "expo-router"
 import { useDispatch, useSelector, Provider } from "react-redux"
 import store from "@/store/store"
@@ -18,6 +18,30 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
+  const handleRemoveCheckpoint = (id: string, name: string) => {
+    if (Platform.OS === "web") {
+      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän rastin?")
+      if (confirmed) {
+        dispatch(removeCheckpointReducer(id, name))
+      }
+    } else {
+      Alert.alert(
+        "Vahvista poisto",
+        "Oletko varma että haluat poistaa tämän rastin?",
+        [
+          { text: "Peru", style: "cancel" },
+          {
+            text: "Poista",
+            style: "destructive",
+            onPress: () => {
+              dispatch(removeCheckpointReducer(id, name))
+            }
+          }
+        ]
+      )
+    }
+  }
+  
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View>
       <Link href={`/checkpoints/${id}`} asChild>
