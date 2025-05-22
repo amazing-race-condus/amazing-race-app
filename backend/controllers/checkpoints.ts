@@ -52,6 +52,14 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
+  const existingStart = await prisma.checkpoint.findFirst({
+    where: { name: body.name }
+  })
+  if (existingStart) {
+    res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi" })
+    return
+  }
+
   if (body.type) {
     if (!Object.values(Type).includes(body.type)) {
       res.status(400).json({ error: "Virheellinen tyyppi." })
