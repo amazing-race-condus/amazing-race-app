@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable, Alert } from "react-native"
+import { View, Text, FlatList, Pressable, Alert, Platform } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector, Provider } from "react-redux"
 import { useEffect } from "react"
@@ -14,16 +14,27 @@ const CheckpointSettings = () => {
   }, [])
 
   const handleRemoveCheckpoint = (id: string, name: string) => {
-    Alert.alert(
-      "Vahvista poisto",
-      "Oletko varma että haluat poistaa tämän rastin?",
-      [
-        { text: "Peru", style: "cancel" },
-        { text: "Poista", style: "destructive", onPress: () => {
-          dispatch(removeCheckpointReducer(id, name))
-        }
-        }]
-    )
+    if (Platform.OS === "web") {
+      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän rastin?")
+      if (confirmed) {
+        dispatch(removeCheckpointReducer(id, name))
+      }
+    } else {
+      Alert.alert(
+        "Vahvista poisto",
+        "Oletko varma että haluat poistaa tämän rastin?",
+        [
+          { text: "Peru", style: "cancel" },
+          {
+            text: "Poista",
+            style: "destructive",
+            onPress: () => {
+              dispatch(removeCheckpointReducer(id, name))
+            }
+          }
+        ]
+      )
+    }
   }
 
   const ItemSeparator = () => <View style={styles.separator} />
