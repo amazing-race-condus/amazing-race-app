@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: condus-amazing-race-is
+  name: condus-amazing-race
   labels:
     app: condus-amazing-race-app
 spec:
