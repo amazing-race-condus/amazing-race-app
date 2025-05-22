@@ -7,8 +7,6 @@ import React, { useState } from "react"
 import { Checkpoint } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
 import { setNotification } from "@/reducers/responseSlice"
-import AppBar from "@/components/AppBar"
-import Notification from "@/components/Notification"
 
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -32,8 +30,6 @@ const AddCheckpoint = () => {
       <Stack.Screen
         options={{ headerShown: false }}
       />
-      <AppBar pageTitle="Lisää rasti" />
-      <Notification />
       <Text style={styles.header}>Lisää rasti:</Text>
       <Text style={styles.breadText}>Rastin nimi: </Text><TextInput
         style={styles.inputField}
