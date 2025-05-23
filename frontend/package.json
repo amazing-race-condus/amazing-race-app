@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
+    "@gorhom/bottom-sheet": "^5.1.4",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.9.0",
     "expo": "~53.0.9",
@@ -26,7 +27,9 @@
     "react-native-screens": "~4.10.0",
     "react-native-web": "^0.20.0",
     "react-redux": "^9.2.0",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-gesture-handler": "~2.24.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

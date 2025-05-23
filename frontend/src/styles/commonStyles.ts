@@ -19,7 +19,6 @@ export const styles = StyleSheet.create({
     color: theme.colors.textTitle,
   },
   content: {
-    backgroundColor: theme.colors.background,
     flex: 0,
     alignItems: "center",
     justifyContent: "flex-start",

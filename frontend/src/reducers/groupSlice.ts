@@ -3,7 +3,6 @@ import type { AppDispatch, RootState } from "@/store/store"
 import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
-import { useRouter } from "expo-router"
 
 export interface groupState {
     id : string,
@@ -46,10 +45,8 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
 export const addGroupReducer = (newObject: groupState, name: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createGroup(newObject)
-    const router = useRouter()
     dispatch(appendGroup(newCheckpoint))
     dispatch(setNotification(`Ryhmä '${name}' lisätty`, "success"))
-    router.navigate("/")
   } catch (error) {
     console.error("Failed to add Group:", error)
     if (error instanceof AxiosError) {
