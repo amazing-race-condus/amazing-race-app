@@ -7,7 +7,8 @@ import { useRouter } from "expo-router"
 
 export interface checkpointState {
     id : string,
-    name : string
+    name : string,
+    type: string
 }
 
 const initialState: checkpointState[] = []
