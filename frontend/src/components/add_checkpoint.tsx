@@ -32,23 +32,23 @@ const AddCheckpoint = () => {
       />
       <Text style={styles.header}>Lisää rasti:</Text>
       <View style={styles.formContainer}>
-        <Text style={styles.breadText}>Rastin nimi: </Text><TextInput
+        <Text style={styles.formText}>Rastin nimi: </Text><TextInput
           style={styles.inputField}
           value={name}
           onChangeText={setName}
         />
-        <Text style={[styles.breadText, { marginTop: 16 }]}>Rastin tyyppi:</Text>
+        <Text style={styles.formText}>Rastin tyyppi:</Text>
         <RadioButton.Group onValueChange={value => setType(value)} value={type}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginTop: 8 }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={styles.radiobuttonGroup}>
+            <View style={styles.radiobuttonItem}>
               <RadioButton value="START" />
               <Text>Lähtö</Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.radiobuttonItem}>
               <RadioButton value="INTERMEDIATE" />
               <Text>Välirasti</Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.radiobuttonItem}>
               <RadioButton value="FINISH" />
               <Text>Maali</Text>
             </View>
