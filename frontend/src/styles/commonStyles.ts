@@ -20,10 +20,9 @@ export const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: theme.colors.background,
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingBottom: 50
   },
   inputField: {
     borderWidth: 1,
