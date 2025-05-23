@@ -3,24 +3,38 @@ import axios, { AxiosError } from "axios"
 import { useDispatch, Provider } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import store, { AppDispatch } from "@/store/store"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/responseSlice"
 
 const RouteMinMax = () => {
-  const [minimum, setMinimum] = useState("")
-  const [maximum, setMaximum] = useState("")
-  const dispatch = useDispatch<AppDispatch>()
   const url =
       Platform.OS === "web"
         ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
         : process.env.EXPO_PUBLIC_BACKEND_URL
 
-  
+  const eventId = 2
+  const [minimum, setMinimum] = useState("")
+  const [maximum, setMaximum] = useState("")
+  const dispatch = useDispatch<AppDispatch>()
+
+  const getInitialLimits = async () => {
+    const response = await axios.get(`${url}/settings/${eventId}/limits`)
+    const initialLimits = response.data
+    if (initialLimits) {
+      setMinimum(initialLimits.min_route_time.toString())
+      setMaximum(initialLimits.max_route_time.toString())
+    }
+  }
+
+  useEffect(() => {
+    getInitialLimits()
+  }, [])
+
   const updateLimit = async (limit: RouteLimit) => {
     try {
       const response = await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
-      return response
+      dispatch(setNotification(`Minimi- ja maksimiajat päivitetty.`, "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
@@ -29,9 +43,10 @@ const RouteMinMax = () => {
       }
     }
   }
+  
   const updateRouteMinMax = () => {
     const data = {
-      "id": 1,
+      "id": eventId,
       "min_route_time": Number(minimum),
       "max_route_time": Number(maximum)
     }
@@ -63,10 +78,4 @@ const RouteMinMax = () => {
   )
 }
 
-const RouteMinMaxProvider = () => (
-  <Provider store={store}>
-    <RouteMinMax />
-  </Provider>
-)
-
-export default RouteMinMaxProvider
+export default RouteMinMax

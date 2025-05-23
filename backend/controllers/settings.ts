@@ -24,7 +24,7 @@ settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
   const event_id = Number(req.params.event_id)
 
   const event = await prisma.event.findUnique({ select: { max_route_time : true, min_route_time: true }, where: {id: event_id }})
-
+  console.log(event)
   res.send(event)
 })
 
