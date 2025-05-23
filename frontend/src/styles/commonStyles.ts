@@ -28,15 +28,15 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 10,
-    width: Math.min(screenWidth * 0.9, 355),
+    width: Math.min(screenWidth * 0.8, 355),
     paddingVertical: 7,
     marginBottom:10,
-    color: theme.colors.inputField,
+    color: "black",
     backgroundColor: "white",
   },
   button: {
     height: 30,
-    width: Math.min(screenWidth * 0.9, 355),
+    width: Math.min(screenWidth * 0.8, 355),
     backgroundColor: theme.colors.button,
     borderRadius: 8,
     justifyContent: "center",
@@ -134,8 +134,7 @@ export const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    marginVertical: 20,
+    shadowRadius: 4
   },
   radiobuttonGroup: {
     flexDirection: "row",
