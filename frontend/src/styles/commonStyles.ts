@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: theme.colors.background,
-    flexGrow: 1,
+    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
   },
