@@ -50,7 +50,7 @@ const CheckpointSettings = () => {
 
   return (
     <View style={styles.content}>
-      <Text style={styles.header}>Rastit:</Text>
+      <Text style={styles.header}>Hallinnoi rasteja:</Text>
       <FlatList
         contentContainerStyle={styles.listcontainer}
         data={checkpoints}
