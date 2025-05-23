@@ -35,7 +35,7 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const addCheckpoitReducer = (newObject: checkpointState, name: string) => async (dispatch: AppDispatch) => {
+export const addCheckpoitReducer = (newObject: checkpointState, name: string, type: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
     const router = useRouter()

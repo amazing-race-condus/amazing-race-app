@@ -20,8 +20,7 @@ const AddCheckpoint = () => {
       type: type,
       id: "0"
     }
-    console.log("n1, newCheckpoint", newCheckpoint)
-    dispatch(addCheckpoitReducer(newCheckpoint, name))
+    dispatch(addCheckpoitReducer(newCheckpoint, name, type))
     setName("")
 
   }
