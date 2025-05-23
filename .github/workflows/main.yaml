@@ -45,7 +45,15 @@
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     build-and-push-image:
-      if: github.ref == 'refs/heads/main'
+      if: |
+        always()
+        && (
+          (needs.paths-filter.outputs.frontend == 'true' ||
+          needs.paths-filter.outputs.backend == 'true') &&
+          (needs.frontend.result == 'success' || needs.frontend.result == 'skipped') &&
+          (needs.backend.result == 'success' || needs.backend.result == 'skipped')
+        )
+        && github.ref == 'refs/heads/main'
       needs: [paths-filter, frontend, backend]
       runs-on: ubuntu-24.04
       permissions:
