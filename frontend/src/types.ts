@@ -1,6 +1,7 @@
 export interface Checkpoint {
     id: string,
-    name: string
+    name: string,
+    type: string
 }
 
 export type NotificationState = {
