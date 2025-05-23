@@ -1,8 +1,8 @@
 import { View, Text, FlatList, Pressable, Alert } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector, Provider } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
-import store, { RootState, AppDispatch } from "@/store/store"
+import { RootState, AppDispatch } from "@/store/store"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
 
 const CheckpointSettings = () => {
@@ -56,10 +56,4 @@ const CheckpointSettings = () => {
   )
 }
 
-const CheckpointSettingsProvider = () => (
-  <Provider store={store}>
-    <CheckpointSettings />
-  </Provider>
-)
-
-export default CheckpointSettingsProvider
+export default CheckpointSettings

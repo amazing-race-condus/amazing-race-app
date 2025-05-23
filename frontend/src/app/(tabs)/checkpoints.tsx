@@ -1,12 +1,10 @@
 import React, { useEffect } from "react"
-import { View, Text, FlatList, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
+import { View, Text, FlatList, Alert, Platform, TouchableOpacity } from "react-native"
 import { Link, Stack } from "expo-router"
-import { useDispatch, useSelector, Provider } from "react-redux"
-import store from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { Entypo } from "@expo/vector-icons"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
-// eslint-disable-next-line no-duplicate-imports
 import type { RootState, AppDispatch } from "@/store/store"
 import Notification from "@/components/Notification"
 
@@ -41,7 +39,7 @@ const Checkpoints = () => {
       )
     }
   }
-  
+
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
     <View>
       <Link href={`/checkpoints/${id}`} asChild>
@@ -81,10 +79,4 @@ const Checkpoints = () => {
   )
 }
 
-const CheckpointProvider = () => (
-  <Provider store={store}>
-    <Checkpoints />
-  </Provider>
-)
-
-export default CheckpointProvider
+export default Checkpoints
