@@ -49,7 +49,7 @@ export const addGroupReducer = (newObject: groupState, name: string) => async (d
     const router = useRouter()
     dispatch(appendGroup(newCheckpoint))
     dispatch(setNotification(`Ryhmä '${name}' lisätty`, "success"))
-    router.navigate("/checkpoints")
+    router.navigate("/")
   } catch (error) {
     console.error("Failed to add Group:", error)
     if (error instanceof AxiosError) {
@@ -66,8 +66,8 @@ export const removeGroupReducer =
       await removeGroup(id)
 
       // get current state
-      const current = getState().checkpoints
-      const updated = current.filter((checkpoint) => checkpoint.id !== id)
+      const current = getState().groups
+      const updated = current.filter((groups) => groups.id !== id)
 
       dispatch(setGroups(updated))
       dispatch(setNotification(`Ryhmä '${name}' poistettu`, "success"))
@@ -75,7 +75,7 @@ export const removeGroupReducer =
       console.error("Failed to remove checkpoint:", error)
       dispatch(setNotification(`Ryhmää ${name} ei voitu poistaa`, "error"))
     }
-}
+  }
 
 export const { setGroups , appendGroup } = groupSlice.actions
 export default groupSlice.reducer
