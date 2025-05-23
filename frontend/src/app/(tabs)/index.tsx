@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Text, View, Platform, FlatList, TouchableOpacity } from "react-native"
+import { Text, View, FlatList, TouchableOpacity } from "react-native"
 import { Provider, useDispatch, useSelector } from "react-redux"
 import { Link, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
@@ -7,18 +7,13 @@ import store, { AppDispatch, RootState} from "@/store/store"
 import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
 
-const url =
-  Platform.OS === "web"
-    ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
-    : process.env.EXPO_PUBLIC_BACKEND_URL
-
 const App = () => {
-  //const dispatch: AppDispatch = useDispatch<AppDispatch>()
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const groups = useSelector((state: RootState) => state.groups)
 
-  // useEffect(() => {
-  //   dispatch(fetchGroups())
-  // }, [])
+  useEffect(() => {
+    dispatch(fetchGroups())
+  }, [])
 
   const ItemSeparator = () => <View style={styles.separator} />
 
