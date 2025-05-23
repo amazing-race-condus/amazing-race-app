@@ -53,7 +53,6 @@ const AddCheckpoint = () => {
           </View>
         </View>
       </RadioButton.Group>
-      <br />
       <Pressable style={styles.button} onPress={() => { checkpointCreation() }}>
         <Text style={styles.buttonText}>Lisää</Text>
       </Pressable>
