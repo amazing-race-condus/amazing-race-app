@@ -1,8 +1,8 @@
 import { View, Text, TextInput, Pressable, Platform } from "react-native"
 import axios, { AxiosError } from "axios"
-import { useDispatch, Provider } from "react-redux"
+import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
-import store, { AppDispatch } from "@/store/store"
+import { AppDispatch } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/responseSlice"
@@ -33,8 +33,8 @@ const RouteMinMax = () => {
 
   const updateLimit = async (limit: RouteLimit) => {
     try {
-      const response = await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
-      dispatch(setNotification(`Minimi- ja maksimiajat päivitetty.`, "success"))
+      await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
+      dispatch(setNotification("Minimi- ja maksimiajat päivitetty.", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
@@ -43,7 +43,7 @@ const RouteMinMax = () => {
       }
     }
   }
-  
+
   const updateRouteMinMax = () => {
     const data = {
       "id": eventId,
@@ -56,7 +56,7 @@ const RouteMinMax = () => {
   return (
     <View style={{flex:1}}>
       <Text style={styles.breadText}>Reittien minimiaika:</Text>
-      <TextInput 
+      <TextInput
         style={styles.inputField}
         value={minimum}
         keyboardType="numeric"
@@ -64,7 +64,7 @@ const RouteMinMax = () => {
         maxLength={4}
       />
       <Text style={styles.breadText}>Reittien maksimiaika:</Text>
-      <TextInput 
+      <TextInput
         style={styles.inputField}
         value={maximum}
         keyboardType="numeric"
