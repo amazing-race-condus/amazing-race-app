@@ -1,7 +1,7 @@
 import { View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import store, { RootState } from "@/store/store"
-import { Provider, useSelector } from "react-redux"
+import { RootState } from "@/store/store"
+import { useSelector } from "react-redux"
 
 const Notification = () => {
   const { message, type } = useSelector((state: RootState) => state.message)
@@ -18,10 +18,4 @@ const Notification = () => {
   )
 }
 
-const NotificationProvider = () => (
-  <Provider store={store}>
-    <Notification />
-  </Provider>
-)
-
-export default NotificationProvider
+export default Notification

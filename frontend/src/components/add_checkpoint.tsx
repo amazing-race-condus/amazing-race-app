@@ -1,12 +1,11 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { useDispatch, Provider, useSelector } from "react-redux"
-import store, { AppDispatch } from "@/store/store"
-import { Stack, useRouter } from "expo-router"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "@/store/store"
+import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
 import { Checkpoint } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
-import { setNotification } from "@/reducers/responseSlice"
 
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -40,10 +39,4 @@ const AddCheckpoint = () => {
   )
 }
 
-const AddCheckpointProvider = () => (
-  <Provider store={store}>
-    <AddCheckpoint />
-  </Provider>
-)
-
-export default AddCheckpointProvider
+export default AddCheckpoint

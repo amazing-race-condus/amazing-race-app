@@ -1,9 +1,9 @@
 import React, { useEffect } from "react"
 import { Text, View, FlatList, TouchableOpacity } from "react-native"
-import { Provider, useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link, Stack } from "expo-router"
+import { AppDispatch, RootState} from "@/store/store"
 import { styles } from "@/styles/commonStyles"
-import store, { AppDispatch, RootState} from "@/store/store"
 import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
 
@@ -61,10 +61,4 @@ const App = () => {
   )
 }
 
-const AppProvider = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
-
-export default AppProvider
+export default App
