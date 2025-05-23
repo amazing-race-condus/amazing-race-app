@@ -74,9 +74,8 @@ export const styles = StyleSheet.create({
     height: 5,
   },
   listcontainer: {
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
+    justifyContent: "flex-start"
   },
   checkpointName: {
     fontSize: theme.fontSizes.listItem,
