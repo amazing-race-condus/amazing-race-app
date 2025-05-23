@@ -48,7 +48,7 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
   const event_id = req.body.id
   const new_min_route_time = req.body.min_route_time
   const new_max_route_time = req.body.max_route_time
-  
+
   if (!validateMinAndMax(new_min_route_time, new_max_route_time, res)) {
     return
   } else {
@@ -56,7 +56,7 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
       where: {id: event_id},
       data: {min_route_time: new_min_route_time, max_route_time: new_max_route_time}
     })
-    res.send(updatedEvent) 
+    res.send(updatedEvent)
   }
 })
 
