@@ -1,0 +1,81 @@
+import { View, Text, TextInput, Pressable, Platform } from "react-native"
+import axios, { AxiosError } from "axios"
+import { useDispatch } from "react-redux"
+import { styles } from "@/styles/commonStyles"
+import { AppDispatch } from "@/store/store"
+import { useState, useEffect } from "react"
+import { RouteLimit } from "@/types"
+import { setNotification } from "@/reducers/responseSlice"
+
+const RouteMinMax = () => {
+  const url =
+      Platform.OS === "web"
+        ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
+        : process.env.EXPO_PUBLIC_BACKEND_URL
+
+  const eventId = 2
+  const [minimum, setMinimum] = useState("")
+  const [maximum, setMaximum] = useState("")
+  const dispatch = useDispatch<AppDispatch>()
+
+  const getInitialLimits = async () => {
+    const response = await axios.get(`${url}/settings/${eventId}/limits`)
+    const initialLimits = response.data
+    if (initialLimits) {
+      setMinimum(initialLimits.min_route_time.toString())
+      setMaximum(initialLimits.max_route_time.toString())
+    }
+  }
+
+  useEffect(() => {
+    getInitialLimits()
+  }, [])
+
+  const updateLimit = async (limit: RouteLimit) => {
+    try {
+      await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
+      dispatch(setNotification("Minimi- ja maksimiajat päivitetty.", "success"))
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        dispatch(setNotification(
+          error.response?.data.error ?? `Reittien minimi- ja maksimiaikoja ei voitu muuttaa: ${error.message}`, "error"
+        ))
+      }
+    }
+  }
+
+  const updateRouteMinMax = () => {
+    const data = {
+      "id": eventId,
+      "min_route_time": Number(minimum),
+      "max_route_time": Number(maximum)
+    }
+    updateLimit(data)
+  }
+
+  return (
+    <View style={{flex:1}}>
+      <Text style={styles.breadText}>Reittien minimiaika:</Text>
+      <TextInput
+        style={styles.inputField}
+        value={minimum}
+        keyboardType="numeric"
+        onChangeText={setMinimum}
+        maxLength={4}
+      />
+      <Text style={styles.breadText}>Reittien maksimiaika:</Text>
+      <TextInput
+        style={styles.inputField}
+        value={maximum}
+        keyboardType="numeric"
+        onChangeText={setMaximum}
+        maxLength={4}
+      />
+      <Pressable style={styles.button} onPress={() => { updateRouteMinMax() }}>
+        <Text style={styles.buttonText}>Aseta</Text>
+      </Pressable>
+    </View>
+  )
+}
+
+export default RouteMinMax

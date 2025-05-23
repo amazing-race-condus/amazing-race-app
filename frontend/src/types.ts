@@ -4,6 +4,12 @@ export interface Checkpoint {
     type: string
 }
 
+export interface RouteLimit {
+    id: number,
+    min_route_time: number,
+    max_route_time: number
+}
+
 export type NotificationState = {
     message: string,
     type: "error" | "success" | null
