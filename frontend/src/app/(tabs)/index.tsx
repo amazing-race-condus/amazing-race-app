@@ -1,8 +1,6 @@
 import { Text, View, Platform } from "react-native"
-import { Provider } from "react-redux"
-import { Link, Stack } from "expo-router"
+import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import store from "@/store/store"
 import Notification from "@/components/Notification"
 
 const url =
@@ -26,10 +24,4 @@ const App = () => {
   )
 }
 
-const AppProvider = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
-
-export default AppProvider
+export default App
