@@ -1,4 +1,5 @@
 import { View, Text, TextInput, Pressable, Platform } from "react-native"
+import { Stack } from "expo-router"
 import axios, { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
@@ -54,26 +55,32 @@ const RouteMinMax = () => {
   }
 
   return (
-    <View style={{flex:1}}>
-      <Text style={styles.breadText}>Reittien minimiaika:</Text>
-      <TextInput
-        style={styles.inputField}
-        value={minimum}
-        keyboardType="numeric"
-        onChangeText={setMinimum}
-        maxLength={4}
+    <View style={styles.content}>
+      <Stack.Screen
+        options={{ headerShown: false }}
       />
-      <Text style={styles.breadText}>Reittien maksimiaika:</Text>
-      <TextInput
-        style={styles.inputField}
-        value={maximum}
-        keyboardType="numeric"
-        onChangeText={setMaximum}
-        maxLength={4}
-      />
-      <Pressable style={styles.button} onPress={() => { updateRouteMinMax() }}>
-        <Text style={styles.buttonText}>Aseta</Text>
-      </Pressable>
+      <Text style={styles.header}>Hallinnoi reittejä:</Text>
+      <View style={styles.formContainer}>
+        <Text style={styles.formText}>Reittien minimiaika:</Text>
+        <TextInput
+          style={styles.inputField}
+          value={minimum}
+          keyboardType="numeric"
+          onChangeText={setMinimum}
+          maxLength={4}
+        />
+        <Text style={styles.formText}>Reittien maksimiaika:</Text>
+        <TextInput
+          style={styles.inputField}
+          value={maximum}
+          keyboardType="numeric"
+          onChangeText={setMaximum}
+          maxLength={4}
+        />
+        <Pressable style={styles.button} onPress={() => { updateRouteMinMax() }}>
+          <Text style={styles.buttonText}>Aseta</Text>
+        </Pressable>
+      </View>
     </View>
   )
 }
