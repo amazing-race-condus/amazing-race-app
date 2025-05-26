@@ -36,4 +36,4 @@ describe("Get checkpoints", () => {
     const response = await request(app).get("/api/checkpoints");
     expect(response.body.length).toBe(initialCheckpoints.length);
   });
-});
+})
