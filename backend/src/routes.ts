@@ -13,30 +13,30 @@ interface Distances {
   [start:number]: {[end:number]: number}
 }
 
-export const route_distance = (route: number[], distances: Distances): number => {
-  const array_length = route.length;
+export const routeDistance = (route: number[], distances: Distances): number => {
+  const arrayLength = route.length;
 
   // Start to checkpoint 1.
-  let current_distance = distances[0][route[0]];
+  let currentDistance = distances[0][route[0]];
 
-  for (let i = 0; i < array_length - 1; i++) {
-    current_distance += distances[route[i]][route[i+1]];
+  for (let i = 0; i < arrayLength - 1; i++) {
+    currentDistance += distances[route[i]][route[i+1]];
   }
 
   // Checkpoint n to finish.
-  current_distance += distances[route[array_length-1]][array_length+1];
-  return current_distance;
+  currentDistance += distances[route[arrayLength-1]][arrayLength+1];
+  return currentDistance;
 }
 
 // Verifies that the route length is within specified bounds.
-const verify_route = (permutation: number[], distances: Distances, min: number, max: number): boolean => {
-  const distance = route_distance(permutation, distances);
+const verifyRoute = (permutation: number[], distances: Distances, min: number, max: number): boolean => {
+  const distance = routeDistance(permutation, distances);
   return distance >= min && distance <= max;
 }
 
-export const get_valid_routes = (checkpoints: number[], distances: Distances, min: number, max: number): number[][] => {
-  const permutations = [...new Permutation(checkpoints)];
+export const getValidRoutes = (checkpoints: number[], distances: Distances, min: number, max: number): number[][] => {
+  const permutations = [...new Permutation(checkpoints, 4)];
   return permutations.filter((permutation) => {
-    return verify_route(permutation, distances, min, max);
+    return verifyRoute(permutation, distances, min, max);
   });
 };
