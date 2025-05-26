@@ -7,6 +7,7 @@ import { Entypo } from "@expo/vector-icons"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import type { RootState, AppDispatch } from "@/store/store"
 import Notification from "@/components/Notification"
+import { getType } from "@/utils/typeUtils"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -16,19 +17,28 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
-  const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
-    <View>
-      <Link href={`/checkpoints/${id}`} asChild>
-        <TouchableOpacity style={styles.item}>
-          <Text style={styles.checkpointName}>{name}</Text>
-          <Entypo name="chevron-right" size={24} color="black" />
-        </TouchableOpacity>
-      </Link>
-      {/* <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
+  const CheckpointItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
+    const translatedType = getType(type)
+    return (
+
+      <View>
+        <Link href={`/checkpoints/${id}`} asChild>
+          <TouchableOpacity style={styles.item}>
+            <Text style={styles.checkpointName}>
+              {name}
+              {translatedType !== "" && (
+                <Text style={styles.checkpointType}> {translatedType}</Text>
+              )}
+            </Text>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
+        {/* <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
         <Text style={styles.buttonText}>Poista</Text>
       </Pressable> */}
-    </View>
-  )
+      </View>
+    )
+  }
 
   const ItemSeparator = () => <View style={styles.separator} />
 
@@ -45,6 +55,7 @@ const Checkpoints = () => {
           renderItem={({ item }) =>
             <CheckpointItem
               name={item.name}
+              type={item.type}
               id={item.id}
             />
           }

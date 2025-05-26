@@ -7,3 +7,5 @@ dist
 *.log
 
 public
+
+coverage
