@@ -20,23 +20,23 @@ export const styles = StyleSheet.create({
   },
   content: {
     // backgroundColor: "red",
-    flex: 0,
+    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingBottom: 50
   },
   inputField: {
     borderWidth: 1,
-    borderColor: "white",
+    borderColor: "black",
     borderRadius: 10,
-    width: Math.min(screenWidth * 0.9, 355),
+    width: Math.min(screenWidth * 0.8, 355),
     paddingVertical: 7,
     marginBottom:10,
-    color: theme.colors.inputField,
+    color: theme.colors.textInput,
+    backgroundColor: "white",
   },
   button: {
     height: 30,
-    width: Math.min(screenWidth * 0.9, 355),
+    width: Math.min(screenWidth * 0.8, 355),
     backgroundColor: theme.colors.button,
     borderRadius: 8,
     justifyContent: "center",
@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: theme.colors.listItemBackground,
     width: Math.min(screenWidth * 0.9, 320),
+    borderRadius: 12,
   },
   title: {
     fontSize: 35,
@@ -73,9 +74,8 @@ export const styles = StyleSheet.create({
     height: 5,
   },
   listcontainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%"
+    width: "100%",
+    justifyContent: "flex-start"
   },
   checkpointName: {
     fontSize: theme.fontSizes.listItem,
@@ -88,6 +88,10 @@ export const styles = StyleSheet.create({
   },
   breadText: {
     color: theme.colors.textBread,
+  },
+  formText: {
+    color: theme.colors.background,
+    fontWeight: "bold",
   },
   notification: {
     backgroundColor: theme.colors.notificationBackground,
@@ -121,5 +125,25 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+  },
+  formContainer: {
+    backgroundColor: theme.colors.listItemBackground,
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  radiobuttonGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginTop: 8,
+  },
+  radiobuttonItem: {
+    flexDirection: "row",
+    alignItems: "center"
   },
 })

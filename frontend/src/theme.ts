@@ -4,6 +4,7 @@ const theme = {
     textTitle: "#FFCC00",
     textBread: "#FFF",
     textButton: "#FFF",
+    textInput: "000",
     inputField: "#FFF",
     listItemBackground: "#CEDDF0",
     notificationBackground: "#1C4F10",

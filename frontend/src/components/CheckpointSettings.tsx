@@ -50,19 +50,15 @@ const CheckpointSettings = () => {
 
   return (
     <View style={styles.content}>
-      <Text style={styles.header}>Rastit:</Text>
-      <FlatList
-        contentContainerStyle={styles.listcontainer}
-        data={checkpoints}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) =>
-          <CheckpointSettingsItem
-            name={item.name}
-            id={item.id}
-          />
-        }
-        keyExtractor={item => item.id}
-      />
+      <Text style={styles.header}>Hallinnoi rasteja:</Text>
+      <View style={styles.listcontainer}>
+        {checkpoints.map((item, index) => (
+          <View key={item.id}>
+            <CheckpointSettingsItem name={item.name} id={item.id} />
+            {index < checkpoints.length - 1 && <ItemSeparator />}
+          </View>
+        ))}
+      </View>
     </View>
   )
 }
