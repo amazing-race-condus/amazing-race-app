@@ -37,7 +37,7 @@ const AddNew = () => {
     }
   }
 
-  const handleBAck = () => {
+  const handleBack = () => {
     if (Platform.OS !== "ios") {
       router.navigate("/")
     } else {
@@ -51,7 +51,7 @@ const AddNew = () => {
         index={0}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        onClose={handleBAck}
+        onClose={handleBack}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
@@ -87,7 +87,7 @@ const AddNew = () => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Add Group</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
           </Pressable>
         </BottomSheetView>
       </BottomSheet>
