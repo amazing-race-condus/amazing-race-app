@@ -1,8 +1,7 @@
-import BottomSheet, { BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
-import { Text, Pressable, View } from "react-native"
-
+import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
+import { Text, Pressable, Keyboard, View, Platform } from "react-native"
 import { useEffect, useRef, useState } from "react"
-import { Stack, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
@@ -10,13 +9,17 @@ import { addGroupReducer } from "@/reducers/groupSlice"
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
-  const [groupname, setGroupname] = useState("")
   const router = useRouter()
 
+  const [groupname, setGroupname] = useState("")
+
   useEffect(() => {
-    setTimeout(() => {
-      bottomSheetRef.current?.expand()
-    }, 100)
+    if (Platform.OS !== "web") {
+      const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+        bottomSheetRef.current?.close()
+      })
+      return () => keyboardHideListener.remove()
+    }
   }, [])
 
   const addNewGroup = async () => {
@@ -29,42 +32,46 @@ const AddNew = () => {
 
       dispatch(addGroupReducer(newGroup, groupname))
       setGroupname("")
+      Keyboard.dismiss()
       bottomSheetRef.current?.close()
     }
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
       <BottomSheet
         index={0}
-        snapPoints={["35%"]}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        keyboardBehavior="fillParent"
-        keyboardBlurBehavior="restore"
-        android_keyboardInputMode="adjustResize"
-        onClose={() => router.navigate("/")}
+        onClose={() => router.back()}
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            opacity={0.5}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+          />
+        )}
       >
         <BottomSheetView style={{ flex: 1, padding: 16 }}>
           <BottomSheetTextInput
             onChangeText={setGroupname}
             value={groupname}
-            placeholder="Enter group name"
+            placeholder="Syötä ryhmän nimi"
             style={{
               borderWidth: 1,
-              borderColor: "#ccc",
+              borderColor: "silver",
               borderRadius: 8,
               padding: 12,
               marginBottom: 16,
             }}
+            returnKeyType="done"
+            onSubmitEditing={addNewGroup}
+            autoFocus
           />
           <Pressable
-            onPress={() => addNewGroup()}
+            onPress={addNewGroup}
             style={{
               backgroundColor: "orange",
               padding: 12,

@@ -1,15 +1,18 @@
 import { Stack } from "expo-router"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 
-export default function RootLayout() {
+export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: true }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Stack.Screen
-          name="(groups)/addNew"
+          name="addNew"
           options={{
-            presentation: "transparaentModal",
-            headerShown: false,
+            presentation: "transparentModal",
             animation: "none",
           }}
         />

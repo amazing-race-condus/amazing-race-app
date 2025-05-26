@@ -1,21 +1,29 @@
-import { useEffect } from "react"
-import { Text, View, FlatList, TouchableOpacity, Pressable } from "react-native"
+import { useCallback, useState } from "react"
+import { Text, View, FlatList, TouchableOpacity } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import { Link, Stack } from "expo-router"
+import { Link, Stack, useFocusEffect } from "expo-router"
 import { AppDispatch, RootState} from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
-import { fetchGroups, removeGroupReducer } from "@/reducers/groupSlice"
+import { fetchGroups } from "@/reducers/groupSlice"
 import Search from "@/components/Search"
 import AddNewButton from "@/components/addGroupButton"
 
 const App = () => {
+  const [search, setSearch] = useState<string>("")
+
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const groups = useSelector((state: RootState) => state.groups)
 
-  useEffect(() => {
-    dispatch(fetchGroups())
-  }, [])
+  const filteredGroups = groups.filter(
+    item => item.name.toLowerCase().startsWith(search.toLocaleLowerCase())
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchGroups())
+    }, [dispatch])
+  )
 
   const ItemSeparator = () => <View style={styles.separator} />
 
@@ -27,17 +35,17 @@ const App = () => {
         }}
       />
       <Notification />
-      <Search />
-      <View style={styles.content}>
+      <Search search={search} setSearch={setSearch}/>
+      <View style={[styles.content, {marginTop: 75}]}>
         <FlatList
-          contentContainerStyle={[styles.listcontainer, { marginTop: "75" }]}
-          data={groups}
+          contentContainerStyle={[styles.listcontainer]}
+          data={filteredGroups}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={({ item }) =>
             <View>
               <Link
                 href={{
-                  pathname: `/(groups)/${item.id}`,
+                  pathname: `/(groups)/group/${item.id}`,
                   params: { id: item.id, name: item.name }
                 }}
                 asChild
@@ -46,9 +54,6 @@ const App = () => {
                   <Text style={styles.checkpointName}>{item.name}</Text>
                 </TouchableOpacity>
               </Link>
-              <Pressable onPress={() => dispatch(removeGroupReducer(item.id, item.name))}>
-                <Text> delete </Text>
-              </Pressable>
             </View>
           }
           keyExtractor={item => item.id}

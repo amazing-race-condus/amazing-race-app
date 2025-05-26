@@ -1,6 +1,6 @@
 import React from "react"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-import { Link, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import { Pressable } from "react-native"
 
 const AddNewButton = () => {
