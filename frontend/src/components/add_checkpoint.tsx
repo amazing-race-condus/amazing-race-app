@@ -4,9 +4,8 @@ import { AppDispatch } from "@/store/store"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
-import { Checkpoint } from "@/types"
+import { Checkpoint, CheckpointType } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
-import { setNotification } from "@/reducers/responseSlice"
 import { RadioButton } from "react-native-paper"
 
 const AddCheckpoint = () => {
@@ -17,7 +16,7 @@ const AddCheckpoint = () => {
   const checkpointCreation = async () => {
     const newCheckpoint: Checkpoint = {
       name: name,
-      type: type,
+      type: type as CheckpointType,
       id: "0"
     }
     dispatch(addCheckpoitReducer(newCheckpoint, name, type))

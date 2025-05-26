@@ -4,11 +4,12 @@ import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/service
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
 import { useRouter } from "expo-router"
+import { CheckpointType } from "@/types"
 
 export interface checkpointState {
     id : string,
     name : string,
-    type: string
+    type: CheckpointType
 }
 
 const initialState: checkpointState[] = []
