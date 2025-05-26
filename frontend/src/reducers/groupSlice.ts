@@ -9,16 +9,7 @@ export interface groupState {
     name : string
 }
 
-const initialState: groupState[] = [
-  {
-    id: "idfs",
-    name: "IcedLimeTeam"
-  },
-  {
-    id: "diafs",
-    name: "NooobydoobyTeam"
-  },
-]
+const initialState: groupState[] = []
 
 const groupSlice = createSlice({
   name: "groups",
