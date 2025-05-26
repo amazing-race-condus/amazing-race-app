@@ -33,9 +33,6 @@ const Checkpoints = () => {
             <Entypo name="chevron-right" size={24} color="black" />
           </TouchableOpacity>
         </Link>
-        {/* <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
-        <Text style={styles.buttonText}>Poista</Text>
-      </Pressable> */}
       </View>
     )
   }

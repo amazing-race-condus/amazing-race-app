@@ -6,7 +6,6 @@ import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
 import { Checkpoint } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
-import { setNotification } from "@/reducers/responseSlice"
 import { RadioButton } from "react-native-paper"
 
 const AddCheckpoint = () => {

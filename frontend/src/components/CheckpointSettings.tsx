@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable, Alert, Platform } from "react-native"
+import { View, Text, Pressable, Alert, Platform } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
