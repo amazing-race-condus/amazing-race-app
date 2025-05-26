@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 
-
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -40,11 +39,8 @@ const AddNew = () => {
 
   const handleBAck = () => {
     if (Platform.OS !== "ios") {
-      // bottomSheetRef.current?.close()
-      console.log("android back")
       router.navigate("/")
     } else {
-      console.log("ios back")
       router.back()
     }
   }

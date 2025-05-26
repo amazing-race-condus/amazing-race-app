@@ -12,11 +12,8 @@ const Team = () => {
   const handleSubmit = () => {
     dispatch(removeGroupReducer(id, name))
     if (Platform.OS !== "ios") {
-      // bottomSheetRef.current?.close()
-      console.log("android back")
       router.navigate("/")
     } else {
-      console.log("ios back")
       router.back()
     }
   }
