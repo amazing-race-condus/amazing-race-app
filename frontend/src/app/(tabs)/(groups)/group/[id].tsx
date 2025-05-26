@@ -15,7 +15,7 @@ const Team = () => {
   }
 
   return (
-    <View >
+    <View style={{ marginTop: 75 }}>
       <Stack.Screen
         options={{ headerShown: false }}
       />

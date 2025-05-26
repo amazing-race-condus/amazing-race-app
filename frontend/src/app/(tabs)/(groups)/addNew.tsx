@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 
+
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -37,13 +38,22 @@ const AddNew = () => {
     }
   }
 
+  const handleBAck = () => {
+    if (Platform.OS !== "IOS") {
+      // bottomSheetRef.current?.close()
+      router.back()
+    } else {
+      router.navigate("/")
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <BottomSheet
         index={0}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        onClose={() => router.navigate("/")}
+        onClose={handleBAck}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
