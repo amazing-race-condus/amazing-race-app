@@ -37,13 +37,21 @@ const AddNew = () => {
     }
   }
 
+  const handleBAck = () => {
+    if (Platform.OS !== "ios") {
+      router.navigate("/")
+    } else {
+      router.back()
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <BottomSheet
         index={0}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        // onClose={() => router.back()}
+        onClose={handleBAck}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}

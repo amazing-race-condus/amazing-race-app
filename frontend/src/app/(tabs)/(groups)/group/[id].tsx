@@ -1,6 +1,6 @@
 import { AppDispatch } from "@/store/store"
 import { Stack, useLocalSearchParams, useRouter } from "expo-router"
-import { Pressable, Text, View } from "react-native"
+import { Platform, Pressable, Text, View } from "react-native"
 import { useDispatch } from "react-redux"
 import { removeGroupReducer } from "@/reducers/groupSlice"
 
@@ -11,11 +11,15 @@ const Team = () => {
 
   const handleSubmit = () => {
     dispatch(removeGroupReducer(id, name))
-    router.back()
+    if (Platform.OS !== "ios") {
+      router.navigate("/")
+    } else {
+      router.back()
+    }
   }
 
   return (
-    <View >
+    <View style={{ marginTop: 75 }}>
       <Stack.Screen
         options={{ headerShown: false }}
       />
