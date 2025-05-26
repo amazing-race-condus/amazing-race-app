@@ -43,7 +43,7 @@ const AddNew = () => {
         index={0}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        onClose={() => router.back()}
+        onClose={() => router.navigate("/")}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
