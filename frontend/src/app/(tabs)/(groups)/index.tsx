@@ -36,7 +36,7 @@ const App = () => {
       />
       <Notification />
       <Search search={search} setSearch={setSearch}/>
-      <View style={[styles.content, {marginTop: 75}]}>
+      <View style={styles.content}>
         <FlatList
           contentContainerStyle={[styles.listcontainer]}
           data={filteredGroups}

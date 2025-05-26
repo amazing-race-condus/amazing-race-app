@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width: Math.min(screenWidth * 0.9, 355),
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 15,
