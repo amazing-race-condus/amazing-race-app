@@ -19,8 +19,6 @@ export const styles = StyleSheet.create({
     color: theme.colors.textTitle,
   },
   content: {
-    backgroundColor: theme.colors.background,
-    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
   },

@@ -5,9 +5,10 @@ export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
       <Tabs.Screen
-        name="index"
+        name="(groups)"
         options={{
           title: "Ryhmät",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="users" color={color} />,
         }}
       />
@@ -15,6 +16,7 @@ export default function TabLayout() {
         name="checkpoints"
         options={{
           title: "Rastit",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="compass" color={color} />
         }}
       />
@@ -23,12 +25,6 @@ export default function TabLayout() {
         options={{
           title: "Asetukset",
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="checkpoints/[id]"
-        options={{
-          href: null
         }}
       />
     </Tabs>

@@ -15,46 +15,46 @@
         - 'backend/**'
 
   jobs:
-    paths-filter:
-      runs-on: ubuntu-24.04
-      outputs:
-        frontend: ${{ steps.filter.outputs.frontend }}
-        backend: ${{ steps.filter.outputs.backend }}
-      steps:
-        - uses: actions/checkout@v4
-        - name: Filter changed paths
-          id: filter
-          uses: dorny/paths-filter@v3
-          with:
-            filters: |
-              frontend:
-                - 'frontend/**'
-              backend:
-                - 'backend/**'
+    # paths-filter:
+    #   runs-on: ubuntu-24.04
+    #   outputs:
+    #     frontend: ${{ steps.filter.outputs.frontend }}
+    #     backend: ${{ steps.filter.outputs.backend }}
+    #   steps:
+    #     - uses: actions/checkout@v4
+    #     - name: Filter changed paths
+    #       id: filter
+    #       uses: dorny/paths-filter@v3
+    #       with:
+    #         filters: |
+    #           frontend:
+    #             - 'frontend/**'
+    #           backend:
+    #             - 'backend/**'
 
     frontend:
-      needs: [paths-filter]
-      if: ${{ needs.paths-filter.outputs.frontend == 'true' }}
+      # needs: [paths-filter]
+      # if: ${{ needs.paths-filter.outputs.frontend == 'true' }}
       uses: ./.github/workflows/frontend.yaml
 
     backend:
-      needs: [paths-filter]
-      if: ${{ needs.paths-filter.outputs.backend == 'true' }}
+      # needs: [paths-filter]
+      # if: ${{ needs.paths-filter.outputs.backend == 'true' }}
       uses: ./.github/workflows/backend.yaml
       secrets:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+      # && (
+      #   (needs.paths-filter.outputs.frontend == 'true' ||
+      #   needs.paths-filter.outputs.backend == 'true') &&
+      #   (needs.frontend.result == 'success' || needs.frontend.result == 'skipped') &&
+      #   (needs.backend.result == 'success' || needs.backend.result == 'skipped')
+      # )
     build-and-push-image:
       if: |
         always()
-        && (
-          (needs.paths-filter.outputs.frontend == 'true' ||
-          needs.paths-filter.outputs.backend == 'true') &&
-          (needs.frontend.result == 'success' || needs.frontend.result == 'skipped') &&
-          (needs.backend.result == 'success' || needs.backend.result == 'skipped')
-        )
         && github.ref == 'refs/heads/main'
-      needs: [paths-filter, frontend, backend]
+      needs: [frontend, backend]
       runs-on: ubuntu-24.04
       permissions:
         contents: read
