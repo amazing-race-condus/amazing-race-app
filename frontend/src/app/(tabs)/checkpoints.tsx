@@ -1,14 +1,12 @@
 import React, { useEffect } from "react"
-import { View, Text, FlatList, Pressable, Alert, Platform } from "react-native"
+import { View, Text, FlatList, TouchableOpacity } from "react-native"
 import { Link, Stack } from "expo-router"
-import { useDispatch, useSelector, Provider } from "react-redux"
-import store from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
 import { styles } from "@/styles/commonStyles"
-import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
-// eslint-disable-next-line no-duplicate-imports
+import { Entypo } from "@expo/vector-icons"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import type { RootState, AppDispatch } from "@/store/store"
 import Notification from "@/components/Notification"
-import { setNotification } from "@/reducers/responseSlice"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -18,36 +16,17 @@ const Checkpoints = () => {
     dispatch(fetchCheckpoints())
   }, [])
 
-  const handleRemoveCheckpoint = (id: string, name: string) => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän rastin?")
-      if (confirmed) {
-        dispatch(removeCheckpointReducer(id, name))
-      }
-    } else {
-      Alert.alert(
-        "Vahvista poisto",
-        "Oletko varma että haluat poistaa tämän rastin?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Poista",
-            style: "destructive",
-            onPress: () => {
-              dispatch(removeCheckpointReducer(id, name))
-            }
-          }
-        ]
-      )
-    }
-  }
-
   const CheckpointItem = ({ name, id }: { name: string, id: string }) => (
-    <View style={styles.item}>
-      <Link style={styles.checkpointName} href={`/checkpoints/${id}`}>{name}</Link>
-      <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
+    <View>
+      <Link href={`/checkpoints/${id}`} asChild>
+        <TouchableOpacity style={styles.item}>
+          <Text style={styles.checkpointName}>{name}</Text>
+          <Entypo name="chevron-right" size={24} color="black" />
+        </TouchableOpacity>
+      </Link>
+      {/* <Pressable style={styles.button} onPress={() => handleRemoveCheckpoint(id, name)}>
         <Text style={styles.buttonText}>Poista</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   )
 
@@ -76,10 +55,4 @@ const Checkpoints = () => {
   )
 }
 
-const CheckpointProvider = () => (
-  <Provider store={store}>
-    <Checkpoints />
-  </Provider>
-)
-
-export default CheckpointProvider
+export default Checkpoints

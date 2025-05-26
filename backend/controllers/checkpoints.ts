@@ -42,21 +42,28 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
-  if  (body.name.length > 100 ) {
+  const inputName = body.name.trim()
+
+  if  (inputName.length > 100 ) {
     res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta."})
     return
   }
 
-  if (body.name.length < 2 ) {
+  if (inputName.length < 2 ) {
     res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
     return
   }
 
-  const existingStart = await prisma.checkpoint.findFirst({
-    where: { name: body.name }
+  const existingName = await prisma.checkpoint.findFirst({
+    where: {
+      name: {
+        equals: inputName,
+        mode: "insensitive"
+      }
+    }
   })
-  if (existingStart) {
-    res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi" })
+  if (existingName) {
+    res.status(400).json({ error: "Rastin nimi on jo käytössä." })
     return
   }
 

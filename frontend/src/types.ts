@@ -1,6 +1,13 @@
 export interface Checkpoint {
     id: string,
-    name: string
+    name: string,
+    type: string
+}
+
+export interface RouteLimit {
+    id: number,
+    min_route_time: number,
+    max_route_time: number
 }
 
 export type NotificationState = {
