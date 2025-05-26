@@ -39,11 +39,13 @@ const AddNew = () => {
   }
 
   const handleBAck = () => {
-    if (Platform.OS !== "IOS") {
+    if (Platform.OS !== "ios") {
       // bottomSheetRef.current?.close()
-      router.back()
-    } else {
+      console.log("android back")
       router.navigate("/")
+    } else {
+      console.log("ios back")
+      router.back()
     }
   }
 
