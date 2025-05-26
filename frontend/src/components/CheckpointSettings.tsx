@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { RootState, AppDispatch } from "@/store/store"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
+import { getType } from "@/utils/typeUtils"
 
 const CheckpointSettings = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -39,30 +40,35 @@ const CheckpointSettings = () => {
 
   const ItemSeparator = () => <View style={styles.separator} />
 
-  const CheckpointSettingsItem = ({ name, id }: { name: string, id: string }) => (
-    <View style={styles.item}>
-      <Text style={styles.checkpointName}>{name}</Text>
-      <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(id, name)}>
-        <Text style={styles.buttonText}>Poista</Text>
-      </Pressable>
-    </View>
-  )
+  const CheckpointSettingsItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
+    const translatedType = getType(type)
+    return (
+
+      <View style={styles.item}>
+        <Text style={styles.checkpointName}>
+          {name}
+          {translatedType !== "" && (
+            <Text style={styles.checkpointType}> ({translatedType})</Text>
+          )}
+        </Text>
+        <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(id, name)}>
+          <Text style={styles.buttonText}>Poista</Text>
+        </Pressable>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.content}>
       <Text style={styles.header}>Hallinnoi rasteja:</Text>
-      <FlatList
-        contentContainerStyle={styles.listcontainer}
-        data={checkpoints}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) =>
-          <CheckpointSettingsItem
-            name={item.name}
-            id={item.id}
-          />
-        }
-        keyExtractor={item => item.id}
-      />
+      <View style={styles.listcontainer}>
+        {checkpoints.map((item, index) => (
+          <View key={item.id}>
+            <CheckpointSettingsItem name={item.name} type={item.type} id={item.id} />
+            {index < checkpoints.length - 1 && <ItemSeparator />}
+          </View>
+        ))}
+      </View>
     </View>
   )
 }

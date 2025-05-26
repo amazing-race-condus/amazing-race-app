@@ -67,22 +67,27 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
+  let parsedType: Type | undefined = undefined;
+
   if (body.type) {
     if (!Object.values(Type).includes(body.type)) {
       res.status(400).json({ error: "Virheellinen tyyppi." })
       return
     }
-    if (body.type === "START") {
+
+    parsedType = body.type as Type
+
+    if (parsedType === Type.START) {
       const existingStart = await prisma.checkpoint.findFirst({
-        where: { type: "START" }
+        where: { type: Type.START }
       })
       if (existingStart) {
         res.status(400).json({ error: "Lähtörasti on jo luotu." })
         return
       }
-    } else if (body.type === "FINISH") {
+    } else if (parsedType === Type.FINISH) {
       const existingFinish = await prisma.checkpoint.findFirst({
-        where: { type: "FINISH" }
+        where: { type: Type.FINISH }
       })
       if (existingFinish) {
         res.status(400).json({ error: "Maali on jo luotu." })
@@ -94,7 +99,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
   const savedCheckpoint = await prisma.checkpoint.create({
     data: {
       name: body.name,
-      type: body.type,
+      type: parsedType,
       hint: body.hint,
       event_id: body.event_id
     }

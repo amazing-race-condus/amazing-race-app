@@ -19,8 +19,6 @@ export const styles = StyleSheet.create({
     color: theme.colors.textTitle,
   },
   content: {
-    backgroundColor: theme.colors.background,
-    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -31,7 +29,7 @@ export const styles = StyleSheet.create({
     width: Math.min(screenWidth * 0.8, 355),
     paddingVertical: 7,
     marginBottom:10,
-    color: "black",
+    color: theme.colors.textInput,
     backgroundColor: "white",
   },
   button: {
@@ -80,8 +78,18 @@ export const styles = StyleSheet.create({
   checkpointName: {
     fontSize: theme.fontSizes.listItem,
     fontWeight: "600",
-    margin: 10,
     color: "#000",
+    padding: 0,
+    margin: 0,
+    lineHeight: 20,
+  },
+  checkpointType: {
+    fontWeight: "400",
+    color: "#666",
+    fontSize: theme.fontSizes.body,
+    lineHeight: 20,
+    margin: 0,
+    padding: 0,
   },
   checkpointcontainer: {
     marginBottom: 75
@@ -134,7 +142,7 @@ export const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4
+    shadowRadius: 4,
   },
   radiobuttonGroup: {
     flexDirection: "row",

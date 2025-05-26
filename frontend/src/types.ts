@@ -14,3 +14,8 @@ export type NotificationState = {
     message: string,
     type: "error" | "success" | null
 }
+
+export type Group = {
+    id: string,
+    name: string,
+}
