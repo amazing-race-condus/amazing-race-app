@@ -33,11 +33,6 @@ describe("Get Groups", () => {
   })
 
   it("Group is not created with existing name", async () => {
-    // await request(app)
-    //   .post("/api/groups")
-    //   .send({
-    //     name: "Test group"
-    //   })
     const response = await request(app)
       .post("/api/groups")
       .send({
@@ -48,13 +43,6 @@ describe("Get Groups", () => {
   })
 
   it("Group is deleted", async () => {
-    // const response = await request(app)
-    //   .post("/api/groups")
-    //   .send({
-    //     name: "Test group"
-    //   })
-
-    //const id = response.body.id
     const response1 = await request(app)
       .delete(`/api/groups/${ide}`)
       .send({
