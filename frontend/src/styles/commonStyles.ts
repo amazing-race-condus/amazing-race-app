@@ -80,8 +80,18 @@ export const styles = StyleSheet.create({
   checkpointName: {
     fontSize: theme.fontSizes.listItem,
     fontWeight: "600",
-    margin: 10,
     color: "#000",
+    padding: 0,
+    margin: 0,
+    lineHeight: 20,
+  },
+  checkpointType: {
+    fontWeight: "400",
+    color: "#666",
+    fontSize: theme.fontSizes.body,
+    lineHeight: 20,
+    margin: 0,
+    padding: 0,
   },
   checkpointcontainer: {
     marginBottom: 75
