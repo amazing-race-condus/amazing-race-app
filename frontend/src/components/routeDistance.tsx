@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { Checkpoint } from '@/types';
 
 const RouteDistance = () => {
+  const checkpoints = useSelector((state: RootState) => state.checkpoints)
+
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [formValues, setFormValues] = useState({});
-  const checkpoints = {
-    0: {type: "start", name: "Oodi"},
-    1: {type: "intermediate", name: "Kalasatama"},
-    2: {type: "intermediate", name: "Testi"},
-    3: {type: "end", name: "Kisahalli"}
-  }
-  const items = [0, 1, 2, 3];
 
-  const filterCriteria = (item: number) => {
-    return function(field: number) {
-      const isSameCheckpoint = item !== field
-      const fieldIsStart = checkpoints[field].type !== "start"
-      const startToEnd = !(checkpoints[item].type === "start" && checkpoints[field].type === "end")
+  const filterCriteria = (item: Checkpoint) => {
+    return function(field: Checkpoint) {
+      const isSameCheckpoint = item.id !== field.id
+      const fieldIsStart = field.type !== "START"
+      const startToEnd = !(item.type === "START" && field.type === "FINISH")
       return isSameCheckpoint && fieldIsStart && startToEnd
     }
   }
@@ -37,20 +35,20 @@ const RouteDistance = () => {
 
   return (
     <View style={styles.container}>
-      {items.filter(item => checkpoints[item].type !== "end").map((item) => (
-        <View key={item} style={styles.itemContainer}>
-          <TouchableOpacity onPress={() => toggleItem(item)} style={styles.itemHeader}>
-            <Text style={styles.itemText}>{checkpoints[item].name}</Text>
+      {checkpoints.filter(checkpoint => checkpoint.type !== "FINISH").map((checkpoint, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <TouchableOpacity onPress={() => toggleItem(index)} style={styles.itemHeader}>
+            <Text style={styles.itemText}>{checkpoint.name + ((checkpoint.type === "START") ? " (Lähtö)" : "")}</Text>
           </TouchableOpacity>
-          {expandedIndex === item && (
+          {expandedIndex === index && (
             <View style={styles.formContainer}>
-              {items.filter(filterCriteria(item)).map((field) => (
+              {checkpoints.filter(filterCriteria(checkpoint)).map((field, index2) => (
                 <TextInput
-                  key={field}
+                  key={index2}
                   style={styles.input}
-                  placeholder={String(checkpoints[field].name)}
-                  value={formValues[item]?.[field] || ''}
-                  onChangeText={(text) => handleInputChange(item, field, text)}
+                  placeholder={field.name + ((field.type === "FINISH") ? " (Maali)" : "")}
+                  value={formValues[index]?.[field.name] || ''}
+                  onChangeText={(text) => handleInputChange(index, field.name, text)}
                 />
               ))}
             </View>
@@ -60,6 +58,7 @@ const RouteDistance = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
