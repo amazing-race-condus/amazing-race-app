@@ -3,12 +3,12 @@ import type { AppDispatch, RootState } from "@/store/store"
 import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
-import { useRouter } from "expo-router"
+import { CheckpointType } from "@/types"
 
 export interface checkpointState {
     id : string,
     name : string,
-    type: string
+    type: CheckpointType
 }
 
 const initialState: checkpointState[] = []
@@ -38,10 +38,8 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
 export const addCheckpoitReducer = (newObject: checkpointState, name: string, type: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
-    const router = useRouter()
     dispatch(appendCheckpoint(newCheckpoint))
     dispatch(setNotification(`Rasti '${name}' lisätty`, "success"))
-    router.navigate("/checkpoints")
   } catch (error) {
     console.error("Failed to add checkpoint:", error)
     if (error instanceof AxiosError) {

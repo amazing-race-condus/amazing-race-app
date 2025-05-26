@@ -7,7 +7,7 @@ import { Entypo } from "@expo/vector-icons"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import type { RootState, AppDispatch } from "@/store/store"
 import Notification from "@/components/Notification"
-import { getType } from "@/utils/typeUtils"
+import { getType, sortCheckpoints } from "@/utils/checkpointUtils"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -16,6 +16,8 @@ const Checkpoints = () => {
   useEffect(() => {
     dispatch(fetchCheckpoints())
   }, [])
+
+  const sortedCheckpoints = sortCheckpoints(checkpoints)
 
   const CheckpointItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
     const translatedType = getType(type)
@@ -47,7 +49,7 @@ const Checkpoints = () => {
         <Text style={styles.title}>Rastit:</Text>
         <FlatList
           contentContainerStyle={styles.listcontainer}
-          data={checkpoints}
+          data={sortedCheckpoints}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={({ item }) =>
             <CheckpointItem
