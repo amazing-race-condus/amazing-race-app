@@ -4,9 +4,22 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 const RouteDistance = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [formValues, setFormValues] = useState({});
+  const checkpoints = {
+    0: {type: "start", name: "Oodi"},
+    1: {type: "intermediate", name: "Kalasatama"},
+    2: {type: "intermediate", name: "Testi"},
+    3: {type: "end", name: "Kisahalli"}
+  }
+  const items = [0, 1, 2, 3];
 
-  const items = ['Oodi', 'Kalasatama', 'Kisahalli'];
-  const formFields = ['Oodi', 'Kalasatama', 'Kisahalli']; // Fields per item
+  const filterCriteria = (item: number) => {
+    return function(field: number) {
+      const isSameCheckpoint = item !== field
+      const fieldIsStart = checkpoints[field].type !== "start"
+      const startToEnd = !(checkpoints[item].type === "start" && checkpoints[field].type === "end")
+      return isSameCheckpoint && fieldIsStart && startToEnd
+    }
+  }
 
   const toggleItem = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -24,20 +37,20 @@ const RouteDistance = () => {
 
   return (
     <View style={styles.container}>
-      {items.map((item, index) => (
-        <View key={index} style={styles.itemContainer}>
-          <TouchableOpacity onPress={() => toggleItem(index)} style={styles.itemHeader}>
-            <Text style={styles.itemText}>{item}</Text>
+      {items.filter(item => checkpoints[item].type !== "end").map((item) => (
+        <View key={item} style={styles.itemContainer}>
+          <TouchableOpacity onPress={() => toggleItem(item)} style={styles.itemHeader}>
+            <Text style={styles.itemText}>{checkpoints[item].name}</Text>
           </TouchableOpacity>
-          {expandedIndex === index && (
+          {expandedIndex === item && (
             <View style={styles.formContainer}>
-              {formFields.map((field) => (
+              {items.filter(filterCriteria(item)).map((field) => (
                 <TextInput
                   key={field}
                   style={styles.input}
-                  placeholder={field}
-                  value={formValues[index]?.[field] || ''}
-                  onChangeText={(text) => handleInputChange(index, field, text)}
+                  placeholder={String(checkpoints[field].name)}
+                  value={formValues[item]?.[field] || ''}
+                  onChangeText={(text) => handleInputChange(item, field, text)}
                 />
               ))}
             </View>
