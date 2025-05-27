@@ -10,6 +10,10 @@ export interface RouteLimit {
     max_route_time: number
 }
 
+export interface Distances {
+  [start:number]: {[end:number]: number}
+}
+
 export type NotificationState = {
     message: string,
     type: "error" | "success" | null

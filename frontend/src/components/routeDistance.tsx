@@ -1,60 +1,115 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { Checkpoint } from '@/types';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platform } from "react-native";
+import axios, { AxiosError } from "axios"
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { Checkpoint, Distances } from "@/types";
+import { AppDispatch } from "@/store/store";
+import { setNotification } from "@/reducers/responseSlice"
+
+// Temporary style solution
+import { Dimensions } from "react-native"
+import Constants from "expo-constants"
+import theme from "@/theme"
+
+const screenWidth = Dimensions.get("window").width
+
 
 const RouteDistance = () => {
-  const checkpoints = useSelector((state: RootState) => state.checkpoints)
+  const url =
+        Platform.OS === "web"
+          ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
+          : process.env.EXPO_PUBLIC_BACKEND_URL
+  const checkpoints: Checkpoint[] = useSelector((state: RootState) => state.checkpoints)
 
-  const [expandedIndex, setExpandedIndex] = useState(null);
-  const [formValues, setFormValues] = useState({});
+  const eventId = 1
+  const [expandedIndex, setExpandedIndex] = useState<Number>(-1);
+  const [formValues, setFormValues] = useState<Distances>({});
+  const dispatch = useDispatch<AppDispatch>()
 
-  const filterCriteria = (item: Checkpoint) => {
-    return function(field: Checkpoint) {
-      const isSameCheckpoint = item.id !== field.id
-      const fieldIsStart = field.type !== "START"
-      const startToEnd = !(item.type === "START" && field.type === "FINISH")
-      return isSameCheckpoint && fieldIsStart && startToEnd
+  const getRouteDistances = async () => {
+    const response = await axios.get(`${url}/settings/${eventId}/distances`)
+    const distances = response.data
+    if (distances) {
+      setFormValues(distances)
     }
   }
 
-  const toggleItem = (index) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
+  const setRouteDistances = async () => {
+    try {
+      await axios.put<Distances>(`${url}/settings/update_distances`, formValues)
+      dispatch(setNotification("Rastien väliset etäisyydet päivitetty", "success"))
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        dispatch(setNotification(
+          error.response?.data.error ?? `Rastien välisiä etäisyyksiä ei voitu päivittää: ${error.message}`, "error"
+        ))
+      }
+    }
+  }
+
+  useEffect(() => {
+    getRouteDistances()
+  }, [])
+
+  const filterCriteria = (fromCheckpoint: Checkpoint) => {
+    return function(toCheckpoint: Checkpoint) {
+      const isSameCheckpoint = fromCheckpoint.id !== toCheckpoint.id
+      const toCheckpointIsStart = toCheckpoint.type !== "START"
+      const startToEnd = !(fromCheckpoint.type === "START" && toCheckpoint.type === "FINISH")
+      return isSameCheckpoint && toCheckpointIsStart && startToEnd
+    }
+  }
+
+  const toggleItem = (index: Number) => {
+    setExpandedIndex(expandedIndex === index ? -1 : index);
   };
 
-  const handleInputChange = (itemIndex, field, text) => {
+  const handleInputChange = (fromCheckpointId: String, toCheckpointId: String, value: String) => {
+    
+    if (isNaN(Number(fromCheckpointId)) || isNaN(Number(toCheckpointId)) || isNaN((Number(value)))) {
+      return
+    }
+    
     setFormValues((prev) => ({
       ...prev,
-      [itemIndex]: {
-        ...prev[itemIndex],
-        [field]: text,
+      [Number(fromCheckpointId)]: {
+        ...prev[Number(fromCheckpointId)],
+        [Number(toCheckpointId)]: Number(value),
       },
     }));
   };
+  console.log(formValues)
 
   return (
     <View style={styles.container}>
-      {checkpoints.filter(checkpoint => checkpoint.type !== "FINISH").map((checkpoint, index) => (
-        <View key={index} style={styles.itemContainer}>
-          <TouchableOpacity onPress={() => toggleItem(index)} style={styles.itemHeader}>
-            <Text style={styles.itemText}>{checkpoint.name + ((checkpoint.type === "START") ? " (Lähtö)" : "")}</Text>
+      <Text style={styles.header}>Rastien väliset etäisyydet:</Text>
+      <View style={styles.formContainer2}>
+      {checkpoints.filter(fromCheckpoint => fromCheckpoint.type !== "FINISH").map((fromCheckpoint, fromIndex) => (
+        <View key={fromIndex} style={styles.itemContainer}>
+          <TouchableOpacity onPress={() => toggleItem(fromIndex)} style={styles.itemHeader}>
+            <Text style={styles.itemText}>{fromCheckpoint.name + ((fromCheckpoint.type === "START") ? " (Lähtö)" : "")}</Text>
           </TouchableOpacity>
-          {expandedIndex === index && (
+          {expandedIndex === fromIndex && (
             <View style={styles.formContainer}>
-              {checkpoints.filter(filterCriteria(checkpoint)).map((field, index2) => (
+              {checkpoints.filter(filterCriteria(fromCheckpoint)).map((toCheckpoint, toIndex) => (
                 <TextInput
-                  key={index2}
+                  keyboardType="numeric"
+                  key={toIndex}
                   style={styles.input}
-                  placeholder={field.name + ((field.type === "FINISH") ? " (Maali)" : "")}
-                  value={formValues[index]?.[field.name] || ''}
-                  onChangeText={(text) => handleInputChange(index, field.name, text)}
+                  placeholder={toCheckpoint.name + ((toCheckpoint.type === "FINISH") ? " (Maali)" : "")}
+                  value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
+                  onChangeText={(value) => handleInputChange(fromCheckpoint.id, toCheckpoint.id, value)}
                 />
               ))}
             </View>
           )}
         </View>
       ))}
+    <Pressable style={styles.button} onPress={() => { setRouteDistances() }}>
+      <Text>Aseta</Text>
+    </Pressable>
+      </View>
     </View>
   );
 };
@@ -63,6 +118,13 @@ const RouteDistance = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+  },
+  container2: {
+    paddingTop: Constants.statusBarHeight,
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   itemContainer: {
     marginBottom: 10,
@@ -87,6 +149,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 4,
+  },
+  button: {
+    height: 30,
+    width: Math.min(screenWidth * 0.8, 355),
+    backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  header: {
+    margin: 10,
+    fontSize: theme.fontSizes.header,
+    fontWeight: "bold",
+    color: theme.colors.textTitle,
+  },
+  formContainer2: {
+    backgroundColor: theme.colors.listItemBackground,
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 });
 
