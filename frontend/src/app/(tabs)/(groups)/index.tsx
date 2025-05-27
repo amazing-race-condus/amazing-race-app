@@ -46,7 +46,7 @@ const App = () => {
               <Link
                 href={{
                   pathname: `/(groups)/group/${item.id}`,
-                  params: { name: item.name }
+                  params: { name: item.name, members: item.members }
                 }}
                 asChild
               >
@@ -56,7 +56,7 @@ const App = () => {
               </Link>
             </View>
           }
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id?.toString() ?? ""}
         />
       </View>
       <AddNewButton/>
