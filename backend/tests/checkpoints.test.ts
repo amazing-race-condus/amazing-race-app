@@ -1,24 +1,9 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { Type } from "../prisma/prisma/"
-
-const initialCheckpoints = [
-  {
-    name: "Oodi",
-    type: Type.FINISH,
-  },
-  {
-    name: "Tripla",
-    type: Type.START,
-  },
-  {
-    name: "Rautatieasema",
-    type: Type.INTERMEDIATE,
-  },
-]
+import { initialCheckpoints, finalCheckpoints, intermediateCheckpoints } from "./test_helper"
 
 
-describe("Get checkpoints", () => {
+describe("Get all checkpoints", () => {
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
@@ -38,7 +23,7 @@ describe("Get checkpoints", () => {
   })
 })
 
-describe("viewing a specific checkpoint", () => {
+describe("Viewing a specific checkpoint", () => {
 
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
@@ -70,7 +55,7 @@ describe("viewing a specific checkpoint", () => {
   })
 })
 
-describe("addition of a new checkpoint", () => {
+describe("Addition of a new checkpoint", () => {
 
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
@@ -172,6 +157,51 @@ describe("addition of a new checkpoint", () => {
     expect(result.body.error).toContain("Maali on jo luotu.")
   })
 
+  it("fails with status code 400 and proper error message if there is already 8 checkpoints", async () => {
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: finalCheckpoints,
+    })
+
+    const newCheckpoint = {
+      name: "Välirasti",
+      type: "INTERMEDIATE"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    const checkpointsAtEnd = await prisma.checkpoint.findMany()
+    expect(checkpointsAtEnd.length).toBe(finalCheckpoints.length)
+    expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia.")
+
+  })
+
+  it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: intermediateCheckpoints,
+    })
+
+    const newCheckpoint = {
+      name: "Välirasti",
+      type: "INTERMEDIATE"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    const checkpointsAtEnd = await prisma.checkpoint.findMany()
+    expect(checkpointsAtEnd.length).toBe(intermediateCheckpoints.length)
+    expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
+
+  })
+
+
   it("fails with status code 400 and proper error message if type is invalid", async () => {
     const newCheckpoint = {
       name: "Rasti",
@@ -210,7 +240,7 @@ describe("addition of a new checkpoint", () => {
   })
 })
 
-describe("deletion of a checkpoint", () => {
+describe("Deletion of a checkpoint", () => {
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
@@ -239,6 +269,10 @@ describe("deletion of a checkpoint", () => {
 
 
 afterAll(async () => {
+  await prisma.checkpoint.deleteMany({})
+  await prisma.checkpoint.createMany({
+    data: finalCheckpoints,
+  })
   await prisma.$disconnect()
   server.close()
 })
