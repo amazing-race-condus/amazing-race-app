@@ -46,7 +46,7 @@ const App = () => {
               <Link
                 href={{
                   pathname: `/(groups)/group/${item.id}`,
-                  params: { id: item.id, name: item.name }
+                  params: { name: item.name }
                 }}
                 asChild
               >
@@ -65,4 +65,3 @@ const App = () => {
 }
 
 export default App
-

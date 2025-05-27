@@ -13,10 +13,10 @@ const Team = () => {
   const handleSubmit = () => {
 
     const handleBack = () => {
-      if (Platform.OS !== "ios") {
-        router.navigate("/")
-      } else {
+      if (router.canGoBack()) {
         router.back()
+      } else {
+        router.navigate("/")
       }
     }
 
