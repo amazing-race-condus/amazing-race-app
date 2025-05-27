@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
   },
   listcontainer: {
     width: "100%",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   checkpointName: {
     fontSize: theme.fontSizes.listItem,

@@ -18,6 +18,7 @@ export type NotificationState = {
 }
 
 export type Group = {
-    id: string,
+    id?: number,
     name: string,
+    members: number,
 }
