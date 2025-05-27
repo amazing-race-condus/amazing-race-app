@@ -19,7 +19,8 @@ describe("Get Groups", () => {
     const response = await request(app)
       .post("/api/groups")
       .send({
-        name: "Test group"
+        name: "Test group",
+        members: 4
       })
     ide = response.body.id
     expect(response.status).toBe(200)
@@ -36,7 +37,8 @@ describe("Get Groups", () => {
     const response = await request(app)
       .post("/api/groups")
       .send({
-        name: "Test group"
+        name: "Test group",
+        members: 4
       })
     expect(response.status).toBe(400)
     expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi")
