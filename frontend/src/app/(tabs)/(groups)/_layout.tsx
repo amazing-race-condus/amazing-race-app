@@ -23,6 +23,9 @@ export default function Layout() {
             animation: "none",
           }}
         />
+        <Stack.Screen
+          name="group/[id]"
+        />
       </Stack>
     </GestureHandlerRootView>
   )
