@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
 import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
-import { getPenalty, givePenalty } from "@/services/penaltyService"
+import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
 import type { Group } from "@/types"
@@ -63,6 +63,28 @@ export const givePenaltyReducer = (id: number, penalty: number) => async (dispat
   } catch (error) {
     console.error("Failed to update penalty:", error)
     dispatch(setNotification("Rangaistus ei onnistunut", "error"))
+  }
+}
+
+export const removePenaltyReducer = (id: number, penaltyId:number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  try {
+    const penalty = await removePenalty(penaltyId)
+
+    const updatedGroups = getState().groups.map((group) => {
+      if (group.id === id) {
+        return {
+          ...group,
+          penalty: [...group.penalty.filter(penalty => penalty.id !== penaltyId)]
+        }
+      }
+      return group
+    })
+
+    dispatch(setGroups(updatedGroups))
+    dispatch(setNotification("Rangaistus poistettu", "success"))
+  } catch (error) {
+    console.error("Failed to remove penalty:", error)
+    dispatch(setNotification("Rangaistusta ei voitu poistaa", "error"))
   }
 }
 

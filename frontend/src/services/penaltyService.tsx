@@ -18,7 +18,7 @@ export const givePenalty = async (id: number | string[], penaltytime: number) =>
   return response.data
 }
 
-export const removePenalty = async (id: string | string[]) => {
+export const removePenalty = async (id: number | string[]) => {
   const response = await axios
     .delete(`${url}/penalty/${id}`)
   return response.data

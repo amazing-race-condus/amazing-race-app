@@ -1,10 +1,10 @@
-import store, { AppDispatch, RootState } from "@/store/store"
+import { AppDispatch, RootState } from "@/store/store"
 import { Stack, useLocalSearchParams } from "expo-router"
 import { Alert, Platform, Pressable, Text, TouchableOpacity, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { Entypo } from "@expo/vector-icons"
-import { fetchPenaltyReducer, givePenaltyReducer } from "@/reducers/groupSlice"
+import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
 import React, { useState , useEffect, use } from "react"
 
 type PenaltyProps = {
@@ -12,9 +12,7 @@ type PenaltyProps = {
 }
 
 const Penalty = ({ id }: PenaltyProps) => {
-  // const { id } = useLocalSearchParams<{ id: string }>()
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  // const groups = store.getState().groups
   const group = useSelector((state: RootState) =>
     state.groups.find(group => group.id === Number(id))
   )
@@ -23,17 +21,8 @@ const Penalty = ({ id }: PenaltyProps) => {
 
   const [visible, setVisible] = useState(false)
 
-  // useEffect(() => {
-  //   if (id) {
-  //     dispatch(fetchPenaltyReducer(Number(id)))
-  //   }
-  // }, [id, dispatch])
-
   return (
     <View style={styles.container}>
-      {/* <Pressable style={styles.item} onPress={() => {setVisible(!visible)}}>
-        <Text style={styles.checkpointName}>Rangaistus</Text>
-      </Pressable> */}
 
       <TouchableOpacity style={styles.item}
         onPress={() => setVisible(!visible)}>
@@ -63,12 +52,13 @@ const Penalty = ({ id }: PenaltyProps) => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.item}>
-            <Text style={styles.checkpointName}>Rangaistukset</Text>
+          <View style={styles.container}>
             {group?.penalty && group.penalty.length > 0 ? (
               group.penalty.map((penalty) => (
                 <Text key={penalty.id} style={styles.checkpointName}>
-                  {penalty.time} minuuttia
+                  {penalty.time}
+                  <Pressable onPress={() => dispatch(removePenaltyReducer(group.id ,penalty.id))}> 
+                    <Text>Poista rangaistus</Text></Pressable>
                 </Text>
               ))
             ) : (
