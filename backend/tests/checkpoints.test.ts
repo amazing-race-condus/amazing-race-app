@@ -24,7 +24,6 @@ describe("Get all checkpoints", () => {
 })
 
 describe("Viewing a specific checkpoint", () => {
-
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
@@ -56,7 +55,6 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
-
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
