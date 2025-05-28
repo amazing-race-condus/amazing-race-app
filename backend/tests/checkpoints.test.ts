@@ -19,7 +19,7 @@ describe("Get all checkpoints", () => {
 
   it("all checkpoints are returned", async () => {
     const response = await request(app).get("/api/checkpoints")
-    expect(response.body.length).toBe(-1)
+    expect(response.body.length).toBe(initialCheckpoints.length)
   })
 })
 
