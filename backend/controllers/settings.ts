@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
+import { Distances } from "../../frontend/src/types"
 const settingsRouter = express.Router()
 
 const validateMinAndMax = (min: number, max: number, res: Response) : boolean => {
@@ -192,8 +193,38 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
 })
 
 
+const validateCheckpointDistances = async (): Promise<Boolean> => {
+  try {
+    const event_id = 1
+    const result = await prisma.checkpointDistance.findMany({
+      select: {from_id: true, to_id: true, time: true},
+      where: {event_id: event_id}
+    })
 
+    const distances: { [from_id: number]: {[to_id: number]: number} } = {}
 
+    result.map(row => {
+      if (!(row.from_id in distances))
+        distances[row.from_id] = {}
+      distances[row.from_id][row.to_id] = row.time
+    })
+  
+    const checkpoints = await prisma.checkpoint.findMany()
+
+    for (let i = 0; i < checkpoints.length; i++) {
+      for (let j = 0; j < checkpoints.length; i++) {
+        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START") {
+          if (!(Number.isInteger(distances[i][j]))) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  } catch (error) {
+    return false
+  }
+}
 
 //add or update distances
 settingsRouter.get("/create_routes", async (req: Request, res: Response) => {
@@ -220,23 +251,14 @@ settingsRouter.get("/create_routes", async (req: Request, res: Response) => {
   //get all groups
   */
 
-
-
   //res.status(200).json({routesAmount: 123})
-  const routesAmount = routes.length
-  if (routesAmount === 0) {
+  console.log("Hep")
+  if (await validateCheckpointDistances()) {
     res.status(400).json({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
   } else {
-    res.status(200).json({routesAmount: routesAmount})
+    res.status(200).json({routesAmount: routes.length})
   }
 
-
-  
-
-  
 })
-
-
-
 
 export default settingsRouter
