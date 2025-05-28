@@ -5,7 +5,7 @@ import AddCheckpoint from "@/components/addCheckpoint"
 import RouteMinMax from "@/components/routeMinMax"
 import CheckpointDistance from "@/components/checkpointDistance"
 import { styles } from "@/styles/commonStyles"
-import CheckpointSettings from "@/components/Checkpoints"
+import Checkpoints from "@/components/Checkpoints"
 
 const Settings = () => {
   return (
@@ -16,7 +16,7 @@ const Settings = () => {
         <AddCheckpoint />
         <RouteMinMax />
         <CheckpointDistance />
-        <CheckpointSettings />
+        <Checkpoints />
       </ScrollView>
     </SafeAreaView>
   )

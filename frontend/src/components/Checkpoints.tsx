@@ -84,7 +84,12 @@ const Checkpoints = () => {
 
   return (
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi rasteja:</Text>
+      {pathname === "/settings" && (
+        <Text style={styles.header}>Hallinnoi rasteja:</Text>
+      )}
+      {pathname.startsWith("/checkpoints") && (
+        <Text style={styles.title}>Rastit:</Text>
+      )}
       <View style={styles.listcontainer}>
         {sortedCheckpoints.map((item, index) => (
           <View key={item.id}>
