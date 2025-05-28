@@ -4,6 +4,7 @@ import Notification from "@/components/Notification"
 import AddCheckpoint from "@/components/addCheckpoint"
 import RouteMinMax from "@/components/routeMinMax"
 import CheckpointDistance from "@/components/checkpointDistance"
+import RouteGeneration from "@/components/routeGeneration"
 import { styles } from "@/styles/commonStyles"
 import Checkpoints from "@/components/Checkpoints"
 
@@ -15,6 +16,7 @@ const Settings = () => {
         <Text style={styles.title}>Asetukset</Text>
         <AddCheckpoint />
         <RouteMinMax />
+        <RouteGeneration />
         <CheckpointDistance />
         <Checkpoints />
       </ScrollView>

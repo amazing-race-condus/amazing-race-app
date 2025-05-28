@@ -191,4 +191,52 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   res.status(200).json({upserts: upserts, failures: failures})
 })
 
+
+
+
+
+//add or update distances
+settingsRouter.get("/create_routes", async (req: Request, res: Response) => {
+  //*validointi onnistunut (kaikki matka-ajat olemassa)* ...
+
+  //distances = {}
+
+  //getRoutes()
+  const routes = [
+    [10, 15, 42, 44, 22, 100],
+    [10, 35, 53, 53, 44, 100],
+    [10, 15, 42, 44, 22, 100],
+  ]
+
+  //hae ryhmät
+  const group_ids = [42, 55, 53, 53]
+
+  //tietokantaan tallennus
+  /*
+  for index in range(length(group_ids)):
+    route_index = index % len(routes)
+    
+
+  //get all groups
+  */
+
+
+
+  //res.status(200).json({routesAmount: 123})
+  const routesAmount = routes.length
+  if (routesAmount === 0) {
+    res.status(400).json({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
+  } else {
+    res.status(200).json({routesAmount: routesAmount})
+  }
+
+
+  
+
+  
+})
+
+
+
+
 export default settingsRouter
