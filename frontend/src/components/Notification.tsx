@@ -14,7 +14,6 @@ const Notification = () => {
   return (
     <View style={style}>
       <Text style={styles.breadText}>{ message }</Text>
-      <Text style={styles.breadText}>{ message }</Text>
     </View>
   )
 }
