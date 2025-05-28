@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platform } from "react-native";
+import React, { useState, useEffect } from "react"
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platform, Dimensions} from "react-native"
 import axios, { AxiosError } from "axios"
-import { useSelector, useDispatch } from "react-redux";
-import { Stack } from "expo-router"
-import { RootState } from "@/store/store";
-import { Checkpoint, Distances } from "@/types";
-import { AppDispatch } from "@/store/store";
+import { useSelector, useDispatch } from "react-redux"
+import { RootState , AppDispatch } from "@/store/store"
+import { Checkpoint, Distances } from "@/types"
 import { setNotification } from "@/reducers/responseSlice"
 
 // Temporary style solution
-import { Dimensions } from "react-native"
 import Constants from "expo-constants"
 import theme from "@/theme"
 
 const screenWidth = Dimensions.get("window").width
-
 
 const CheckpointDistance = () => {
   const url =
@@ -24,8 +20,8 @@ const CheckpointDistance = () => {
   const checkpoints: Checkpoint[] = useSelector((state: RootState) => state.checkpoints)
 
   const eventId = 1
-  const [expandedIndex, setExpandedIndex] = useState<Number>(-1);
-  const [formValues, setFormValues] = useState<Distances>({});
+  const [expandedIndex, setExpandedIndex] = useState<number>(-1)
+  const [formValues, setFormValues] = useState<Distances>({})
   const dispatch = useDispatch<AppDispatch>()
 
   const getCheckpointDistances = async () => {
@@ -62,62 +58,61 @@ const CheckpointDistance = () => {
     }
   }
 
-  const toggleItem = (index: Number) => {
-    setExpandedIndex(expandedIndex === index ? -1 : index);
-  };
+  const toggleItem = (index: number) => {
+    setExpandedIndex(expandedIndex === index ? -1 : index)
+  }
 
-  const handleInputChange = (fromCheckpointId: String, toCheckpointId: String, value: String) => {
-    
+  const handleInputChange = (fromCheckpointId: string, toCheckpointId: string, value: string) => {
+
     if (isNaN(Number(fromCheckpointId)) || isNaN(Number(toCheckpointId)) || isNaN((Number(value)))) {
       return
     }
-    
+
     setFormValues((prev) => ({
       ...prev,
       [Number(fromCheckpointId)]: {
         ...prev[Number(fromCheckpointId)],
         [Number(toCheckpointId)]: Number(value),
       },
-    }));
-  };
+    }))
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Rastien väliset etäisyydet:</Text>
       <View style={styles.formContainer2}>
-      {checkpoints.filter(fromCheckpoint => fromCheckpoint.type !== "FINISH").map((fromCheckpoint, fromIndex) => (
-        <View key={fromIndex} style={styles.itemContainer}>
-          <TouchableOpacity onPress={() => toggleItem(fromIndex)} style={styles.itemHeader}>
-            <Text style={styles.itemText}>{fromCheckpoint.name + ((fromCheckpoint.type === "START") ? " (Lähtö)" : "")}</Text>
-          </TouchableOpacity>
-          {expandedIndex === fromIndex && (
-            <View style={styles.formContainer}>
-              {checkpoints.filter(filterCriteria(fromCheckpoint)).map((toCheckpoint, toIndex) => (
-                <View key={toIndex} style={{flexDirection: "row"}}>
-                  <Text>Field</Text>
-                <TextInput
-                  keyboardType="numeric"
-                  key={toIndex}
-                  style={styles.input}
-                  placeholder={toCheckpoint.name + ((toCheckpoint.type === "FINISH") ? " (Maali)" : "")}
-                  value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
-                  onChangeText={(value) => handleInputChange(fromCheckpoint.id, toCheckpoint.id, value)}
-                  maxLength={4}
-                />
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-      ))}
+        <Text style={styles.formText}>Matka-aika rastista...</Text>
+        {checkpoints.filter(fromCheckpoint => fromCheckpoint.type !== "FINISH").map((fromCheckpoint, fromIndex) => (
+          <View key={fromIndex} style={styles.itemContainer}>
+            <TouchableOpacity onPress={() => toggleItem(fromIndex)} style={styles.itemHeader}>
+              <Text style={styles.itemText}>{fromCheckpoint.name + ((fromCheckpoint.type === "START") ? " (Lähtö)" : "")}</Text>
+            </TouchableOpacity>
+            {expandedIndex === fromIndex && (
+              <View style={styles.formContainer}>
+                <Text style={styles.formText}>rastiin...</Text>
+                {checkpoints.filter(filterCriteria(fromCheckpoint)).map((toCheckpoint, toIndex) => (
+                  <View key={toIndex}>
+                    <Text>{toCheckpoint.name + ((toCheckpoint.type === "FINISH") ? " (Maali)" : "")}</Text>
+                    <TextInput
+                      keyboardType="numeric"
+                      style={styles.input}
+                      value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
+                      onChangeText={(value) => handleInputChange(fromCheckpoint.id, toCheckpoint.id, value)}
+                      maxLength={4}
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        ))}
         <Pressable style={styles.button} onPress={() => { setCheckpointDistances() }}>
           <Text>Aseta</Text>
         </Pressable>
       </View>
     </View>
-  );
-};
-
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -133,25 +128,25 @@ const styles = StyleSheet.create({
   itemContainer: {
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
   },
   itemHeader: {
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   itemText: {
     fontSize: 16,
   },
   formContainer: {
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   input: {
     marginBottom: 10,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 4,
   },
   button: {
@@ -182,6 +177,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-});
+  formText: {
+    color: theme.colors.background,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+})
 
 export default CheckpointDistance
