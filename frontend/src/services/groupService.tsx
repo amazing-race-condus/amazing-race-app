@@ -24,7 +24,13 @@ export const createGroup = async (newGroup: Group) => {
   return response.data
 }
 
-export const removeGroup = async (id: number) => {
+
+export const updateGroupPenalty = async (id: string, penalty: number) => {
+  const response = await axios.put<Group>(`${url}/groups/${id}`, { penalty })
+  return response.data
+}
+
+export const removeGroup = async (id: string) => {
   const request = axios.delete(`${url}/groups/${id}`)
   const response = await request
   return response.data
