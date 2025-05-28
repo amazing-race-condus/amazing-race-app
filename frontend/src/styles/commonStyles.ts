@@ -146,13 +146,16 @@ export const styles = StyleSheet.create({
   },
   radiobuttonGroup: {
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
+    marginBottom: 16,
+    flexWrap: "wrap",
     gap: 16,
-    marginTop: 8,
   },
   radiobuttonItem: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    marginHorizontal: 8,
   },
   smallButton2: {
     height: 30,

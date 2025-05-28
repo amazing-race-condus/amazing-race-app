@@ -10,6 +10,9 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
   const group = await prisma.group.findUnique({
     where: { id },
+    include: {
+      penalty: true,
+    }
   })
   if (group) {
     res.json(group)
@@ -18,10 +21,13 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-
 groupsRouter.get("/", async (_, res: Response) => {
 
-  const allGroups = await prisma.group.findMany()
+  const allGroups = await prisma.group.findMany({
+    include: {
+      penalty: true,
+    }
+  })
 
   res.send(allGroups)
 })
@@ -73,6 +79,36 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
   res.json(group)
 })
 
+groupsRouter.put("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const body = req.body
+
+  const existingGroup = await prisma.group.findUnique({
+    where: { id }
+  })
+
+  console.log("Existing group:", existingGroup)
+
+  console.log("Body:", body)
+
+  // const newPenalties : number[] = existingGroup.penalty.concat([body.penalty]) 
+
+  //console.log("New penalties:", newPenalties)
+
+  // const group = await prisma.group.update({
+  //   where: { id },
+  //   data: {
+  //     penalty: newPenalties,
+  //   }
+  // })
+
+  // if (group) {
+  //   res.json(group)
+  // } else {
+  //   res.status(404).end()
+  // }
+})
+
 groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
@@ -106,7 +142,5 @@ groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
   }
   return
 })
-
-
 
 export default groupsRouter

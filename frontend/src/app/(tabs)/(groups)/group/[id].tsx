@@ -11,6 +11,7 @@ import { getType } from "@/utils/checkpointUtils"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/responseSlice"
 import Notification from "@/components/Notification"
+import Penalty from "./penalty"
 
 const Team = () => {
   const { id } = useLocalSearchParams<{id: string}>()
@@ -217,6 +218,7 @@ const Team = () => {
           }
           keyExtractor={item => item.id}
         />
+        <Penalty id={id}/>
         <Text style={styles.header}>Poista ryhmä</Text>
         <Pressable onPress={handleDelete} style={ styles.button }>
           <Text> Poista </Text>
