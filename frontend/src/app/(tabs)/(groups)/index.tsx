@@ -8,6 +8,7 @@ import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
 import Search from "@/components/Search"
 import AddNewButton from "@/components/addGroupButton"
+import { Entypo } from "@expo/vector-icons"
 
 const App = () => {
   const [search, setSearch] = useState<string>("")
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Ryhmät:</Text>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -52,6 +54,7 @@ const App = () => {
               >
                 <TouchableOpacity style={styles.item}>
                   <Text style={styles.checkpointName}>{item.name}</Text>
+                  <Entypo name="chevron-right" size={24} color="black" />
                 </TouchableOpacity>
               </Link>
             </View>
