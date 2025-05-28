@@ -1,16 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup, updateGroupPenalty } from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
 import { getPenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
 import type { Group } from "@/types"
 
+export interface penaltyState {
+    id: number,
+    time: number
+}
 
 export interface groupState {
-    id : string,
-    name : string,
-    penalty: number[],
+    id?: number,
+    name: string,
+    members: number,
+    penalty: penaltyState[],
     disqualified: boolean,
 }
 
@@ -32,21 +37,28 @@ const groupSlice = createSlice({
 export const fetchGroups = () => async (dispatch: AppDispatch) => {
   try {
     const allGroups = await getAllGroups()
+
     dispatch(setGroups(allGroups))
   } catch (error) {
     console.error("Failed to fetch groups:", error)
   }
 }
 
-
-export const updateReducer = (id: string, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const givePenaltyReducer = (id: number, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
-    // const body = {
-    //   penalty: penalty,
-    // }
-    const updated = await updateGroupPenalty(id, penalty)
+    const penalte = await givePenalty(id, penalty)
+    console.log("penalte", penalte)
+    const updatedGroups = getState().groups.map((group) => {
+      if (group.id === penalte.group_id) {
+        return {
+          ...group,
+          penalty: [...group.penalty, penalte]
+        }
+      }
+      return group
+    })
 
-    dispatch(setGroups(updated))
+    dispatch(setGroups(updatedGroups))
     dispatch(setNotification("Ryhmä rangaistu", "success"))
   } catch (error) {
     console.error("Failed to update penalty:", error)
@@ -54,17 +66,18 @@ export const updateReducer = (id: string, penalty: number) => async (dispatch: A
   }
 }
 
-export const addGroupReducer = (newObject: groupState, name: string) => async (dispatch: AppDispatch) => {
+export const addGroupReducer = (newObject: Group, name: string) => async (dispatch: AppDispatch) => {
 
   try {
-    const newCheckpoint = await createGroup(newGroup)
+    console.log("New Object", newObject)
+    const newCheckpoint = await createGroup(newObject)
     dispatch(appendGroup(newCheckpoint))
-    dispatch(setNotification(`Ryhmä '${newGroup.name}' lisätty`, "success"))
+    dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {
     console.error("Failed to add Group:", error)
     if (error instanceof AxiosError) {
       dispatch(setNotification(
-        error.response?.data.error ?? `Ryhmää '${newGroup.name}' ei voitu lisätä: ${error.message}`, "error"
+        error.response?.data.error ?? `Ryhmää '${newObject.name}' ei voitu lisätä: ${error.message}`, "error"
       ))
     }
   }

@@ -81,7 +81,7 @@ const Team = () => {
         <Text style={styles.breadText}>Jäsenmäärä {members}</Text>
         <Text style={styles.header}>Ryhmän reitti</Text>
 
-        <Penalty/>
+        <Penalty id={id}/>
 
         <Text style={styles.header}>Poista ryhmä</Text>
         <Pressable onPress={handleSubmit} style={ styles.button }>

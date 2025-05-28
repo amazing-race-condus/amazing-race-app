@@ -10,6 +10,9 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
   const group = await prisma.group.findUnique({
     where: { id },
+    include: {
+      penalty: true,
+    }
   })
   if (group) {
     res.json(group)
@@ -20,7 +23,11 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
 groupsRouter.get("/", async (_, res: Response) => {
 
-  const allGroups = await prisma.group.findMany()
+  const allGroups = await prisma.group.findMany({
+    include: {
+      penalty: true,
+    }
+  })
 
   res.send(allGroups)
 })
@@ -110,6 +117,18 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   })
   if (group) {
     res.json(group)
+  } else {
+    res.status(404).end()
+  }
+})
+
+groupsRouter.delete("/all/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const allGroups = await prisma.group.deleteMany({
+    where: { id },
+  })
+  if (allGroups) {
+    res.json(allGroups)
   } else {
     res.status(404).end()
   }

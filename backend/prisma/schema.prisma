@@ -101,6 +101,6 @@ model Penalty {
   time            Int
   event_id        Int?
 
-  group        Group       @relation(fields: [group_id], references: [id])
-  event        Event?      @relation(fields: [event_id], references: [id])
+  group        Group       @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  event        Event?      @relation(fields: [event_id], references: [id], onDelete: Cascade)
 }
