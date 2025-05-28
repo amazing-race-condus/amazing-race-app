@@ -2,9 +2,6 @@ name: "backend pipeline"
 
 on:
   workflow_call:
-    secrets:
-      DATABASE_URL:
-        required: true
 
 jobs:
   lint:
@@ -27,6 +24,18 @@ jobs:
 
   test:
     runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     defaults:
       run:
         working-directory: backend
@@ -42,7 +51,11 @@ jobs:
       run: npm ci
     - name: Generate prisma
       run: npx prisma generate
+    - name: Run database migrations
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+      run: npx prisma migrate deploy
     - name: Run tests
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
       run: npm run test
