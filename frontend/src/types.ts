@@ -21,9 +21,10 @@ export type NotificationState = {
     type: "error" | "success" | null
 }
 
-export interface penaltyState {
+export interface Penalty {
     id: number,
-    time: number
+    time: number,
+    group_id?: number,
 }
 
 export interface Group {
@@ -31,5 +32,5 @@ export interface Group {
     name: string,
     members: number,
     disqualified?: boolean,
-    penalty: penaltyState[],
+    penalty: Penalty[],
 }

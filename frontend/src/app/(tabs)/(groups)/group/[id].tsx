@@ -196,39 +196,37 @@ const Team = () => {
   }
 
   return (
-    <View style={ styles.container }>
-      <View style={styles.content}>
-        <Stack.Screen
-          options={{ headerShown: false }}
-        />
-        <Notification />
-        <Text style={styles.title}>{group.name}</Text>
-        <Text style={styles.breadText}>Diskattu: {group.disqualified?.toString()}</Text>
-        <Text style={styles.breadText}>Jäsenmäärä {group.members}</Text>
-        <FlatList
-          contentContainerStyle={styles.listcontainer}
-          data={checkpoints}
-          ItemSeparatorComponent={ItemSeparator}
-          renderItem={({ item }) =>
-            <CheckpointItem
-              name={item.name}
-              type={item.type}
-              id={item.id}
-            />
-          }
-          keyExtractor={item => item.id}
-        />
-        <Penalty id={id}/>
-        <Text style={styles.header}>Poista ryhmä</Text>
-        <Pressable onPress={handleDelete} style={ styles.button }>
-          <Text> Poista </Text>
-        </Pressable>
-        <Text style={styles.header}>Diskaa ryhmä</Text>
-        <Pressable onPress={handleDisqualification} style={ styles.button }>
-          <Text> Diskaa / Epädiskaa </Text>
-        </Pressable>
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+      />
+      <Notification />
+      <Text style={styles.title}>{group.name}</Text>
+      <Text style={styles.breadText}>Diskattu: {group.disqualified?.toString()}</Text>
+      <Text style={styles.breadText}>Jäsenmäärä {group.members}</Text>
+      <FlatList
+        contentContainerStyle={styles.listcontainer}
+        data={checkpoints}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) =>
+          <CheckpointItem
+            name={item.name}
+            type={item.type}
+            id={item.id}
+          />
+        }
+        keyExtractor={item => item.id}
+      />
+      <Penalty id={id}/>
+      <Text style={styles.header}>Poista ryhmä</Text>
+      <Pressable onPress={handleDelete} style={ styles.button }>
+        <Text> Poista </Text>
+      </Pressable>
+      <Text style={styles.header}>Diskaa ryhmä</Text>
+      <Pressable onPress={handleDisqualification} style={ styles.button }>
+        <Text> Diskaa / Epädiskaa </Text>
+      </Pressable>
 
-      </View>
     </View>
   )
 }

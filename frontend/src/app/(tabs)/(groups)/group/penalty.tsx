@@ -22,7 +22,7 @@ const Penalty = ({ id }: PenaltyProps) => {
   const [visible, setVisible] = useState(false)
 
   return (
-    <View style={styles.container}>
+    <View style={styles.content}>
 
       <TouchableOpacity style={styles.item}
         onPress={() => setVisible(!visible)}>
@@ -57,7 +57,7 @@ const Penalty = ({ id }: PenaltyProps) => {
               group.penalty.map((penalty) => (
                 <Text key={penalty.id} style={styles.checkpointName}>
                   {penalty.time}
-                  <Pressable onPress={() => dispatch(removePenaltyReducer(group.id ,penalty.id))}> 
+                  <Pressable onPress={() => dispatch(removePenaltyReducer(group.id ,penalty.id))}>
                     <Text>Poista rangaistus</Text></Pressable>
                 </Text>
               ))

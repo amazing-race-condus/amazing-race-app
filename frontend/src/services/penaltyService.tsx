@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Platform } from "react-native"
+import type { Penalty } from "@/types"
 
 const url =
   Platform.OS === "web"
@@ -14,7 +15,7 @@ export const getPenalty = async (id: number | string[]) => {
 
 export const givePenalty = async (id: number | string[], penaltytime: number) => {
   const response = await axios
-    .post<JSON>(`${url}/penalty/${id}`, { penalty_time: penaltytime })
+    .post<Penalty>(`${url}/penalty/${id}`, { penalty_time: penaltytime })
   return response.data
 }
 

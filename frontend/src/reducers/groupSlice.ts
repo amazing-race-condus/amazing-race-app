@@ -4,22 +4,9 @@ import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
-import type { Group } from "@/types"
+import type { Group, Penalty } from "@/types"
 
-export interface penaltyState {
-    id: number,
-    time: number
-}
-
-export interface groupState {
-    id?: number,
-    name: string,
-    members: number,
-    penalty: penaltyState[],
-    disqualified: boolean,
-}
-
-const initialState: groupState[] = []
+const initialState: Group[] = []
 
 const groupSlice = createSlice({
   name: "groups",
@@ -74,7 +61,7 @@ export const givePenaltyReducer = (id: number, penalty: number) => async (dispat
 
 export const removePenaltyReducer = (id: number, penaltyId:number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
-    const penalty = await removePenalty(penaltyId)
+    await removePenalty(penaltyId)
 
     const updatedGroups = getState().groups.map((group) => {
       if (group.id === id) {

@@ -90,23 +90,7 @@ groupsRouter.put("/:id", async (req: Request, res: Response) => {
   console.log("Existing group:", existingGroup)
 
   console.log("Body:", body)
-
-  // const newPenalties : number[] = existingGroup.penalty.concat([body.penalty]) 
-
-  //console.log("New penalties:", newPenalties)
-
-  // const group = await prisma.group.update({
-  //   where: { id },
-  //   data: {
-  //     penalty: newPenalties,
-  //   }
-  // })
-
-  // if (group) {
-  //   res.json(group)
-  // } else {
-  //   res.status(404).end()
-  // }
+  console.log(res)
 })
 
 groupsRouter.delete("/:id", async (req: Request, res: Response) => {
