@@ -1,9 +1,10 @@
 import React from "react"
 import { View } from "react-native"
-import {  Stack } from "expo-router"
+import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import Checkpoints from "@/components/Checkpoints"
+import AddNewButton from "@/components/addCheckpointButton"
 
 const CheckpointsList = () => {
 
@@ -14,6 +15,7 @@ const CheckpointsList = () => {
         <Notification />
         <Checkpoints />
       </View>
+      <AddNewButton/>
     </View>
   )
 }

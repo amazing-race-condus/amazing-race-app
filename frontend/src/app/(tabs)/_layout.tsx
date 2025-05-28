@@ -13,7 +13,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="checkpoints"
+        name="(checkpoints)/checkpointsList"
         options={{
           title: "Rastit",
           headerShown: false,
