@@ -24,6 +24,16 @@ const Settings = () => {
             <Entypo name="chevron-right" size={24} color="black" />
           </TouchableOpacity>
         </Link>
+        <Link href={"/settings/groups"} asChild>
+          <TouchableOpacity style={styles.item}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.checkpointName}>
+                Hallinnoi ryhmiä
+              </Text>
+            </View>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
         <RouteMinMax />
         <CheckpointDistance />
       </ScrollView>
