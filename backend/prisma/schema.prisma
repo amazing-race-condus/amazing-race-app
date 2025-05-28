@@ -25,6 +25,7 @@ model Checkpoint {
   fromDistances   CheckpointDistance[] @relation("FromCheckpoint")
   toDistances     CheckpointDistance[] @relation("ToCheckpoint")
   group           Group[]
+  penalty         Penalty[]
   routeCheckpoint RouteCheckpoint[]
 }
 
@@ -99,8 +100,10 @@ model Penalty {
   id              Int  @id @default(autoincrement())
   group_id        Int
   time            Int
+  checkpoint_id   Int?
   event_id        Int?
 
-  group        Group       @relation(fields: [group_id], references: [id])
-  event        Event?      @relation(fields: [event_id], references: [id])
+  group        Group       @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  event        Event?      @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  checkpoint   Checkpoint? @relation(fields: [checkpoint_id], references: [id], onDelete: Cascade)
 }

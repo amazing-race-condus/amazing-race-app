@@ -46,7 +46,6 @@ const App = () => {
               <Link
                 href={{
                   pathname: `/(groups)/group/${item.id}`,
-                  params: { name: item.name, members: item.members }
                 }}
                 asChild
               >

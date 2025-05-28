@@ -86,6 +86,27 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
+groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+
+  const existingGroup = await prisma.group.findUnique({
+    where: { id },
+    select: { disqualified: true },
+  })
+
+  const group = await prisma.group.update({
+    where: { id },
+    data: { disqualified: !existingGroup?.disqualified },
+  })
+
+  if (group) {
+    res.json(group)
+  } else {
+    res.status(404).json({ error: "Ryhmää ei löydy" })
+  }
+  return
+})
+
 
 
 export default groupsRouter

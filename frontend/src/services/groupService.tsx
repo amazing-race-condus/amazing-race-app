@@ -29,3 +29,9 @@ export const removeGroup = async (id: number) => {
   const response = await request
   return response.data
 }
+
+export const disqualifyGroup = async (id: number) => {
+  const request = axios.put(`${url}/groups/${id}/disqualify`)
+  const response = await request
+  return response.data
+}

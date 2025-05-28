@@ -16,6 +16,12 @@ const groupSlice = createSlice({
     },
     appendGroup(state, action: PayloadAction<Group>) {
       state.push(action.payload)
+    },
+    updateGroup(state, action: PayloadAction<Group>) {
+      const index = state.findIndex(g => g.id === action.payload.id)
+      if (index !== -1) {
+        state[index] = action.payload
+      }
     }
   },
 })
@@ -61,5 +67,5 @@ export const removeGroupReducer =
     }
   }
 
-export const { setGroups , appendGroup } = groupSlice.actions
+export const { setGroups , appendGroup, updateGroup } = groupSlice.actions
 export default groupSlice.reducer
