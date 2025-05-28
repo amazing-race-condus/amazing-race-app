@@ -1,7 +1,9 @@
-export interface Checkpoint {
-    id: string,
-    name: string,
-    type: string
+export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
+
+export type Checkpoint = {
+  id: string;
+  name: string;
+  type: CheckpointType
 }
 
 export interface RouteLimit {
@@ -20,6 +22,7 @@ export type NotificationState = {
 }
 
 export type Group = {
-    id: string,
+    id?: number,
     name: string,
+    members: number,
 }

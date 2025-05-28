@@ -1,7 +1,7 @@
 import { ScrollView, Text } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Notification from "@/components/Notification"
-import AddCheckpoint from "@/components/add_checkpoint"
+import AddCheckpoint from "@/components/addCheckpoint"
 import RouteMinMax from "@/components/routeMinMax"
 import RouteDistance from "@/components/routeDistance"
 import { styles } from "@/styles/commonStyles"

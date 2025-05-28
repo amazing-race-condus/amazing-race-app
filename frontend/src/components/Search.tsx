@@ -1,5 +1,4 @@
-import { SafeAreaView, TextInput, StyleSheet, Dimensions, View } from "react-native"
-import { SafeAreaProvider } from "react-native-safe-area-context"
+import { TextInput, StyleSheet, Dimensions, View } from "react-native"
 // import FontAwesome from "@expo/vector-icons/FontAwesome"
 
 const screenWidth = Dimensions.get("window").width
@@ -9,19 +8,15 @@ const Search = (
   {search: string, setSearch: React.Dispatch<React.SetStateAction<string>>}
 ) => {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.layout}>
-        <View>
-          <TextInput
-            style={styles.input}
-            onChangeText={setSearch}
-            value={search}
-            placeholder="Hae ryhmiä..."
-            placeholderTextColor="grey"
-          />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={setSearch}
+        value={search}
+        placeholder="Hae ryhmiä..."
+        placeholderTextColor="grey"
+      />
+    </View>
   )
 }
 
@@ -35,6 +30,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width: Math.min(screenWidth * 0.9, 355),
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 15,

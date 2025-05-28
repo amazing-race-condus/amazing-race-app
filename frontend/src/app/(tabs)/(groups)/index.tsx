@@ -36,7 +36,7 @@ const App = () => {
       />
       <Notification />
       <Search search={search} setSearch={setSearch}/>
-      <View style={[styles.content, {marginTop: 75}]}>
+      <View style={styles.content}>
         <FlatList
           contentContainerStyle={[styles.listcontainer]}
           data={filteredGroups}
@@ -46,7 +46,7 @@ const App = () => {
               <Link
                 href={{
                   pathname: `/(groups)/group/${item.id}`,
-                  params: { id: item.id, name: item.name }
+                  params: { name: item.name, members: item.members }
                 }}
                 asChild
               >
@@ -56,7 +56,7 @@ const App = () => {
               </Link>
             </View>
           }
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id?.toString() ?? ""}
         />
       </View>
       <AddNewButton/>
@@ -65,4 +65,3 @@ const App = () => {
 }
 
 export default App
-

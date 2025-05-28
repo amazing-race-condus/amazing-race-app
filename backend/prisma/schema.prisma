@@ -47,6 +47,7 @@ model Event {
 model Group {
   id                 Int       @id @default(autoincrement())
   name               String    @unique
+  members            Int       @default(-1)
   event_id           Int?
   finish_time        DateTime?
   next_checkpoint_id Int?
@@ -88,8 +89,8 @@ model CheckpointDistance {
   time     Int
   event_id Int?
 
-  from  Checkpoint @relation("FromCheckpoint", fields: [from_id], references: [id])
-  to    Checkpoint @relation("ToCheckpoint", fields: [to_id], references: [id])
+  from  Checkpoint @relation("FromCheckpoint", fields: [from_id], references: [id], onDelete: Cascade)
+  to    Checkpoint @relation("ToCheckpoint", fields: [to_id], references: [id], onDelete: Cascade)
   event Event?     @relation(fields: [event_id], references: [id])
 
   @@unique([from_id, to_id, event_id])

@@ -2,8 +2,7 @@ node_modules
 dist
 
 /prisma/prisma
-.env
-.env.test
+.env*
 *.log
 
 public

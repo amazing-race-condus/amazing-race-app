@@ -5,13 +5,16 @@ import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
+import { Group } from "@/types"
 
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const router = useRouter()
+  const nextRef = useRef(null)
 
   const [groupname, setGroupname] = useState("")
+  const [groupMembers, setGroupMembers] = useState<number>(0)
 
   useEffect(() => {
     if (Platform.OS !== "web") {
@@ -24,24 +27,23 @@ const AddNew = () => {
 
   const addNewGroup = async () => {
     if (groupname.trim()) {
-      const newGroup = {
+      const newGroup: Group = {
         name: groupname,
-        id: "0"
+        members: groupMembers,
       }
-      console.log(newGroup)
 
-      dispatch(addGroupReducer(newGroup, groupname))
+      dispatch(addGroupReducer(newGroup))
       setGroupname("")
       Keyboard.dismiss()
       bottomSheetRef.current?.close()
     }
   }
 
-  const handleBAck = () => {
-    if (Platform.OS !== "ios") {
-      router.navigate("/")
-    } else {
+  const handleBack = () => {
+    if (router.canGoBack()) {
       router.back()
+    } else {
+      router.navigate("/")
     }
   }
 
@@ -51,7 +53,7 @@ const AddNew = () => {
         index={0}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
-        onClose={handleBAck}
+        onClose={handleBack}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
@@ -74,9 +76,24 @@ const AddNew = () => {
               padding: 12,
               marginBottom: 16,
             }}
-            returnKeyType="done"
+            returnKeyType="next"
             onSubmitEditing={addNewGroup}
             autoFocus
+          />
+          <BottomSheetTextInput
+            ref={nextRef}
+            onChangeText={text => setGroupMembers(Number(text))}
+            keyboardType="numeric"
+            placeholder="Syötä jäsenten määrä"
+            style={{
+              borderWidth: 1,
+              borderColor: "silver",
+              borderRadius: 8,
+              padding: 12,
+              marginBottom: 16,
+            }}
+            returnKeyType="done"
+            onSubmitEditing={addNewGroup}
           />
           <Pressable
             onPress={addNewGroup}
@@ -87,7 +104,7 @@ const AddNew = () => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Add Group</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
           </Pressable>
         </BottomSheetView>
       </BottomSheet>

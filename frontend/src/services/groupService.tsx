@@ -19,12 +19,12 @@ export const getAllGroups = async (): Promise<Group[]> => {
   return response.data
 }
 
-export const createGroup = async (newObject: Group) => {
-  const response = await axios.post<Group>(`${url}/groups`, newObject)
+export const createGroup = async (newGroup: Group) => {
+  const response = await axios.post<Group>(`${url}/groups`, newGroup)
   return response.data
 }
 
-export const removeGroup = async (id: string) => {
+export const removeGroup = async (id: number) => {
   const request = axios.delete(`${url}/groups/${id}`)
   const response = await request
   return response.data

@@ -19,7 +19,8 @@ describe("Get Groups", () => {
     const response = await request(app)
       .post("/api/groups")
       .send({
-        name: "Test group"
+        name: "Test group",
+        members: 4
       })
     ide = response.body.id
     expect(response.status).toBe(200)
@@ -33,28 +34,17 @@ describe("Get Groups", () => {
   })
 
   it("Group is not created with existing name", async () => {
-    // await request(app)
-    //   .post("/api/groups")
-    //   .send({
-    //     name: "Test group"
-    //   })
     const response = await request(app)
       .post("/api/groups")
       .send({
-        name: "Test group"
+        name: "Test group",
+        members: 4
       })
     expect(response.status).toBe(400)
     expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi")
   })
 
   it("Group is deleted", async () => {
-    // const response = await request(app)
-    //   .post("/api/groups")
-    //   .send({
-    //     name: "Test group"
-    //   })
-
-    //const id = response.body.id
     const response1 = await request(app)
       .delete(`/api/groups/${ide}`)
       .send({
