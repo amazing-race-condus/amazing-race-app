@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity, FlatList } from "react-native"
+import { View, Text, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
@@ -84,7 +84,7 @@ const Checkpoints = () => {
 
   return (
     <View style={styles.content}>
-      {pathname === "/settings" && (
+      {pathname.startsWith("/settings") && (
         <Text style={styles.header}>Hallinnoi rasteja:</Text>
       )}
       {pathname.startsWith("/checkpoints") && (
