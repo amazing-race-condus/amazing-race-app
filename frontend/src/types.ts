@@ -20,4 +20,6 @@ export type NotificationState = {
 export type Group = {
     id: string,
     name: string,
+    penalty: number[],
+    disqualified: boolean,
 }

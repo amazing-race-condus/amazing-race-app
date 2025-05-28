@@ -6,6 +6,7 @@ import checkpointsRouter from "../controllers/checkpoints"
 import groupsRouter from "../controllers/groups"
 import { unknownEndpoint, errorHandler } from "../utils/middleware"
 import settingsRouter from "../controllers/settings"
+import penaltyRouter from "../controllers/penalties"
 
 const prisma = new PrismaClient()
 
@@ -17,6 +18,7 @@ const port = 3000
 
 app.use("/api/checkpoints", checkpointsRouter)
 app.use("/api/groups", groupsRouter)
+app.use("/api/penalty", penaltyRouter)
 app.use("/api/settings", settingsRouter)
 
 app.all("{*splat}", (req, res) => {

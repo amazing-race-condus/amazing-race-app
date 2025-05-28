@@ -1,12 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup, updateGroupPenalty } from "@/services/groupService"
+import { getPenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
 
 export interface groupState {
     id : string,
-    name : string
+    name : string,
+    penalty: number[],
+    disqualified: boolean,
 }
 
 const initialState: groupState[] = []
@@ -33,6 +36,21 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
   }
 }
 
+export const updateReducer = (id: string, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  try {
+    // const body = {
+    //   penalty: penalty,
+    // }
+    const updated = await updateGroupPenalty(id, penalty)
+
+    dispatch(setGroups(updated))
+    dispatch(setNotification("Ryhmä rangaistu", "success"))
+  } catch (error) {
+    console.error("Failed to update penalty:", error)
+    dispatch(setNotification("Rangaistus ei onnistunut", "error"))
+  }
+}
+
 export const addGroupReducer = (newObject: groupState, name: string) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createGroup(newObject)
@@ -53,7 +71,6 @@ export const removeGroupReducer =
     try {
       await removeGroup(id)
 
-      // get current state
       const current = getState().groups
       const updated = current.filter((groups) => groups.id !== id)
 

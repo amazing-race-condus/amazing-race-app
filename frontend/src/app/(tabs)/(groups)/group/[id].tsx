@@ -4,6 +4,7 @@ import { Alert, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch } from "react-redux"
 import { removeGroupReducer } from "@/reducers/groupSlice"
+import Penalty from "./penalty"
 
 const Team = () => {
   const { id, name } = useLocalSearchParams<{id: string, name: string}>()
@@ -84,15 +85,7 @@ const Team = () => {
 
         <Text style={styles.header}>Ryhmän reitti</Text>
 
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
-
-        <Text style={styles.header}>Ryhmän aikasakot</Text>
-
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
-
-        <Text style={styles.header}>Sakota ryhmä</Text>
-
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
+        <Penalty/>
 
         <Text style={styles.header}>Poista ryhmä</Text>
 
