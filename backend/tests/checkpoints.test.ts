@@ -19,12 +19,11 @@ describe("Get all checkpoints", () => {
 
   it("all checkpoints are returned", async () => {
     const response = await request(app).get("/api/checkpoints")
-    expect(response.body.length).toBe(initialCheckpoints.length)
+    expect(response.body.length).toBe(-1)
   })
 })
 
 describe("Viewing a specific checkpoint", () => {
-
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
@@ -56,7 +55,6 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
-
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
