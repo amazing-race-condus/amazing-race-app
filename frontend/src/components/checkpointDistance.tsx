@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platform } from "react-native";
 import axios, { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux";
+import { Stack } from "expo-router"
 import { RootState } from "@/store/store";
 import { Checkpoint, Distances } from "@/types";
 import { AppDispatch } from "@/store/store";
@@ -15,7 +16,7 @@ import theme from "@/theme"
 const screenWidth = Dimensions.get("window").width
 
 
-const RouteDistance = () => {
+const CheckpointDistance = () => {
   const url =
         Platform.OS === "web"
           ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
@@ -27,7 +28,7 @@ const RouteDistance = () => {
   const [formValues, setFormValues] = useState<Distances>({});
   const dispatch = useDispatch<AppDispatch>()
 
-  const getRouteDistances = async () => {
+  const getCheckpointDistances = async () => {
     const response = await axios.get(`${url}/settings/${eventId}/distances`)
     const distances = response.data
     if (distances) {
@@ -35,7 +36,7 @@ const RouteDistance = () => {
     }
   }
 
-  const setRouteDistances = async () => {
+  const setCheckpointDistances = async () => {
     try {
       await axios.put<Distances>(`${url}/settings/update_distances`, formValues)
       dispatch(setNotification("Rastien väliset etäisyydet päivitetty", "success"))
@@ -49,7 +50,7 @@ const RouteDistance = () => {
   }
 
   useEffect(() => {
-    getRouteDistances()
+    getCheckpointDistances()
   }, [])
 
   const filterCriteria = (fromCheckpoint: Checkpoint) => {
@@ -79,7 +80,6 @@ const RouteDistance = () => {
       },
     }));
   };
-  console.log(formValues)
 
   return (
     <View style={styles.container}>
@@ -93,6 +93,8 @@ const RouteDistance = () => {
           {expandedIndex === fromIndex && (
             <View style={styles.formContainer}>
               {checkpoints.filter(filterCriteria(fromCheckpoint)).map((toCheckpoint, toIndex) => (
+                <View key={toIndex} style={{flexDirection: "row"}}>
+                  <Text>Field</Text>
                 <TextInput
                   keyboardType="numeric"
                   key={toIndex}
@@ -100,15 +102,17 @@ const RouteDistance = () => {
                   placeholder={toCheckpoint.name + ((toCheckpoint.type === "FINISH") ? " (Maali)" : "")}
                   value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
                   onChangeText={(value) => handleInputChange(fromCheckpoint.id, toCheckpoint.id, value)}
+                  maxLength={4}
                 />
+                </View>
               ))}
             </View>
           )}
         </View>
       ))}
-    <Pressable style={styles.button} onPress={() => { setRouteDistances() }}>
-      <Text>Aseta</Text>
-    </Pressable>
+        <Pressable style={styles.button} onPress={() => { setCheckpointDistances() }}>
+          <Text>Aseta</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -180,4 +184,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RouteDistance
+export default CheckpointDistance
