@@ -1,6 +1,10 @@
 import { Stack } from "expo-router"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 
+export const unstable_settings = {
+  initialRouteName: "settings/options"
+}
+
 export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -10,17 +14,7 @@ export default function Layout() {
         }}
       >
         <Stack.Screen
-          name="checkpointsList"
-        />
-        <Stack.Screen
-          name="addNew"
-          options={{
-            presentation: "transparentModal",
-            animation: "none",
-          }}
-        />
-        <Stack.Screen
-          name="[id]"
+          name="options"
         />
       </Stack>
     </GestureHandlerRootView>

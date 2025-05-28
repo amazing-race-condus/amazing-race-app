@@ -3,40 +3,39 @@ import { Permutation } from "js-combinatorics";
 /*
 Usage:
 
-get_valid_routes requires four arguments: checkpoints (array of integers, i.e. indices of the checkpoints), distances
-(object, see interface below), and minimum and maximum length of the routes. Note that the array checkpoint should not contain
+get_valid_routes requires six arguments: checkpoints (array of integers, i.e. indices of the checkpoints), distances
+(object, see interface below), minimum and maximum length of the routes, and start and end points. Note that the array checkpoints should not contain
 the start and end points. Returns an array of arrays of integers, describing the route (without start or end points).
 */
-
 
 interface Distances {
   [start:number]: {[end:number]: number}
 }
 
-export const route_distance = (route: number[], distances: Distances): number => {
-  const array_length = route.length;
+export const routeDistance = (route: number[], distances: Distances, start: number, end: number): number => {
+  const wholeRoute = [start].concat(route, [end])
 
-  // Start to checkpoint 1.
-  let current_distance = distances[0][route[0]];
+  // From start point to the first checkpoint.
+  let currentDistance = distances[wholeRoute[0]][wholeRoute[1]]
 
-  for (let i = 0; i < array_length - 1; i++) {
-    current_distance += distances[route[i]][route[i+1]];
-  }
+  // To next checkpoints and the end point.
+  for (let i = 2; i < wholeRoute.length; i++) {
+    const prev_cp = wholeRoute[i-1]
+    const curr_cp = wholeRoute[i]
+    currentDistance += distances[prev_cp][curr_cp]}
 
-  // Checkpoint n to finish.
-  current_distance += distances[route[array_length-1]][array_length+1];
-  return current_distance;
+  return currentDistance;
 }
 
 // Verifies that the route length is within specified bounds.
-const verify_route = (permutation: number[], distances: Distances, min: number, max: number): boolean => {
-  const distance = route_distance(permutation, distances);
+export const verifyRoute = (permutation: number[], distances: Distances, min: number, max: number, start: number, end: number): boolean => {
+  const distance = routeDistance(permutation, distances, start, end);
   return distance >= min && distance <= max;
 }
 
-export const get_valid_routes = (checkpoints: number[], distances: Distances, min: number, max: number): number[][] => {
-  const permutations = [...new Permutation(checkpoints)];
+export const getValidRoutes = (checkpoints: number[], distances: Distances, min: number, max: number, start: number, end: number, length: number = 4): number[][] => {
+  const permutations = [...new Permutation(checkpoints, length)];
   return permutations.filter((permutation) => {
-    return verify_route(permutation, distances, min, max);
+    return verifyRoute(permutation, distances, min, max, start, end);
   });
 };

@@ -154,8 +154,8 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
 
   */
 
-  const distances = req.body.distances
-  const event_id = req.body.event_id
+  const distances = req.body
+  const event_id = 1 //req.body.event_id
 
   let upserts = 0
   let failures = 0
