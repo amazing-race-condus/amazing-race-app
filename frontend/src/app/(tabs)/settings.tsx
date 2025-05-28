@@ -4,7 +4,7 @@ import Notification from "@/components/Notification"
 import AddCheckpoint from "@/components/addCheckpoint"
 import RouteMinMax from "@/components/routeMinMax"
 import { styles } from "@/styles/commonStyles"
-import CheckpointSettings from "@/components/CheckpointSettings"
+import CheckpointSettings from "@/components/Checkpoints"
 
 const Settings = () => {
   return (

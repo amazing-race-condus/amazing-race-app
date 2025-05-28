@@ -1,14 +1,17 @@
-import { View, Text, Pressable, Alert, Platform } from "react-native"
+import { View, Text, Pressable, Alert, Platform, TouchableOpacity, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { RootState, AppDispatch } from "@/store/store"
 import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
 import { getType, sortCheckpoints } from "@/utils/checkpointUtils"
+import { usePathname, Link } from "expo-router"
+import { Entypo } from "@expo/vector-icons"
 
-const CheckpointSettings = () => {
+const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
+  const pathname = usePathname()
 
   useEffect(() => {
     dispatch(fetchCheckpoints())
@@ -42,17 +45,36 @@ const CheckpointSettings = () => {
 
   const ItemSeparator = () => <View style={styles.separator} />
 
-  const CheckpointSettingsItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
+  const CheckpointItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
     const translatedType = getType(type)
-    return (
 
+    if (pathname.startsWith("/checkpoints")) {
+      return (
+        <Link href={`/checkpoints/${id}`} asChild>
+          <TouchableOpacity style={styles.item}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.checkpointName}>
+                {name}
+                {translatedType !== "" && (
+                  <Text style={styles.checkpointType}> ({translatedType})</Text>
+                )}
+              </Text>
+            </View>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
+      )
+    }
+    return (
       <View style={styles.item}>
-        <Text style={styles.checkpointName}>
-          {name}
-          {translatedType !== "" && (
-            <Text style={styles.checkpointType}> ({translatedType})</Text>
-          )}
-        </Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.checkpointName}>
+            {name}
+            {translatedType !== "" && (
+              <Text style={styles.checkpointType}> ({translatedType})</Text>
+            )}
+          </Text>
+        </View>
         <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(id, name)}>
           <Text style={styles.buttonText}>Poista</Text>
         </Pressable>
@@ -66,7 +88,7 @@ const CheckpointSettings = () => {
       <View style={styles.listcontainer}>
         {sortedCheckpoints.map((item, index) => (
           <View key={item.id}>
-            <CheckpointSettingsItem name={item.name} type={item.type} id={item.id} />
+            <CheckpointItem name={item.name} type={item.type} id={item.id} />
             {index < sortedCheckpoints.length - 1 && <ItemSeparator />}
           </View>
         ))}
@@ -75,4 +97,4 @@ const CheckpointSettings = () => {
   )
 }
 
-export default CheckpointSettings
+export default Checkpoints
