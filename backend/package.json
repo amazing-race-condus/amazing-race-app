@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "npx dotenv -e .env.test -- nodemon src/index.ts",
+    "dev": "npx dotenv -e .env.dev -- nodemon src/index.ts",
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "serve": "node dist/index.js",
     "lint": "eslint .",
-    "test": "jest",
-    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev"
+    "test": "dotenv -e .env.test -- jest",
+    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
+    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
