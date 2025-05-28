@@ -41,7 +41,6 @@ model Event {
   route              Route[]
   checkpointDistance CheckpointDistance[]
   penalty            Penalty[]
-  penaltyType        PenaltyType[]
 }
 
 model Group {
@@ -99,20 +98,9 @@ model CheckpointDistance {
 model Penalty {
   id              Int  @id @default(autoincrement())
   group_id        Int
-  penalty_type_id Int
+  time            Int
   event_id        Int?
 
   group        Group       @relation(fields: [group_id], references: [id])
-  penalty_type PenaltyType @relation(fields: [penalty_type_id], references: [id])
   event        Event?      @relation(fields: [event_id], references: [id])
-}
-
-model PenaltyType {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  time     Int
-  event_id Int?
-
-  event   Event?    @relation(fields: [event_id], references: [id])
-  penalty Penalty[]
 }
