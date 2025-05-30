@@ -12,16 +12,39 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  container2: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  itemContainer: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+  },
+  formContainer2: {
+    padding: 10,
+    backgroundColor: "#fff",
+  },
   header: {
     margin: 10,
     fontSize: theme.fontSizes.header,
     fontWeight: "bold",
     color: theme.colors.textTitle,
   },
-  content: {
+  itemHeader: {
+    padding: 10,
+    backgroundColor: "#f0f0f0",
+  },
+  content2: {
     alignItems: "center",
     justifyContent: "flex-start",
     flex: 1
+  },
+  content: {
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   inputField: {
     borderWidth: 1,
@@ -32,6 +55,13 @@ export const styles = StyleSheet.create({
     marginBottom:10,
     color: theme.colors.textInput,
     backgroundColor: "white",
+  },
+  input: {
+    marginBottom: 10,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
   },
   button: {
     height: 30,
@@ -102,6 +132,14 @@ export const styles = StyleSheet.create({
     color: theme.colors.background,
     fontWeight: "bold",
   },
+  formText2: {
+    color: theme.colors.background,
+    fontWeight: "bold",
+    marginBottom: 10
+  },
+  itemText: {
+    fontSize: 16,
+  },
   notification: {
     backgroundColor: theme.colors.notificationBackground,
     borderStyle: "solid",
@@ -137,7 +175,6 @@ export const styles = StyleSheet.create({
   },
   formContainer: {
     backgroundColor: theme.colors.listItemBackground,
-    alignItems: "center",
     padding: 20,
     borderRadius: 12,
     shadowColor: "#000",
