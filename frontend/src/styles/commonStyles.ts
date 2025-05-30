@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
   content: {
     alignItems: "center",
     justifyContent: "flex-start",
+    flex: 1
   },
   inputField: {
     borderWidth: 1,
