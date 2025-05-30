@@ -208,13 +208,15 @@ const validateCheckpointDistances = async (): Promise<Boolean> => {
         distances[row.from_id] = {}
       distances[row.from_id][row.to_id] = row.time
     })
-  
+    
     const checkpoints = await prisma.checkpoint.findMany()
 
     for (let i = 0; i < checkpoints.length; i++) {
-      for (let j = 0; j < checkpoints.length; i++) {
-        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START") {
-          if (!(Number.isInteger(distances[i][j]))) {
+      for (let j = 0; j < checkpoints.length; j++) {
+        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
+          const fromId = checkpoints[i].id
+          const toId = checkpoints[j].id
+          if (!(Number.isInteger(distances[fromId][toId]))) {
             return false
           }
         }
@@ -252,11 +254,11 @@ settingsRouter.get("/create_routes", async (req: Request, res: Response) => {
   */
 
   //res.status(200).json({routesAmount: 123})
-  console.log("Hep")
+  
   if (await validateCheckpointDistances()) {
-    res.status(400).json({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
-  } else {
     res.status(200).json({routesAmount: routes.length})
+  } else {
+    res.status(400).json({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
   }
 
 })
