@@ -29,16 +29,16 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const addGroupReducer = (newGroup: Group) => async (dispatch: AppDispatch) => {
+export const addGroupReducer = (newObject: Group) => async (dispatch: AppDispatch) => {
   try {
-    const newCheckpoint = await createGroup(newGroup)
-    dispatch(appendGroup(newCheckpoint))
-    dispatch(setNotification(`Ryhmä '${newGroup.name}' lisätty`, "success"))
+    const newGroup = await createGroup(newObject)
+    dispatch(appendGroup(newGroup))
+    dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {
     console.error("Failed to add Group:", error)
     if (error instanceof AxiosError) {
       dispatch(setNotification(
-        error.response?.data.error ?? `Ryhmää '${newGroup.name}' ei voitu lisätä: ${error.message}`, "error"
+        error.response?.data.error ?? `Ryhmää '${newObject.name}' ei voitu lisätä: ${error.message}`, "error"
       ))
     }
   }
