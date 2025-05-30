@@ -15,7 +15,7 @@ export const initialCheckpoints = [
   }
 ]
 
-export const finalCheckpoints = [
+export const checkpoints = [
   {
     name: "Oodi",
     type: Type.FINISH,

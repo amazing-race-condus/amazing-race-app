@@ -23,7 +23,6 @@ const RouteMinMax = () => {
     const response = await axios.get(`${url}/settings/${eventId}/limits`)
     const initialLimits = response.data
     if (initialLimits) {
-      console.log("initiallimits", initialLimits)
       setMinimum(initialLimits.minRouteTime.toString())
       setMaximum(initialLimits.maxRouteTime.toString())
     }
@@ -49,8 +48,8 @@ const RouteMinMax = () => {
   const updateRouteMinMax = () => {
     const data = {
       "id": eventId,
-      "min_route_time": Number(minimum),
-      "max_route_time": Number(maximum)
+      "minRouteTime": Number(minimum),
+      "maxRouteTime": Number(maximum)
     }
     updateLimit(data)
   }
