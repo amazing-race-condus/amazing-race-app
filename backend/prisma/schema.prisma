@@ -14,6 +14,12 @@ enum Type {
   INTERMEDIATE
 }
 
+enum PenaltyType {
+  HINT
+  SKIP
+  OVERTIME
+}
+
 model Checkpoint {
   id       Int     @id @default(autoincrement())
   name     String  @unique
@@ -100,7 +106,8 @@ model Penalty {
   id              Int  @id @default(autoincrement())
   groupId         Int  @map("group_id")
   time            Int
-  checkpointId    Int? @map("checkpoint_id")
+  type            PenaltyType
+  checkpointId    Int @map("checkpoint_id")
   eventId         Int? @map("event_id")
 
   group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
