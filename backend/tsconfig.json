@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
-    "types": ["jest"],
+    "types": ["jest", "node"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
