@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
-import { Distances } from "../../frontend/src/types"
+import { getValidRoutes } from "../src/routes"
 const settingsRouter = express.Router()
 
 const validateMinAndMax = (min: number, max: number, res: Response) : boolean => {
@@ -192,74 +192,70 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   res.status(200).json({upserts: upserts, failures: failures})
 })
 
+settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
+  console.log("--- settingsRouter req.body:", req.body)
 
-const validateCheckpointDistances = async (): Promise<Boolean> => {
-  try {
-    const event_id = 1
-    const result = await prisma.checkpointDistance.findMany({
-      select: {from_id: true, to_id: true, time: true},
-      where: {event_id: event_id}
-    })
+  const event_id = 1 //req.body.event_id
+  console.log("create_routes, event_id:", event_id)
 
-    const distances: { [from_id: number]: {[to_id: number]: number} } = {}
+  //TODO: validate that all checkpoint distances are set for this event
+  //if ()
+  //  res.status(400).send({error: "Reittejä ei voi luoda, koska kaikkien rastien välille ei ole määritelty matka-aikoja."})
 
-    result.map(row => {
-      if (!(row.from_id in distances))
-        distances[row.from_id] = {}
-      distances[row.from_id][row.to_id] = row.time
-    })
-    
-    const checkpoints = await prisma.checkpoint.findMany()
+  //TODO: get all of these from database
+  const checkpoints = [11, 22, 33, 44]
+  const start = 10
+  const end = 99
+  const min = 0
+  const max = 999999999999999
 
-    for (let i = 0; i < checkpoints.length; i++) {
-      for (let j = 0; j < checkpoints.length; j++) {
-        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
-          const fromId = checkpoints[i].id
-          const toId = checkpoints[j].id
-          if (!(Number.isInteger(distances[fromId][toId]))) {
-            return false
-          }
-        }
-      }
-    }
-    return true
-  } catch (error) {
-    return false
+  //TODO
+  //if (!(checkpoints.length === 4 && ...))
+  //  res.send({error: "Reittejä ei voi luoda, koska tapahtumalle ei ole määritelty kaikkia tarvittavia tietoja: 4 rastia, 1 maali, 1 lähtö, reiti nminimikesto ja reitin maksimikesto)"})
+
+  const distances = {
+    10: {11: 999, 22: 999, 33: 999, 44: 999},
+    11: {22: 999, 33: 999, 99: 999, 44: 999},
+    22: {11: 999, 33: 999, 99: 999, 44: 999},
+    33: {11: 999, 22: 999, 99: 999, 44: 999},
+    44: {11: 999, 22: 999, 33: 999, 99: 999}
+  } //TODO: get from database
+
+  const routes = getValidRoutes(checkpoints, distances, min, max, start, end)
+  //example: [ [ 11, 22, 33, 44 ], [ 11, 22, 44, 33 ], [ 33, 11, 22, 44 ] ]
+
+  console.log("--- routes from getValidRoutes:", routes)
+
+  if (routes.length === 0)
+    res.status(400).send({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
+
+  //TODO: save routes in database (and delete old routes and groups' routes)
+  //...
+
+  const route_ids = [101, 102, 103] //TODO: get routes from database
+  const group_ids = [42, 55, 53, 63] //TODO: get groups from database. const groups = await prisma.group.findMany({ where: {event_id: event_id}}) 
+
+  //save a route for every group in the database
+  let group_i = 0
+  for (group_i; group_i < group_ids.length; group_i ++) {
+    const route_i = group_i % route_ids.length
+    const group_id = group_ids[group_i]
+    const route_id = route_ids[route_i]
+
+    console.log("--- save route", route_id, "for group", group_id, "(TODO)")
+
+    //tallennus tietokantaan
+
+    //const updatedData = await prisma.group.update({
+    //  where: { id: group_id, event_id: event_id},
+    //  data: { route_id: route_id },
+    //)
+
+    //console.log("updatedData": updatedData)
+
   }
-}
 
-//add or update distances
-settingsRouter.get("/create_routes", async (req: Request, res: Response) => {
-  //*validointi onnistunut (kaikki matka-ajat olemassa)* ...
-
-  //distances = {}
-
-  //getRoutes()
-  const routes = [
-    [10, 15, 42, 44, 22, 100],
-    [10, 35, 53, 53, 44, 100],
-    [10, 15, 42, 44, 22, 100],
-  ]
-
-  //hae ryhmät
-  const group_ids = [42, 55, 53, 53]
-
-  //tietokantaan tallennus
-  /*
-  for index in range(length(group_ids)):
-    route_index = index % len(routes)
-    
-
-  //get all groups
-  */
-
-  //res.status(200).json({routesAmount: 123})
-  
-  if (await validateCheckpointDistances()) {
-    res.status(200).json({routesAmount: routes.length})
-  } else {
-    res.status(400).json({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
-  }
+  res.status(200).json({routesAmount: routes.length})
 
 })
 
