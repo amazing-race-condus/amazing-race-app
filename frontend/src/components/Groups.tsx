@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity, FlatList } from "react-native"
+import { View, Text, Pressable, Alert, Platform, TouchableOpacity, ScrollView } from "react-native"
 import { useCallback, useState } from "react"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
@@ -23,6 +23,8 @@ const Groups = () => {
       dispatch(fetchGroups())
     }, [dispatch])
   )
+
+  const ItemSeparator = () => <View style={styles.separator} />
 
   const handleRemoveGroup = (id: string | number, name: string) => {
     if (Platform.OS === "web") {
@@ -49,7 +51,7 @@ const Groups = () => {
   }
 
   const GroupItem = ({ name, members, id }: { name: string; members: number; id: string }) => {
-    if (pathname === "/settings/groups") {
+    if (pathname ==="/settings/groups") {
       return (
         <View style={styles.item}>
           <View style={{ flex: 1 }}>
@@ -78,32 +80,23 @@ const Groups = () => {
     )
   }
 
-  const ItemSeparator = () => <View style={styles.separator} />
-
   return (
     <View style={styles.container}>
-      {pathname === "/" && (
-        <Text style={styles.title}>Ryhmät:</Text>
-      )}
-      {pathname.startsWith("/settings") && (
-        <Text style={styles.header}>Hallinnoi ryhmiä:</Text>
-      )}
+      {pathname === "/" && <Text style={styles.title}>Ryhmät:</Text>}
+      {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
+
       <Search search={search} setSearch={setSearch} />
-      <View style={styles.content}>
-        <FlatList
-          contentContainerStyle={[styles.listcontainer]}
-          data={filteredGroups}
-          ItemSeparatorComponent={ItemSeparator}
-          renderItem={({ item }) => (
-            <GroupItem
-              name={item.name}
-              members={item.members}
-              id={item.id.toString()}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </View>
+
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <View style={styles.listcontainer}>
+          {filteredGroups.map((item, index) => (
+            <View key={item.id}>
+              <GroupItem name={item.name} members={item.members} id={item.id?.toString() ?? ""} />
+              {index < filteredGroups.length - 1 && <ItemSeparator />}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   )
 }

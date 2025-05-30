@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, TouchableOpacity, Pressable, Platform, Dimensions} from "react-native"
+import { View, Text, TextInput, TouchableOpacity, Pressable, Platform } from "react-native"
 import axios, { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState , AppDispatch } from "@/store/store"

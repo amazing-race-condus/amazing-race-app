@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import {  View } from "react-native"
+import {  View, ScrollView } from "react-native"
 import { useDispatch } from "react-redux"
 import { Stack, useFocusEffect, usePathname } from "expo-router"
 import { AppDispatch} from "@/store/store"
@@ -23,11 +23,11 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Stack.Screen options={{ headerShown: false }} />
         <Notification />
         <Groups />
-      </View>
+      </ScrollView>
       {pathname.startsWith("/settings") && (
         <AddNewButton/>
       )}
