@@ -21,40 +21,40 @@ const validateMinAndMax = (min: number, max: number, res: Response) : boolean =>
 }
 
 settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
+  const eventId = Number(req.params.eventId)
 
-  const event = await prisma.event.findUnique({ select: { max_route_time : true, min_route_time: true }, where: {id: event_id }})
+  const event = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
   console.log(event)
   res.send(event)
 })
 
 settingsRouter.get("/:event_id/min", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
+  const eventId = Number(req.params.eventId)
 
-  const event = await prisma.event.findUnique({ select: { min_route_time: true }, where: {id: event_id }})
+  const event = await prisma.event.findUnique({ select: { minRouteTime: true }, where: {id: eventId }})
 
   res.send(event)
 })
 
 settingsRouter.get("/:event_id/max", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
+  const eventId = Number(req.params.eventId)
 
-  const event = await prisma.event.findUnique({ select: { max_route_time: true }, where: {id: event_id }})
+  const event = await prisma.event.findUnique({ select: { maxRouteTime: true }, where: {id: eventId }})
 
   res.send(event)
 })
 
 settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
-  const event_id = req.body.id
-  const new_min_route_time = req.body.min_route_time
-  const new_max_route_time = req.body.max_route_time
+  const eventId = req.body.id
+  const newMinRouteTime = req.body.minRouteTime
+  const newMaxRouteTime = req.body.maxRouteTime
 
-  if (!validateMinAndMax(new_min_route_time, new_max_route_time, res)) {
+  if (!validateMinAndMax(newMinRouteTime, newMaxRouteTime, res)) {
     return
   } else {
     const updatedEvent = await prisma.event.update({
-      where: {id: event_id},
-      data: {min_route_time: new_min_route_time, max_route_time: new_max_route_time}
+      where: {id: eventId},
+      data: {minRouteTime: newMinRouteTime, maxRouteTime: newMaxRouteTime}
     })
     res.status(200).json(updatedEvent)
   }
@@ -62,16 +62,16 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 //add one distance between two checkpoints
 settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
-  const event_id = req.body.event_id
+  const eventId = req.body.eventId
   const from_checkpoint_id = req.body.from_checkpoint_id
   const to_checkpoint_id = req.body.to_checkpoint_id
   const time = req.body.time
 
   const addedDistance = await prisma.checkpointDistance.create({
     data: {
-      event_id: event_id,
-      from_id: from_checkpoint_id,
-      to_id: to_checkpoint_id,
+      eventId: eventId,
+      fromId: from_checkpoint_id,
+      toId: to_checkpoint_id,
       time: time
     }
   })
@@ -80,13 +80,13 @@ settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
 })
 
 //get a single distance between two checkpoints
-settingsRouter.get("/:event_id/distances/:from_id/:to_id", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-  const from_id = Number(req.params.from_id)
-  const to_id = Number(req.params.to_id)
+settingsRouter.get("/:event_id/distances/:fromId/:toId", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.eventId)
+  const fromId = Number(req.params.fromId)
+  const toId = Number(req.params.toId)
 
   const result = await prisma.checkpointDistance.findFirst({
-    where: {event_id: event_id, from_id: from_id, to_id: to_id}
+    where: {eventId: eventId, fromId: fromId, toId: toId}
   })
 
   if (result) {
@@ -98,19 +98,19 @@ settingsRouter.get("/:event_id/distances/:from_id/:to_id", async (req: Request, 
 })
 
 //get all distances from one checkpoint
-settingsRouter.get("/:event_id/distances/:from_id", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-  const from_id = Number(req.params.from_id)
+settingsRouter.get("/:event_id/distances/:fromId", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.eventId)
+  const fromId = Number(req.params.fromId)
 
   const result = await prisma.checkpointDistance.findMany({
-    select: {to_id: true, time: true},
-    where: {event_id: event_id, from_id: from_id}
+    select: {toId: true, time: true},
+    where: {eventId: eventId, fromId: fromId}
   })
 
   const times: { [index: number]: number} = {}
 
   result.map(row => {
-    times[row.to_id] = row.time
+    times[row.toId] = row.time
   })
 
   res.send(times) //examples: { "2": 30, "15": 11, ... } or {}
@@ -118,19 +118,19 @@ settingsRouter.get("/:event_id/distances/:from_id", async (req: Request, res: Re
 
 //get all distances in an event
 settingsRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
+  const eventId = Number(req.params.eventId)
 
   const result = await prisma.checkpointDistance.findMany({
-    select: {from_id: true, to_id: true, time: true},
-    where: {event_id: event_id}
+    select: {fromId: true, toId: true, time: true},
+    where: {eventId: eventId}
   })
 
-  const times: { [from_id: number]: {[to_id: number]: number} } = {}
+  const times: { [fromId: number]: {[toId: number]: number} } = {}
 
   result.map(row => {
-    if (!(row.from_id in times))
-      times[row.from_id] = {}
-    times[row.from_id][row.to_id] = row.time
+    if (!(row.fromId in times))
+      times[row.fromId] = {}
+    times[row.fromId][row.toId] = row.time
   })
 
   res.send(times) //examples { "1": { "2": 20, "3": 30, ... }, ... } or {}
@@ -142,7 +142,7 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   An example req.body:
 
   {
-    "event_id": 1,
+    "eventId": 1,
     "distances": {
         "2": {"13": 12, "15": 30},
         "3": {"3": 23, "15": 24},
@@ -155,34 +155,34 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   */
 
   const distances = req.body
-  const event_id = 1 //req.body.event_id
+  const eventId = 1 //req.body.eventId
 
   let upserts = 0
   let failures = 0
 
-  for (const [fromId] of Object.entries(distances)) {
-    const from_id = Number(fromId)
+  for (const [newFromId] of Object.entries(distances)) {
+    const fromId = Number(newFromId)
 
-    for (const [toId, time] of Object.entries(distances[fromId])) {
-      const to_id = Number(toId)
+    for (const [newToId, time] of Object.entries(distances[fromId])) {
+      const toId = Number(newToId)
 
       try {
         const upsertedData = await prisma.checkpointDistance.upsert({
           where: {
-            from_id_to_id_event_id: {
-              from_id: from_id,
-              to_id: to_id,
-              event_id: event_id
+            fromId_toId_eventId: {
+              fromId: fromId,
+              toId: toId,
+              eventId: eventId
             }
           },
-          create: {from_id: from_id, to_id: to_id, time: Number(time), event_id: event_id},
+          create: {fromId: fromId, toId: toId, time: Number(time), eventId: eventId},
           update: {time: Number(time)},
         })
 
         console.log("upsertedData:", upsertedData)
         upserts += 1
       } catch {
-        console.log("Error while trying to upsert", from_id, to_id, time, ":")
+        console.log("Error while trying to upsert", fromId, toId, time, ":")
         failures += 1
       }
     }
