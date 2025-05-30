@@ -92,7 +92,7 @@ const CheckpointDistance = () => {
                       keyboardType="numeric"
                       style={styles.input}
                       value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
-                      onChangeText={(value) => handleInputChange(fromCheckpoint.id, toCheckpoint.id, value)}
+                      onChangeText={(value) => handleInputChange(fromCheckpoint.id.toString(), toCheckpoint.id.toString(), value)}
                       maxLength={4}
                     />
                   </View>
