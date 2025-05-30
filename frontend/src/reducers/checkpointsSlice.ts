@@ -3,7 +3,7 @@ import type { AppDispatch, RootState } from "@/store/store"
 import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
 import { setNotification } from "./responseSlice"
 import { AxiosError } from "axios"
-import { CheckpointType } from "@/types"
+import { Checkpoint, CheckpointType } from "@/types"
 
 export interface checkpointState {
     id : string,
@@ -35,16 +35,16 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const addCheckpoitReducer = (newObject: checkpointState, name: string, type: string) => async (dispatch: AppDispatch) => {
+export const addCheckpointReducer = (newObject: Checkpoint) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
     dispatch(appendCheckpoint(newCheckpoint))
-    dispatch(setNotification(`Rasti '${name}' lisätty`, "success"))
+    dispatch(setNotification(`Rasti '${newObject.name}' lisätty`, "success"))
   } catch (error) {
     console.error("Failed to add checkpoint:", error)
     if (error instanceof AxiosError) {
       dispatch(setNotification(
-        error.response?.data.error ?? `Rastia '${name}' ei voitu lisätä: ${error.message}`, "error"
+        error.response?.data.error ?? `Rastia '${newObject.name}' ei voitu lisätä: ${error.message}`, "error"
       ))
     }
   }
