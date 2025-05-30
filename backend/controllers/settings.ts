@@ -21,7 +21,7 @@ const validateMinAndMax = (min: number, max: number, res: Response) : boolean =>
 }
 
 settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
+  const eventId = Number(req.params.event_id)
 
   const event = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
   console.log(event)
@@ -29,7 +29,7 @@ settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
 })
 
 settingsRouter.get("/:event_id/min", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
+  const eventId = Number(req.params.event_id)
 
   const event = await prisma.event.findUnique({ select: { minRouteTime: true }, where: {id: eventId }})
 
@@ -37,7 +37,7 @@ settingsRouter.get("/:event_id/min", async (req: Request, res: Response) => {
 })
 
 settingsRouter.get("/:event_id/max", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
+  const eventId = Number(req.params.event_id)
 
   const event = await prisma.event.findUnique({ select: { maxRouteTime: true }, where: {id: eventId }})
 
@@ -45,6 +45,8 @@ settingsRouter.get("/:event_id/max", async (req: Request, res: Response) => {
 })
 
 settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
+  console.log(req.body)
+
   const eventId = req.body.id
   const newMinRouteTime = req.body.minRouteTime
   const newMaxRouteTime = req.body.maxRouteTime
@@ -62,16 +64,17 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 //add one distance between two checkpoints
 settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
+  console.log(req.body)
   const eventId = req.body.eventId
-  const from_checkpoint_id = req.body.from_checkpoint_id
-  const to_checkpoint_id = req.body.to_checkpoint_id
+  const fromCheckpointId = req.body.from_checkpointId
+  const toCheckpointId = req.body.to_checkpointId
   const time = req.body.time
 
   const addedDistance = await prisma.checkpointDistance.create({
     data: {
       eventId: eventId,
-      fromId: from_checkpoint_id,
-      toId: to_checkpoint_id,
+      fromId: fromCheckpointId,
+      toId: toCheckpointId,
       time: time
     }
   })
@@ -80,10 +83,11 @@ settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
 })
 
 //get a single distance between two checkpoints
-settingsRouter.get("/:event_id/distances/:fromId/:toId", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
-  const fromId = Number(req.params.fromId)
-  const toId = Number(req.params.toId)
+settingsRouter.get("/:event_id/distances/:from_id/:to_id", async (req: Request, res: Response) => {
+  console.log(req.body)
+  const eventId = Number(req.params.event_id)
+  const fromId = Number(req.params.from_id)
+  const toId = Number(req.params.to_id)
 
   const result = await prisma.checkpointDistance.findFirst({
     where: {eventId: eventId, fromId: fromId, toId: toId}
@@ -98,9 +102,9 @@ settingsRouter.get("/:event_id/distances/:fromId/:toId", async (req: Request, re
 })
 
 //get all distances from one checkpoint
-settingsRouter.get("/:event_id/distances/:fromId", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
-  const fromId = Number(req.params.fromId)
+settingsRouter.get("/:event_id/distances/:from_id", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+  const fromId = Number(req.params.from_id)
 
   const result = await prisma.checkpointDistance.findMany({
     select: {toId: true, time: true},
@@ -118,7 +122,7 @@ settingsRouter.get("/:event_id/distances/:fromId", async (req: Request, res: Res
 
 //get all distances in an event
 settingsRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.eventId)
+  const eventId = Number(req.params.event_id)
 
   const result = await prisma.checkpointDistance.findMany({
     select: {fromId: true, toId: true, time: true},

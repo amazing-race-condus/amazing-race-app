@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "test": "dotenv -e .env.test -- jest",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
-    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev"
+    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
+    "seed": "ts-node prisma/seed.ts",
+    "seed:dev": "dotenv -e .env.dev -- ts-node prisma/seed.ts",
+    "seed:test": "dotenv -e .env.test -- ts-node prisma/seed.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +23,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.27",
     "@types/supertest": "^6.0.3",
     "dotenv": "^16.5.0",
     "dotenv-cli": "^8.0.0",

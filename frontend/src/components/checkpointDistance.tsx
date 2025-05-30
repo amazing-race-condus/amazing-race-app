@@ -117,6 +117,8 @@ const CheckpointDistance = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   container2: {
     paddingTop: Constants.statusBarHeight,
@@ -181,6 +183,13 @@ const styles = StyleSheet.create({
     color: theme.colors.background,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  title: {
+    fontSize: 35,
+    margin: 10,
+    fontWeight: "600",
+    color: theme.colors.textTitle,
+    textAlign: "center",
   },
 })
 
