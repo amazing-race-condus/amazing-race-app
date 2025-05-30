@@ -4,6 +4,7 @@ const settingsRouter = express.Router()
 
 const validateMinAndMax = (min: number, max: number, res: Response) : boolean => {
   if (!(Number.isInteger(min) && Number.isInteger(max))) {
+    console.log("hep", min, max, typeof(min), typeof(max))
     res.status(400).json({"error": "Syöte on oltava kokonaisluku."})
     return false
   }
