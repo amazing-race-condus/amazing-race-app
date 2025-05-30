@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "Type" AS ENUM ('START', 'FINISH', 'INTERMEDIATE');
 
+-- CreateEnum
+CREATE TYPE "PenaltyType" AS ENUM ('HINT', 'SKIP', 'OVERTIME');
+
 -- CreateTable
 CREATE TABLE "Checkpoint" (
     "id" SERIAL NOT NULL,
@@ -73,7 +76,8 @@ CREATE TABLE "Penalty" (
     "id" SERIAL NOT NULL,
     "group_id" INTEGER NOT NULL,
     "time" INTEGER NOT NULL,
-    "checkpoint_id" INTEGER,
+    "type" "PenaltyType" NOT NULL,
+    "checkpoint_id" INTEGER NOT NULL,
     "event_id" INTEGER,
 
     CONSTRAINT "Penalty_pkey" PRIMARY KEY ("id")
