@@ -23,25 +23,7 @@ const validateMinAndMax = (min: number, max: number, res: Response) : boolean =>
 
 settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
   const event_id = Number(req.params.event_id)
-
   const event = await prisma.event.findUnique({ select: { max_route_time : true, min_route_time: true }, where: {id: event_id }})
-  console.log(event)
-  res.send(event)
-})
-
-settingsRouter.get("/:event_id/min", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-
-  const event = await prisma.event.findUnique({ select: { min_route_time: true }, where: {id: event_id }})
-
-  res.send(event)
-})
-
-settingsRouter.get("/:event_id/max", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-
-  const event = await prisma.event.findUnique({ select: { max_route_time: true }, where: {id: event_id }})
-
   res.send(event)
 })
 
@@ -61,69 +43,19 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
   }
 })
 
-//add one distance between two checkpoints
-settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
-  const event_id = req.body.event_id
-  const from_checkpoint_id = req.body.from_checkpoint_id
-  const to_checkpoint_id = req.body.to_checkpoint_id
-  const time = req.body.time
-
-  const addedDistance = await prisma.checkpointDistance.create({
-    data: {
-      event_id: event_id,
-      from_id: from_checkpoint_id,
-      to_id: to_checkpoint_id,
-      time: time
-    }
-  })
-
-  res.send(addedDistance)
-})
-
-//get a single distance between two checkpoints
-settingsRouter.get("/:event_id/distances/:from_id/:to_id", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-  const from_id = Number(req.params.from_id)
-  const to_id = Number(req.params.to_id)
-
-  const result = await prisma.checkpointDistance.findFirst({
-    where: {event_id: event_id, from_id: from_id, to_id: to_id}
-  })
-
-  if (result) {
-    res.send(result.time) //example: 30
-  } else {
-    res.status(404).end()
-  }
-
-})
-
-//get all distances from one checkpoint
-settingsRouter.get("/:event_id/distances/:from_id", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-  const from_id = Number(req.params.from_id)
-
-  const result = await prisma.checkpointDistance.findMany({
-    select: {to_id: true, time: true},
-    where: {event_id: event_id, from_id: from_id}
-  })
-
-  const times: { [index: number]: number} = {}
-
-  result.map(row => {
-    times[row.to_id] = row.time
-  })
-
-  res.send(times) //examples: { "2": 30, "15": 11, ... } or {}
-})
-
 //get all distances in an event
 settingsRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
+  const eventId = Number(req.params.event_id)
 
+  const times = await getDistances(eventId)
+
+  res.send(times) //examples { "1": { "2": 20, "3": 30, ... }, ... } or {}
+})
+
+const getDistances = async (eventId: number) => {
   const result = await prisma.checkpointDistance.findMany({
     select: {from_id: true, to_id: true, time: true},
-    where: {event_id: event_id}
+    where: {event_id: eventId}
   })
 
   const times: { [from_id: number]: {[to_id: number]: number} } = {}
@@ -134,8 +66,8 @@ settingsRouter.get("/:event_id/distances", async (req: Request, res: Response) =
     times[row.from_id][row.to_id] = row.time
   })
 
-  res.send(times) //examples { "1": { "2": 20, "3": 30, ... }, ... } or {}
-})
+  return times
+}
 
 //add or update distances
 settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
@@ -257,6 +189,28 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
 
   res.status(200).json({routesAmount: routes.length})
 
-})
+const validateCheckpointDistances = async (): Promise<boolean> => {
+  try {
+    const eventId = 1
+    const distances = await getDistances(eventId)
+    const checkpoints = await prisma.checkpoint.findMany()
+
+    for (let i = 0; i < checkpoints.length; i++) {
+      for (let j = 0; j < checkpoints.length; j++) {
+        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
+          const fromId = checkpoints[i].id
+          const toId = checkpoints[j].id
+          if (!(Number.isInteger(distances[fromId][toId]))) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  } catch (error) {
+    return false
+  }
+}})
+
 
 export default settingsRouter

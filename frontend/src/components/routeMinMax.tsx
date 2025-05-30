@@ -14,7 +14,7 @@ const RouteMinMax = () => {
         ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
         : process.env.EXPO_PUBLIC_BACKEND_URL
 
-  const eventId = 2
+  const eventId = 1
   const [minimum, setMinimum] = useState("")
   const [maximum, setMaximum] = useState("")
   const dispatch = useDispatch<AppDispatch>()
