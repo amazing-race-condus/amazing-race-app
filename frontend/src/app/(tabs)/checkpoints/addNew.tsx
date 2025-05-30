@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
+import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
 import { Checkpoint, CheckpointType } from "@/types"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
@@ -32,7 +32,7 @@ const AddNew = () => {
       type: type as CheckpointType,
       id: "0"
     }
-    dispatch(addCheckpoitReducer(newCheckpoint, name, type))
+    dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     Keyboard.dismiss()
     bottomSheetRef.current?.close()

@@ -20,7 +20,7 @@ const validateMinAndMax = (min: number, max: number, res: Response) : boolean =>
   return true
 }
 
-settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
+settingsRouter.get("/:eventId/limits", async (req: Request, res: Response) => {
   const eventId = Number(req.params.eventId)
 
   const event = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
