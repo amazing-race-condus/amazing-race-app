@@ -78,19 +78,6 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
   res.json(group)
 })
 
-groupsRouter.put("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-  const body = req.body
-
-  const existingGroup = await prisma.group.findUnique({
-    where: { id }
-  })
-
-
-  console.log("Body:", body)
-  console.log(res)
-})
-
 groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 

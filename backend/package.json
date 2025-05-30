@@ -8,7 +8,7 @@
     "build": "tsc",
     "serve": "node dist/index.js",
     "lint": "eslint .",
-    "test": "dotenv -e .env.test -- jest",
+    "test": "dotenv -e .env.test -- jest --runInBand",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
     "reset:dev": "dotenv -e .env.dev -- npx prisma migrate reset && npm run migrate:dev && npm run seed:dev",
