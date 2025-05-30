@@ -8,8 +8,8 @@ export type Checkpoint = {
 
 export interface RouteLimit {
     id: number,
-    min_route_time: number,
-    max_route_time: number
+    minRouteTime: number,
+    maxRouteTime: number
 }
 
 export interface Distances {
