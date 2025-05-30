@@ -6,7 +6,7 @@ import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
-import { setNotification } from "@/reducers/responseSlice"
+import { setNotification } from "@/reducers/notificationSlice"
 
 const RouteMinMax = () => {
   const url =

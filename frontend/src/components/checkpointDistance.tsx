@@ -4,8 +4,8 @@ import axios, { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState , AppDispatch } from "@/store/store"
 import { Checkpoint, Distances } from "@/types"
-import { setNotification } from "@/reducers/responseSlice"
 import { styles } from "@/styles/commonStyles"
+import { setNotification } from "@/reducers/notificationSlice"
 
 const CheckpointDistance = () => {
   const url =

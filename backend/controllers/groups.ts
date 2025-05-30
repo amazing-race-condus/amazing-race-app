@@ -10,6 +10,9 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
   const group = await prisma.group.findUnique({
     where: { id },
+    include: {
+      penalty: true,
+    }
   })
   if (group) {
     res.json(group)
@@ -18,17 +21,19 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-
 groupsRouter.get("/", async (_, res: Response) => {
 
-  const allGroups = await prisma.group.findMany()
+  const allGroups = await prisma.group.findMany({
+    include: {
+      penalty: true,
+    }
+  })
 
   res.send(allGroups)
 })
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
-  console.log(body)
 
   if (!body.name ) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
@@ -86,6 +91,25 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
+groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
 
+  const existingGroup = await prisma.group.findUnique({
+    where: { id },
+    select: { disqualified: true },
+  })
+
+  const group = await prisma.group.update({
+    where: { id },
+    data: { disqualified: !existingGroup?.disqualified },
+  })
+
+  if (group) {
+    res.json(group)
+  } else {
+    res.status(404).json({ error: "Ryhmää ei löydy" })
+  }
+  return
+})
 
 export default groupsRouter

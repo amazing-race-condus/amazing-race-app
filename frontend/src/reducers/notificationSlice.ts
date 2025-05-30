@@ -1,8 +1,8 @@
 import { AppDispatch } from "@/store/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { NotificationState } from "@/types"
+import type { Notification } from "@/types"
 
-const initialState: NotificationState = {
+const initialState: Notification = {
   message: "",
   type: null
 }
@@ -11,7 +11,7 @@ const messageSlice = createSlice({
   name: "notification",
   initialState,
   reducers: {
-    setMessage(state, action: PayloadAction<NotificationState>) {
+    setMessage(state, action: PayloadAction<Notification>) {
       return action.payload
     }
   },

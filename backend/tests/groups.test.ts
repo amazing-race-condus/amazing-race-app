@@ -7,7 +7,7 @@ describe("Get Groups", () => {
     server.close()
   })
 
-  let ide: unknown
+  let groupId: unknown
 
   it("Groups are returned as json", async () => {
     const response = await request(app).get("/api/groups")
@@ -22,14 +22,14 @@ describe("Get Groups", () => {
         name: "Test group",
         members: 4
       })
-    ide = response.body.id
+    groupId = response.body.id
     expect(response.status).toBe(200)
     expect(response.body.name).toBe("Test group")
   })
 
   it("One group is returned", async () => {
     const response = await request(app)
-      .get(`/api/groups/${ide}`)
+      .get(`/api/groups/${groupId}`)
     expect(response.status).toBe(200)
   })
 
@@ -45,11 +45,11 @@ describe("Get Groups", () => {
   })
 
   it("Group is deleted", async () => {
-    const response1 = await request(app)
-      .delete(`/api/groups/${ide}`)
+    const response = await request(app)
+      .delete(`/api/groups/${groupId}`)
       .send({
-        id: ide
+        id: groupId
       })
-    expect(response1.status).toBe(200)
+    expect(response.status).toBe(200)
   })
 })

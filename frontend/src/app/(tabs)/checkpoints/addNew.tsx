@@ -5,7 +5,7 @@ import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
-import { Checkpoint, CheckpointType } from "@/types"
+import { AddCheckpoint, CheckpointType } from "@/types"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 
@@ -14,8 +14,8 @@ const AddNew = () => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const router = useRouter()
 
-  const [name, setName] = useState("")
-  const [type, setType] = useState("INTERMEDIATE")
+  const [name, setName] = useState<string>("")
+  const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
 
   useEffect(() => {
     if (Platform.OS !== "web") {
@@ -27,10 +27,9 @@ const AddNew = () => {
   }, [])
 
   const addNewCheckpoint = async () => {
-    const newCheckpoint: Checkpoint = {
+    const newCheckpoint: AddCheckpoint = {
       name: name,
-      type: type as CheckpointType,
-      id: "0"
+      type: type,
     }
     dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
@@ -80,7 +79,7 @@ const AddNew = () => {
             onSubmitEditing={addNewCheckpoint}
             autoFocus
           />
-          <RadioButton.Group onValueChange={value => setType(value)} value={type}>
+          <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
             <View style={styles.radiobuttonGroup}>
               <View style={styles.radiobuttonItem}>
                 <RadioButton value="START" />
