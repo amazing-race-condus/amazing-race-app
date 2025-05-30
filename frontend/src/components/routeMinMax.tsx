@@ -14,7 +14,7 @@ const RouteMinMax = () => {
         ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
         : process.env.EXPO_PUBLIC_BACKEND_URL
 
-  const eventId = 2
+  const eventId = 1
   const [minimum, setMinimum] = useState("")
   const [maximum, setMaximum] = useState("")
   const dispatch = useDispatch<AppDispatch>()
@@ -23,8 +23,9 @@ const RouteMinMax = () => {
     const response = await axios.get(`${url}/settings/${eventId}/limits`)
     const initialLimits = response.data
     if (initialLimits) {
-      setMinimum(initialLimits.min_route_time.toString())
-      setMaximum(initialLimits.max_route_time.toString())
+      console.log("initiallimits", initialLimits)
+      setMinimum(initialLimits.minRouteTime.toString())
+      setMaximum(initialLimits.maxRouteTime.toString())
     }
   }
 
@@ -47,7 +48,7 @@ const RouteMinMax = () => {
 
   const updateRouteMinMax = () => {
     const data = {
-      "id": eventId,
+      "id": Number(eventId),
       "min_route_time": Number(minimum),
       "max_route_time": Number(maximum)
     }
