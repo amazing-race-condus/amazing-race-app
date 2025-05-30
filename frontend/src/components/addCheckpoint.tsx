@@ -4,7 +4,7 @@ import { AppDispatch } from "@/store/store"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
-import { AddCheckpoint as Todo, CheckpointType } from "@/types"
+import { AddCheckpoint as AddCheckpointType, CheckpointType } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
 import { RadioButton } from "react-native-paper"
 
@@ -14,8 +14,7 @@ const AddCheckpoint = () => {
   const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
 
   const checkpointCreation = async () => {
-    // TODO: fix this type (or export) lol
-    const newCheckpoint: Todo = {
+    const newCheckpoint: AddCheckpointType = {
       name: name,
       type: type as CheckpointType,
     }
