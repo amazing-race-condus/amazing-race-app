@@ -94,8 +94,8 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
         return
       }
     } else if (parsedType === Type.INTERMEDIATE) {
-      const intermediates = allCheckpoints.filter(c => c.type === "INTERMEDIATE").length
-      if (intermediates>=6) {
+      const intermediateCheckpoints = allCheckpoints.filter(c => c.type === "INTERMEDIATE").length
+      if (intermediateCheckpoints >= 6) {
         res.status(400).json({ error: "Välirastien maksimimäärä on 6 rastia." })
         return
       }

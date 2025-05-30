@@ -1,26 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
 import { getAllCheckpoints, removeCheckpoint, createCheckpoint } from "@/services/checkpointService"
-import { setNotification } from "./responseSlice"
+import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
-import { Checkpoint, CheckpointType } from "@/types"
+import { Checkpoint, AddCheckpoint } from "@/types"
 
-export interface checkpointState {
-    id : string,
-    name : string,
-    type: CheckpointType
-}
-
-const initialState: checkpointState[] = []
+const initialState: Checkpoint[] = []
 
 const checkpointSlice = createSlice({
   name: "checkpoints",
   initialState,
   reducers: {
-    setCheckpoints(state, action: PayloadAction<checkpointState[]>) {
+    setCheckpoints(state, action: PayloadAction<Checkpoint[]>) {
       return action.payload
     },
-    appendCheckpoint(state, action: PayloadAction<checkpointState>) {
+    appendCheckpoint(state, action: PayloadAction<Checkpoint>) {
       state.push(action.payload)
     }
   },
@@ -35,7 +29,7 @@ export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const addCheckpointReducer = (newObject: Checkpoint) => async (dispatch: AppDispatch) => {
+export const addCheckpointReducer = (newObject: AddCheckpoint) => async (dispatch: AppDispatch) => {
   try {
     const newCheckpoint = await createCheckpoint(newObject)
     dispatch(appendCheckpoint(newCheckpoint))
@@ -51,7 +45,7 @@ export const addCheckpointReducer = (newObject: Checkpoint) => async (dispatch: 
 }
 
 export const removeCheckpointReducer =
-  (id: string, name: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (id: number, name: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       await removeCheckpoint(id)
 

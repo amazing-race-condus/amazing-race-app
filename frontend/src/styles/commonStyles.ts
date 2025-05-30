@@ -157,4 +157,18 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 8,
   },
+  smallButton2: {
+    height: 30,
+    width: 100,
+    margin: 2,
+    backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
 })

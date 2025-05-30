@@ -77,3 +77,14 @@ export const intermediateCheckpoints = [
   },
 ]
 
+export const initialGroups = [
+  {
+    name: "Testiryhmä",
+    members: 4,
+  },
+  {
+    name: "Toinen ryhmä",
+    members: 3,
+  },
+]
+

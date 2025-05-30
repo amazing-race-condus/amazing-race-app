@@ -1,6 +1,6 @@
 import { Checkpoint } from "@/types"
 
-export const getType = (type?: string): string => {
+export const getType = (type: string): string => {
   switch (type) {
   case "START":
     return "Lähtö"

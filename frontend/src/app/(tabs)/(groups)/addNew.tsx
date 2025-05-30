@@ -5,7 +5,7 @@ import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
-import { Group } from "@/types"
+import { AddGroup } from "@/types"
 
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -13,7 +13,7 @@ const AddNew = () => {
   const router = useRouter()
   const nextRef = useRef(null)
 
-  const [groupname, setGroupname] = useState("")
+  const [groupname, setGroupname] = useState<string>("")
   const [groupMembers, setGroupMembers] = useState<number>(0)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const AddNew = () => {
 
   const addNewGroup = async () => {
     if (groupname.trim()) {
-      const newGroup: Group = {
+      const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
       }

@@ -4,24 +4,22 @@ import { AppDispatch } from "@/store/store"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import React, { useState } from "react"
-import { Checkpoint, CheckpointType } from "@/types"
+import { AddCheckpoint as AddCheckpointType, CheckpointType } from "@/types"
 import { addCheckpoitReducer } from "@/reducers/checkpointsSlice"
 import { RadioButton } from "react-native-paper"
 
 const AddCheckpoint = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const [name, setName] = useState("")
-  const [type, setType] = useState("INTERMEDIATE")
+  const [name, setName] = useState<string>("")
+  const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
 
   const checkpointCreation = async () => {
-    const newCheckpoint: Checkpoint = {
+    const newCheckpoint: AddCheckpointType = {
       name: name,
       type: type as CheckpointType,
-      id: "0"
     }
-    dispatch(addCheckpoitReducer(newCheckpoint, name, type))
+    dispatch(addCheckpoitReducer(newCheckpoint))
     setName("")
-
   }
 
   return (
@@ -37,7 +35,7 @@ const AddCheckpoint = () => {
           onChangeText={setName}
         />
         <Text style={styles.formText}>Rastin tyyppi:</Text>
-        <RadioButton.Group onValueChange={value => setType(value)} value={type}>
+        <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
           <View style={styles.radiobuttonGroup}>
             <View style={styles.radiobuttonItem}>
               <RadioButton value="START" />
