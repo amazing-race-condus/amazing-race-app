@@ -48,7 +48,7 @@ const RouteMinMax = () => {
 
   const updateRouteMinMax = () => {
     const data = {
-      "id": Number(eventId),
+      "id": eventId,
       "min_route_time": Number(minimum),
       "max_route_time": Number(maximum)
     }
