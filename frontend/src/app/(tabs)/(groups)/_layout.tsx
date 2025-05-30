@@ -14,11 +14,17 @@ export default function Layout() {
         }}
       >
         <Stack.Screen
+          name="index"
+        />
+        <Stack.Screen
           name="addNew"
           options={{
             presentation: "transparentModal",
             animation: "none",
           }}
+        />
+        <Stack.Screen
+          name="group/[id]"
         />
       </Stack>
     </GestureHandlerRootView>

@@ -7,24 +7,24 @@ import { removeGroupReducer } from "@/reducers/groupSlice"
 import Penalty from "./penalty"
 
 const Team = () => {
-  const { id, name } = useLocalSearchParams<{id: string, name: string}>()
+  const { id, name, members } = useLocalSearchParams<{id: string, name: string, members: string}>()
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const router = useRouter()
 
   const handleSubmit = () => {
 
     const handleBack = () => {
-      if (Platform.OS !== "ios") {
-        router.navigate("/")
-      } else {
+      if (router.canGoBack()) {
         router.back()
+      } else {
+        router.navigate("/")
       }
     }
 
     if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän rastin?")
+      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän ryhmän?")
       if (confirmed) {
-        dispatch(removeGroupReducer(id, name))
+        dispatch(removeGroupReducer(Number(id)))
         handleBack()
       }
     } else {
@@ -37,7 +37,7 @@ const Team = () => {
             text: "Poista",
             style: "destructive",
             onPress: () => {
-              dispatch(removeGroupReducer(id, name))
+              dispatch(removeGroupReducer(Number(id)))
               handleBack()
             }
           }
@@ -48,14 +48,14 @@ const Team = () => {
 
   const handleDiscqualification = () => {
     if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat diskaa tämän rastin?")
+      const confirmed = window.confirm("Oletko varma että haluat diskaa tämän ryhmän?")
       if (confirmed) {
         console.log("Disqualified")
       }
     } else {
       Alert.alert(
         "Vahvista diskaus",
-        "Oletko varma että haluat diskaa tämän rymän?",
+        "Oletko varma että haluat diskaa tämän ryhmän?",
         [
           { text: "Peru", style: "cancel" },
           {
@@ -77,24 +77,17 @@ const Team = () => {
         <Stack.Screen
           options={{ headerShown: false }}
         />
-
-        <Stack.Screen
-          options={{ headerShown: false }}
-        />
         <Text style={styles.title}>{name}</Text>
-
+        <Text style={styles.breadText}>Jäsenmäärä {members}</Text>
         <Text style={styles.header}>Ryhmän reitti</Text>
 
-        <Penalty/>
+        <Penalty id={id}/>
 
         <Text style={styles.header}>Poista ryhmä</Text>
-
         <Pressable onPress={handleSubmit} style={ styles.button }>
           <Text> Poista </Text>
         </Pressable>
-
         <Text style={styles.header}>Diskaa ryhmä</Text>
-
         <Pressable onPress={handleDiscqualification} style={ styles.button }>
           <Text> Diskaa </Text>
         </Pressable>

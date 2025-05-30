@@ -41,8 +41,6 @@
       # needs: [paths-filter]
       # if: ${{ needs.paths-filter.outputs.backend == 'true' }}
       uses: ./.github/workflows/backend.yaml
-      secrets:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       # && (
       #   (needs.paths-filter.outputs.frontend == 'true' ||

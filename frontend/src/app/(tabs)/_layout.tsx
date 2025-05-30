@@ -24,6 +24,8 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Asetukset",
+          headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
         }}
       />

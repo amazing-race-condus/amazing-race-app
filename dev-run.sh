@@ -28,7 +28,7 @@ if [[ $1 != "-w" ]]; then
 fi
 
 # Start backend
-( cd ./backend ; npm run dev > /dev/null ) &
+x-terminal-emulator -e "cd ./backend; npm run dev"
 BACKEND_PID=$!
 
 # Start frontend

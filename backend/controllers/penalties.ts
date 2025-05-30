@@ -10,6 +10,7 @@ penaltyRouter.get("/", async (req: Request, res: Response) => {
   res.json(penalties)
 })
 
+// Create a new penalty for a group by (Group) ID
 
 penaltyRouter.post("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
@@ -31,11 +32,13 @@ penaltyRouter.post("/:id", async (req: Request, res: Response) => {
   }
 })
 
+// Get all penalties for a group by (Group) ID
+
 penaltyRouter.get("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const penalty = await prisma.penalty.findMany({
-    where: { id },
+    where: { group_id : id },
   })
   if (penalty) {
     res.json(penalty)
@@ -44,15 +47,30 @@ penaltyRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
+// Delete a penalty by (Penalty) ID
+
 penaltyRouter.delete("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
-  const deletedPenalty = await prisma.penalty.deleteMany({
+  const deletedPenalty = await prisma.penalty.delete({
     where: { id },
   })
 
   if (deletedPenalty) {
     res.status(204).end()
+  } else {
+    res.status(404).end()
+  }
+})
+
+penaltyRouter.delete("/all/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const allGroups = await prisma.penalty.deleteMany({
+    where: { group_id : id }
+  })
+
+  if (allGroups) {
+    res.json(allGroups)
   } else {
     res.status(404).end()
   }

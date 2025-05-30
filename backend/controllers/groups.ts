@@ -10,6 +10,9 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
   const group = await prisma.group.findUnique({
     where: { id },
+    include: {
+      penalty: true,
+    }
   })
   if (group) {
     res.json(group)
@@ -20,13 +23,18 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
 groupsRouter.get("/", async (_, res: Response) => {
 
-  const allGroups = await prisma.group.findMany()
+  const allGroups = await prisma.group.findMany({
+    include: {
+      penalty: true,
+    }
+  })
 
   res.send(allGroups)
 })
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
+  console.log(body)
 
   if (!body.name ) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
@@ -43,6 +51,16 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
+  if (body.members < 4) {
+    res.status(400).json({ error: "Ryhmässä tulee olla vähintään 4 jäsentä." })
+    return
+  }
+
+  if (body.members > 20) {
+    res.status(400).json({ error: "WTF: monta teitä oikein on?" })
+    return
+  }
+
   const existingStart = await prisma.group.findFirst({
     where: { name: body.name }
   })
@@ -54,6 +72,7 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
   const group = await prisma.group.create({
     data: {
       name: body.name,
+      members: Number(body.members),
     }
   })
 
@@ -98,6 +117,18 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   })
   if (group) {
     res.json(group)
+  } else {
+    res.status(404).end()
+  }
+})
+
+groupsRouter.delete("/all/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const allGroups = await prisma.group.deleteMany({
+    where: { id },
+  })
+  if (allGroups) {
+    res.json(allGroups)
   } else {
     res.status(404).end()
   }

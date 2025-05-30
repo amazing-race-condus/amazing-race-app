@@ -1,24 +1,28 @@
-import { AppDispatch } from "@/store/store"
-import { Stack, useLocalSearchParams, useRouter } from "expo-router"
+import { AppDispatch, RootState } from "@/store/store"
+import { Stack, useLocalSearchParams } from "expo-router"
 import { Alert, Platform, Pressable, Text, TouchableOpacity, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Entypo } from "@expo/vector-icons"
-import { removeGroupReducer } from "@/reducers/groupSlice"
-import React, { useState } from "react"
+import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
+import React, { useState , useEffect, use } from "react"
 
-const Penalty = () => {
-  //const { id, name } = useLocalSearchParams<{id: string, name: string}>()
-//   const dispatch: AppDispatch = useDispatch<AppDispatch>()
-//   const router = useRouter()
+type PenaltyProps = {
+  id: string
+}
+
+const Penalty = ({ id }: PenaltyProps) => {
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
+  const group = useSelector((state: RootState) =>
+    state.groups.find(group => group.id === Number(id))
+  )
+
+  console.log("Group:", group)
 
   const [visible, setVisible] = useState(false)
 
   return (
     <View style={styles.container}>
-      {/* <Pressable style={styles.item} onPress={() => {setVisible(!visible)}}>
-        <Text style={styles.checkpointName}>Rangaistus</Text>
-      </Pressable> */}
 
       <TouchableOpacity style={styles.item}
         onPress={() => setVisible(!visible)}>
@@ -31,8 +35,36 @@ const Penalty = () => {
       </TouchableOpacity>
 
       {visible &&
+
         <View style={styles.container}>
           <Text>Rangaistus</Text>
+
+          <View style={styles.item}>
+            <Text style={styles.checkpointName}>Anna rangaistus</Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (id) {
+                  dispatch(givePenaltyReducer(Number(id), 5))
+                }
+              }}
+            >
+              <Entypo name="plus" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.container}>
+            {group?.penalty && group.penalty.length > 0 ? (
+              group.penalty.map((penalty) => (
+                <Text key={penalty.id} style={styles.checkpointName}>
+                  {penalty.time}
+                  <Pressable onPress={() => dispatch(removePenaltyReducer(group.id ,penalty.id))}> 
+                    <Text>Poista rangaistus</Text></Pressable>
+                </Text>
+              ))
+            ) : (
+              <Text style={styles.checkpointName}>Ei rangaistuksia</Text>
+            )}
+          </View>
         </View>
       }
     </View>

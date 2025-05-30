@@ -12,14 +12,24 @@ export interface RouteLimit {
     max_route_time: number
 }
 
+export interface Distances {
+  [start:number]: {[end:number]: number}
+}
+
 export type NotificationState = {
     message: string,
     type: "error" | "success" | null
 }
 
-export type Group = {
-    id: string,
+export interface penaltyState {
+    id: number,
+    time: number
+}
+
+export interface Group {
+    id?: number,
     name: string,
-    penalty: number[],
+    members: number,
+    penalty: penaltyState[],
     disqualified: boolean,
 }

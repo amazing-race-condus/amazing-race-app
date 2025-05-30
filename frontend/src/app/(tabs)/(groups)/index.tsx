@@ -8,6 +8,7 @@ import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
 import Search from "@/components/Search"
 import AddNewButton from "@/components/addGroupButton"
+import { Entypo } from "@expo/vector-icons"
 
 const App = () => {
   const [search, setSearch] = useState<string>("")
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Ryhmät:</Text>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -46,17 +48,18 @@ const App = () => {
               <Link
                 href={{
                   pathname: `/(groups)/group/${item.id}`,
-                  params: { id: item.id, name: item.name }
+                  params: { name: item.name, members: item.members }
                 }}
                 asChild
               >
                 <TouchableOpacity style={styles.item}>
                   <Text style={styles.checkpointName}>{item.name}</Text>
+                  <Entypo name="chevron-right" size={24} color="black" />
                 </TouchableOpacity>
               </Link>
             </View>
           }
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id?.toString() ?? ""}
         />
       </View>
       <AddNewButton/>
@@ -65,4 +68,3 @@ const App = () => {
 }
 
 export default App
-
