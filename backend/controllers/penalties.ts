@@ -9,16 +9,16 @@ penaltyRouter.get("/", async (req: Request, res: Response) => {
   res.json(penalties)
 })
 
-// Create a new penalty for a group by (Group) ID
-
-penaltyRouter.post("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
+penaltyRouter.post("/:groupid", async (req: Request, res: Response) => {
+  const id = Number(req.params.groupid)
   const body = req.body
 
   const newPenalty = await prisma.penalty.create({
     data: {
       groupId: id,
-      time: body.penalty_time,
+      time: body.penaltyTime,
+      type: body.penaltyType,
+      checkpointId: body.checkpointId
     }
   })
 
@@ -29,10 +29,8 @@ penaltyRouter.post("/:id", async (req: Request, res: Response) => {
   }
 })
 
-// Get all penalties for a group by (Group) ID
-
-penaltyRouter.get("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
+penaltyRouter.get("/:groupid", async (req: Request, res: Response) => {
+  const id = Number(req.params.groupid)
 
   const penalty = await prisma.penalty.findMany({
     where: { groupId : id },
@@ -44,10 +42,8 @@ penaltyRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-// Delete a penalty by (Penalty) ID
-
-penaltyRouter.delete("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
+penaltyRouter.delete("/:penaltyid", async (req: Request, res: Response) => {
+  const id = Number(req.params.penaltyid)
 
   const deletedPenalty = await prisma.penalty.delete({
     where: { id },
@@ -60,14 +56,14 @@ penaltyRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
-penaltyRouter.delete("/all/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-  const allGroups = await prisma.penalty.deleteMany({
+penaltyRouter.delete("/all/:groupid", async (req: Request, res: Response) => {
+  const id = Number(req.params.groupid)
+  const groupsPenalties = await prisma.penalty.deleteMany({
     where: { groupId : id }
   })
 
-  if (allGroups) {
-    res.json(allGroups)
+  if (groupsPenalties) {
+    res.json(groupsPenalties)
   } else {
     res.status(404).end()
   }

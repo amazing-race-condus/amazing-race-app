@@ -14,13 +14,14 @@ import Penalty from "./penalty"
 import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 
 const Team = () => {
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
+  const router = useRouter()
+
   const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
   )
 
-  const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const router = useRouter()
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
 
@@ -147,6 +148,7 @@ const Team = () => {
         renderItem={({ item }) =>
           <GroupCheckpointItem
             checkpoint = { item }
+            group = { group }
             nextCheckpointId={nextCheckpointId}
             completeCheckpoint={completeCheckpoint}
           />

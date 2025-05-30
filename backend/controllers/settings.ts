@@ -46,8 +46,6 @@ settingsRouter.get("/:event_id/max", async (req: Request, res: Response) => {
 })
 
 settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
-  console.log(req.body)
-
   const eventId = req.body.id
   const newMinRouteTime = req.body.minRouteTime
   const newMaxRouteTime = req.body.maxRouteTime
@@ -65,7 +63,6 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 //add one distance between two checkpoints
 settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
-  console.log(req.body)
   const eventId = req.body.eventId
   const fromCheckpointId = req.body.from_checkpointId
   const toCheckpointId = req.body.to_checkpointId
@@ -85,7 +82,6 @@ settingsRouter.post("/update_distance", async (req: Request, res: Response) => {
 
 //get a single distance between two checkpoints
 settingsRouter.get("/:event_id/distances/:from_id/:to_id", async (req: Request, res: Response) => {
-  console.log(req.body)
   const eventId = Number(req.params.event_id)
   const fromId = Number(req.params.from_id)
   const toId = Number(req.params.to_id)

@@ -4,7 +4,7 @@ import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
-import type { AddGroup, Group } from "@/types"
+import type { AddGroup, Group, PenaltyType } from "@/types"
 
 const initialState: Group[] = []
 
@@ -37,14 +37,14 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const givePenaltyReducer = (id: number, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const givePenaltyReducer = (groupId: number, checkpointId: number, penaltyType: PenaltyType, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
-    const penalte = await givePenalty(id, penalty)
+    const newPenalty = await givePenalty(groupId, checkpointId, penaltyType, penalty)
     const updatedGroups = getState().groups.map((group) => {
-      if (group.id === penalte.group_id) {
+      if (group.id === newPenalty.groupId) {
         return {
           ...group,
-          penalty: [...group.penalty, penalte]
+          penalty: [...group.penalty, newPenalty]
         }
       }
       return group
@@ -58,12 +58,12 @@ export const givePenaltyReducer = (id: number, penalty: number) => async (dispat
   }
 }
 
-export const removePenaltyReducer = (id: number, penaltyId:number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const removePenaltyReducer = (groupId: number, penaltyId:number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
     await removePenalty(penaltyId)
 
     const updatedGroups = getState().groups.map((group) => {
-      if (group.id === id) {
+      if (group.id === groupId) {
         return {
           ...group,
           penalty: [...group.penalty.filter(penalty => penalty.id !== penaltyId)]

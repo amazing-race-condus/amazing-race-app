@@ -1,4 +1,5 @@
 export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
+export type PenaltyType = "HINT" | "SKIP" | "OVERTIME";
 
 export type Checkpoint = {
   id: number;
@@ -25,8 +26,10 @@ export type Notification = {
 
 export interface Penalty {
     id: number,
+    type: PenaltyType,
     time: number,
-    group_id: number,
+    groupId: number,
+    checkpointId: number
 }
 
 export interface Group {

@@ -5,7 +5,7 @@ import { initialGroups } from "./test_helper"
 describe("Get Groups", () => {
   let ide: number
 
-  let penalty_ide: number
+  let penaltyIde: number
 
   beforeAll(async () => {
     await prisma.group.deleteMany({})
@@ -15,7 +15,6 @@ describe("Get Groups", () => {
 
     const firstGroup = await prisma.group.findFirst({})
 
-    // const ide = firstGroup.id
     if (firstGroup) {
       ide = firstGroup.id
     } else {
@@ -30,8 +29,6 @@ describe("Get Groups", () => {
     server.close()
   })
 
-  //let ide: unknown
-
   it("Penalties are returned as json", async () => {
     const response = await request(app).get("/api/penalty")
     expect(response.status).toBe(200)
@@ -42,14 +39,14 @@ describe("Get Groups", () => {
     const response = await request(app)
       .post(`/api/penalty/${ide.toString()}`)
       .send({
-        group_id: ide,
-        penalty_time: 30,
+        groupId: ide,
+        penaltyTime: 30,
       })
 
-    penalty_ide = response.body.id
+    penaltyIde = response.body.id
 
     expect(response.status).toBe(200)
-    expect(response.body.group_id).toBe(ide)
+    expect(response.body.groupId).toBe(ide)
     expect(response.body.time).toBe(30)
   })
 
@@ -58,13 +55,13 @@ describe("Get Groups", () => {
       .get(`/api/groups/${ide.toString()}`)
 
     expect(response.status).toBe(200)
-    expect(response.body.penalty[0].group_id).toBe(ide)
+    expect(response.body.penalty[0].groupId).toBe(ide)
     expect(response.body.penalty[0].time).toBe(30)
   })
 
   it("Delete a penalty", async () => {
     const deleteRes = await request(app)
-      .delete(`/api/penalty/${penalty_ide.toString()}`)
+      .delete(`/api/penalty/${penaltyIde.toString()}`)
 
     expect(deleteRes.status).toBe(204)
 
