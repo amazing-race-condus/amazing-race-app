@@ -7,11 +7,11 @@ import { removeGroupReducer, updateGroup } from "@/reducers/groupSlice"
 import { getAllCheckpoints } from "@/services/checkpointService"
 import React, { useCallback, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
-import { getType } from "@/utils/checkpointUtils"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/Notification"
 import Penalty from "./penalty"
+import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 
 const Team = () => {
   const { id } = useLocalSearchParams<{id: string}>()
@@ -129,56 +129,6 @@ const Team = () => {
     }
   }
 
-  // todo: better approach idk
-  const CheckpointItem = ({ item }: { item: Checkpoint }) => {
-    const translatedType = getType(item.type)
-    return (
-      <View style={styles.item}>
-        <Text style={styles.checkpointName}>
-          {item.name}
-          {translatedType !== "" && (
-            <Text style={styles.checkpointType}> {translatedType}</Text>
-          )}
-        </Text>
-        { item.id === nextCheckpointId && (
-          <View style={styles.content}>
-            <Pressable
-              onPress={() => console.log("skip")}
-              style={styles.smallButton2}
-            >
-              <Text style={styles.buttonText}>Skip</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => completeCheckpoint(Number(id))}
-              style={styles.smallButton2}
-            >
-              <Text style={styles.buttonText}>Suorita</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => console.log("Vihjepuhelin")}
-              style={styles.smallButton2}
-            >
-              <Text style={styles.buttonText}>Vihjepuhelin</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => console.log("yliaika")}
-              style={styles.smallButton2}
-            >
-              <Text style={styles.buttonText}>Yliaika</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => console.log("vihje")}
-              style={styles.smallButton2}
-            >
-              <Text style={styles.buttonText}>Vihje</Text>
-            </Pressable>
-          </View>
-        )}
-
-      </View>
-    )
-  }
-
   const ItemSeparator = () => <View style={styles.separator} />
 
   return (
@@ -195,7 +145,11 @@ const Team = () => {
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) =>
-          <CheckpointItem item = { item } />
+          <GroupCheckpointItem
+            checkpoint = { item }
+            nextCheckpointId={nextCheckpointId}
+            completeCheckpoint={completeCheckpoint}
+          />
         }
         keyExtractor={item => item.id.toString()}
       />
