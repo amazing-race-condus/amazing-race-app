@@ -9,7 +9,7 @@ import React, { useCallback, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
 import { disqualifyGroup } from "@/services/groupService"
-import { setNotification } from "@/reducers/responseSlice"
+import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/Notification"
 import Penalty from "./penalty"
 
@@ -24,8 +24,6 @@ const Team = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
 
-  console.log(group)
-
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
@@ -36,21 +34,18 @@ const Team = () => {
         intermediate.splice(4)
         const newData = [...start, ...intermediate, ...finish]
         setCheckpoints(newData)
-        setNextCheckpointId(Number(newData[0].id))
+        setNextCheckpointId(newData[0].id)
       }
       checkpointsRoute()
     }, [])
   )
 
-  const completeCheckpoint = (id: string) => {
+  const completeCheckpoint = (id: number) => {
     if (Platform.OS === "web") {
       const confirmed = window.confirm("Oletko varma että haluat merkitä rastin suoritetuksi?")
       if (confirmed) {
-        console.log(`Checkpoint ${id} completed`)
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-        setNextCheckpointId(Number(checkpoints[currentCheckpointIndex + 1]?.id || 0))
-
-        // Database update logic can be added here
+        setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
       }
     } else {
       Alert.alert(
@@ -61,11 +56,8 @@ const Team = () => {
           {
             text: "Suorita",
             onPress: () => {
-              console.log(`Checkpoint ${id} completed`)
               const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-              setNextCheckpointId(Number(checkpoints[currentCheckpointIndex + 1]?.id || 0))
-
-              // Database update logic can be added here
+              setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
             },
           }
         ]
@@ -107,11 +99,14 @@ const Team = () => {
     }
   }
 
-  const handleDisqualification = () => {
+  const handleDisqualification = async () => {
     if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat diskaa tämän ryhmän?")
+      const confirmed = window.confirm("Oletko varma että haluat diskata tämän ryhmän?")
       if (confirmed) {
-        console.log("Disqualified")
+        const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
+        const disqualified = disqualifiedGroup.disqualified
+        dispatch(updateGroup(disqualifiedGroup))
+        dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
       }
     } else {
       Alert.alert(
@@ -123,11 +118,10 @@ const Team = () => {
             text: "Diskaa",
             style: "destructive",
             onPress: async () => {
-              console.log("Disqualified")
               const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
               const disqualified = disqualifiedGroup.disqualified
               dispatch(updateGroup(disqualifiedGroup))
-              dispatch(setNotification(`Ryhmä ${name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
+              dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
             }
           }
         ]
@@ -135,18 +129,18 @@ const Team = () => {
     }
   }
 
-  const CheckpointItem = ({ name, type, id }: { name: string, type: string, id: string }) => {
-    const translatedType = getType(type)
+  // todo: better approach idk
+  const CheckpointItem = ({ item }: { item: Checkpoint }) => {
+    const translatedType = getType(item.type)
     return (
       <View style={styles.item}>
         <Text style={styles.checkpointName}>
-          {name}
+          {item.name}
           {translatedType !== "" && (
             <Text style={styles.checkpointType}> {translatedType}</Text>
           )}
         </Text>
-
-        { Number(id) === nextCheckpointId && (
+        { item.id === nextCheckpointId && (
           <View style={styles.content}>
             <Pressable
               onPress={() => console.log("skip")}
@@ -155,7 +149,7 @@ const Team = () => {
               <Text style={styles.buttonText}>Skip</Text>
             </Pressable>
             <Pressable
-              onPress={() => completeCheckpoint(id)}
+              onPress={() => completeCheckpoint(Number(id))}
               style={styles.smallButton2}
             >
               <Text style={styles.buttonText}>Suorita</Text>
@@ -187,35 +181,23 @@ const Team = () => {
 
   const ItemSeparator = () => <View style={styles.separator} />
 
-  if (!group) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Ryhmä ei löytynyt</Text>
-      </View>
-    )
-  }
-
   return (
     <View style={styles.container}>
       <Stack.Screen
         options={{ headerShown: false }}
       />
       <Notification />
-      <Text style={styles.title}>{group.name}</Text>
-      <Text style={styles.breadText}>Diskattu: {group.disqualified?.toString()}</Text>
-      <Text style={styles.breadText}>Jäsenmäärä {group.members}</Text>
+      <Text style={styles.title}>{group?.name}</Text>
+      <Text style={styles.breadText}>Diskattu: {group?.disqualified.toString()}</Text>
+      <Text style={styles.breadText}>Jäsenmäärä {group?.members}</Text>
       <FlatList
         contentContainerStyle={styles.listcontainer}
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) =>
-          <CheckpointItem
-            name={item.name}
-            type={item.type}
-            id={item.id}
-          />
+          <CheckpointItem item = { item } />
         }
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
       />
       <Penalty id={id}/>
       <Text style={styles.header}>Poista ryhmä</Text>

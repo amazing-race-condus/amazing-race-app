@@ -34,7 +34,6 @@ groupsRouter.get("/", async (_, res: Response) => {
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
-  console.log(body)
 
   if (!body.name ) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
@@ -87,7 +86,6 @@ groupsRouter.put("/:id", async (req: Request, res: Response) => {
     where: { id }
   })
 
-  console.log("Existing group:", existingGroup)
 
   console.log("Body:", body)
   console.log(res)

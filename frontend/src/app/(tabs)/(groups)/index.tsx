@@ -57,7 +57,7 @@ const App = () => {
               </Link>
             </View>
           }
-          keyExtractor={item => item.id?.toString() ?? ""}
+          keyExtractor={item => item.id.toString()}
         />
       </View>
       <AddNewButton/>

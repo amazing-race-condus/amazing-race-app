@@ -1,11 +1,10 @@
 import { AppDispatch, RootState } from "@/store/store"
-import { Stack, useLocalSearchParams } from "expo-router"
-import { Alert, Platform, Pressable, Text, TouchableOpacity, View } from "react-native"
+import { Pressable, Text, TouchableOpacity, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { Entypo } from "@expo/vector-icons"
 import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
-import React, { useState , useEffect, use } from "react"
+import React, { useState } from "react"
 
 type PenaltyProps = {
   id: string
@@ -16,8 +15,6 @@ const Penalty = ({ id }: PenaltyProps) => {
   const group = useSelector((state: RootState) =>
     state.groups.find(group => group.id === Number(id))
   )
-
-  console.log("Group:", group)
 
   const [visible, setVisible] = useState(false)
 
@@ -35,7 +32,6 @@ const Penalty = ({ id }: PenaltyProps) => {
       </TouchableOpacity>
 
       {visible &&
-
         <View style={styles.container}>
           <Text>Rangaistus</Text>
 

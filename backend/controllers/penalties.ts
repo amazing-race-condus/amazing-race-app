@@ -1,6 +1,5 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
-// import { Type } from "../prisma/prisma/"
 
 const penaltyRouter = express.Router()
 
@@ -18,12 +17,10 @@ penaltyRouter.post("/:id", async (req: Request, res: Response) => {
 
   const newPenalty = await prisma.penalty.create({
     data: {
-      group_id: id,
+      groupId: id,
       time: body.penalty_time,
     }
   })
-
-  console.log("Body:", body)
 
   if (newPenalty) {
     res.json(newPenalty)
@@ -38,7 +35,7 @@ penaltyRouter.get("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const penalty = await prisma.penalty.findMany({
-    where: { group_id : id },
+    where: { groupId : id },
   })
   if (penalty) {
     res.json(penalty)
@@ -66,7 +63,7 @@ penaltyRouter.delete("/:id", async (req: Request, res: Response) => {
 penaltyRouter.delete("/all/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const allGroups = await prisma.penalty.deleteMany({
-    where: { group_id : id }
+    where: { groupId : id }
   })
 
   if (allGroups) {

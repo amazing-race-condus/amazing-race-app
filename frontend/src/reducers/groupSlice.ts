@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
 import { getAllGroups, createGroup, removeGroup } from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
-import { setNotification } from "./responseSlice"
+import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
-import type { Group, Penalty } from "@/types"
+import type { AddGroup, Group } from "@/types"
 
 const initialState: Group[] = []
 
@@ -40,7 +40,6 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
 export const givePenaltyReducer = (id: number, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
     const penalte = await givePenalty(id, penalty)
-    console.log("penalte", penalte)
     const updatedGroups = getState().groups.map((group) => {
       if (group.id === penalte.group_id) {
         return {
@@ -81,10 +80,8 @@ export const removePenaltyReducer = (id: number, penaltyId:number) => async (dis
   }
 }
 
-export const addGroupReducer = (newObject: Group, name: string) => async (dispatch: AppDispatch) => {
-
+export const addGroupReducer = (newObject: AddGroup) => async (dispatch: AppDispatch) => {
   try {
-    console.log("New Object", newObject)
     const newCheckpoint = await createGroup(newObject)
     dispatch(appendGroup(newCheckpoint))
     dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))

@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState , AppDispatch } from "@/store/store"
 import { Checkpoint, Distances } from "@/types"
-import { setNotification } from "@/reducers/responseSlice"
+import { setNotification } from "@/reducers/notificationSlice"
 
 // Temporary style solution
 import Constants from "expo-constants"
