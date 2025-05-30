@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { View, ScrollView } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
@@ -10,11 +10,11 @@ const CheckpointSettings = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Stack.Screen options={{ headerShown: false }} />
         <Notification />
         <Checkpoints />
-      </View>
+      </ScrollView>
       <AddNewButton/>
     </View>
   )

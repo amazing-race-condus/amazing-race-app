@@ -16,7 +16,7 @@ const Checkpoints = () => {
 
   useEffect(() => {
     dispatch(fetchCheckpoints())
-  }, [])
+  }, [dispatch])
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 
@@ -50,37 +50,37 @@ const Checkpoints = () => {
     // todo: better translatation tai jotain
     const translatedType = getType(item.type)
 
-    if (pathname.startsWith("/checkpoints")) {
+    if (pathname === "/settings/checkpoints") {
       return (
-        <Link href={`/checkpoints/${item.id}`} asChild>
-          <TouchableOpacity style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkpointName}>
-                {item.name}
-                {translatedType !== "" && (
-                  <Text style={styles.checkpointType}> ({translatedType})</Text>
-                )}
-              </Text>
-            </View>
-            <Entypo name="chevron-right" size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
+        <View style={styles.item}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.checkpointName}>
+              {item.name}
+              {translatedType !== "" && (
+                <Text style={styles.checkpointType}> ({translatedType})</Text>
+              )}
+            </Text>
+          </View>
+          <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
+            <Text style={styles.buttonText}>Poista</Text>
+          </Pressable>
+        </View>
       )
     }
     return (
-      <View style={styles.item}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.checkpointName}>
-            {item.name}
-            {translatedType !== "" && (
-              <Text style={styles.checkpointType}> ({translatedType})</Text>
-            )}
-          </Text>
-        </View>
-        <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
-          <Text style={styles.buttonText}>Poista</Text>
-        </Pressable>
-      </View>
+      <Link href={`/checkpoints/${item.id}`} asChild>
+        <TouchableOpacity style={styles.item}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.checkpointName}>
+              {item.name}
+              {translatedType !== "" && (
+                <Text style={styles.checkpointType}> ({translatedType})</Text>
+              )}
+            </Text>
+          </View>
+          <Entypo name="chevron-right" size={24} color="black" />
+        </TouchableOpacity>
+      </Link>
     )
   }
 

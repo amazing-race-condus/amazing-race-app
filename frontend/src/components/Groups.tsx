@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
+import { View, Text, Pressable, Alert, Platform, TouchableOpacity, ScrollView } from "react-native"
 import { useCallback, useState } from "react"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
@@ -82,15 +82,12 @@ const Groups = () => {
 
   return (
     <View style={styles.container}>
-      {pathname === "/" && (
-        <Text style={styles.title}>Ryhmät:</Text>
-      )}
-      {pathname.startsWith("/settings") && (
-        <Text style={styles.header}>Hallinnoi ryhmiä:</Text>
-      )}
+      {pathname === "/" && <Text style={styles.title}>Ryhmät:</Text>}
+      {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
+
       <Search search={search} setSearch={setSearch} />
 
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.listcontainer}>
           {filteredGroups.map((item, index) => (
             <View key={item.id}>
@@ -99,7 +96,7 @@ const Groups = () => {
             </View>
           ))}
         </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }

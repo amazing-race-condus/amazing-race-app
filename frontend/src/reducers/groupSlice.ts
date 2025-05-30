@@ -82,8 +82,8 @@ export const removePenaltyReducer = (groupId: number, penaltyId:number) => async
 
 export const addGroupReducer = (newObject: AddGroup) => async (dispatch: AppDispatch) => {
   try {
-    const newCheckpoint = await createGroup(newObject)
-    dispatch(appendGroup(newCheckpoint))
+    const newGroup = await createGroup(newObject)
+    dispatch(appendGroup(newGroup))
     dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {
     console.error("Failed to add Group:", error)

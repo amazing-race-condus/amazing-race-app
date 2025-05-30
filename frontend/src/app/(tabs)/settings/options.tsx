@@ -1,4 +1,4 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Notification from "@/components/Notification"
 import { styles } from "@/styles/commonStyles"
@@ -9,7 +9,7 @@ import { Entypo } from "@expo/vector-icons"
 const Settings = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <View>
         <Notification />
         <Text style={styles.title}>Asetukset</Text>
         <Link href={"/settings/checkpoints"} asChild>
@@ -42,7 +42,7 @@ const Settings = () => {
             <Entypo name="chevron-right" size={24} color="black" />
           </TouchableOpacity>
         </Link>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }
