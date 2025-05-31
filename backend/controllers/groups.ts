@@ -32,6 +32,14 @@ groupsRouter.get("/", async (_, res: Response) => {
   res.send(allGroups)
 })
 
+groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+
+  const arrivingGroups = await prisma.group.findMany({ where: { nextCheckpointId: id } })
+
+  res.json(arrivingGroups)
+})
+
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
 
@@ -64,7 +72,7 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     where: { name: body.name }
   })
   if (existingStart) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi" })
+    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
     return
   }
 
