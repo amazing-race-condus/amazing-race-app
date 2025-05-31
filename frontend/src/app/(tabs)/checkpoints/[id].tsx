@@ -11,7 +11,6 @@ const Checkpoint = () => {
     state.checkpoints.find(g => g.id === Number(id))
   )
 
-  console.log("checkpoint", checkpoint)
   return (
     <View style={styles.container}>
       <View style={styles.content}>

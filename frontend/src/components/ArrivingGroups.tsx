@@ -37,7 +37,7 @@ const ArrivingGroups = ({ checkpointId = 1}) => {
       }
     }
     fetchArrivingGroups()
-  }, [])
+  }, [checkpointId])
 
   return (
     <View>
