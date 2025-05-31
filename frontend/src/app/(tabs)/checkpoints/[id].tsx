@@ -11,6 +11,7 @@ const Checkpoint = () => {
     state.checkpoints.find(g => g.id === Number(id))
   )
 
+  console.log("checkpoint", checkpoint)
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -18,6 +19,15 @@ const Checkpoint = () => {
           options={{ headerShown: false }}
         />
         <Text style={styles.title}>{checkpoint?.name}</Text>
+        <Text style={[styles.breadText, {fontWeight: "bold"}]}>
+          {checkpoint?.type === "START"
+            ? "Lähtö"
+            : checkpoint?.type === "FINISH"
+              ? "Maali"
+              : checkpoint?.type === "INTERMEDIATE"
+                ? "Välirasti"
+                : "Rasti"}
+        </Text>
         <ArrivingGroups checkpointId={Number(id)} />
       </View>
     </View>
