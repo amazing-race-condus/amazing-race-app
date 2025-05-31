@@ -13,9 +13,7 @@ const GroupCheckpointItem = (
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const translatedType = getType(checkpoint.type)
 
-  const CheckpointPenalties = group?.penalty.filter(p => p.checkpointId === checkpoint.id)
-
-  console.log(CheckpointPenalties)
+  const CheckpointPenalties = group?.penalty.filter(p => p.checkpointId === checkpoint.id) || []
 
   return (
     <View style={styles.item}>
