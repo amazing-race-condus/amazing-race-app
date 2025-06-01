@@ -1,9 +1,11 @@
 export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
 
 export type Checkpoint = {
-  id: string;
-  name: string;
-  type: CheckpointType
+    type: CheckpointType | null;
+    id: number;
+    eventId: number | null;
+    name: string;
+    hint: string | null
 }
 
 export interface RouteLimit {

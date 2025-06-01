@@ -1,5 +1,5 @@
 import { Permutation } from "js-combinatorics";
-
+import { Distances, Checkpoint } from "../../frontend/src/types"
 /*
 Usage:
 
@@ -8,13 +8,10 @@ get_valid_routes requires six arguments: checkpoints (array of integers, i.e. in
 the start and end points. Returns an array of arrays of integers, describing the route (without start or end points).
 */
 
-interface Distances {
-  [start:number]: {[end:number]: number}
-}
 
 export const routeDistance = (route: number[], distances: Distances, start: number, end: number): number => {
-  const wholeRoute = [start].concat(route, [end])
-
+  //const wholeRoute = [start].concat(route, [end])
+  const wholeRoute = route
   // From start point to the first checkpoint.
   let currentDistance = distances[wholeRoute[0]][wholeRoute[1]]
 
@@ -28,14 +25,28 @@ export const routeDistance = (route: number[], distances: Distances, start: numb
 }
 
 // Verifies that the route length is within specified bounds.
-export const verifyRoute = (permutation: number[], distances: Distances, min: number, max: number, start: number, end: number): boolean => {
-  const distance = routeDistance(permutation, distances, start, end);
+export const verifyRoute = (permutation: number[], distances: Distances, min: number, max: number, start: number, finish: number): boolean => {
+  const distance = routeDistance(permutation, distances, start, finish);
   return distance >= min && distance <= max;
 }
 
-export const getValidRoutes = (checkpoints: number[], distances: Distances, min: number, max: number, start: number, end: number, length: number = 4): number[][] => {
-  const permutations = [...new Permutation(checkpoints, length)];
-  return permutations.filter((permutation) => {
-    return verifyRoute(permutation, distances, min, max, start, end);
-  });
-};
+
+export const getValidRoutes = (checkpoints: Checkpoint[], distances: Distances, min: number | null, max: number | null, length: number = 4): number[][] => {
+  const start = checkpoints.find(checkpoint => checkpoint.type === "START")
+  const finish = checkpoints.find(checkpoint => checkpoint.type === "FINISH")
+
+  if (!start || !finish || !min || !max) {
+    return [[]]
+  }
+
+  const intermediateIds: number[] = checkpoints
+    .filter(checkpoint => checkpoint.type === "INTERMEDIATE")
+    .map(checkpoint => checkpoint.id)
+  const permutations = [...new Permutation(intermediateIds, length)]
+  const intermediateIdPermutation = permutations.filter((permutation) => {
+    return verifyRoute(permutation, distances, min, max, start.id, finish.id)
+  })
+  // Add start and finish ids to every permutation.
+  const routes = intermediateIdPermutation.map(row => ([start.id, ...row, finish.id]))
+  return routes
+}

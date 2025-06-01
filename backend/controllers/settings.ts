@@ -1,6 +1,9 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
 import { getValidRoutes } from "../src/routes"
+import { Distances, Checkpoint } from "../../frontend/src/types"
+import { error } from "console"
+
 const settingsRouter = express.Router()
 
 const validateMinAndMax = (min: number, max: number, res: Response) : boolean => {
@@ -21,9 +24,48 @@ const validateMinAndMax = (min: number, max: number, res: Response) : boolean =>
   return true
 }
 
+const validateCheckpointDistances = async (distances: Distances, checkpoints: Checkpoint[]): Promise<boolean> => {
+  try {
+    if (Object.keys(distances).length === 0) {
+      return false
+    }
+    for (let i = 0; i < checkpoints.length; i++) {
+      for (let j = 0; j < checkpoints.length; j++) {
+        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
+          const fromId = checkpoints[i].id
+          const toId = checkpoints[j].id
+          if (!(Number.isInteger(distances[fromId][toId]))) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+const getDistances = async (eventId: number) => {
+  const result = await prisma.checkpointDistance.findMany({
+    select: {fromId: true, toId: true, time: true},
+    where: {eventId: eventId}
+  })
+  // { [from_id: number]: {[to_id: number]: number} }
+  const times: Distances = {}
+
+  result.map(row => {
+    if (!(row.fromId in times))
+      times[row.fromId] = {}
+    times[row.fromId][row.toId] = row.time
+  })
+
+  return times
+}
+
 settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
-  const event_id = Number(req.params.event_id)
-  const event = await prisma.event.findUnique({ select: { max_route_time : true, min_route_time: true }, where: {id: event_id }})
+  const eventId = Number(req.params.event_id)
+  const event = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
   res.send(event)
 })
 
@@ -37,7 +79,7 @@ settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
   } else {
     const updatedEvent = await prisma.event.update({
       where: {id: event_id},
-      data: {min_route_time: new_min_route_time, max_route_time: new_max_route_time}
+      data: {minRouteTime: new_min_route_time, maxRouteTime: new_max_route_time}
     })
     res.status(200).json(updatedEvent)
   }
@@ -51,23 +93,6 @@ settingsRouter.get("/:event_id/distances", async (req: Request, res: Response) =
 
   res.send(times) //examples { "1": { "2": 20, "3": 30, ... }, ... } or {}
 })
-
-const getDistances = async (eventId: number) => {
-  const result = await prisma.checkpointDistance.findMany({
-    select: {from_id: true, to_id: true, time: true},
-    where: {event_id: eventId}
-  })
-
-  const times: { [from_id: number]: {[to_id: number]: number} } = {}
-
-  result.map(row => {
-    if (!(row.from_id in times))
-      times[row.from_id] = {}
-    times[row.from_id][row.to_id] = row.time
-  })
-
-  return times
-}
 
 //add or update distances
 settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
@@ -88,7 +113,7 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   */
 
   const distances = req.body
-  const event_id = 1 //req.body.event_id
+  const eventId = 1 //req.body.event_id
 
   let upserts = 0
   let failures = 0
@@ -102,13 +127,13 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
       try {
         const upsertedData = await prisma.checkpointDistance.upsert({
           where: {
-            from_id_to_id_event_id: {
-              from_id: from_id,
-              to_id: to_id,
-              event_id: event_id
+            fromId_toId_eventId: {
+              fromId: from_id,
+              toId: to_id,
+              eventId: eventId
             }
           },
-          create: {from_id: from_id, to_id: to_id, time: Number(time), event_id: event_id},
+          create: {fromId: from_id, toId: to_id, time: Number(time), eventId: eventId},
           update: {time: Number(time)},
         })
 
@@ -125,39 +150,55 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
 })
 
 settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
-  console.log("--- settingsRouter req.body:", req.body)
+  const eventId = 1 //req.body.event_id
+  try {
+    const checkpoints = await prisma.checkpoint.findMany()
+    const hasStart = checkpoints.some(cp => cp.type === "START");
+    const hasFinish = checkpoints.some(cp => cp.type === "FINISH");
 
-  const event_id = 1 //req.body.event_id
-  console.log("create_routes, event_id:", event_id)
+    const distances = await getDistances(eventId)
+    const limits = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
+    console.log("Limits: ", limits)
 
-  //TODO: validate that all checkpoint distances are set for this event
-  //if ()
-  //  res.status(400).send({error: "Reittejä ei voi luoda, koska kaikkien rastien välille ei ole määritelty matka-aikoja."})
+    if (!limits) {
+      res.status(404).json({ error: "Tapahtumaa ei löytynyt annetulla ID:llä." })
+      return
+    }
 
-  //TODO: get all of these from database
-  const checkpoints = [11, 22, 33, 44]
-  const start = 10
-  const end = 99
-  const min = 0
-  const max = 999999999999999
+    const min = limits.minRouteTime
+    const max = limits.maxRouteTime
+    let errorMessage = ""
 
-  //TODO
-  //if (!(checkpoints.length === 4 && ...))
-  //  res.send({error: "Reittejä ei voi luoda, koska tapahtumalle ei ole määritelty kaikkia tarvittavia tietoja: 4 rastia, 1 maali, 1 lähtö, reiti nminimikesto ja reitin maksimikesto)"})
+    if (!min || !max) {
+      errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty."
+    } else if (!hasStart || !hasFinish) {
+      errorMessage = "Lähtöä tai maalia ei ole määritelty."
+    } else if (!(await validateCheckpointDistances(distances, checkpoints))) {
+      errorMessage = "Kaikkien rastien välille ei ole määritelty matka-aikoja."
+    }
+    if (errorMessage) {
+      res.status(400).json({error: errorMessage})
+      return
+    }
 
-  const distances = {
-    10: {11: 999, 22: 999, 33: 999, 44: 999},
-    11: {22: 999, 33: 999, 99: 999, 44: 999},
-    22: {11: 999, 33: 999, 99: 999, 44: 999},
-    33: {11: 999, 22: 999, 99: 999, 44: 999},
-    44: {11: 999, 22: 999, 33: 999, 99: 999}
-  } //TODO: get from database
+    const routes = getValidRoutes(checkpoints, distances, min, max)
+    res.status(200).json({message: `${routes.length} reittiä luotu.`})
+    return
+  
+  } catch (error) {
+    console.error("Unexpected error in /create_routes:", error)
+    res.status(500).json({ error: "Järjestelmävirhe. Yritä myöhemmin uudelleen." })
+    return
+  }
+  
+  
 
-  const routes = getValidRoutes(checkpoints, distances, min, max, start, end)
+  //const routes = getValidRoutes(checkpoints, distances, min, max)
   //example: [ [ 11, 22, 33, 44 ], [ 11, 22, 44, 33 ], [ 33, 11, 22, 44 ] ]
 
-  console.log("--- routes from getValidRoutes:", routes)
+  //console.log("--- routes from getValidRoutes:", routes)
 
+  /*
   if (routes.length === 0)
     res.status(400).send({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
 
@@ -188,29 +229,7 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
   }
 
   res.status(200).json({routesAmount: routes.length})
-
-const validateCheckpointDistances = async (): Promise<boolean> => {
-  try {
-    const eventId = 1
-    const distances = await getDistances(eventId)
-    const checkpoints = await prisma.checkpoint.findMany()
-
-    for (let i = 0; i < checkpoints.length; i++) {
-      for (let j = 0; j < checkpoints.length; j++) {
-        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
-          const fromId = checkpoints[i].id
-          const toId = checkpoints[j].id
-          if (!(Number.isInteger(distances[fromId][toId]))) {
-            return false
-          }
-        }
-      }
-    }
-    return true
-  } catch (error) {
-    return false
-  }
-}})
-
+  */
+})
 
 export default settingsRouter

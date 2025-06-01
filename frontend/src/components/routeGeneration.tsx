@@ -15,9 +15,9 @@ const RouteGeneration = () => {
 
   const createRoutes = async () => {
     try {
-      const response = await axios.get(`${url}/settings/create_routes`)
-      const routesAmount = response.data.routesAmount
-      dispatch(setNotification(`${routesAmount} reittiä luotu.`, "success"))
+      const response = await axios.put(`${url}/settings/create_routes`)
+      const routesAmount = response.data.message
+      dispatch(setNotification(routesAmount, "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
@@ -32,10 +32,7 @@ const RouteGeneration = () => {
       <Text style={styles.header}>Luo reitit:</Text>
       <View style={styles.formContainer}>
         <Pressable style={styles.button} onPress={() => {createRoutes()}}>
-          <Text>Luo reitit:</Text>
-        </Pressable>
-        <Pressable style={styles.button}>
-          <Text>Jaa reitit ryhmille:</Text>
+          <Text>Luo reitit</Text>
         </Pressable>
       </View>
     </View>

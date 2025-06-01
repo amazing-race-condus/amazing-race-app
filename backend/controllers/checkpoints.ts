@@ -106,7 +106,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
       name: body.name,
       type: parsedType,
       hint: body.hint,
-      event_id: body.event_id
+      eventId: body.event_id
     }
   })
   res.status(201).json(savedCheckpoint)
