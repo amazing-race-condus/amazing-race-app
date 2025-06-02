@@ -32,6 +32,14 @@ groupsRouter.get("/", async (_, res: Response) => {
   res.send(allGroups)
 })
 
+groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+
+  const arrivingGroups = await prisma.group.findMany({ where: { nextCheckpointId: id } })
+
+  res.json(arrivingGroups)
+})
+
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
 
@@ -64,7 +72,7 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     where: { name: body.name }
   })
   if (existingStart) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi" })
+    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
     return
   }
 
@@ -89,6 +97,27 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   } else {
     res.status(404).end()
   }
+})
+
+groupsRouter.put("/:id/dnf", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+
+  const existingGroup = await prisma.group.findUnique({
+    where: { id },
+    select: { dnf: true },
+  })
+
+  const group = await prisma.group.update({
+    where: { id },
+    data: { dnf: !existingGroup?.dnf },
+  })
+
+  if (group) {
+    res.json(group)
+  } else {
+    res.status(404).json({ error: "Ryhmää ei löydy" })
+  }
+  return
 })
 
 groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {

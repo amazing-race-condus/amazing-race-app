@@ -13,7 +13,7 @@ const GroupCheckpointItem = (
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const translatedType = getType(checkpoint.type)
 
-  const CheckpointPenalties = group?.penalty.filter(p => p.checkpointId === checkpoint.id)
+  const CheckpointPenalties = group?.penalty?.filter(p => p.checkpointId === checkpoint.id)
 
   return (
     <View style={styles.item}>
@@ -57,7 +57,7 @@ const GroupCheckpointItem = (
           </Pressable>
         </View>
       )}
-      {CheckpointPenalties.map(p =>
+      {CheckpointPenalties?.map(p =>
         <Text key={p.id} style={styles.breadText}>• {p.time}</Text>
       )}
     </View>

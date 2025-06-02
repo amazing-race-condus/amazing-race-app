@@ -41,7 +41,7 @@ describe("Get Groups", () => {
         members: 4
       })
     expect(response.status).toBe(400)
-    expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi")
+    expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi.")
   })
 
   it("Group is deleted", async () => {
