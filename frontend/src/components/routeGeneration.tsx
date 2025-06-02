@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platform, Dimensions} from "react-native"
+import React from "react"
+import { View, Text, Pressable, Platform } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import axios, { AxiosError } from "axios"
 import { useDispatch } from "react-redux"

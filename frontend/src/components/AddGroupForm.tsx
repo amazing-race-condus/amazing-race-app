@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import { Keyboard, Pressable, Text, View } from "react-native"
+import { Keyboard, Pressable, Text } from "react-native"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
