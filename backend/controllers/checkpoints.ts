@@ -104,7 +104,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
   const savedCheckpoint = await prisma.checkpoint.create({
     data: {
       name: body.name,
-      type: parsedType,
+      type: body.type,
       hint: body.hint,
       eventId: body.eventId
     }

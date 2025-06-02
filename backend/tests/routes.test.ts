@@ -1,6 +1,63 @@
 import { routeDistance, verifyRoute, getValidRoutes } from "../src/routes"
+import { Checkpoint, CheckpointType } from "../../frontend/src/types"
 
-const checkpoints = [11, 22, 33, 44, 55, 66]
+const checkpoints: Checkpoint[] = [ {
+  id: 77,
+  eventId: null,
+  hint: null,
+  name: "Oodi",
+  type: "FINISH" as CheckpointType
+},
+{
+  id: 55,
+  eventId: null,
+  hint: null,
+  name: "Tripla",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 22,
+  eventId: null,
+  hint: null,
+  name: "Kumpulan kampus",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 11,
+  eventId: null,
+  hint: null,
+  name: "Rautatieasema",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 66,
+  eventId: null,
+  hint: null,
+  name: "Tuomiokirkko12",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 33,
+  eventId: null,
+  hint: null,
+  name: "Esplanadi",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 44,
+  eventId: null,
+  hint: null,
+  name: "Tuomiokirkko",
+  type: "INTERMEDIATE" as CheckpointType
+},
+{
+  id: 88,
+  eventId: null,
+  hint: null,
+  name: "Tuomiokirkk1o",
+  type: "START" as CheckpointType
+}
+]
 const distances = {
   55: {11: 9999999999, 22: 9999999999, 33: 9999999999, 44: 9999999999, 66: 100000, 77: 9999999999},
   22: {11: 9999999999, 33: 100, 44: 9999999999, 55: 9999999999, 66: 9999999999, 77: 9999999999},
@@ -10,16 +67,14 @@ const distances = {
   44: {11: 9999999999, 22: 9999999999, 33: 9999999999, 55: 10000, 66: 9999999999, 77: 9999999999},
   66: {11: 9999999999, 22: 9999999999, 33: 9999999999, 44: 9999999999, 55: 9999999999, 77: 1000000},
 }
-const start = 88
-const end = 77
 
-const route = [11, 22, 33, 44, 55, 66]
+const route = [88, 11, 22, 33, 44, 55, 66, 77]
 const expectedDistance = 1111111
 const length = 4
 
 describe("Routes algorithm", () => {
   test("counts a route distance correctly", () => {
-    const returnedDistance = routeDistance(route, distances, start, end)
+    const returnedDistance = routeDistance(route, distances)
     expect(returnedDistance).toEqual(expectedDistance);
   })
 
@@ -27,20 +82,19 @@ describe("Routes algorithm", () => {
     const min = expectedDistance
     const max = expectedDistance
 
-    expect(verifyRoute(route, distances, min, max, start, end)).toBeTruthy()
-    expect(verifyRoute(route, distances, 0, min-1, start, end)).toBeFalsy()
-    expect(verifyRoute(route, distances, max+1, 9999999999999, start, end)).toBeFalsy()
+    expect(verifyRoute(route, distances, min, max)).toBeTruthy()
+    expect(verifyRoute(route, distances, 0, min-1)).toBeFalsy()
+    expect(verifyRoute(route, distances, max+1, 9999999999999)).toBeFalsy()
   })
 
   test("returns unique routes", () => {
-    const returnedRoutes = getValidRoutes(checkpoints, distances, 0, 9999999999999, start, end, length)
-    const uniqueReturnedRoutes = new Set(returnedRoutes.map(route => route.join()))
+    const returnedRoutes = getValidRoutes(checkpoints, distances, 1, 9999999999999, length)
+    const uniqueReturnedRoutes = new Set(returnedRoutes.map(route => route.route.join()))
     expect(returnedRoutes).toHaveLength(uniqueReturnedRoutes.size)
   })
 
   test("returns valid permutations", () => {
-    const returnedRoutes = getValidRoutes(checkpoints, distances, 0, 9999999999999, start, end, length)
-
+    const returnedRoutes = getValidRoutes(checkpoints, distances, 1, 9999999999999, length)
     /*
     check for each route:
     - correct amount of checkpoints
@@ -49,19 +103,76 @@ describe("Routes algorithm", () => {
     */
 
     returnedRoutes.map((route) => {
-      expect(route).toHaveLength(length)
+      expect(route.route).toHaveLength(length+2)
 
-      const routeSet = new Set(route)
-      expect(route).toHaveLength(routeSet.size)
+      const routeSet = new Set(route.route)
+      expect(route.route).toHaveLength(routeSet.size)
 
-      route.map((checkpoint) => {
+      route.route.map((checkpoint) => {
 
-        expect(checkpoints).toContain(checkpoint)
+        expect(checkpoints.map(c => c.id)).toContain(checkpoint)
       })
     })
   })
 
   test("returns the correct routes", () => {
+    const checkpoints: Checkpoint[] = [ {
+      id: 77,
+      eventId: null,
+      hint: null,
+      name: "Oodi",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 55,
+      eventId: null,
+      hint: null,
+      name: "Tripla",
+      type: "FINISH" as CheckpointType
+    },
+    {
+      id: 22,
+      eventId: null,
+      hint: null,
+      name: "Kumpulan kampus",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 11,
+      eventId: null,
+      hint: null,
+      name: "Rautatieasema",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 66,
+      eventId: null,
+      hint: null,
+      name: "Tuomiokirkko12",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 33,
+      eventId: null,
+      hint: null,
+      name: "Esplanadi",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 44,
+      eventId: null,
+      hint: null,
+      name: "Tuomiokirkko",
+      type: "INTERMEDIATE" as CheckpointType
+    },
+    {
+      id: 88,
+      eventId: null,
+      hint: null,
+      name: "Tuomiokirkk1o",
+      type: "START" as CheckpointType
+    }
+    ]
     const distances = {
       33: {11: 9999, 22: 9999, 44: 1, 55: 9999, 66: 1, 77: 9999},
       88: {11: 1, 22: 9999, 33: 9999, 44: 9999, 77: 1, 66: 9999},
@@ -71,17 +182,14 @@ describe("Routes algorithm", () => {
       22: {11: 9999, 33: 1, 44: 9999, 55: 9999, 66: 9999, 77: 9999},
       44: {11: 9999, 22: 9999, 33: 9999, 55: 1, 66: 9999, 77: 9999}
     }
-    const checkpoints = [11, 22, 33, 44, 66, 77]
-    const start = 88
-    const end = 55
     const expectedRoutes = [
-      [77, 22, 33, 44],
-      [11, 22, 33, 66],
-      [11, 22, 33, 44],
-      [77, 22, 33, 66]
+      [88, 77, 22, 33, 44, 55],
+      [88, 11, 22, 33, 66, 55],
+      [88, 11, 22, 33, 44, 55],
+      [88, 77, 22, 33, 66, 55]
     ]
-    const returnedRoutes = getValidRoutes(checkpoints, distances, 0, 9999, start, end, 4)
+    const returnedRoutes = getValidRoutes(checkpoints, distances, 1, 9999, 4)
 
-    expect(returnedRoutes.sort()).toStrictEqual(expectedRoutes.sort())
+    expect(returnedRoutes.map(r => r.route).sort()).toStrictEqual(expectedRoutes.sort())
   })
 })

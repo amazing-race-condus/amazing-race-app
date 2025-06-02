@@ -23,7 +23,7 @@ enum PenaltyType {
 model Checkpoint {
   id       Int     @id @default(autoincrement())
   name     String  @unique
-  type     Type?
+  type     Type
   hint     String?
   eventId  Int?    @map("event_id")
 
@@ -78,15 +78,15 @@ model Route {
 }
 
 model RouteCheckpoint {
-  id            Int @id @default(autoincrement())
-  routeId       Int @map("route_id")
-  checkpointId  Int @map("checkpoint_id")
-  order         Int
+  id                      Int @id @default(autoincrement())
+  routeId                 Int @map("route_id")
+  checkpointId            Int @map("checkpoint_id")
+  checkpointOrder         Int @map("checkpoint_order")
 
-  route      Route      @relation(fields: [routeId], references: [id])
-  checkpoint Checkpoint @relation(fields: [checkpointId], references: [id])
+  route      Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  checkpoint Checkpoint @relation(fields: [checkpointId], references: [id], onDelete: Cascade)
 
-  @@unique([routeId, order])
+  @@unique([routeId, checkpointOrder])
 }
 
 model CheckpointDistance {

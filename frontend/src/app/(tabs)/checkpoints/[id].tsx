@@ -3,6 +3,7 @@ import { useLocalSearchParams, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { RootState } from "@/store/store"
 import { useSelector } from "react-redux"
+import ArrivingGroups from "@/components/ArrivingGroups"
 
 const Checkpoint = () => {
   const { id } = useLocalSearchParams()
@@ -17,7 +18,16 @@ const Checkpoint = () => {
           options={{ headerShown: false }}
         />
         <Text style={styles.title}>{checkpoint?.name}</Text>
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
+        <Text style={[styles.breadText, {fontWeight: "bold"}]}>
+          {checkpoint?.type === "START"
+            ? "Lähtö"
+            : checkpoint?.type === "FINISH"
+              ? "Maali"
+              : checkpoint?.type === "INTERMEDIATE"
+                ? "Välirasti"
+                : "Rasti"}
+        </Text>
+        <ArrivingGroups checkpointId={Number(id)} />
       </View>
     </View>
   )
