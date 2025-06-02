@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
 import { getValidRoutes } from "../src/routes"
-import { Distances, Checkpoint } from "../../frontend/src/types"
+import { Distances, Checkpoint, Route } from "../../frontend/src/types"
 import { error } from "console"
 
 const settingsRouter = express.Router()
@@ -148,6 +148,29 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   res.status(200).json({upserts: upserts, failures: failures})
 })
 
+const updateRoutes = async (routes: Route[]) => {
+  for (const route of routes) {
+    const { id } = await prisma.route.create({
+      data: {
+        routeTime: route.length
+      },
+      select: {
+        id: true
+      }
+    })
+    for (const [order, checkpoint] of route.route.entries()) {
+      await prisma.routeCheckpoint.create({
+      data: {
+        routeId: id,
+        checkpointId: checkpoint,
+        checkpointOrder: order
+      }
+    })
+    }
+  }
+  console.log("Valmis")
+}
+
 settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
   const eventId = 1 //req.body.event_id
   try {
@@ -180,6 +203,14 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
     }
 
     const routes = getValidRoutes(checkpoints, distances, min, max)
+
+    if (routes.length === 0) {
+      res.status(400).json({error: "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
+      return
+    }
+
+    updateRoutes(routes)
+
     res.status(200).json({message: `${routes.length} reittiä luotu.`})
     return
   

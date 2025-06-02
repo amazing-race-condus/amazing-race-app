@@ -2,7 +2,7 @@ export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
 export type PenaltyType = "HINT" | "SKIP" | "OVERTIME";
 
 export type Checkpoint = {
-    type: CheckpointType | null;
+    type: CheckpointType;
     id: number;
     eventId: number | null;
     name: string;
@@ -15,6 +15,11 @@ export interface RouteLimit {
     id: number,
     minRouteTime: number,
     maxRouteTime: number
+}
+
+export interface Route {
+  route: number[],
+  length: number
 }
 
 export interface Distances {

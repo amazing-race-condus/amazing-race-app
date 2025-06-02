@@ -22,7 +22,6 @@ const RouteMinMax = () => {
   const getInitialLimits = async () => {
     const response = await axios.get(`${url}/settings/${eventId}/limits`)
     const initialLimits = response.data
-    console.log(initialLimits)
     if (initialLimits) {
       setMinimum(initialLimits.minRouteTime.toString())
       setMaximum(initialLimits.maxRouteTime.toString())

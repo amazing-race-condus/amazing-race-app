@@ -15,8 +15,6 @@ const GroupCheckpointItem = (
 
   const CheckpointPenalties = group?.penalty.filter(p => p.checkpointId === checkpoint.id)
 
-  console.log(CheckpointPenalties)
-
   return (
     <View style={styles.item}>
       <Text style={styles.checkpointName}>
