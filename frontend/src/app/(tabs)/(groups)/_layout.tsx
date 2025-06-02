@@ -17,13 +17,6 @@ export default function Layout() {
           name="index"
         />
         <Stack.Screen
-          name="addNew"
-          options={{
-            presentation: "transparentModal",
-            animation: "none",
-          }}
-        />
-        <Stack.Screen
           name="group/[id]"
         />
       </Stack>
