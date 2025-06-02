@@ -38,6 +38,7 @@ export interface Group {
     members: number,
     disqualified: boolean,
     penalty: Penalty[],
+    dnf: boolean
 }
 
-export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty">
+export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">
