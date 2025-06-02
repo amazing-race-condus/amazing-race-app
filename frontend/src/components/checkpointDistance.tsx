@@ -6,6 +6,7 @@ import { RootState , AppDispatch } from "@/store/store"
 import { Checkpoint, Distances } from "@/types"
 import { styles } from "@/styles/commonStyles"
 import { setNotification } from "@/reducers/notificationSlice"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 
 const CheckpointDistance = () => {
   const url =
@@ -18,6 +19,10 @@ const CheckpointDistance = () => {
   const [expandedIndex, setExpandedIndex] = useState<number>(-1)
   const [formValues, setFormValues] = useState<Distances>({})
   const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    dispatch(fetchCheckpoints())
+  }, [dispatch])
 
   const getCheckpointDistances = async () => {
     const response = await axios.get(`${url}/settings/${eventId}/distances`)

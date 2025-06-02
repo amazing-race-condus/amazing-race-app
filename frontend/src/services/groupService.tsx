@@ -28,6 +28,12 @@ export const removeGroup = async (id: number) => {
   return response.data
 }
 
+export const dnfGroup = async (id: number) => {
+  const request = axios.put(`${url}/groups/${id}/dnf`)
+  const response = await request
+  return response.data
+}
+
 export const disqualifyGroup = async (id: number) => {
   const request = axios.put(`${url}/groups/${id}/disqualify`)
   const response = await request

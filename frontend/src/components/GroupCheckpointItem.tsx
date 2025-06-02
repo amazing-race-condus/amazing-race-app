@@ -57,7 +57,7 @@ const GroupCheckpointItem = (
           </Pressable>
         </View>
       )}
-      {CheckpointPenalties.map(p =>
+      {CheckpointPenalties?.map(p =>
         <Text key={p.id} style={styles.breadText}>• {p.time}</Text>
       )}
     </View>
