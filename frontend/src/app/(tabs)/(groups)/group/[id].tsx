@@ -1,21 +1,23 @@
 import { AppDispatch, RootState } from "@/store/store"
-import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router"
+import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { removeGroupReducer, updateGroup } from "@/reducers/groupSlice"
+import { dnfGroupReducer, updateGroup } from "@/reducers/groupSlice"
 import { getAllCheckpoints } from "@/services/checkpointService"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/Notification"
 import Penalty from "./penalty"
 import GroupCheckpointItem from "@/components/GroupCheckpointItem"
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const router = useRouter()
+  const bottomSheetRef = useRef<BottomSheet>(null)
 
   const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
@@ -66,20 +68,12 @@ const Team = () => {
     }
   }
 
-  const handleDelete = () => {
-    const handleBack = () => {
-      if (router.canGoBack()) {
-        router.back()
-      } else {
-        router.navigate("/")
-      }
-    }
-
+  const handleDNF = () => {
     if (Platform.OS === "web") {
       const confirmed = window.confirm("Oletko varma että haluat poistaa tämän ryhmän?")
       if (confirmed) {
-        dispatch(removeGroupReducer(Number(id)))
-        handleBack()
+        dispatch(dnfGroupReducer(Number(id)))
+        bottomSheetRef.current?.close()
       }
     } else {
       Alert.alert(
@@ -91,8 +85,8 @@ const Team = () => {
             text: "Poista",
             style: "destructive",
             onPress: () => {
-              dispatch(removeGroupReducer(Number(id)))
-              handleBack()
+              dispatch(dnfGroupReducer(Number(id)))
+              bottomSheetRef.current?.close()
             }
           }
         ]
@@ -139,8 +133,12 @@ const Team = () => {
       />
       <Notification />
       <Text style={styles.title}>{group?.name}</Text>
+      <Pressable style={{ width: 50, height: 50 }} onPress={() => bottomSheetRef.current?.expand()}>
+        <FontAwesome6 name="ellipsis-vertical" size={50} color="black" />
+      </Pressable>
       <Text style={styles.breadText}>Diskattu: {group?.disqualified.toString()}</Text>
       <Text style={styles.breadText}>Jäsenmäärä {group?.members}</Text>
+      <Text style={styles.breadText}>dnf {group?.dnf.toString()}</Text>
       <FlatList
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
@@ -155,15 +153,45 @@ const Team = () => {
         keyExtractor={item => item.id.toString()}
       />
       <Penalty id={id}/>
-      <Text style={styles.header}>Poista ryhmä</Text>
-      <Pressable onPress={handleDelete} style={ styles.button }>
-        <Text> Poista </Text>
-      </Pressable>
-      <Text style={styles.header}>Diskaa ryhmä</Text>
-      <Pressable onPress={handleDisqualification} style={ styles.button }>
-        <Text> Diskaa / Epädiskaa </Text>
-      </Pressable>
 
+      <BottomSheet
+        index={-1}
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            opacity={0.5}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+          />
+        )}
+      >
+        <BottomSheetView style={{ flex: 1, padding: 16 }}>
+          <Pressable onPress={handleDNF} style={{
+            borderWidth: 1,
+            backgroundColor: "#f54254",
+            borderColor: "silver",
+            borderRadius: 8,
+            padding: 12,
+            marginBottom: 16,
+          }}>
+            <Text> Keskeytä suoritus </Text>
+          </Pressable>
+          <Pressable onPress={handleDisqualification} style={{
+            borderWidth: 1,
+            backgroundColor: "#f54254",
+            borderColor: "silver",
+            borderRadius: 8,
+            padding: 12,
+            marginBottom: 16,
+          }}
+          >
+            <Text> Diskaa / Epädiskaa ryhmä </Text>
+          </Pressable>
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   )
 }
