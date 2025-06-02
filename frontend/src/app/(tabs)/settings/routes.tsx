@@ -5,6 +5,7 @@ import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import RouteMinMax from "@/components/routeMinMax"
 import CheckpointDistance from "@/components/checkpointDistance"
+import RouteGeneration from "@/components/routeGeneration"
 
 const RouteSettings = () => {
   return (
@@ -14,6 +15,7 @@ const RouteSettings = () => {
         <Notification />
         <RouteMinMax />
         <CheckpointDistance />
+        <RouteGeneration />
       </ScrollView>
     </View>
   )
