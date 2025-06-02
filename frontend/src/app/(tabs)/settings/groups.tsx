@@ -9,7 +9,7 @@ import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
+import AddNewButton from "@/components/addNewButton"
 
 const GroupSettings = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -37,24 +37,7 @@ const GroupSettings = () => {
       <Stack.Screen options={{ headerShown: false }} />
       <Notification />
       <Groups />
-      {/* <AddNewButton/> */}
-      <Pressable
-        onPress={() => bottomSheetRef.current?.expand()}
-        style={{
-          position: "absolute",
-          bottom: 20,
-          right: 20,
-          backgroundColor: "orange",
-          width: 56,
-          height: 56,
-          borderRadius: 20,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <FontAwesome6 name="plus" size={24} color="white" />
-      </Pressable>
-
+      <AddNewButton onPress={() => bottomSheetRef.current?.expand()} />
       <BottomSheet
         index={-1}
         enablePanDownToClose={true}
@@ -83,7 +66,6 @@ const GroupSettings = () => {
             }}
             returnKeyType="next"
             onSubmitEditing={addNewGroup}
-            // autoFocus
           />
           <BottomSheetTextInput
             ref={nextRef}
