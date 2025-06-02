@@ -12,6 +12,7 @@
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
     "reset:dev": "dotenv -e .env.dev -- npx prisma migrate reset && npm run migrate:dev && npm run seed:dev",
+    "reset:test": "dotenv -e .env.test -- npx prisma migrate reset",
     "seed": "ts-node prisma/seed.ts",
     "seed:dev": "dotenv -e .env.dev -- ts-node prisma/seedDev.ts",
     "seed:test": "dotenv -e .env.test -- ts-node prisma/seed.ts"
