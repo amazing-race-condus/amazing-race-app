@@ -1,8 +1,8 @@
 import { useCallback } from "react"
-import {  View, ScrollView } from "react-native"
+import {  View } from "react-native"
 import { useDispatch } from "react-redux"
 import { Stack, useFocusEffect, usePathname } from "expo-router"
-import { AppDispatch} from "@/store/store"
+import { AppDispatch } from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
@@ -10,7 +10,6 @@ import AddNewButton from "@/components/addGroupButton"
 import Groups from "@/components/Groups"
 
 const App = () => {
-
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
 
   useFocusEffect(
@@ -23,11 +22,9 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Notification />
-        <Groups />
-      </ScrollView>
+      <Stack.Screen options={{ headerShown: false }} />
+      <Notification />
+      <Groups />
       {pathname.startsWith("/settings") && (
         <AddNewButton/>
       )}

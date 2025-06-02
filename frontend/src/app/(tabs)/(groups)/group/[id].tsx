@@ -142,7 +142,6 @@ const Team = () => {
       <Text style={styles.breadText}>Diskattu: {group?.disqualified.toString()}</Text>
       <Text style={styles.breadText}>Jäsenmäärä {group?.members}</Text>
       <FlatList
-        contentContainerStyle={styles.listcontainer}
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) =>

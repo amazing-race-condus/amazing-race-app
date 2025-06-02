@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity, ScrollView } from "react-native"
+import { View, Text, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
 import { useCallback, useState } from "react"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
@@ -7,6 +7,7 @@ import { usePathname, Link, useFocusEffect } from "expo-router"
 import { Entypo } from "@expo/vector-icons"
 import { removeGroupReducer, fetchGroups } from "@/reducers/groupSlice"
 import Search from "@/components/Search"
+import { FlatList } from "react-native-gesture-handler"
 
 const Groups = () => {
   const [search, setSearch] = useState<string>("")
@@ -23,8 +24,6 @@ const Groups = () => {
       dispatch(fetchGroups())
     }, [dispatch])
   )
-
-  const ItemSeparator = () => <View style={styles.separator} />
 
   const handleRemoveGroup = (id: string | number, name: string) => {
     if (Platform.OS === "web") {
@@ -87,16 +86,17 @@ const Groups = () => {
 
       <Search search={search} setSearch={setSearch} />
 
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <View style={styles.listcontainer}>
-          {filteredGroups.map((item, index) => (
-            <View key={item.id}>
-              <GroupItem name={item.name} members={item.members} id={item.id?.toString() ?? ""} />
-              {index < filteredGroups.length - 1 && <ItemSeparator />}
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={filteredGroups}
+        keyExtractor={(item) => item.id?.toString()}
+        renderItem={({ item }) => (
+          <GroupItem
+            name={item.name}
+            members={item.members}
+            id={item.id?.toString()}
+          />
+        )}
+      />
     </View>
   )
 }
