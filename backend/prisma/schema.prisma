@@ -14,27 +14,34 @@ enum Type {
   INTERMEDIATE
 }
 
+enum PenaltyType {
+  HINT
+  SKIP
+  OVERTIME
+}
+
 model Checkpoint {
   id       Int     @id @default(autoincrement())
   name     String  @unique
-  type     Type?
+  type     Type
   hint     String?
-  event_id Int?
+  eventId  Int?    @map("event_id")
 
-  event           Event?               @relation(fields: [event_id], references: [id])
+  event           Event?               @relation(fields: [eventId], references: [id])
   fromDistances   CheckpointDistance[] @relation("FromCheckpoint")
   toDistances     CheckpointDistance[] @relation("ToCheckpoint")
   group           Group[]
+  penalty         Penalty[]
   routeCheckpoint RouteCheckpoint[]
 }
 
 model Event {
   id             Int       @id @default(autoincrement())
   name           String    @unique
-  start_time     DateTime?
-  end_time       DateTime?
-  min_route_time Int?
-  max_route_time Int?
+  startTime      DateTime? @map("start_time")
+  endTime        DateTime? @map("end_time")
+  minRouteTime   Int?      @map("min_route_time")
+  maxRouteTime   Int?      @map("max_route_time")
 
   checkpoints        Checkpoint[]
   group              Group[]
@@ -47,60 +54,63 @@ model Group {
   id                 Int       @id @default(autoincrement())
   name               String    @unique
   members            Int       @default(-1)
-  event_id           Int?
-  finish_time        DateTime?
-  next_checkpoint_id Int?
-  route_id           Int?
+  eventId            Int?      @map("event_id")
+  finishTime         DateTime? @map("finish_time")
+  nextCheckpointId   Int?      @map("next_checkpoint_id")
+  routeId            Int?      @map("route_id")
   disqualified       Boolean   @default(false)
 
-  event           Event?      @relation(fields: [event_id], references: [id])
-  route           Route?      @relation(fields: [route_id], references: [id])
-  next_checkpoint Checkpoint? @relation(fields: [next_checkpoint_id], references: [id])
+  event           Event?      @relation(fields: [eventId], references: [id])
+  route           Route?      @relation(fields: [routeId], references: [id])
+  next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
 }
 
 model Route {
   id         Int  @id @default(autoincrement())
-  route_time Int
-  event_id   Int?
+  routeTime  Int  @map("route_time")
+  eventId    Int? @map("event_id")
 
-  event      Event?            @relation(fields: [event_id], references: [id])
+  event      Event?            @relation(fields: [eventId], references: [id])
   routeSteps RouteCheckpoint[]
   group      Group[]
 }
 
 model RouteCheckpoint {
   id            Int @id @default(autoincrement())
-  route_id      Int
-  checkpoint_id Int
+  routeId       Int @map("route_id")
+  checkpointId  Int @map("checkpoint_id")
   order         Int
 
-  route      Route      @relation(fields: [route_id], references: [id])
-  checkpoint Checkpoint @relation(fields: [checkpoint_id], references: [id])
+  route      Route      @relation(fields: [routeId], references: [id])
+  checkpoint Checkpoint @relation(fields: [checkpointId], references: [id])
 
-  @@unique([route_id, order])
+  @@unique([routeId, order])
 }
 
 model CheckpointDistance {
   id       Int  @id @default(autoincrement())
-  from_id  Int
-  to_id    Int
+  fromId   Int  @map("from_id")
+  toId     Int  @map("to_id")
   time     Int
-  event_id Int?
+  eventId  Int? @map("event_id")
 
-  from  Checkpoint @relation("FromCheckpoint", fields: [from_id], references: [id], onDelete: Cascade)
-  to    Checkpoint @relation("ToCheckpoint", fields: [to_id], references: [id], onDelete: Cascade)
-  event Event?     @relation(fields: [event_id], references: [id])
+  from  Checkpoint @relation("FromCheckpoint", fields: [fromId], references: [id], onDelete: Cascade)
+  to    Checkpoint @relation("ToCheckpoint", fields: [toId], references: [id], onDelete: Cascade)
+  event Event?     @relation(fields: [eventId], references: [id])
 
-  @@unique([from_id, to_id, event_id])
+  @@unique([fromId, toId, eventId])
 }
 
 model Penalty {
   id              Int  @id @default(autoincrement())
-  group_id        Int
+  groupId         Int  @map("group_id")
   time            Int
-  event_id        Int?
+  type            PenaltyType
+  checkpointId    Int @map("checkpoint_id")
+  eventId         Int? @map("event_id")
 
-  group        Group       @relation(fields: [group_id], references: [id])
-  event        Event?      @relation(fields: [event_id], references: [id])
+  group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  event        Event?      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  checkpoint   Checkpoint? @relation(fields: [checkpointId], references: [id], onDelete: Cascade)
 }

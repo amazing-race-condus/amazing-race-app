@@ -51,7 +51,6 @@ const getDistances = async (eventId: number) => {
     select: {fromId: true, toId: true, time: true},
     where: {eventId: eventId}
   })
-  // { [from_id: number]: {[to_id: number]: number} }
   const times: Distances = {}
 
   result.map(row => {
@@ -70,16 +69,16 @@ settingsRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
 })
 
 settingsRouter.put("/update_limits", async (req: Request, res: Response) => {
-  const event_id = req.body.id
-  const new_min_route_time = req.body.min_route_time
-  const new_max_route_time = req.body.max_route_time
+  const eventId = req.body.id
+  const newMinRouteTime = req.body.minRouteTime
+  const newMaxRouteTime = req.body.maxRouteTime
 
-  if (!validateMinAndMax(new_min_route_time, new_max_route_time, res)) {
+  if (!validateMinAndMax(newMinRouteTime, newMaxRouteTime, res)) {
     return
   } else {
     const updatedEvent = await prisma.event.update({
-      where: {id: event_id},
-      data: {minRouteTime: new_min_route_time, maxRouteTime: new_max_route_time}
+      where: {id: eventId},
+      data: {minRouteTime: newMinRouteTime, maxRouteTime: newMaxRouteTime}
     })
     res.status(200).json(updatedEvent)
   }
@@ -100,7 +99,7 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   An example req.body:
 
   {
-    "event_id": 1,
+    "eventId": 1,
     "distances": {
         "2": {"13": 12, "15": 30},
         "3": {"3": 23, "15": 24},
@@ -113,34 +112,34 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   */
 
   const distances = req.body
-  const eventId = 1 //req.body.event_id
+  const eventId = 1 //req.body.eventId
 
   let upserts = 0
   let failures = 0
 
-  for (const [fromId] of Object.entries(distances)) {
-    const from_id = Number(fromId)
+  for (const [newFromId] of Object.entries(distances)) {
+    const fromId = Number(newFromId)
 
-    for (const [toId, time] of Object.entries(distances[fromId])) {
-      const to_id = Number(toId)
+    for (const [newToId, time] of Object.entries(distances[fromId])) {
+      const toId = Number(newToId)
 
       try {
         const upsertedData = await prisma.checkpointDistance.upsert({
           where: {
             fromId_toId_eventId: {
-              fromId: from_id,
-              toId: to_id,
+              fromId: fromId,
+              toId: toId,
               eventId: eventId
             }
           },
-          create: {fromId: from_id, toId: to_id, time: Number(time), eventId: eventId},
+          create: {fromId: fromId, toId: toId, time: Number(time), eventId: eventId},
           update: {time: Number(time)},
         })
 
         console.log("upsertedData:", upsertedData)
         upserts += 1
       } catch {
-        console.log("Error while trying to upsert", from_id, to_id, time, ":")
+        console.log("Error while trying to upsert", fromId, toId, time, ":")
         failures += 1
       }
     }
@@ -158,7 +157,6 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
 
     const distances = await getDistances(eventId)
     const limits = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
-    console.log("Limits: ", limits)
 
     if (!limits) {
       res.status(404).json({ error: "Tapahtumaa ei löytynyt annetulla ID:llä." })

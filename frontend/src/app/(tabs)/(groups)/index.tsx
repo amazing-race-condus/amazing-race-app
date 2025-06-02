@@ -1,23 +1,17 @@
-import { useCallback, useState } from "react"
-import { Text, View, FlatList, TouchableOpacity } from "react-native"
-import { useDispatch, useSelector } from "react-redux"
-import { Link, Stack, useFocusEffect } from "expo-router"
-import { AppDispatch, RootState} from "@/store/store"
+import { useCallback } from "react"
+import {  View, ScrollView } from "react-native"
+import { useDispatch } from "react-redux"
+import { Stack, useFocusEffect, usePathname } from "expo-router"
+import { AppDispatch} from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
-import Search from "@/components/Search"
 import AddNewButton from "@/components/addGroupButton"
+import Groups from "@/components/Groups"
 
 const App = () => {
-  const [search, setSearch] = useState<string>("")
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const groups = useSelector((state: RootState) => state.groups)
-
-  const filteredGroups = groups.filter(
-    item => item.name.toLowerCase().startsWith(search.toLocaleLowerCase())
-  )
 
   useFocusEffect(
     useCallback(() => {
@@ -25,41 +19,19 @@ const App = () => {
     }, [dispatch])
   )
 
-  const ItemSeparator = () => <View style={styles.separator} />
+  const pathname = usePathname()
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Notification />
-      <Search search={search} setSearch={setSearch}/>
-      <View style={styles.content}>
-        <FlatList
-          contentContainerStyle={[styles.listcontainer]}
-          data={filteredGroups}
-          ItemSeparatorComponent={ItemSeparator}
-          renderItem={({ item }) =>
-            <View>
-              <Link
-                href={{
-                  pathname: `/(groups)/group/${item.id}`,
-                  params: { name: item.name, members: item.members }
-                }}
-                asChild
-              >
-                <TouchableOpacity style={styles.item}>
-                  <Text style={styles.checkpointName}>{item.name}</Text>
-                </TouchableOpacity>
-              </Link>
-            </View>
-          }
-          keyExtractor={item => item.id?.toString() ?? ""}
-        />
-      </View>
-      <AddNewButton/>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Notification />
+        <Groups />
+      </ScrollView>
+      {pathname.startsWith("/settings") && (
+        <AddNewButton/>
+      )}
+
     </View>
   )
 }

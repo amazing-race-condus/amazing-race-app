@@ -1,26 +1,14 @@
 import { View, Text } from "react-native"
 import { useLocalSearchParams, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import { getCheckpoint } from "@/services/checkpointService"
-import { useEffect, useState } from "react"
+import { RootState } from "@/store/store"
+import { useSelector } from "react-redux"
 
 const Checkpoint = () => {
   const { id } = useLocalSearchParams()
-  const [name, setName] = useState("Loading...")
-
-  useEffect(() => {
-    const fetchCheckpoint = async () => {
-      try {
-        const data = await getCheckpoint(id)
-        setName(data.name)
-      } catch (error) {
-        console.error(error)
-        setName("Error")
-      }
-    }
-
-    if (id) fetchCheckpoint()
-  }, [id])
+  const checkpoint = useSelector((state: RootState) =>
+    state.checkpoints.find(g => g.id === Number(id))
+  )
 
   return (
     <View style={styles.container}>
@@ -28,7 +16,7 @@ const Checkpoint = () => {
         <Stack.Screen
           options={{ headerShown: false }}
         />
-        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.title}>{checkpoint?.name}</Text>
         <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
       </View>
     </View>

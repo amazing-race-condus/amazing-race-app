@@ -15,7 +15,7 @@ export const initialCheckpoints = [
   }
 ]
 
-export const finalCheckpoints = [
+export const checkpoints = [
   {
     name: "Oodi",
     type: Type.FINISH,
@@ -74,6 +74,17 @@ export const intermediateCheckpoints = [
   {
     name: "Kauppatori",
     type: Type.INTERMEDIATE,
+  },
+]
+
+export const initialGroups = [
+  {
+    name: "Testiryhmä",
+    members: 4,
+  },
+  {
+    name: "Toinen ryhmä",
+    members: 3,
   },
 ]
 

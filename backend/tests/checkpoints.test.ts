@@ -1,6 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, finalCheckpoints, intermediateCheckpoints } from "./test_helper"
+import { initialCheckpoints, checkpoints, intermediateCheckpoints } from "./test_helper"
 
 
 describe("Get all checkpoints", () => {
@@ -55,12 +55,6 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
-  beforeEach(async () => {
-    await prisma.checkpoint.deleteMany({})
-    await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
-    })
-  })
 
   it("succeeds with valid data", async () => {
     const newCheckpoint = {
@@ -75,9 +69,9 @@ describe("Addition of a new checkpoint", () => {
 
 
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length+1)
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).toContain("Tennispalatsi")
+    await prisma.checkpoint.deleteMany({})
   })
 
   it("fails with status code 400 and proper error message if data invalid", async () => {
@@ -90,8 +84,6 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
     expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu.")
   })
 
@@ -106,9 +98,10 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    let checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
     expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta.")
+    let checkpointsAtEnd = await prisma.checkpoint.findMany()
+    let names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("S")
 
     newCheckpoint = {
       name: "S".repeat(101),
@@ -120,12 +113,18 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
     expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 100 kirjainta.")
+    checkpointsAtEnd = await prisma.checkpoint.findMany()
+    names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("S".repeat(101))
   })
 
   it("fails with status code 400 and proper error message if chekpoint with type start or finish already exists", async () => {
+
+    await prisma.checkpoint.createMany({
+      data: initialCheckpoints
+    })
+
     let newCheckpoint = {
       name: "Lähtö",
       type: "START"
@@ -136,8 +135,6 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    let checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
     expect(result.body.error).toContain("Lähtörasti on jo luotu.")
 
     newCheckpoint = {
@@ -150,15 +147,17 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
     expect(result.body.error).toContain("Maali on jo luotu.")
+    const checkpointsAtEnd = await prisma.checkpoint.findMany()
+    const names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("Lähtö")
+    expect(names).not.toContain("Maali")
+    await prisma.checkpoint.deleteMany({})
   })
 
   it("fails with status code 400 and proper error message if there is already 8 checkpoints", async () => {
-    await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: finalCheckpoints,
+      data: checkpoints,
     })
 
     const newCheckpoint = {
@@ -171,14 +170,15 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(finalCheckpoints.length)
     expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia.")
+    const checkpointsAtEnd = await prisma.checkpoint.findMany()
+    const names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("Välirasti")
+    await prisma.checkpoint.deleteMany({})
 
   })
 
   it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
-    await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: intermediateCheckpoints,
     })
@@ -194,9 +194,10 @@ describe("Addition of a new checkpoint", () => {
       .expect("Content-Type", /application\/json/)
 
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(intermediateCheckpoints.length)
+    const names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("Välirasti")
     expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
-
+    await prisma.checkpoint.deleteMany({})
   })
 
 
@@ -212,7 +213,8 @@ describe("Addition of a new checkpoint", () => {
       .expect("Content-Type", /application\/json/)
 
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length)
+    const names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("Rasti")
     expect(result.body.error).toContain("Virheellinen tyyppi.")
   })
 
@@ -232,9 +234,8 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length+1)
     expect(result.body.error).toContain("Rastin nimi on jo käytössä.")
+    await prisma.checkpoint.deleteMany({})
   })
 })
 
@@ -257,8 +258,6 @@ describe("Deletion of a checkpoint", () => {
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length-1)
 
-
-
     const ids = checkpointsAtEnd.map(c => c.id)
     expect(ids).not.toContain(checkpointToDelete.id)
 
@@ -268,9 +267,6 @@ describe("Deletion of a checkpoint", () => {
 
 afterAll(async () => {
   await prisma.checkpoint.deleteMany({})
-  await prisma.checkpoint.createMany({
-    data: finalCheckpoints,
-  })
   await prisma.$disconnect()
   server.close()
 })

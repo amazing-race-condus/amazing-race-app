@@ -1,13 +1,12 @@
 import React from "react"
 import { View, ScrollView } from "react-native"
-import { Stack, usePathname } from "expo-router"
+import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import Checkpoints from "@/components/Checkpoints"
 import AddNewButton from "@/components/addCheckpointButton"
 
-const CheckpointsList = () => {
-  const pathname = usePathname()
+const CheckpointSettings = () => {
 
   return (
     <View style={styles.container}>
@@ -16,12 +15,10 @@ const CheckpointsList = () => {
         <Notification />
         <Checkpoints />
       </ScrollView>
-      {pathname.startsWith("/settings") && (
-        <AddNewButton/>
-      )}
-
+      <AddNewButton/>
     </View>
   )
 }
 
-export default CheckpointsList
+export default CheckpointSettings
+

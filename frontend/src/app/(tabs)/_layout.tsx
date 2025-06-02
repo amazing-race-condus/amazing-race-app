@@ -9,6 +9,7 @@ export default function TabLayout() {
         options={{
           title: "Ryhmät",
           headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="users" color={color} />,
         }}
       />
@@ -17,6 +18,7 @@ export default function TabLayout() {
         options={{
           title: "Rastit",
           headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="compass" color={color} />
         }}
       />
@@ -24,6 +26,8 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Asetukset",
+          headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
         }}
       />

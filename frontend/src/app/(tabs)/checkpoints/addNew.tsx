@@ -4,17 +4,18 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "expo-router"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import { addGroupReducer } from "@/reducers/groupSlice"
-import { AddGroup } from "@/types"
+import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
+import { AddCheckpoint, CheckpointType } from "@/types"
+import { RadioButton } from "react-native-paper"
+import { styles } from "@/styles/commonStyles"
 
 const AddNew = () => {
   const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const router = useRouter()
-  const nextRef = useRef(null)
 
-  const [groupname, setGroupname] = useState<string>("")
-  const [groupMembers, setGroupMembers] = useState<number>(0)
+  const [name, setName] = useState<string>("")
+  const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
 
   useEffect(() => {
     if (Platform.OS !== "web") {
@@ -25,18 +26,16 @@ const AddNew = () => {
     }
   }, [])
 
-  const addNewGroup = async () => {
-    if (groupname.trim()) {
-      const newGroup: AddGroup = {
-        name: groupname,
-        members: groupMembers,
-      }
-
-      dispatch(addGroupReducer(newGroup))
-      setGroupname("")
-      Keyboard.dismiss()
-      bottomSheetRef.current?.close()
+  const addNewCheckpoint = async () => {
+    const newCheckpoint: AddCheckpoint = {
+      name: name,
+      type: type,
     }
+    dispatch(addCheckpointReducer(newCheckpoint))
+    setName("")
+    Keyboard.dismiss()
+    bottomSheetRef.current?.close()
+
   }
 
   const handleBack = () => {
@@ -66,9 +65,9 @@ const AddNew = () => {
       >
         <BottomSheetView style={{ flex: 1, padding: 16 }}>
           <BottomSheetTextInput
-            onChangeText={setGroupname}
-            value={groupname}
-            placeholder="Syötä ryhmän nimi"
+            onChangeText={setName}
+            value={name}
+            placeholder="Syötä rastin nimi"
             style={{
               borderWidth: 1,
               borderColor: "silver",
@@ -77,34 +76,37 @@ const AddNew = () => {
               marginBottom: 16,
             }}
             returnKeyType="next"
-            onSubmitEditing={addNewGroup}
+            onSubmitEditing={addNewCheckpoint}
             autoFocus
           />
-          <BottomSheetTextInput
-            ref={nextRef}
-            onChangeText={text => setGroupMembers(Number(text))}
-            keyboardType="numeric"
-            placeholder="Syötä jäsenten määrä"
-            style={{
-              borderWidth: 1,
-              borderColor: "silver",
-              borderRadius: 8,
-              padding: 12,
-              marginBottom: 16,
-            }}
-            returnKeyType="done"
-            onSubmitEditing={addNewGroup}
-          />
+          <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
+            <View style={styles.radiobuttonGroup}>
+              <View style={styles.radiobuttonItem}>
+                <RadioButton value="START" />
+                <Text>Lähtö</Text>
+              </View>
+              <View style={styles.radiobuttonItem}>
+                <RadioButton value="INTERMEDIATE" />
+                <Text>Välirasti</Text>
+              </View>
+              <View style={styles.radiobuttonItem}>
+                <RadioButton value="FINISH" />
+                <Text>Maali</Text>
+              </View>
+            </View>
+          </RadioButton.Group>
+
           <Pressable
-            onPress={addNewGroup}
+            onPress={addNewCheckpoint}
             style={{
               backgroundColor: "orange",
               padding: 12,
               borderRadius: 8,
               alignItems: "center",
+              marginTop: 16,
             }}
           >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Lisää rasti</Text>
           </Pressable>
         </BottomSheetView>
       </BottomSheet>

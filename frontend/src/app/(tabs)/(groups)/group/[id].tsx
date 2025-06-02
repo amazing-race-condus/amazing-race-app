@@ -1,17 +1,72 @@
-import { AppDispatch } from "@/store/store"
-import { Stack, useLocalSearchParams, useRouter } from "expo-router"
-import { Alert, Platform, Pressable, Text, View } from "react-native"
+import { AppDispatch, RootState } from "@/store/store"
+import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router"
+import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch } from "react-redux"
-import { removeGroupReducer } from "@/reducers/groupSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { removeGroupReducer, updateGroup } from "@/reducers/groupSlice"
+import { getAllCheckpoints } from "@/services/checkpointService"
+import React, { useCallback, useState } from "react"
+import type { Checkpoint, Group } from "@/types"
+import { disqualifyGroup } from "@/services/groupService"
+import { setNotification } from "@/reducers/notificationSlice"
+import Notification from "@/components/Notification"
+import Penalty from "./penalty"
+import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 
 const Team = () => {
-  const { id, name, members } = useLocalSearchParams<{id: string, name: string, members: string}>()
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const router = useRouter()
 
-  const handleSubmit = () => {
+  const { id } = useLocalSearchParams<{id: string}>()
+  const group = useSelector((state: RootState) =>
+    state.groups.find(g => g.id === Number(id))
+  )
 
+  const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
+  const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
+
+  useFocusEffect(
+    useCallback(() => {
+      const checkpointsRoute = async () => {
+        const data = await getAllCheckpoints()
+        const start = data.filter(a => a.type === "START")
+        const finish = data.filter(a => a.type === "FINISH")
+        const intermediate = data.filter(a => a.type === "INTERMEDIATE")
+        intermediate.splice(4)
+        const newData = [...start, ...intermediate, ...finish]
+        setCheckpoints(newData)
+        setNextCheckpointId(newData[0].id)
+      }
+      checkpointsRoute()
+    }, [])
+  )
+
+  const completeCheckpoint = (id: number) => {
+    if (Platform.OS === "web") {
+      const confirmed = window.confirm("Oletko varma että haluat merkitä rastin suoritetuksi?")
+      if (confirmed) {
+        const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+        setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+      }
+    } else {
+      Alert.alert(
+        "Vahvista suoritus",
+        "Oletko varma että haluat merkitä rastin suoritetuksi?",
+        [
+          { text: "Peru", style: "cancel" },
+          {
+            text: "Suorita",
+            onPress: () => {
+              const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+              setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+            },
+          }
+        ]
+      )
+    }
+  }
+
+  const handleDelete = () => {
     const handleBack = () => {
       if (router.canGoBack()) {
         router.back()
@@ -45,23 +100,29 @@ const Team = () => {
     }
   }
 
-  const handleDiscqualification = () => {
+  const handleDisqualification = async () => {
     if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat diskaa tämän ryhmän?")
+      const confirmed = window.confirm("Oletko varma että haluat diskata tämän ryhmän?")
       if (confirmed) {
-        console.log("Disqualified")
+        const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
+        const disqualified = disqualifiedGroup.disqualified
+        dispatch(updateGroup(disqualifiedGroup))
+        dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
       }
     } else {
       Alert.alert(
         "Vahvista diskaus",
-        "Oletko varma että haluat diskaa tämän ryhmän?",
+        "Oletko varma että haluat diskata tämän ryhmän?",
         [
           { text: "Peru", style: "cancel" },
           {
-            text: "Poista",
+            text: "Diskaa",
             style: "destructive",
-            onPress: () => {
-              console.log("Disqualified")
+            onPress: async () => {
+              const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
+              const disqualified = disqualifiedGroup.disqualified
+              dispatch(updateGroup(disqualifiedGroup))
+              dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
             }
           }
         ]
@@ -69,31 +130,41 @@ const Team = () => {
     }
   }
 
+  const ItemSeparator = () => <View style={styles.separator} />
+
   return (
-    <View style={ styles.container }>
-      <View style={styles.content}>
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+      />
+      <Notification />
+      <Text style={styles.title}>{group?.name}</Text>
+      <Text style={styles.breadText}>Diskattu: {group?.disqualified.toString()}</Text>
+      <Text style={styles.breadText}>Jäsenmäärä {group?.members}</Text>
+      <FlatList
+        contentContainerStyle={styles.listcontainer}
+        data={checkpoints}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) =>
+          <GroupCheckpointItem
+            checkpoint = { item }
+            group = { group }
+            nextCheckpointId={nextCheckpointId}
+            completeCheckpoint={completeCheckpoint}
+          />
+        }
+        keyExtractor={item => item.id.toString()}
+      />
+      <Penalty id={id}/>
+      <Text style={styles.header}>Poista ryhmä</Text>
+      <Pressable onPress={handleDelete} style={ styles.button }>
+        <Text> Poista </Text>
+      </Pressable>
+      <Text style={styles.header}>Diskaa ryhmä</Text>
+      <Pressable onPress={handleDisqualification} style={ styles.button }>
+        <Text> Diskaa / Epädiskaa </Text>
+      </Pressable>
 
-        <Stack.Screen
-          options={{ headerShown: false }}
-        />
-        <Text style={styles.title}>{name}</Text>
-        <Text style={styles.breadText}>Jäsenmäärä {members}</Text>
-        <Text style={styles.header}>Ryhmän reitti</Text>
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
-        <Text style={styles.header}>Ryhmän aikasakot</Text>
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
-        <Text style={styles.header}>Sakota ryhmä</Text>
-        <Text style={styles.breadText}>Tähän toiminnallisuutta</Text>
-        <Text style={styles.header}>Poista ryhmä</Text>
-        <Pressable onPress={handleSubmit} style={ styles.button }>
-          <Text> Poista </Text>
-        </Pressable>
-        <Text style={styles.header}>Diskaa ryhmä</Text>
-        <Pressable onPress={handleDiscqualification} style={ styles.button }>
-          <Text> Diskaa </Text>
-        </Pressable>
-
-      </View>
     </View>
   )
 }

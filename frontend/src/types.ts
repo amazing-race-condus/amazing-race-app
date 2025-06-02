@@ -1,4 +1,5 @@
 export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
+export type PenaltyType = "HINT" | "SKIP" | "OVERTIME";
 
 export type Checkpoint = {
     type: CheckpointType | null;
@@ -8,23 +9,37 @@ export type Checkpoint = {
     hint: string | null
 }
 
+export type AddCheckpoint = Omit<Checkpoint, "id">
+
 export interface RouteLimit {
     id: number,
-    min_route_time: number,
-    max_route_time: number
+    minRouteTime: number,
+    maxRouteTime: number
 }
 
 export interface Distances {
   [start:number]: {[end:number]: number}
 }
 
-export type NotificationState = {
+export type Notification = {
     message: string,
     type: "error" | "success" | null
 }
 
-export type Group = {
-    id?: number,
+export interface Penalty {
+    id: number,
+    type: PenaltyType,
+    time: number,
+    groupId: number,
+    checkpointId: number
+}
+
+export interface Group {
+    id: number,
     name: string,
     members: number,
+    disqualified: boolean,
+    penalty: Penalty[],
 }
+
+export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty">

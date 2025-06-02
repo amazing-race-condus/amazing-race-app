@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import messageSlice from "../reducers/responseSlice"
+import messageSlice from "../reducers/notificationSlice"
 import checkpointSlice from "../reducers/checkpointsSlice"
 import groupSlice from "../reducers/groupSlice"
 

@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Platfor
 import { styles } from "@/styles/commonStyles"
 import axios, { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
-import { setNotification } from "@/reducers/responseSlice"
+import { setNotification } from "@/reducers/notificationSlice"
 import { AppDispatch } from "@/store/store"
 
 const RouteGeneration = () => {

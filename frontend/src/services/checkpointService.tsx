@@ -1,6 +1,6 @@
 import axios from "axios"
 import { Platform } from "react-native"
-import { Checkpoint } from "@/types"
+import { Checkpoint, AddCheckpoint } from "@/types"
 
 const url =
   Platform.OS === "web"
@@ -8,25 +8,21 @@ const url =
     : process.env.EXPO_PUBLIC_BACKEND_URL
 
 export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> => {
-  const response = await axios
-    .get<Checkpoint>(`${url}/checkpoints/${id}`)
+  const response = await axios.get<Checkpoint>(`${url}/checkpoints/${id}`)
   return response.data
 }
 
 export const getAllCheckpoints = async (): Promise<Checkpoint[]> => {
-  const response = await axios
-    .get<Checkpoint[]>(`${url}/checkpoints`)
+  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`)
   return response.data
 }
 
-export const createCheckpoint = async (newObject: Checkpoint) => {
+export const createCheckpoint = async (newObject: AddCheckpoint) => {
   const response = await axios.post<Checkpoint>(`${url}/checkpoints`, newObject)
   return response.data
 }
 
-export const removeCheckpoint = async (id: string) => {
-  const request = axios.delete(`${url}/checkpoints/${id}`)
-  const response = await request
+export const removeCheckpoint = async (id: number) => {
+  const response = await axios.delete(`${url}/checkpoints/${id}`)
   return response.data
 }
-

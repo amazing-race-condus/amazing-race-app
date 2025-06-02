@@ -1,27 +1,23 @@
 import React from "react"
 import { View, ScrollView } from "react-native"
-import { Stack, usePathname } from "expo-router"
+import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
-import Checkpoints from "@/components/Checkpoints"
-import AddNewButton from "@/components/addCheckpointButton"
+import Groups from "@/components/Groups"
+import AddNewButton from "@/components/addGroupButton"
 
-const CheckpointsList = () => {
-  const pathname = usePathname()
+const GroupSettings = () => {
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Stack.Screen options={{ headerShown: false }} />
         <Notification />
-        <Checkpoints />
+        <Groups />
       </ScrollView>
-      {pathname.startsWith("/settings") && (
-        <AddNewButton/>
-      )}
-
+      <AddNewButton/>
     </View>
   )
 }
 
-export default CheckpointsList
+export default GroupSettings

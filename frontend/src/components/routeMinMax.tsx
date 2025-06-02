@@ -6,7 +6,7 @@ import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
-import { setNotification } from "@/reducers/responseSlice"
+import { setNotification } from "@/reducers/notificationSlice"
 
 const RouteMinMax = () => {
   const url =
@@ -49,8 +49,8 @@ const RouteMinMax = () => {
   const updateRouteMinMax = () => {
     const data = {
       "id": eventId,
-      "min_route_time": Number(minimum),
-      "max_route_time": Number(maximum)
+      "minRouteTime": Number(minimum),
+      "maxRouteTime": Number(maximum)
     }
     updateLimit(data)
   }
@@ -60,7 +60,7 @@ const RouteMinMax = () => {
       <Stack.Screen
         options={{ headerShown: false }}
       />
-      <Text style={styles.header}>Hallinnoi reittejä:</Text>
+      <Text style={styles.header}>Aseta reiteille aikarajat:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText}>Reittien minimiaika:</Text>
         <TextInput
