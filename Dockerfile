@@ -9,6 +9,8 @@ COPY /backend/prisma ./prisma/
 RUN npx prisma generate
 
 COPY /backend .
+COPY /shared ../shared/
+
 RUN npm run build
 
 
@@ -21,6 +23,7 @@ COPY /frontend/package*.json ./
 RUN npm ci
 
 COPY ./frontend .
+COPY /shared ../shared/
 
 ENV EXPO_PUBLIC_WEB_BACKEND_URL=/api
 RUN npx expo export --platform web
@@ -35,7 +38,7 @@ RUN addgroup -g 1001 -S nodejs && \
 WORKDIR /app
 
 COPY --from=backend-build /app/package*.json ./
-COPY --from=backend-build /app/dist ./dist
+COPY --from=backend-build /app/dist/app ./dist
 COPY --from=backend-build /app/prisma ./dist/prisma/
 COPY --from=backend-build /app/node_modules/.prisma ./node_modules/.prisma
 

@@ -1,5 +1,5 @@
 import { routeDistance, verifyRoute, getValidRoutes } from "../src/routes"
-import { Checkpoint, CheckpointType } from "../../frontend/src/types"
+import { Checkpoint, CheckpointType } from "@/types"
 
 const checkpoints: Checkpoint[] = [ {
   id: 77,

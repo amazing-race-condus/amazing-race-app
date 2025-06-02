@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
 import { getValidRoutes } from "../src/routes"
-import { Distances, Checkpoint, Route } from "../../frontend/src/types"
+import { Distances, Checkpoint, Route } from "@/types"
 
 const settingsRouter = express.Router()
 

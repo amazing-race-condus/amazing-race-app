@@ -10,10 +10,10 @@ import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/Notification"
-import Penalty from "./penalty"
 import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
+import Feather from "@expo/vector-icons/Feather"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -102,6 +102,8 @@ const Team = () => {
         const disqualified = disqualifiedGroup.disqualified
         dispatch(updateGroup(disqualifiedGroup))
         dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
+        bottomSheetRef.current?.close()
+
       }
     } else {
       Alert.alert(
@@ -117,6 +119,7 @@ const Team = () => {
               const disqualified = disqualifiedGroup.disqualified
               dispatch(updateGroup(disqualifiedGroup))
               dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
+              bottomSheetRef.current?.close()
             }
           }
         ]
@@ -132,13 +135,46 @@ const Team = () => {
         options={{ headerShown: false }}
       />
       <Notification />
-      <Text style={styles.title}>{group?.name}</Text>
-      <Pressable style={{ width: 50, height: 50 }} onPress={() => bottomSheetRef.current?.expand()}>
-        <FontAwesome6 name="ellipsis-vertical" size={50} color="black" />
+      <Text style={[
+        styles.title,
+        { textDecorationLine: (group?.disqualified || group?.dnf) ? "line-through" : "none" }
+      ]}>{group?.name}</Text>
+
+      {group?.disqualified && (
+        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
+          DISKATTU
+        </Text>
+      )}
+
+      {group?.dnf && (
+        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
+          SUORITUS KESKEYTETTY
+        </Text>
+      )}
+      <Pressable
+        style={{
+          position: "absolute",
+          top: 40,
+          right: 20,
+          width: 50,
+          height: 50,
+          zIndex: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        onPress={() => bottomSheetRef.current?.expand()}
+      >
+        <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
       </Pressable>
-      <Text style={styles.breadText}>Diskattu: {group?.disqualified.toString()}</Text>
-      <Text style={styles.breadText}>Jäsenmäärä {group?.members}</Text>
-      <Text style={styles.breadText}>dnf {group?.dnf.toString()}</Text>
+      <Text style={styles.breadText}>
+        <FontAwesome6 name="user-group" size={24} color="white" />  Jäsenet: {group?.members}
+      </Text>
+      <Text style={styles.breadText}>
+        <FontAwesome6 name="clock" size={24} color="white" />  Aika:
+      </Text>
+      <Text style={styles.breadText}>
+        <Feather name="x-octagon" size={24} color="white" />  Rankut:
+      </Text>
       <FlatList
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
@@ -152,12 +188,11 @@ const Team = () => {
         }
         keyExtractor={item => item.id.toString()}
       />
-      <Penalty id={id}/>
-
       <BottomSheet
         index={-1}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
+        snapPoints={["25%"]}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
@@ -170,25 +205,25 @@ const Team = () => {
       >
         <BottomSheetView style={{ flex: 1, padding: 16 }}>
           <Pressable onPress={handleDNF} style={{
-            borderWidth: 1,
             backgroundColor: "#f54254",
-            borderColor: "silver",
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
           }}>
-            <Text> Keskeytä suoritus </Text>
+            <Text>
+              {group?.disqualified ? "Keskeytä suoritus" : "Peru keskeytys"}
+            </Text>
           </Pressable>
           <Pressable onPress={handleDisqualification} style={{
-            borderWidth: 1,
             backgroundColor: "#f54254",
-            borderColor: "silver",
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
           }}
           >
-            <Text> Diskaa / Epädiskaa ryhmä </Text>
+            <Text>
+              {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
+            </Text>
           </Pressable>
         </BottomSheetView>
       </BottomSheet>
