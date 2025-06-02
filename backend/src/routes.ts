@@ -27,7 +27,6 @@ export const getValidRoutes = (checkpoints: Checkpoint[], distances: Distances, 
 
   if (!start || !finish || !min || !max) {
     const test: Route[] = [{route: [], length: 0}]
-
     return test
   }
 
@@ -36,8 +35,6 @@ export const getValidRoutes = (checkpoints: Checkpoint[], distances: Distances, 
     .map(checkpoint => checkpoint.id)
 
   const permutations = [...new Permutation(intermediateIds, length)]
-
-  // Add start and finish ids to every permutation.
   const routes = permutations.map(perm => ([start.id, ...perm, finish.id]))
 
   const validRoutes = routes.filter((route) => {
