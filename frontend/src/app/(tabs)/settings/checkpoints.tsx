@@ -1,35 +1,15 @@
-import React, { useRef, useState } from "react"
-import { Pressable, View, Text, Keyboard } from "react-native"
+import React, { useRef } from "react"
+import { View} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import Checkpoints from "@/components/Checkpoints"
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView, BottomSheetTextInput } from "@gorhom/bottom-sheet"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
-import { AddCheckpoint, CheckpointType } from "@/types"
-import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
-import { RadioButton } from "react-native-paper"
+import BottomSheet from "@gorhom/bottom-sheet"
 import AddNewButton from "@/components/addNewButton"
+import AddCheckpointForm from "@/components/AddCheckpointForm"
 
 const CheckpointSettings = () => {
-  const dispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
-
-  const [name, setName] = useState<string>("")
-  const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
-
-  const addNewCheckpoint = async () => {
-    const newCheckpoint: AddCheckpoint = {
-      name: name,
-      type: type,
-    }
-    dispatch(addCheckpointReducer(newCheckpoint))
-    setName("")
-    Keyboard.dismiss()
-    bottomSheetRef.current?.close()
-
-  }
 
   return (
     <View style={styles.container}>
@@ -37,66 +17,7 @@ const CheckpointSettings = () => {
       <Notification />
       <Checkpoints />
       <AddNewButton onPress={() => bottomSheetRef.current?.expand()} />
-      <BottomSheet
-        index={-1}
-        enablePanDownToClose={true}
-        ref={bottomSheetRef}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            opacity={0.5}
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            pressBehavior="close"
-          />
-        )}
-      >
-        <BottomSheetView style={{ flex: 1, padding: 16 }}>
-          <BottomSheetTextInput
-            onChangeText={setName}
-            value={name}
-            placeholder="Syötä rastin nimi"
-            style={{
-              borderWidth: 1,
-              borderColor: "silver",
-              borderRadius: 8,
-              padding: 12,
-              marginBottom: 16,
-            }}
-            returnKeyType="done"
-            onSubmitEditing={addNewCheckpoint}
-          />
-          <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
-            <View style={styles.radiobuttonGroup}>
-              <View style={styles.radiobuttonItem}>
-                <RadioButton value="START" />
-                <Text>Lähtö</Text>
-              </View>
-              <View style={styles.radiobuttonItem}>
-                <RadioButton value="INTERMEDIATE" />
-                <Text>Välirasti</Text>
-              </View>
-              <View style={styles.radiobuttonItem}>
-                <RadioButton value="FINISH" />
-                <Text>Maali</Text>
-              </View>
-            </View>
-          </RadioButton.Group>
-
-          <Pressable
-            onPress={addNewCheckpoint}
-            style={{
-              backgroundColor: "orange",
-              padding: 12,
-              borderRadius: 8,
-              alignItems: "center",
-              marginTop: 16,
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Lisää rasti</Text>
-          </Pressable>
-        </BottomSheetView>
-      </BottomSheet>
+      <AddCheckpointForm bottomSheetRef={bottomSheetRef} />
     </View>
   )
 }
