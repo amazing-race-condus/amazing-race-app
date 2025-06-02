@@ -12,6 +12,11 @@ export const getAllGroups = async (): Promise<Group[]> => {
   return response.data
 }
 
+export const getArrivingGroups = async (checkpointId: number): Promise<Group[]> => {
+  const response = await axios.get<Group[]>(`${url}/groups/by_next_checkpoint/${checkpointId}`)
+  return response.data
+}
+
 export const createGroup = async (newGroup: AddGroup) => {
   const response = await axios.post<Group>(`${url}/groups`, newGroup)
   return response.data
