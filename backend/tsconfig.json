@@ -7,7 +7,14 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*",
+        "../shared/*"
+      ],
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.test.ts"],
   "exclude": ["node_modules"]
