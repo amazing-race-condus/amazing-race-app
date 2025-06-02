@@ -102,10 +102,6 @@ export const styles = StyleSheet.create({
   separator: {
     height: 5,
   },
-  listcontainer: {
-    width: "100%",
-    justifyContent: "flex-start",
-  },
   checkpointName: {
     fontSize: theme.fontSizes.listItem,
     fontWeight: "600",

@@ -92,14 +92,12 @@ const Checkpoints = () => {
       {pathname.startsWith("/checkpoints") && (
         <Text style={styles.title}>Rastit:</Text>
       )}
-      <View style={styles.listcontainer}>
-        {sortedCheckpoints.map((item, index) => (
-          <View key={item.id}>
-            <CheckpointItem item = { item } />
-            {index < sortedCheckpoints.length - 1 && <ItemSeparator />}
-          </View>
-        ))}
-      </View>
+      {sortedCheckpoints.map((item, index) => (
+        <View key={item.id}>
+          <CheckpointItem item = { item } />
+          {index < sortedCheckpoints.length - 1 && <ItemSeparator />}
+        </View>
+      ))}
     </View>
   )
 }
