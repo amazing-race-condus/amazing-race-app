@@ -1,21 +1,23 @@
-import React from "react"
-import { View, ScrollView } from "react-native"
+import React, { useRef } from "react"
+import { View} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
 import Checkpoints from "@/components/Checkpoints"
-import AddNewButton from "@/components/addCheckpointButton"
+import BottomSheet from "@gorhom/bottom-sheet"
+import AddNewButton from "@/components/addNewButton"
+import AddCheckpointForm from "@/components/AddCheckpointForm"
 
 const CheckpointSettings = () => {
+  const bottomSheetRef = useRef<BottomSheet>(null)
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Notification />
-        <Checkpoints />
-      </ScrollView>
-      <AddNewButton/>
+      <Stack.Screen options={{ headerShown: false }} />
+      <Notification />
+      <Checkpoints />
+      <AddNewButton onPress={() => bottomSheetRef.current?.expand()} />
+      <AddCheckpointForm bottomSheetRef={bottomSheetRef} />
     </View>
   )
 }

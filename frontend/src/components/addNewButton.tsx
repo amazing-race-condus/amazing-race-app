@@ -1,14 +1,12 @@
 import React from "react"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-import { useRouter } from "expo-router"
 import { Pressable } from "react-native"
 
-const AddNewButton = () => {
-  const router = useRouter()
+const AddNewButton = ({ onPress }: { onPress: () => void }) => {
 
   return (
     <Pressable
-      onPress={() => router.push("/(tabs)/checkpoints/addNew")}
+      onPress={onPress}
       style={{
         position: "absolute",
         bottom: 20,
