@@ -26,7 +26,7 @@ export const getValidRoutes = (checkpoints: Checkpoint[], distances: Distances, 
   const finish = checkpoints.find(checkpoint => checkpoint.type === "FINISH")
 
   if (!start || !finish || !min || !max) {
-    let test: Route[] = [{route: [], length: 0}]
+    const test: Route[] = [{route: [], length: 0}]
 
     return test
   }

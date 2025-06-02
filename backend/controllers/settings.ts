@@ -2,7 +2,6 @@ import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
 import { getValidRoutes } from "../src/routes"
 import { Distances, Checkpoint, Route } from "../../frontend/src/types"
-import { error } from "console"
 
 const settingsRouter = express.Router()
 
@@ -42,6 +41,7 @@ const validateCheckpointDistances = async (distances: Distances, checkpoints: Ch
     }
     return true
   } catch (error) {
+    console.error(error)
     return false
   }
 }
@@ -160,12 +160,12 @@ const updateRoutes = async (routes: Route[]) => {
     })
     for (const [order, checkpoint] of route.route.entries()) {
       await prisma.routeCheckpoint.create({
-      data: {
-        routeId: id,
-        checkpointId: checkpoint,
-        checkpointOrder: order
-      }
-    })
+        data: {
+          routeId: id,
+          checkpointId: checkpoint,
+          checkpointOrder: order
+        }
+      })
     }
   }
   console.log("Valmis")
@@ -213,14 +213,14 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
 
     res.status(200).json({message: `${routes.length} reittiä luotu.`})
     return
-  
+
   } catch (error) {
     console.error("Unexpected error in /create_routes:", error)
     res.status(500).json({ error: "Järjestelmävirhe. Yritä myöhemmin uudelleen." })
     return
   }
-  
-  
+
+
 
   //const routes = getValidRoutes(checkpoints, distances, min, max)
   //example: [ [ 11, 22, 33, 44 ], [ 11, 22, 44, 33 ], [ 33, 11, 22, 44 ] ]
@@ -235,7 +235,7 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
   //...
 
   const route_ids = [101, 102, 103] //TODO: get routes from database
-  const group_ids = [42, 55, 53, 63] //TODO: get groups from database. const groups = await prisma.group.findMany({ where: {event_id: event_id}}) 
+  const group_ids = [42, 55, 53, 63] //TODO: get groups from database. const groups = await prisma.group.findMany({ where: {event_id: event_id}})
 
   //save a route for every group in the database
   let group_i = 0

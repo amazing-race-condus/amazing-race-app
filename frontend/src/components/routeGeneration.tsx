@@ -9,8 +9,8 @@ import { AppDispatch } from "@/store/store"
 const RouteGeneration = () => {
   const url =
         Platform.OS === "web"
-            ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
-            : process.env.EXPO_PUBLIC_BACKEND_URL
+          ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
+          : process.env.EXPO_PUBLIC_BACKEND_URL
   const dispatch = useDispatch<AppDispatch>()
 
   const createRoutes = async () => {
@@ -36,7 +36,7 @@ const RouteGeneration = () => {
         </Pressable>
       </View>
     </View>
-    )
+  )
 }
 
 export default RouteGeneration
