@@ -4,7 +4,6 @@ import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, updateGroup } from "@/reducers/groupSlice"
-import { getAllCheckpoints } from "@/services/checkpointService"
 import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
@@ -23,22 +22,15 @@ const Team = () => {
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
   )
+
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
 
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
-        const sortedCheckpoints = group.route
-        const data = await getAllCheckpoints()
-        let newData: Checkpoint[] =[]
-        for(let i = 0; i < sortedCheckpoints.length; i++){
-          const id = sortedCheckpoints[i].checkpointId
-          const checkpoint = data.filter(a => a.id === id)
-          newData = newData.concat(checkpoint)
-        }
-        setCheckpoints(newData)
-        setNextCheckpointId(newData[0].id)
+        setCheckpoints(group?.route ?? [])
+        setNextCheckpointId(group?.nextCheckpointId ?? 1)
       }
       checkpointsRoute()
     }, [])

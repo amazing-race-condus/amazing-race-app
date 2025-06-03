@@ -3,6 +3,7 @@ import { prisma } from "../src/index"
 
 const groupsRouter = express.Router()
 
+// USELESS in code but very useful in testing!!!
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const group = await prisma.group.findUnique({
@@ -13,38 +14,45 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
         include: {
           routeSteps: {
             orderBy: { checkpointOrder: 'asc' },
+            include: {
+              checkpoint: true
+            }
           }
         }
       }
     }
   })
-
+  const orderedCheckpoints = group?.route?.routeSteps.map(step => step.checkpoint)
   if (group) {
-    res.json(group)
+    res.json(orderedCheckpoints)
   } else {
     res.status(404).end()
   }
 })
 
 groupsRouter.get("/", async (_, res: Response) => {
-
-  const allGroups = await prisma.group.findMany({
+  const groups = await prisma.group.findMany({
     include: {
       penalty: true,
-      route:{
+      route: {
         include: {
-          routeSteps: true
+          routeSteps: {
+            orderBy: { checkpointOrder: 'asc' },
+            include: {
+              checkpoint: true
+            }
+          }
         }
       }
     }
   })
 
-   const groupsWithRouteSteps = allGroups.map(group => ({
+  const groupsWithCheckpoints = groups.map(group => ({
     ...group,
-    route: group.route?.routeSteps ?? []
+    route: group.route?.routeSteps.map(step => step.checkpoint) ?? []
   }))
 
-  res.send(groupsWithRouteSteps)
+  res.send(groupsWithCheckpoints)
 })
 
 groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
