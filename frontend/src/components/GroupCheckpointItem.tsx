@@ -113,6 +113,7 @@ const GroupCheckpointItem = (
               </Text>
               <Pressable
                 style={styles.deleteButton}
+                onPress={() => dispatch(removePenaltyReducer(group.id, usedHints[0].id))}
               >
                 <MaterialIcons name="delete" size={20} color="#ff4444" />
               </Pressable>
