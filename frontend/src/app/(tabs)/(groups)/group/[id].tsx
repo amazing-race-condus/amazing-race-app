@@ -23,7 +23,7 @@ const Team = () => {
   const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
-  )
+  )!
 
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
@@ -31,8 +31,8 @@ const Team = () => {
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
-        setCheckpoints(group?.route ?? [])
-        setNextCheckpointId(group?.nextCheckpointId ?? group.route[1].id)
+        setCheckpoints(group.route)
+        setNextCheckpointId(group.nextCheckpointId!)
       }
       checkpointsRoute()
     }, [])

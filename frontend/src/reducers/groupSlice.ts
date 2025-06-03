@@ -31,8 +31,6 @@ export const fetchGroups = () => async (dispatch: AppDispatch) => {
   try {
     const allGroups = await getAllGroups()
 
-    console.log(allGroups)
-
     dispatch(setGroups(allGroups))
   } catch (error) {
     console.error("Failed to fetch groups:", error)
