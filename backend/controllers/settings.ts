@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
 import { getValidRoutes } from "../src/routes"
-import { Distances, Checkpoint, Route } from "../../frontend/src/types"
+import { Distances, Checkpoint, Route } from "@/types"
 
 const settingsRouter = express.Router()
 
@@ -148,28 +148,82 @@ settingsRouter.put("/update_distances", async (req: Request, res: Response) => {
   res.status(200).json({upserts: upserts, failures: failures})
 })
 
+const resetRoutes = async () => {
+  await prisma.route.deleteMany()
+}
+
 const updateRoutes = async (routes: Route[]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const operations: any[] = [];
+
   for (const route of routes) {
-    const { id } = await prisma.route.create({
+    // Create the route and get a reference to its future ID
+    const createRoute = prisma.route.create({
       data: {
         routeTime: route.length
-      },
-      select: {
-        id: true
       }
-    })
-    for (const [order, checkpoint] of route.route.entries()) {
-      await prisma.routeCheckpoint.create({
-        data: {
-          routeId: id,
-          checkpointId: checkpoint,
-          checkpointOrder: order
-        }
-      })
-    }
+    });
+
+    // Push the route creation to the operations array
+    operations.push(createRoute);
   }
-  console.log("Valmis")
-}
+
+  // Execute all route creations first to get their IDs
+  const createdRoutes = await prisma.$transaction(operations);
+
+  // Now prepare all routeCheckpoint inserts
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const checkpointOperations: any[] = [];
+
+  for (let i = 0; i < routes.length; i++) {
+    const route = routes[i];
+    const routeId = createdRoutes[i].id;
+
+    const checkpointsData = route.route.map((checkpointId, order) => ({
+      routeId,
+      checkpointId,
+      checkpointOrder: order
+    }));
+
+    checkpointOperations.push(
+      prisma.routeCheckpoint.createMany({
+        data: checkpointsData
+      })
+    );
+  }
+
+  // Insert all checkpoints in one transaction
+  await prisma.$transaction(checkpointOperations);
+};
+
+
+const assignRoutesToGroups = async () => {
+  const routes = await prisma.route.findMany({
+    select: {
+      id: true
+    }
+  })
+
+  const groups = await prisma.group.findMany({
+    select: {
+      id: true
+    }
+  })
+
+  const routeIds = routes.map(route => route.id)
+  const groupIds = groups.map(group => group.id)
+
+  for (let groupIndex = 0; groupIndex < groupIds.length; groupIndex ++) {
+    const routeIndex = groupIndex % routes.length
+    const groupId = groupIds[groupIndex]
+    const routeId = routeIds[routeIndex]
+
+    await prisma.group.update({
+      where: { id: groupId },
+      data: { routeId: routeId }
+    })
+  }}
 
 settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
   const eventId = 1 //req.body.event_id
@@ -208,8 +262,11 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
       res.status(400).json({error: "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
       return
     }
+    console.log(`Number of routes: ${routes.length}`)
 
-    updateRoutes(routes)
+    await resetRoutes()
+    await updateRoutes(routes)
+    await assignRoutesToGroups()
 
     res.status(200).json({message: `${routes.length} reittiä luotu.`})
     return
@@ -219,46 +276,6 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Järjestelmävirhe. Yritä myöhemmin uudelleen." })
     return
   }
-
-
-
-  //const routes = getValidRoutes(checkpoints, distances, min, max)
-  //example: [ [ 11, 22, 33, 44 ], [ 11, 22, 44, 33 ], [ 33, 11, 22, 44 ] ]
-
-  //console.log("--- routes from getValidRoutes:", routes)
-
-  /*
-  if (routes.length === 0)
-    res.status(400).send({"error": "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
-
-  //TODO: save routes in database (and delete old routes and groups' routes)
-  //...
-
-  const route_ids = [101, 102, 103] //TODO: get routes from database
-  const group_ids = [42, 55, 53, 63] //TODO: get groups from database. const groups = await prisma.group.findMany({ where: {event_id: event_id}})
-
-  //save a route for every group in the database
-  let group_i = 0
-  for (group_i; group_i < group_ids.length; group_i ++) {
-    const route_i = group_i % route_ids.length
-    const group_id = group_ids[group_i]
-    const route_id = route_ids[route_i]
-
-    console.log("--- save route", route_id, "for group", group_id, "(TODO)")
-
-    //tallennus tietokantaan
-
-    //const updatedData = await prisma.group.update({
-    //  where: { id: group_id, event_id: event_id},
-    //  data: { route_id: route_id },
-    //)
-
-    //console.log("updatedData": updatedData)
-
-  }
-
-  res.status(200).json({routesAmount: routes.length})
-  */
 })
 
 export default settingsRouter

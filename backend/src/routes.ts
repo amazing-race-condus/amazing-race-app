@@ -1,5 +1,5 @@
 import { Permutation } from "js-combinatorics";
-import { Distances, Checkpoint, Route } from "../../frontend/src/types"
+import { Distances, Checkpoint, Route } from "@/types"
 
 export const routeDistance = (route: number[], distances: Distances): number => {
   // From start point to the first checkpoint.
