@@ -1,13 +1,12 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
+import { View, Text } from "react-native"
 import { useCallback, useState } from "react"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState, AppDispatch } from "@/store/store"
-import { usePathname, Link, useFocusEffect } from "expo-router"
-import { Entypo } from "@expo/vector-icons"
-import { removeGroupReducer, fetchGroups } from "@/reducers/groupSlice"
+import { usePathname, useFocusEffect } from "expo-router"
+import { fetchGroups } from "@/reducers/groupSlice"
 import Search from "@/components/Search"
-import { FlatList } from "react-native-gesture-handler"
+import GroupList from "./GroupList"
 
 const Groups = () => {
   const [search, setSearch] = useState<string>("")
@@ -25,59 +24,7 @@ const Groups = () => {
     }, [dispatch])
   )
 
-  const handleRemoveGroup = (id: string | number, name: string) => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän ryhmän?")
-      if (confirmed) {
-        dispatch(removeGroupReducer(Number(id)))
-      }
-    } else {
-      Alert.alert(
-        "Vahvista poisto",
-        "Oletko varma että haluat poistaa tämän ryhmän?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Poista",
-            style: "destructive",
-            onPress: () => {
-              dispatch(removeGroupReducer(Number(id)))
-            }
-          }
-        ]
-      )
-    }
-  }
-
-  const GroupItem = ({ name, members, id }: { name: string; members: number; id: string }) => {
-    if (pathname ==="/settings/groups") {
-      return (
-        <View style={styles.item}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.checkpointName}>{name}</Text>
-          </View>
-          <Pressable style={styles.smallButton} onPress={() => handleRemoveGroup(id, name)}>
-            <Text style={styles.buttonText}>Poista</Text>
-          </Pressable>
-        </View>
-      )
-    }
-
-    return (
-      <Link
-        href={{
-          pathname: `/(groups)/group/${id}`,
-          params: { name, members }
-        }}
-        asChild
-      >
-        <TouchableOpacity style={styles.item}>
-          <Text style={styles.checkpointName}>{name}</Text>
-          <Entypo name="chevron-right" size={24} color="black" />
-        </TouchableOpacity>
-      </Link>
-    )
-  }
+  console.log("groups", filteredGroups)
 
   return (
     <View style={styles.container}>
@@ -85,18 +32,9 @@ const Groups = () => {
       {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
 
       <Search search={search} setSearch={setSearch} />
+      {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
 
-      <FlatList
-        data={filteredGroups}
-        keyExtractor={(item) => item.id?.toString()}
-        renderItem={({ item }) => (
-          <GroupItem
-            name={item.name}
-            members={item.members}
-            id={item.id?.toString()}
-          />
-        )}
-      />
+      <GroupList groups={filteredGroups} />
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Keyboard, Pressable, Text, View } from "react-native"
+import { Keyboard, Platform, Pressable, Text, View } from "react-native"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
@@ -10,21 +10,18 @@ import { styles } from "@/styles/commonStyles"
 
 const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const [name, setName] = useState("")
+  const [name, setName] = useState<string>("")
   const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
 
   const addNewCheckpoint = async () => {
     const newCheckpoint: AddCheckpoint = {
       name: name,
-      type: type,
-      eventId: null,
-      hint: null
+      type: type
     }
     await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     Keyboard.dismiss()
     bottomSheetRef.current?.close()
-
   }
 
   return (
@@ -32,6 +29,8 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       index={-1}
       enablePanDownToClose
       ref={bottomSheetRef}
+      snapPoints={Platform.OS === "web" ? ["75%"] : []}  // fix for mobile web
+      keyboardBlurBehavior="restore"
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
