@@ -32,7 +32,7 @@ const Team = () => {
     useCallback(() => {
       const checkpointsRoute = async () => {
         setCheckpoints(group?.route ?? [])
-        setNextCheckpointId(group?.nextCheckpointId ?? 1)
+        setNextCheckpointId(group?.nextCheckpointId ?? group.route[1].id)
       }
       checkpointsRoute()
     }, [])
