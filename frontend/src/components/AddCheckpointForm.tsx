@@ -20,7 +20,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       eventId: null,
       hint: null
     }
-    dispatch(addCheckpointReducer(newCheckpoint))
+    await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     Keyboard.dismiss()
     bottomSheetRef.current?.close()
