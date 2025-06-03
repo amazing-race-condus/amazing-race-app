@@ -2,12 +2,13 @@ import { givePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
 import { Checkpoint, Group } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
-import { View, Pressable, Text, StyleSheet, Dimensions, ViewStyle } from "react-native"
+import { View, Pressable, Text, StyleSheet, Dimensions } from "react-native"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-
 import theme from "@/theme"
+import ActionButton from "./ActionButton"
+
 const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
@@ -29,20 +30,6 @@ const GroupCheckpointItem = (
     if (!isActiveCheckpoint) {
       setIsExpanded(!isExpanded)
     }
-  }
-
-  const ActionButton = (
-    { onPress, count, text, style }:
-    { onPress: () => void, count?: number, text: string, style?: ViewStyle}
-  ) => {
-    return (
-      <Pressable
-        onPress={onPress}
-        style={style}
-      >
-        <Text> {text} {count ? `(${count}x)` : ""} </Text>
-      </Pressable>
-    )
   }
 
   return (
@@ -104,7 +91,7 @@ const GroupCheckpointItem = (
       </View>
 
       {((isActiveCheckpoint || isExpanded) &&  CheckpointPenalties.length > 0 ) &&
-        <View style={{ backgroundColor: "rgba(255, 92, 108, 0.5)", paddingHorizontal: "10", borderWidth: 1, borderColor: "red", borderRadius: 10, marginTop: 5 }}>
+        <View style={{ backgroundColor: "rgba(255, 92, 108, 0.5)", paddingHorizontal: 10, borderWidth: 1, borderColor: "red", borderRadius: 10, marginTop: 5 }}>
           <Text style={styles.penaltyTitle}>Rankut:</Text>
           {usedHints.length > 0 && (
             <Text> Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min</Text>
