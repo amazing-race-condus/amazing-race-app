@@ -1,10 +1,8 @@
 import React from "react"
-import { View, Text, StyleSheet, Dimensions } from "react-native"
+import { View, Text, StyleSheet } from "react-native"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import Feather from "@expo/vector-icons/Feather"
 import { Group } from "@/types"
-
-const screenWidth = Dimensions.get("window").width
 
 const GroupInfoHeader = (
   { group, totalPenalty }:
@@ -35,14 +33,12 @@ export default GroupInfoHeader
 
 const styles = StyleSheet.create({
   statsContainer: {
-    width: Math.min(screenWidth * 0.9, 320),
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 12,
     padding: 16,
     marginVertical: 16,
-    marginHorizontal: 8,
   },
   statItem: {
     alignItems: "center",
