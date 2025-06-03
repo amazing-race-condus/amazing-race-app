@@ -1,19 +1,24 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
-// import { Type } from "../prisma/prisma/"
 
 const groupsRouter = express.Router()
 
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
-
   const id = Number(req.params.id)
-
   const group = await prisma.group.findUnique({
     where: { id },
     include: {
       penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: 'asc' },
+          }
+        }
+      }
     }
   })
+
   if (group) {
     res.json(group)
   } else {
@@ -26,10 +31,20 @@ groupsRouter.get("/", async (_, res: Response) => {
   const allGroups = await prisma.group.findMany({
     include: {
       penalty: true,
+      route:{
+        include: {
+          routeSteps: true
+        }
+      }
     }
   })
 
-  res.send(allGroups)
+   const groupsWithRouteSteps = allGroups.map(group => ({
+    ...group,
+    route: group.route?.routeSteps ?? []
+  }))
+
+  res.send(groupsWithRouteSteps)
 })
 
 groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {

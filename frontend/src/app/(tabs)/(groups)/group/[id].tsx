@@ -23,19 +23,20 @@ const Team = () => {
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
   )
-
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
 
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
+        const sortedCheckpoints = group.route
         const data = await getAllCheckpoints()
-        const start = data.filter(a => a.type === "START")
-        const finish = data.filter(a => a.type === "FINISH")
-        const intermediate = data.filter(a => a.type === "INTERMEDIATE")
-        intermediate.splice(4)
-        const newData = [...start, ...intermediate, ...finish]
+        let newData: Checkpoint[] =[]
+        for(let i = 0; i < sortedCheckpoints.length; i++){
+          const id = sortedCheckpoints[i].checkpointId
+          const checkpoint = data.filter(a => a.id === id)
+          newData = newData.concat(checkpoint)
+        }
         setCheckpoints(newData)
         setNextCheckpointId(newData[0].id)
       }
