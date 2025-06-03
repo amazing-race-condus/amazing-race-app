@@ -11,8 +11,8 @@ import theme from "@/theme"
 const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
-  { checkpoint, group, nextCheckpointId, completeCheckpoint }:
-  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number) => void }
+  { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
+  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number) => void, openHint: () => void }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const translatedType = getType(checkpoint.type)
@@ -57,7 +57,7 @@ const GroupCheckpointItem = (
         { isActiveCheckpoint ? (
           <ActionButton
             style={styles.hintButton}
-            onPress={() => console.log("vihje")}
+            onPress={openHint}
             text={"Vihje"}
           />
         ) :

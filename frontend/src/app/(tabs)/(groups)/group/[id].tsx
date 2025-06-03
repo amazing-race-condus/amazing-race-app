@@ -14,10 +14,12 @@ import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import Feather from "@expo/vector-icons/Feather"
+import QRCode from "react-qr-code"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
+  const hintBottomSheetRef = useRef<BottomSheet>(null)
 
   const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
@@ -184,6 +186,7 @@ const Team = () => {
             group = { group }
             nextCheckpointId={nextCheckpointId}
             completeCheckpoint={completeCheckpoint}
+            openHint = { () => hintBottomSheetRef.current?.expand() }
           />
         }
         keyExtractor={item => item.id.toString()}
@@ -225,6 +228,30 @@ const Team = () => {
               {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
             </Text>
           </Pressable>
+        </BottomSheetView>
+      </BottomSheet>
+      <BottomSheet
+        index={-1}
+        ref={hintBottomSheetRef}
+        enablePanDownToClose={true}
+        snapPoints={["75%"]}
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            opacity={0.5}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+          />
+        )}
+      >
+        <BottomSheetView style={{ flex: 1, padding: 16 }}>
+          <QRCode
+            size={256}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            value={"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+            viewBox={"0 0 256 256"}
+          />
         </BottomSheetView>
       </BottomSheet>
     </View>
