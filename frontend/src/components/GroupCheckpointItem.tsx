@@ -2,13 +2,14 @@ import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
 import { Checkpoint, Group } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
-import { View, Pressable, Text, StyleSheet, Dimensions, ViewStyle } from "react-native"
+import { View, Pressable, Text, StyleSheet, Dimensions } from "react-native"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
-
 import theme from "@/theme"
+import ActionButton from "./ActionButton"
+
 const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
@@ -30,20 +31,6 @@ const GroupCheckpointItem = (
     if (!isActiveCheckpoint) {
       setIsExpanded(!isExpanded)
     }
-  }
-
-  const ActionButton = (
-    { onPress, count, text, style }:
-    { onPress: () => void, count?: number, text: string, style?: ViewStyle}
-  ) => {
-    return (
-      <Pressable
-        onPress={onPress}
-        style={style}
-      >
-        <Text> {text} {count ? `(${count}x)` : ""} </Text>
-      </Pressable>
-    )
   }
 
   return (
