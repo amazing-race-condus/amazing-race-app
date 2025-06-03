@@ -13,8 +13,8 @@ import Notification from "@/components/Notification"
 import GroupCheckpointItem from "@/components/GroupCheckpointItem"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-import Feather from "@expo/vector-icons/Feather"
 import QRCode from "react-qr-code"
+import GroupInfoHeader from "@/components/GroupInfoHeader"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -28,6 +28,8 @@ const Team = () => {
 
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
+
+  const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
 
   useFocusEffect(
     useCallback(() => {
@@ -168,18 +170,10 @@ const Team = () => {
       >
         <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
       </Pressable>
-      <Text style={styles.breadText}>
-        <FontAwesome6 name="user-group" size={24} color="white" />  Jäsenet: {group?.members}
-      </Text>
-      <Text style={styles.breadText}>
-        <FontAwesome6 name="clock" size={24} color="white" />  Aika:
-      </Text>
-      <Text style={styles.breadText}>
-        <Feather name="x-octagon" size={24} color="white" />  Rankut:
-      </Text>
       <FlatList
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
+        ListHeaderComponent={<GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>}
         renderItem={({ item }) =>
           <GroupCheckpointItem
             checkpoint = { item }
