@@ -32,6 +32,7 @@ const Groups = () => {
       {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
 
       <Search search={search} setSearch={setSearch} />
+      {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
 
       <GroupList groups={filteredGroups} />
     </View>
