@@ -72,7 +72,7 @@ const Team = () => {
 
   const handleDNF = () => {
     if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän ryhmän?")
+      const confirmed = window.confirm("Oletko varma että haluat keskeyttää ryhmän suorituksen?")
       if (confirmed) {
         dispatch(dnfGroupReducer(Number(id)))
         bottomSheetRef.current?.close()
@@ -80,7 +80,7 @@ const Team = () => {
     } else {
       Alert.alert(
         "Vahvista poisto",
-        "Oletko varma että haluat poistaa tämän rymän?",
+        "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
         [
           { text: "Peru", style: "cancel" },
           {
@@ -214,7 +214,7 @@ const Team = () => {
             marginBottom: 16,
           }}>
             <Text>
-              {group?.disqualified ? "Keskeytä suoritus" : "Peru keskeytys"}
+              {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
             </Text>
           </Pressable>
           <Pressable onPress={handleDisqualification} style={{
