@@ -46,10 +46,12 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
       {search.length === 0
         ? <View>
           <Text style={styles.header}>Saapuvat ryhmät</Text>
+          {arrivingGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei saapuvia ryhmiä.</Text>}
           <GroupList groups={arrivingGroups} />
         </View>
         : <View>
           <Text style={styles.header}>Haetut ryhmät</Text>
+          {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
           <GroupList groups={filteredGroups} />
         </View>}
     </View>
