@@ -4,8 +4,8 @@ import { TextInput, StyleSheet, Dimensions, View } from "react-native"
 const screenWidth = Dimensions.get("window").width
 
 const Search = (
-  {search, setSearch}:
-  {search: string, setSearch: React.Dispatch<React.SetStateAction<string>>}
+  {search, setSearch, placeHolder="Hae ryhmiä..."}:
+  {search: string, setSearch: React.Dispatch<React.SetStateAction<string>>, placeHolder?: string}
 ) => {
   return (
     <View>
@@ -13,7 +13,7 @@ const Search = (
         style={styles.input}
         onChangeText={setSearch}
         value={search}
-        placeholder="Hae ryhmiä..."
+        placeholder={placeHolder}
         placeholderTextColor="grey"
       />
     </View>
