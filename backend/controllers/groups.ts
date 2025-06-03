@@ -13,7 +13,7 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
       route: {
         include: {
           routeSteps: {
-            orderBy: { checkpointOrder: 'asc' },
+            orderBy: { checkpointOrder: "asc" },
             include: {
               checkpoint: true
             }
@@ -59,6 +59,20 @@ groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) 
   const id = Number(req.params.id)
 
   const arrivingGroups = await prisma.group.findMany({ where: { nextCheckpointId: id } })
+
+  res.json(arrivingGroups)
+})
+
+groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const body = req.body
+
+  const arrivingGroups = await prisma.group.update({
+    where: { id: id }
+    , data: {
+      nextCheckpointId: body.nextCheckpointId
+    }
+  })
 
   res.json(arrivingGroups)
 })

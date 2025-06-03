@@ -28,6 +28,11 @@ export const removeGroup = async (id: number) => {
   return response.data
 }
 
+export const giveNextCheckpoint = async (id: number, checkpointId: number) => {
+  const response = await axios.put<Group[]>(`${url}/groups/next_checkpoint/${id}`, {nextCheckpointId: checkpointId})
+  return response.data
+}
+
 export const dnfGroup = async (id: number) => {
   const request = axios.put(`${url}/groups/${id}/dnf`)
   const response = await request

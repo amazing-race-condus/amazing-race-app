@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup, dnfGroup } from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint} from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
@@ -132,6 +132,28 @@ export const dnfGroupReducer =
     } catch (error) {
       console.error("Failed to dnf group:", error)
       dispatch(setNotification("Ryhmän suoritusta ei voitu keskeyttää", "error"))
+    }
+  }
+
+export const giveNextCheckpointReducer =
+  (id: number, checkpointId: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      const updatedGroup = await giveNextCheckpoint(id, checkpointId)
+      const currentGroups = getState().groups
+      const updated = currentGroups.map((currentGroup) => {
+        if (currentGroup.id === id) {
+          return {
+            ...currentGroup,
+            nextCheckpointId: updatedGroup.nextCheckpointId
+          }
+        }
+        return currentGroup
+      })
+      dispatch(setGroups(updated))
+      dispatch(setNotification(`Ryhmän '${updatedGroup.name}' siirtyi seuraavalle rastille `, "success"))
+    } catch (error) {
+      console.error("Failed to give next checkpoint to the group:", error)
+      dispatch(setNotification("Ryhmän suoritusta ei voitu jatkaa", "error"))
     }
   }
 

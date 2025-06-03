@@ -3,7 +3,7 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup } from "@/reducers/groupSlice"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
@@ -44,6 +44,8 @@ const Team = () => {
       if (confirmed) {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
         setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+        console.log(nextCheckpointId)
+        dispatch(giveNextCheckpointReducer(group.id, nextCheckpointId))
       }
     } else {
       Alert.alert(
@@ -55,7 +57,9 @@ const Team = () => {
             text: "Suorita",
             onPress: () => {
               const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-              setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+              const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
+              setNextCheckpointId(nextId)
+              dispatch(giveNextCheckpointReducer(group.id, nextId))
             },
           }
         ]
