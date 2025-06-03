@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import { Keyboard, Pressable, Text, View } from "react-native"
+import { Keyboard, Platform, Pressable, Text } from "react-native"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
@@ -31,6 +31,8 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       index={-1}
       enablePanDownToClose={true}
       ref={bottomSheetRef}
+      keyboardBlurBehavior="restore"
+      snapPoints={Platform.OS === "web" ? ["75%"] : []} // fix for mobile web
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
@@ -54,7 +56,8 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
             marginBottom: 16,
           }}
           returnKeyType="next"
-          onSubmitEditing={addNewGroup}
+          submitBehavior="submit"
+          onSubmitEditing={() => nextRef.current?.focus()}
         />
         <BottomSheetTextInput
           ref={nextRef}

@@ -9,7 +9,7 @@ export type Checkpoint = {
     hint: string | null
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id">
+export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId" | "hint">
 
 export interface RouteLimit {
     id: number,
