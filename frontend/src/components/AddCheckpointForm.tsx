@@ -16,9 +16,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   const addNewCheckpoint = async () => {
     const newCheckpoint: AddCheckpoint = {
       name: name,
-      type: type,
+      type: type
     }
-    dispatch(addCheckpointReducer(newCheckpoint))
+    await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     Keyboard.dismiss()
     bottomSheetRef.current?.close()
