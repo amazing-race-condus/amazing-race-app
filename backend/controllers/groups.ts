@@ -37,7 +37,7 @@ groupsRouter.get("/", async (_, res: Response) => {
       route: {
         include: {
           routeSteps: {
-            orderBy: { checkpointOrder: 'asc' },
+            orderBy: { checkpointOrder: "asc" },
             include: {
               checkpoint: true
             }
