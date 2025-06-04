@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store/store"
 import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
-import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
+import { FlatList, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
@@ -14,6 +14,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/botto
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import QRCode from "react-qr-code"
 import GroupInfoHeader from "@/components/GroupInfoHeader"
+import { handleAlert } from "@/utils/handleAlert"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -41,90 +42,44 @@ const Team = () => {
   )
 
   const completeCheckpoint = (id: number) => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat merkitä rastin suoritetuksi?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Suorita",
+      title: "Vahvista suoritus",
+      message: "Oletko varma että haluat merkitä rastin suoritetuksi?",
+      onConfirm: () => {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-        setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
-        dispatch(giveNextCheckpointReducer(group.id, nextCheckpointId))
+        const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
+        setNextCheckpointId(nextId)
+        dispatch(giveNextCheckpointReducer(group.id, nextId))
       }
-    } else {
-      Alert.alert(
-        "Vahvista suoritus",
-        "Oletko varma että haluat merkitä rastin suoritetuksi?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Suorita",
-            onPress: () => {
-              const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-              const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
-              setNextCheckpointId(nextId)
-              dispatch(giveNextCheckpointReducer(group.id, nextId))
-            },
-          }
-        ]
-      )
-    }
+    })
   }
 
   const handleDNF = () => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat keskeyttää ryhmän suorituksen?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Poista",
+      title: "Vahvista poisto",
+      message: "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
+      onConfirm: () => {
         dispatch(dnfGroupReducer(Number(id)))
         bottomSheetRef.current?.close()
       }
-    } else {
-      Alert.alert(
-        "Vahvista poisto",
-        "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Poista",
-            style: "destructive",
-            onPress: () => {
-              dispatch(dnfGroupReducer(Number(id)))
-              bottomSheetRef.current?.close()
-            }
-          }
-        ]
-      )
-    }
+    })
   }
 
   const handleDisqualification = async () => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat diskata tämän ryhmän?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Diskaa",
+      title: "Vahvista diskaus",
+      message: "Oletko varma että haluat diskata tämän ryhmän?",
+      onConfirm: async () => {
         const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
         const disqualified = disqualifiedGroup.disqualified
         dispatch(updateGroup(disqualifiedGroup))
         dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
         bottomSheetRef.current?.close()
-
       }
-    } else {
-      Alert.alert(
-        "Vahvista diskaus",
-        "Oletko varma että haluat diskata tämän ryhmän?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Diskaa",
-            style: "destructive",
-            onPress: async () => {
-              const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
-              const disqualified = disqualifiedGroup.disqualified
-              dispatch(updateGroup(disqualifiedGroup))
-              dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
-              bottomSheetRef.current?.close()
-            }
-          }
-        ]
-      )
-    }
+    })
   }
 
   const ItemSeparator = () => <View style={styles.separator} />
