@@ -1,57 +1,59 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native"
+import { View, Text } from "react-native"
+import { useCallback, useState } from "react"
 import { styles } from "@/styles/commonStyles"
-import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState, AppDispatch } from "@/store/store"
+import { useFocusEffect } from "expo-router"
+import { fetchGroups } from "@/reducers/groupSlice"
+import Search from "@/components/Search"
+import GroupList from "./GroupList"
 import { getArrivingGroups } from "@/services/groupService"
-import { Group } from "@/types" //?
-import { Link } from "expo-router"
-import { Entypo } from "@expo/vector-icons"
+import { Group } from "@/types"
 
-const GroupItem = ({ name, members, id }: { name: string; members: number; id: string }) => {
-  //copied from Groups component
-  return (
-    <Link
-      href={{
-        pathname: `/(groups)/group/${id}`,
-        params: { name, members }
-      }}
-      asChild
-    >
-      <TouchableOpacity style={styles.item}>
-        <Text style={styles.checkpointName}>{name}</Text>
-        <Entypo name="chevron-right" size={24} color="black" />
-      </TouchableOpacity>
-    </Link>
-  )
-}
+const ArrivingGroups = ({ checkpointId = 1 }) => {
+  console.log("component ArrivingGroups, checkpoint", "?")
 
-const ArrivingGroups = ({ checkpointId = 1}) => {
+  const [search, setSearch] = useState<string>("")
+  const dispatch: AppDispatch = useDispatch()
+  const groups = useSelector((state: RootState) => state.groups)
   const [arrivingGroups, setArrivingGroups] = useState<Group[]>([])
 
-  useEffect(() => {
-    const fetchArrivingGroups = async() => {
-      try {
-        const newArrivingGroups = await getArrivingGroups(checkpointId)
-        setArrivingGroups(newArrivingGroups)
-      } catch (error) {
-        console.log("A problem with fetching arriving groups:", error)
+  const filteredGroups = groups.filter(item =>
+    item.name.toLowerCase().startsWith(search.toLowerCase())
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchGroups())
+
+      const fetchArrivingGroups = async() => {
+        try {
+          const newArrivingGroups = await getArrivingGroups(checkpointId)
+          setArrivingGroups(newArrivingGroups)
+        } catch (error) {
+          console.log("A problem with fetching arriving groups:", error)
+        }
       }
-    }
-    fetchArrivingGroups()
-  }, [checkpointId])
+      fetchArrivingGroups()
+
+    }, [dispatch, checkpointId])
+  )
 
   return (
-    <View>
-      <Text style={[styles.header, {textAlign: "center"}]}>Saapuvat ryhmät</Text>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <View style={styles.listcontainer}>
-          {arrivingGroups.map((group) => (
-            <View key={group.id}>
-              <GroupItem name={group.name} members={4} id={group.id?.toString() ?? ""} />
-            </View>
-          ))}
-          { (arrivingGroups.length === 0) && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei saapuvia ryhmiä.</Text> }
+    <View style={styles.container}>
+      <Search search={search} setSearch={setSearch} placeHolder="Hae kaikista ryhmistä..." />
+
+      {search.length === 0
+        ? <View>
+          <Text style={styles.header}>Saapuvat ryhmät</Text>
+          {arrivingGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei saapuvia ryhmiä.</Text>}
+          <GroupList groups={arrivingGroups} />
         </View>
-      </ScrollView>
+        : <View>
+          <Text style={styles.header}>Haetut ryhmät</Text>
+          {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
+          <GroupList groups={filteredGroups} />
+        </View>}
     </View>
   )
 

@@ -1,13 +1,15 @@
-import { givePenaltyReducer } from "@/reducers/groupSlice"
+import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
 import { Checkpoint, Group } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
-import { View, Pressable, Text, StyleSheet, Dimensions, ViewStyle } from "react-native"
+import { View, Pressable, Text, StyleSheet, Dimensions } from "react-native"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import theme from "@/theme"
+import ActionButton from "./ActionButton"
+
 const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
@@ -21,28 +23,14 @@ const GroupCheckpointItem = (
   const CheckpointPenalties = group?.penalty?.filter(p => p.checkpointId === checkpoint.id)
   const isActiveCheckpoint = checkpoint.id === nextCheckpointId
 
-  const usedHints = CheckpointPenalties.filter(p => p.type === "HINT")
-  const usedSkip = CheckpointPenalties.filter(p => p.type === "SKIP")
-  const usedOvertime = CheckpointPenalties.filter(p => p.type === "OVERTIME")
+  const usedHints = CheckpointPenalties?.filter(p => p.type === "HINT")
+  const usedSkip = CheckpointPenalties?.filter(p => p.type === "SKIP")
+  const usedOvertime = CheckpointPenalties?.filter(p => p.type === "OVERTIME")
 
   const toggleExpanded = () => {
     if (!isActiveCheckpoint) {
       setIsExpanded(!isExpanded)
     }
-  }
-
-  const ActionButton = (
-    { onPress, count, text, style }:
-    { onPress: () => void, count?: number, text: string, style?: ViewStyle}
-  ) => {
-    return (
-      <Pressable
-        onPress={onPress}
-        style={style}
-      >
-        <Text> {text} {count ? `(${count}x)` : ""} </Text>
-      </Pressable>
-    )
   }
 
   return (
@@ -62,10 +50,9 @@ const GroupCheckpointItem = (
           />
         ) :
           <View style={{ marginHorizontal: 10}}>
-            {isExpanded ?
-              <FontAwesome6 name="chevron-up" size={24} color="black" />
-              :
-              <FontAwesome6 name="chevron-down" size={24} color="black" />
+            {isExpanded
+              ? <FontAwesome6 name="chevron-up" size={24} color="black" />
+              : <FontAwesome6 name="chevron-down" size={24} color="black" />
             }
           </View>
         }
@@ -103,20 +90,50 @@ const GroupCheckpointItem = (
         )}
       </View>
 
-      {((isActiveCheckpoint || isExpanded) &&  CheckpointPenalties.length > 0 ) &&
-        <View style={{ backgroundColor: "rgba(255, 92, 108, 0.5)", paddingHorizontal: "10", borderWidth: 1, borderColor: "red", borderRadius: 10, marginTop: 5 }}>
+      {((isActiveCheckpoint || isExpanded) && CheckpointPenalties.length > 0) && (
+        <View style={styles.penaltyContainer}>
           <Text style={styles.penaltyTitle}>Rankut:</Text>
           {usedHints.length > 0 && (
-            <Text> Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min</Text>
+            <View style={styles.penaltyItem}>
+              <Text style={styles.penaltyText}>
+                Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min
+              </Text>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => dispatch(removePenaltyReducer(group.id, usedHints[0].id))}
+              >
+                <MaterialIcons name="delete" size={20} color="#ff4444" />
+              </Pressable>
+            </View>
           )}
           {usedSkip.length > 0 && (
-            <Text> Skip: {usedSkip[0]?.time}min</Text>
+            <View style={styles.penaltyItem}>
+              <Text style={styles.penaltyText}>
+                Skip: {usedSkip[0]?.time}min
+              </Text>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => dispatch(removePenaltyReducer(group.id, usedSkip[0].id))}
+              >
+                <MaterialIcons name="delete" size={20} color="#ff4444" />
+              </Pressable>
+            </View>
           )}
           {usedOvertime.length > 0 && (
-            <Text> Yliaika: {usedOvertime[0]?.time}min</Text>
+            <View style={styles.penaltyItem}>
+              <Text style={styles.penaltyText}>
+                Yliaika: {usedOvertime[0]?.time}min
+              </Text>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => dispatch(removePenaltyReducer(group.id, usedOvertime[0].id))}
+              >
+                <MaterialIcons name="delete" size={20} color="#ff4444" />
+              </Pressable>
+            </View>
           )}
         </View>
-      }
+      )}
     </View>
   )
 }
@@ -143,7 +160,7 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 2,
-    height: 30,
+    height: 45,
     flex: 1,
     backgroundColor: theme.colors.button,
     borderRadius: 8,
@@ -181,5 +198,31 @@ const styles = StyleSheet.create({
     width: "20%",
     padding: 2,
     borderRadius: 6,
-  }
+  },
+  penaltyContainer: {
+    backgroundColor: "rgba(255, 92, 108, 0.3)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 92, 108, 0.5)",
+    borderRadius: 12,
+    marginTop: 8,
+    padding: 12,
+  },
+  penaltyItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+    marginVertical: 2,
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    borderRadius: 8,
+  },
+  penaltyText: {
+    fontWeight: "500",
+  },
+  deleteButton: {
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: "rgba(255, 68, 68, 0.1)",
+  },
 })
