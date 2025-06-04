@@ -25,6 +25,15 @@ const GroupInfoHeader = (
         <Text style={styles.statLabel}>Rankut</Text>
         <Text style={styles.statValue}>{totalPenalty}min</Text>
       </View>
+      <View style={styles.statItem}>
+        {group.easy
+          ? <><Feather name="check" size={20} color="green" />
+            <Text style={styles.statLabel}>Helpotettu</Text>
+            <Text style={styles.statLabel}>Päällä</Text></>
+          : <><Feather name="x" size={20} color="red" />
+            <Text style={styles.statLabel}>Helpotettu</Text>
+            <Text style={styles.statLabel}>Pois</Text></>}
+      </View>
     </View>
   )
 }

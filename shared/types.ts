@@ -49,7 +49,8 @@ export interface Group {
     disqualified: boolean,
     penalty: Penalty[],
     route: Checkpoint[],
-    dnf: boolean
+    dnf: boolean,
+    easy: boolean
 }
 
 export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">
