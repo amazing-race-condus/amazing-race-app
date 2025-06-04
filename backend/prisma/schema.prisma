@@ -62,7 +62,7 @@ model Group {
   dnf                Boolean   @default(false)
 
   event           Event?      @relation(fields: [eventId], references: [id])
-  route           Route?      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
   next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
 }
