@@ -43,12 +43,12 @@ const GroupCheckpointItem = (
           )}
         </View>
         { isActiveCheckpoint ? (
-         (checkpoint.type !== "START") && (
-          <ActionButton
-            style={styles.hintButton}
-            onPress={openHint}
-            text={"Vihje"}
-          />) 
+          (checkpoint.type !== "START") && (
+            <ActionButton
+              style={styles.hintButton}
+              onPress={openHint}
+              text={"Vihje"}
+            />)
         ) :
           <View style={{ marginHorizontal: 10}}>
             {isExpanded
@@ -88,14 +88,14 @@ const GroupCheckpointItem = (
               />
             </View>
           </>
-        ) : 
-        <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
-          <ActionButton
-            style={styles.button}
-            onPress={() => completeCheckpoint(checkpoint.id)}
-            text={"Aloita"}
-          />
-        </View>)}
+        ) :
+          <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
+            <ActionButton
+              style={styles.button}
+              onPress={() => completeCheckpoint(checkpoint.id)}
+              text={"Aloita"}
+            />
+          </View>)}
       </View>
 
       {((isActiveCheckpoint || isExpanded) && CheckpointPenalties.length > 0) && (
