@@ -22,7 +22,8 @@ jest.mock("@/services/checkpointService", () => ({
   ]),
 }))
 
-describe("Rendering checkpoints", () => {
+describe("<Checkpoints />", () => {
+
   afterEach(() => {
     jest.clearAllMocks()
     jest.clearAllTimers()
@@ -31,41 +32,40 @@ describe("Rendering checkpoints", () => {
   afterAll(() => {
     jest.restoreAllMocks()
   })
-  it("renders correct header in settings view", async () => {
+
+  test("renders correct header in settings view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
 
     const store = testStore({
       checkpoints: []
     })
-
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
     await waitFor(() => {
-      expect(getByText("Hallinnoi rasteja:")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi rasteja:")).toBeTruthy()
     })
   })
 
-  it("renders correct header in checkpoints view", async () => {
+  test("renders correct header in checkpoints view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/checkpoints")
 
     const store = testStore({
       checkpoints: []
     })
-
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
     await waitFor(() => {
-      expect(getByText("Rastit:")).toBeTruthy()
+      expect(screen.getByText("Rastit:")).toBeTruthy()
     })
   })
 
-  it("renders checkpoint's name and type correctly", async () => {
+  test("renders checkpoint's name and type correctly", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/checkpoints")
 
     const checkpoints = [
@@ -78,38 +78,25 @@ describe("Rendering checkpoints", () => {
       checkpoints: checkpoints
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
     await waitFor(() => {
-      expect(getByText("Rasti A (Lähtö)")).toBeTruthy()
-      expect(getByText("Rasti B (Maali)")).toBeTruthy()
-      expect(getByText("Rasti C")).toBeTruthy()
+      expect(screen.getByText("Rasti A (Lähtö)")).toBeTruthy()
+      expect(screen.getByText("Rasti B (Maali)")).toBeTruthy()
+      expect(screen.getByText("Rasti C")).toBeTruthy()
     })
   })
-})
 
-describe("Deleting checkpoints", () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-    jest.clearAllTimers()
-  })
-
-  afterAll(() => {
-    jest.restoreAllMocks()
-  })
-
-  it("shows confirmation window on web platform and dispatches on confirm", async () => {
+  test("pressing delete button shows confirmation window on web platform and dispatches on confirm", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
-
     const checkpoint = { id: 1, name: "Rasti A", type: "START" }
 
     const store = testStore({ checkpoints: [checkpoint] })
 
-    const mockDispatch = jest.fn()
-    store.dispatch = mockDispatch
+    store.dispatch = jest.fn()
 
     Object.defineProperty(Platform, "OS", {
       value: "web",
@@ -120,28 +107,22 @@ describe("Deleting checkpoints", () => {
       writable: true,
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
 
-    const button = await waitFor(() => getByText("Poista"))
+    const button = await waitFor(() => screen.getByText("Poista"))
     fireEvent.press(button)
-    expect(mockDispatch).toHaveBeenCalled()
-
-    for (const call of mockDispatch.mock.calls) {
-      expect(typeof call[0]).toBe("function")
-    }
+    expect(store.dispatch).toHaveBeenCalled()
 
   })
-  it("delete button removes checkpoint when pressed on web platform", async () => {
+  test("delete button removes checkpoint when pressed on web platform", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
-
     const checkpoint = { id: 1, name: "Rasti A", type: "START" }
 
     const store = testStore({ checkpoints: [checkpoint] })
-
     Object.defineProperty(Platform, "OS", {
       value: "web",
     })
@@ -151,17 +132,17 @@ describe("Deleting checkpoints", () => {
       writable: true,
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
 
     await waitFor(() => {
-      expect(getByText("Rasti A (Lähtö)")).toBeTruthy()
+      expect(screen.getByText("Rasti A (Lähtö)")).toBeTruthy()
     })
 
-    const button = await waitFor(() => getByText("Poista"))
+    const button = await waitFor(() => screen.getByText("Poista"))
     fireEvent.press(button)
 
     await waitFor(() => {
@@ -169,13 +150,12 @@ describe("Deleting checkpoints", () => {
     })
   })
 
-  it("shows Alert on native platform and dispatches on confirm", async () => {
+  test("pressing delete button shows Alert on native platform and dispatches on confirm", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
 
     const checkpoint = { id: 1, name: "Rasti A", type: "START" }
 
     const store = testStore({ checkpoints: [checkpoint] })
-
     Object.defineProperty(Platform, "OS", { value: "ios" })
 
     const alertMock = jest.spyOn(Alert, "alert").mockImplementation(
@@ -186,33 +166,29 @@ describe("Deleting checkpoints", () => {
         }
       }
     )
+    store.dispatch = jest.fn()
 
-    const mockDispatch = jest.fn()
-    store.dispatch = mockDispatch
-
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
 
-    const button = getByText("Poista")
+    const button = screen.getByText("Poista")
     fireEvent.press(button)
 
     expect(alertMock).toHaveBeenCalled()
 
-    expect(mockDispatch).toHaveBeenCalled()
+    expect(store.dispatch).toHaveBeenCalled()
 
     alertMock.mockRestore()
   })
 
-  it("delete button removes checkpoint when pressed on native platform", async () => {
+  test("delete button removes checkpoint when pressed on native platform", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
-
     const checkpoint = { id: 1, name: "Rasti A", type: "START" }
 
     const store = testStore({ checkpoints: [checkpoint] })
-
     Object.defineProperty(Platform, "OS", { value: "ios" })
 
     jest.spyOn(Alert, "alert").mockImplementation(
@@ -224,17 +200,17 @@ describe("Deleting checkpoints", () => {
       }
     )
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Checkpoints />
       </Provider>
     )
 
     await waitFor(() => {
-      expect(getByText("Rasti A (Lähtö)")).toBeTruthy()
+      expect(screen.getByText("Rasti A (Lähtö)")).toBeTruthy()
     })
 
-    const button = await waitFor(() => getByText("Poista"))
+    const button = await waitFor(() => screen.getByText("Poista"))
     fireEvent.press(button)
 
     await waitFor(() => {

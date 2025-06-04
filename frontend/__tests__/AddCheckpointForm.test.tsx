@@ -1,28 +1,24 @@
 import React, { createRef } from "react"
 import { render, fireEvent, waitFor, act, screen } from "@testing-library/react-native"
-import * as reactRedux from "react-redux"
 import testStore from "@/store/testStore"
 import AddCheckpointForm from "@/components/AddCheckpointForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
+import { mockStore } from "../src/utils/testUtils"
 
-jest.mock("@/services/checkpointService", () => ({
-  createCheckpoint: jest.fn().mockResolvedValue({
-    id: "99",
-    name: "Testirasti",
-    type: "FINISH",
-    hint: null,
-    eventId: null,
-  }),
-  getAllCheckpoints: jest.fn().mockResolvedValue([]),
-  removeCheckpoint: jest.fn().mockResolvedValue(true),
-}))
+describe("<AddCheckpointForm />", () => {
+  let store: any
 
-describe("AddCheckpointForm", () => {
   beforeEach(() => {
+    store = mockStore({})
+    store.dispatch = jest.fn()
+  })
+
+  afterEach(() => {
     jest.clearAllMocks()
   })
-  it("renders input, radio buttons and add button", async () => {
+
+  test("renders input, radio buttons and add button", async () => {
     const bottomSheetRef = createRef<BottomSheet>()
     const store = testStore()
 
@@ -41,16 +37,10 @@ describe("AddCheckpointForm", () => {
     })
   })
 
-  it("kutsuu dispatchia ja sulkee bottomsheetin, kun lomake lähetetään", async () => {
-    const mockDispatch = jest.fn()
-    jest.spyOn(reactRedux, "useDispatch").mockReturnValue(mockDispatch)
-
+  test("calls dispatch after sending the form", async () => {
     const bottomSheetRef = {
       current: { close: null }
     }
-
-    const store = testStore()
-
     render(
       <Provider store={store}>
         <AddCheckpointForm bottomSheetRef={bottomSheetRef as any} />
@@ -71,8 +61,7 @@ describe("AddCheckpointForm", () => {
       fireEvent.press(button)
     })
 
-    await waitFor(() => {
-      expect(mockDispatch.mock.calls).toHaveLength(1)
-    })
+    expect(store.dispatch).toHaveBeenCalledTimes(1)
   })
+
 })
