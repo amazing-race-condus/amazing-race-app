@@ -7,7 +7,7 @@ const groupsRouter = express.Router()
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const group = await prisma.group.findUnique({
-    where: { id },
+    where: { id: id },
     include: {
       penalty: true,
       route: {
@@ -22,9 +22,16 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
       }
     }
   })
-  const orderedCheckpoints = group?.route?.routeSteps.map(step => step.checkpoint)
+
+  const groupWithCheckpoints = group
+    ? {
+      ...group,
+      route: group.route?.routeSteps.map(step => step.checkpoint) ?? []
+    }
+    : null
+
   if (group) {
-    res.json(orderedCheckpoints)
+    res.json(groupWithCheckpoints)
   } else {
     res.status(404).end()
   }
