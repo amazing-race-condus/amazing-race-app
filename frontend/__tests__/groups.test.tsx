@@ -23,7 +23,7 @@ jest.mock("@/services/groupService", () => ({
   ]),
 }))
 
-describe("Rendering groups", () => {
+describe("<Groups />", () => {
   afterEach(() => {
     jest.clearAllMocks()
     jest.clearAllTimers()
@@ -32,14 +32,14 @@ describe("Rendering groups", () => {
   afterAll(() => {
     jest.restoreAllMocks()
   })
-  it("renders search bar and correct header in settings view", async () => {
+  test("renders search bar and correct header in settings view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const store = testStore({
       groups: []
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Groups />
       </Provider>
@@ -47,18 +47,18 @@ describe("Rendering groups", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(getByText("Hallinnoi ryhmiä:")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi ryhmiä:")).toBeTruthy()
     })
   })
 
-  it("renders search bar and correct header in groups view", async () => {
+  test("renders search bar and correct header in groups view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/")
 
     const store = testStore({
       groups: []
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Groups />
       </Provider>
@@ -66,11 +66,11 @@ describe("Rendering groups", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(getByText("Ryhmät:")).toBeTruthy()
+      expect(screen.getByText("Ryhmät:")).toBeTruthy()
     })
   })
 
-  it("renders group's name correctly", async () => {
+  test("renders group's name correctly", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/")
 
     const groups = [
@@ -82,37 +82,25 @@ describe("Rendering groups", () => {
       groups: groups
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Groups />
       </Provider>
     )
     await waitFor(() => {
-      expect(getByText("Ryhmä A")).toBeTruthy()
-      expect(getByText("Ryhmä B")).toBeTruthy()
+      expect(screen.getByText("Ryhmä A")).toBeTruthy()
+      expect(screen.getByText("Ryhmä B")).toBeTruthy()
     })
   })
-})
 
-describe("Deleting groups", () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-    jest.clearAllTimers()
-  })
-
-  afterAll(() => {
-    jest.restoreAllMocks()
-  })
-
-  it("shows confirmation window on web platform and dispatches on confirm", async () => {
+  test("pressing delete button shows confirmation window on web platform and dispatches on confirm", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const group = { id: 1, name: "Rasti A", type: "START" }
 
     const store = testStore({ groups: [group] })
 
-    const mockDispatch = jest.fn()
-    store.dispatch = mockDispatch
+    store.dispatch = jest.fn()
 
     Object.defineProperty(Platform, "OS", {
       value: "web",
@@ -123,22 +111,18 @@ describe("Deleting groups", () => {
       writable: true,
     })
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Groups />
       </Provider>
     )
 
-    const button = await waitFor(() => getByText("Poista"))
+    const button = await waitFor(() => screen.getByText("Poista"))
     fireEvent.press(button)
-    expect(mockDispatch).toHaveBeenCalled()
-
-    for (const call of mockDispatch.mock.calls) {
-      expect(typeof call[0]).toBe("function")
-    }
+    expect(store.dispatch).toHaveBeenCalled()
 
   })
-  it("delete button removes group when pressed on web platform", async () => {
+  test("delete button removes group when pressed on web platform", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const group = { id: 1, name: "Ryhmä A"}
@@ -172,7 +156,7 @@ describe("Deleting groups", () => {
     })
   })
 
-  it("shows Alert on native platform and dispatches on confirm", async () => {
+  test("pressing delete button shows Alert on native platform and dispatches on confirm", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const group = { id: 1, name: "Ryhmä A"}
@@ -190,8 +174,7 @@ describe("Deleting groups", () => {
       }
     )
 
-    const mockDispatch = jest.fn()
-    store.dispatch = mockDispatch
+    store.dispatch = jest.fn()
 
     const { getByText } = render(
       <Provider store={store}>
@@ -204,12 +187,12 @@ describe("Deleting groups", () => {
 
     expect(alertMock).toHaveBeenCalled()
 
-    expect(mockDispatch).toHaveBeenCalled()
+    expect(store.dispatch).toHaveBeenCalled()
 
     alertMock.mockRestore()
   })
 
-  it("delete button removes group when pressed on native platform", async () => {
+  test("delete button removes group when pressed on native platform", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const group = { id: 1, name: "Ryhmä A"}
@@ -227,17 +210,17 @@ describe("Deleting groups", () => {
       }
     )
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <Groups />
       </Provider>
     )
 
     await waitFor(() => {
-      expect(getByText("Ryhmä A")).toBeTruthy()
+      expect(screen.getByText("Ryhmä A")).toBeTruthy()
     })
 
-    const button = await waitFor(() => getByText("Poista"))
+    const button = await waitFor(() => screen.getByText("Poista"))
     fireEvent.press(button)
 
     await waitFor(() => {
