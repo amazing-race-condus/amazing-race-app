@@ -46,7 +46,6 @@ const Team = () => {
       if (confirmed) {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
         setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
-        console.log(nextCheckpointId)
         dispatch(giveNextCheckpointReducer(group.id, nextCheckpointId))
       }
     } else {

@@ -220,7 +220,7 @@ const assignRoutesToGroups = async () => {
     const routeIndex = groupIndex % routes.length
     const groupId = groupIds[groupIndex]
     const routeId = routeIds[routeIndex]
-    const nextCheckpointId = routes[routeIndex].routeSteps[1].checkpointId
+    const nextCheckpointId = routes[routeIndex].routeSteps[0].checkpointId
 
     await prisma.group.update({
       where: { id: groupId },

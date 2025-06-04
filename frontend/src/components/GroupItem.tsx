@@ -7,7 +7,6 @@ import { Entypo } from "@expo/vector-icons"
 import { removeGroupReducer } from "@/reducers/groupSlice"
 
 const GroupItem = ({ name, members, id }: { name: string; members: number; id: string }) => {
-  console.log("component GroupItem, name, members, id:", name, members, id)
   const dispatch: AppDispatch = useDispatch()
   const pathname = usePathname()
 
