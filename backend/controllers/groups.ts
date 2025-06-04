@@ -124,6 +124,7 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     data: {
       name: body.name,
       members: Number(body.members),
+      easy: body.easy
     }
   })
 

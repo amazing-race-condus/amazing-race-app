@@ -13,13 +13,14 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   const nextRef = useRef(null)
   const [groupname, setGroupname] = useState<string>("")
   const [groupMembers, setGroupMembers] = useState<number>(0)
-  const [easy, setEasy] = useState<Boolean>(false)
+  const [easy, setEasy] = useState<boolean>(false)
 
   const addNewGroup = async () => {
     if (groupname.trim()) {
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
+        easy: easy
       }
 
       dispatch(addGroupReducer(newGroup))
