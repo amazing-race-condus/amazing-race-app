@@ -1,22 +1,26 @@
 import React, { useState, useRef } from "react"
-import { Keyboard, Platform, Pressable, Text } from "react-native"
+import { Keyboard, Platform, Pressable, Text, View } from "react-native"
+import { RadioButton } from "react-native-paper"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
+import { styles } from "@/styles/commonStyles"
 
 const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef(null)
   const [groupname, setGroupname] = useState<string>("")
   const [groupMembers, setGroupMembers] = useState<number>(0)
+  const [easy, setEasy] = useState<boolean>(false)
 
   const addNewGroup = async () => {
     if (groupname.trim()) {
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
+        easy: easy
       }
 
       dispatch(addGroupReducer(newGroup))
@@ -74,6 +78,18 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
           returnKeyType="done"
           onSubmitEditing={addNewGroup}
         />
+        <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
+          <View style={styles.radiobuttonGroup}>
+            <View style={styles.radiobuttonItem}>
+              <RadioButton value="true" />
+              <Text>Helpotetut vihjeet</Text>
+            </View>
+            <View style={styles.radiobuttonItem}>
+              <RadioButton value="false" />
+              <Text>Tavalliset vihjeet</Text>
+            </View>
+          </View>
+        </RadioButton.Group>
         <Pressable
           onPress={addNewGroup}
           style={{
