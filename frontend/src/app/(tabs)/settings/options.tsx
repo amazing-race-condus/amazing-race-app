@@ -42,6 +42,18 @@ const Settings = () => {
             <Entypo name="chevron-right" size={24} color="black" />
           </TouchableOpacity>
         </Link>
+
+        <Link href={"/settings/game"} asChild>
+          <TouchableOpacity style={styles.item}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.checkpointName}>
+                Hallinnoi peliä
+              </Text>
+            </View>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
+
       </View>
     </SafeAreaView>
   )

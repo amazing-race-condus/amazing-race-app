@@ -157,5 +157,26 @@ export const giveNextCheckpointReducer =
     }
   }
 
+export const setStartTimeReducer = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  try {
+    const updatedGroup = await giveNextCheckpoint()
+    const currentGroups = getState().groups
+    const updated = currentGroups.map((currentGroup) => {
+      if (currentGroup.id) {
+        return {
+          ...currentGroup,
+          startTime: updatedGroup.startTime
+        }
+      }
+      return currentGroup
+    })
+    dispatch(setGroups(updated))
+    dispatch(setNotification("Peli loitettu", "success"))
+  } catch (error) {
+    console.error("Failed to start the game:", error)
+    dispatch(setNotification("Pelin aloitus epäonnistui", "error"))
+  }
+}
+
 export const { setGroups , appendGroup, updateGroup } = groupSlice.actions
 export default groupSlice.reducer
