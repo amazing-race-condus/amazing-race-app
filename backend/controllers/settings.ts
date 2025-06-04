@@ -226,7 +226,9 @@ const assignRoutesToGroups = async () => {
       where: { id: groupId },
       data: { routeId: routeId, nextCheckpointId: nextCheckpointId }
     })
-  }}
+  }
+  return groupIds.length
+}
 
 settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
   const eventId = 1 //req.body.event_id
@@ -268,9 +270,9 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
 
     await resetRoutes()
     await updateRoutes(routes)
-    await assignRoutesToGroups()
+    const numberOfGroups = await assignRoutesToGroups()
 
-    res.status(200).json({message: `${routes.length} reittiä luotu.`})
+    res.status(200).json({message: routes.length, groupsAmount: numberOfGroups})
     return
 
   } catch (error) {
