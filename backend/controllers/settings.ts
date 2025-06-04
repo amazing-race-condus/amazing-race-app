@@ -197,20 +197,22 @@ const updateRoutes = async (routes: Route[]) => {
   await prisma.$transaction(checkpointOperations);
 };
 
-
 const assignRoutesToGroups = async () => {
   const routes = await prisma.route.findMany({
     select: {
-      id: true
+      id: true,
+      routeSteps: {
+        orderBy: {
+          checkpointOrder: "asc"
+        }
+      }
     }
   })
-
   const groups = await prisma.group.findMany({
     select: {
       id: true
     }
   })
-
   const routeIds = routes.map(route => route.id)
   const groupIds = groups.map(group => group.id)
 
@@ -218,10 +220,11 @@ const assignRoutesToGroups = async () => {
     const routeIndex = groupIndex % routes.length
     const groupId = groupIds[groupIndex]
     const routeId = routeIds[routeIndex]
+    const nextCheckpointId = routes[routeIndex].routeSteps[0].checkpointId
 
     await prisma.group.update({
       where: { id: groupId },
-      data: { routeId: routeId }
+      data: { routeId: routeId, nextCheckpointId: nextCheckpointId }
     })
   }}
 
@@ -262,7 +265,6 @@ settingsRouter.put("/create_routes", async (req: Request, res: Response) => {
       res.status(400).json({error: "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."})
       return
     }
-    console.log(`Number of routes: ${routes.length}`)
 
     await resetRoutes()
     await updateRoutes(routes)

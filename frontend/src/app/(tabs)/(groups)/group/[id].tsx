@@ -3,8 +3,7 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup } from "@/reducers/groupSlice"
-import { getAllCheckpoints } from "@/services/checkpointService"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
@@ -24,7 +23,7 @@ const Team = () => {
   const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
-  )
+  )!
 
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
@@ -34,14 +33,8 @@ const Team = () => {
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
-        const data = await getAllCheckpoints()
-        const start = data.filter(a => a.type === "START")
-        const finish = data.filter(a => a.type === "FINISH")
-        const intermediate = data.filter(a => a.type === "INTERMEDIATE")
-        intermediate.splice(4)
-        const newData = [...start, ...intermediate, ...finish]
-        setCheckpoints(newData)
-        setNextCheckpointId(newData[0].id)
+        setCheckpoints(group.route)
+        setNextCheckpointId(group.nextCheckpointId!)
       }
       checkpointsRoute()
     }, [])
@@ -53,6 +46,7 @@ const Team = () => {
       if (confirmed) {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
         setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+        dispatch(giveNextCheckpointReducer(group.id, nextCheckpointId))
       }
     } else {
       Alert.alert(
@@ -64,7 +58,9 @@ const Team = () => {
             text: "Suorita",
             onPress: () => {
               const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-              setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
+              const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
+              setNextCheckpointId(nextId)
+              dispatch(giveNextCheckpointReducer(group.id, nextId))
             },
           }
         ]

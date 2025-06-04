@@ -43,8 +43,12 @@ export interface Group {
     id: number,
     name: string,
     members: number,
+    eventId: number | null,
+    finishTime: number | null,
+    nextCheckpointId: number | null,
     disqualified: boolean,
     penalty: Penalty[],
+    route: Checkpoint[],
     dnf: boolean
 }
 

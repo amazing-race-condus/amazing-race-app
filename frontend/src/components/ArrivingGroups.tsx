@@ -11,8 +11,6 @@ import { getArrivingGroups } from "@/services/groupService"
 import { Group } from "@/types"
 
 const ArrivingGroups = ({ checkpointId = 1 }) => {
-  console.log("component ArrivingGroups, checkpoint", "?")
-
   const [search, setSearch] = useState<string>("")
   const dispatch: AppDispatch = useDispatch()
   const groups = useSelector((state: RootState) => state.groups)

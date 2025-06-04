@@ -1,41 +1,85 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
-// import { Type } from "../prisma/prisma/"
 
 const groupsRouter = express.Router()
 
+// USELESS in code but very useful in testing!!!
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
-
   const id = Number(req.params.id)
-
   const group = await prisma.group.findUnique({
-    where: { id },
+    where: { id: id },
     include: {
       penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: "asc" },
+            include: {
+              checkpoint: true
+            }
+          }
+        }
+      }
     }
   })
+
+  const groupWithCheckpoints = group
+    ? {
+      ...group,
+      route: group.route?.routeSteps.map(step => step.checkpoint) ?? []
+    }
+    : null
+
   if (group) {
-    res.json(group)
+    res.json(groupWithCheckpoints)
   } else {
     res.status(404).end()
   }
 })
 
 groupsRouter.get("/", async (_, res: Response) => {
-
-  const allGroups = await prisma.group.findMany({
+  const groups = await prisma.group.findMany({
     include: {
       penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: "asc" },
+            include: {
+              checkpoint: true
+            }
+          }
+        }
+      }
     }
   })
 
-  res.send(allGroups)
+  const groupsWithCheckpoints = groups.map(group => ({
+    ...group,
+    route: group.route?.routeSteps.map(step => step.checkpoint) ?? []
+  }))
+
+  res.send(groupsWithCheckpoints)
 })
 
 groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const arrivingGroups = await prisma.group.findMany({ where: { nextCheckpointId: id } })
+
+  res.json(arrivingGroups)
+})
+
+groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const body = req.body
+
+  const arrivingGroups = await prisma.group.update({
+    where: { id: id }
+    , data: {
+      nextCheckpointId: body.nextCheckpointId
+    }
+  })
 
   res.json(arrivingGroups)
 })

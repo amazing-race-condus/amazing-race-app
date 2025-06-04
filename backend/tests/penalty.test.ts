@@ -69,6 +69,8 @@ describe("Penalties", () => {
     const response = await request(app)
       .get(`/api/groups/${groupId.toString()}`)
 
+    console.log(groupId)
+    console.log("Tässä")
     expect(response.status).toBe(200)
     expect(response.body.penalty[0].groupId).toBe(groupId)
     expect(response.body.penalty[0].time).toBe(30)

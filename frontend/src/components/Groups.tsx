@@ -24,8 +24,6 @@ const Groups = () => {
     }, [dispatch])
   )
 
-  console.log("groups", filteredGroups)
-
   return (
     <View style={styles.container}>
       {pathname === "/" && <Text style={styles.title}>Ryhmät:</Text>}
