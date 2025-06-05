@@ -28,7 +28,7 @@ export interface Distances {
 
 export type Notification = {
     message: string,
-    type: "error" | "success" | null
+    type: "error" | "success" | "warning" | null
 }
 
 export interface Penalty {
