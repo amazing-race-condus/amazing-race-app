@@ -9,11 +9,23 @@ const Notification = () => {
     return null
   }
 
-  const style = type === "error" ? styles.error : styles.notification
+  let backgroundStyle
+  const textStyle = (type === "warning" ? styles.warningText : styles.breadText)
+
+  switch (type) {
+  case "error":
+    backgroundStyle = styles.error
+    break
+  case "warning":
+    backgroundStyle = styles.warning
+    break
+  default:
+    backgroundStyle = styles.notification
+  }
 
   return (
-    <View style={style}>
-      <Text style={styles.breadText}>{ message }</Text>
+    <View style={backgroundStyle}>
+      <Text style={textStyle}>{ message }</Text>
     </View>
   )
 }
