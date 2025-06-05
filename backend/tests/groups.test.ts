@@ -4,6 +4,7 @@ import { initialGroups } from "./test_helper"
 
 describe("Get Groups", () => {
   afterAll(async () => {
+    await prisma.group.deleteMany({})
     await prisma.$disconnect()
     server.close()
   })
