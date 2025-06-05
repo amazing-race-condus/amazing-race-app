@@ -1,6 +1,6 @@
 import { givePenaltyReducer, removePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
-import { Checkpoint, Group } from "@/types"
+import { Checkpoint, Group, Penalty } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
 import { View, Pressable, Text, StyleSheet, Dimensions } from "react-native"
 import { useDispatch } from "react-redux"
@@ -12,12 +12,158 @@ import ActionButton from "./ActionButton"
 
 const screenWidth = Dimensions.get("window").width
 
+const CheckpointHeader = (
+  {checkpoint, isActive, isExpanded, openHint, toggleExpanded}:
+  {
+    checkpoint: Checkpoint
+    isActive: boolean
+    isExpanded: boolean
+    openHint: () => void
+    toggleExpanded: () => void
+  }
+) => {
+  const translatedType = getType(checkpoint.type)
+
+  return (
+    <Pressable style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 3 }} onPress={toggleExpanded}>
+      <View style={{ flexDirection: "row", flex: 1, alignItems: "center", alignContent: "center" }}>
+        <Text style={styles.title}>{checkpoint.name}</Text>
+        {translatedType !== "" && (
+          <Text style={styles.checkpointType}>{translatedType}</Text>
+        )}
+      </View>
+      { isActive ? (
+        (checkpoint.type !== "START") && (
+          <ActionButton
+            style={styles.hintButton}
+            onPress={openHint}
+            text={"Vihje"}
+          />)
+      ) :
+        <View style={{ marginHorizontal: 10 }}>
+          {isExpanded
+            ? <FontAwesome6 name="chevron-up" size={24} color="black" />
+            : <FontAwesome6 name="chevron-down" size={24} color="black" />
+          }
+        </View>
+      }
+    </Pressable>
+  )
+}
+
+const CheckpointActions = (
+  { checkpoint, group, usedHints, completeCheckpoint }:
+  {
+    checkpoint: Checkpoint
+    group: Group
+    usedHints: Penalty[]
+    completeCheckpoint: (id: number) => void
+  }
+) => {
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
+
+  if (checkpoint.type === "START") {
+    return (
+      <ActionButton
+        style={styles.button}
+        onPress={() => completeCheckpoint(checkpoint.id)}
+        text={"Aloita"}
+      />
+    )
+  }
+
+  return (
+    <View style={{ flexDirection: "column"}}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <ActionButton
+          style={styles.button}
+          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))}
+          text={"Skip"}
+        />
+        <ActionButton
+          style={styles.button}
+          onPress={() => completeCheckpoint(checkpoint.id)}
+          text={"Suorita"}
+        />
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <ActionButton
+          style={styles.button}
+          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))}
+          count={usedHints.length}
+          text={"Vihjepuhelin"}
+        />
+        <ActionButton
+          style={styles.button}
+          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))}
+          text={"Yliaika"}
+        />
+      </View>
+    </View>
+  )
+}
+
+const ListCheckpointPenalties = (
+  { groupId, usedHints, usedSkip, usedOvertime }:
+  {
+    groupId: number
+    usedHints: Penalty[]
+    usedSkip: Penalty[]
+    usedOvertime: Penalty[]
+  }
+) => {
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
+
+  return (
+    <View style={styles.penaltyContainer}>
+      <Text style={styles.penaltyTitle}>Rankut:</Text>
+      {usedHints.length > 0 && (
+        <View style={styles.penaltyItem}>
+          <Text style={styles.penaltyText}>
+                Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min
+          </Text>
+          <Pressable
+            style={styles.deleteButton}
+            onPress={() => dispatch(removePenaltyReducer(groupId, usedHints[0].id))}
+          >
+            <MaterialIcons name="delete" size={20} color="#ff4444" />
+          </Pressable>
+        </View>
+      )}
+      {usedSkip.length > 0 && (
+        <View style={styles.penaltyItem}>
+          <Text style={styles.penaltyText}>
+                Skip: {usedSkip[0]?.time}min
+          </Text>
+          <Pressable
+            style={styles.deleteButton}
+            onPress={() => dispatch(removePenaltyReducer(groupId, usedSkip[0].id))}
+          >
+            <MaterialIcons name="delete" size={20} color="#ff4444" />
+          </Pressable>
+        </View>
+      )}
+      {usedOvertime.length > 0 && (
+        <View style={styles.penaltyItem}>
+          <Text style={styles.penaltyText}>
+                Yliaika: {usedOvertime[0]?.time}min
+          </Text>
+          <Pressable
+            style={styles.deleteButton}
+            onPress={() => dispatch(removePenaltyReducer(groupId, usedOvertime[0].id))}
+          >
+            <MaterialIcons name="delete" size={20} color="#ff4444" />
+          </Pressable>
+        </View>
+      )}
+    </View>
+  )
+}
+
 const GroupCheckpointItem = (
   { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
   { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number) => void, openHint: () => void }
 ) => {
-  const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const translatedType = getType(checkpoint.type)
   const [isExpanded, setIsExpanded] = useState(false)
 
   const CheckpointPenalties = group?.penalty?.filter(p => p.checkpointId === checkpoint.id)
@@ -35,112 +181,28 @@ const GroupCheckpointItem = (
 
   return (
     <View style={[styles.item, { backgroundColor: isActiveCheckpoint ? theme.colors.listItemBackground : "rgba(187, 183, 183, 0.75)" }]}>
-      <Pressable style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 3 }} onPress={toggleExpanded}>
-        <View style={{ flexDirection: "row", flex: 1, alignItems: "center", alignContent: "center" }}>
-          <Text style={styles.title}>{checkpoint.name}</Text>
-          {translatedType !== "" && (
-            <Text style={styles.checkpointType}>{translatedType}</Text>
-          )}
-        </View>
-        { isActiveCheckpoint ? (
-          (checkpoint.type !== "START") && (
-            <ActionButton
-              style={styles.hintButton}
-              onPress={openHint}
-              text={"Vihje"}
-            />)
-        ) :
-          <View style={{ marginHorizontal: 10}}>
-            {isExpanded
-              ? <FontAwesome6 name="chevron-up" size={24} color="black" />
-              : <FontAwesome6 name="chevron-down" size={24} color="black" />
-            }
-          </View>
-        }
-      </Pressable>
-
-      <View style={{ flexDirection: "column"}}>
-        { isActiveCheckpoint && ((checkpoint.type !== "START") ? (
-          <>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <ActionButton
-                style={styles.button}
-                onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))}
-                text={"Skip"}
-              />
-              <ActionButton
-                style={styles.button}
-                onPress={() => completeCheckpoint(checkpoint.id)}
-                text={"Suorita"}
-              />
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <ActionButton
-                style={styles.button}
-                onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))}
-                count={usedHints.length}
-                text={"Vihjepuhelin"}
-              />
-              <ActionButton
-                style={styles.button}
-                onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))}
-                text={"Yliaika"}
-              />
-            </View>
-          </>
-        ) :
-          <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
-            <ActionButton
-              style={styles.button}
-              onPress={() => completeCheckpoint(checkpoint.id)}
-              text={"Aloita"}
-            />
-          </View>)}
-      </View>
-
+      <CheckpointHeader
+        checkpoint={checkpoint}
+        isActive={isActiveCheckpoint}
+        isExpanded={isExpanded}
+        openHint={openHint}
+        toggleExpanded={toggleExpanded}
+      />
+      { isActiveCheckpoint &&  (
+        <CheckpointActions
+          checkpoint={checkpoint}
+          group={group}
+          usedHints={usedHints}
+          completeCheckpoint={completeCheckpoint}
+        />
+      )}
       {((isActiveCheckpoint || isExpanded) && CheckpointPenalties.length > 0) && (
-        <View style={styles.penaltyContainer}>
-          <Text style={styles.penaltyTitle}>Rankut:</Text>
-          {usedHints.length > 0 && (
-            <View style={styles.penaltyItem}>
-              <Text style={styles.penaltyText}>
-                Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min
-              </Text>
-              <Pressable
-                style={styles.deleteButton}
-                onPress={() => dispatch(removePenaltyReducer(group.id, usedHints[0].id))}
-              >
-                <MaterialIcons name="delete" size={20} color="#ff4444" />
-              </Pressable>
-            </View>
-          )}
-          {usedSkip.length > 0 && (
-            <View style={styles.penaltyItem}>
-              <Text style={styles.penaltyText}>
-                Skip: {usedSkip[0]?.time}min
-              </Text>
-              <Pressable
-                style={styles.deleteButton}
-                onPress={() => dispatch(removePenaltyReducer(group.id, usedSkip[0].id))}
-              >
-                <MaterialIcons name="delete" size={20} color="#ff4444" />
-              </Pressable>
-            </View>
-          )}
-          {usedOvertime.length > 0 && (
-            <View style={styles.penaltyItem}>
-              <Text style={styles.penaltyText}>
-                Yliaika: {usedOvertime[0]?.time}min
-              </Text>
-              <Pressable
-                style={styles.deleteButton}
-                onPress={() => dispatch(removePenaltyReducer(group.id, usedOvertime[0].id))}
-              >
-                <MaterialIcons name="delete" size={20} color="#ff4444" />
-              </Pressable>
-            </View>
-          )}
-        </View>
+        <ListCheckpointPenalties
+          groupId={group.id}
+          usedHints={usedHints}
+          usedSkip={usedSkip}
+          usedOvertime={usedOvertime}
+        />
       )}
     </View>
   )

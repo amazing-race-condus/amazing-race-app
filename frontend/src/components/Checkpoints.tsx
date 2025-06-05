@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Platform, TouchableOpacity } from "react-native"
+import { View, Text, Pressable, TouchableOpacity } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
@@ -8,6 +8,7 @@ import { getType, sortCheckpoints } from "@/utils/checkpointUtils"
 import { usePathname, Link } from "expo-router"
 import { Entypo } from "@expo/vector-icons"
 import { Checkpoint } from "@/types"
+import { handleAlert } from "@/utils/handleAlert"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -21,27 +22,12 @@ const Checkpoints = () => {
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 
   const handleRemoveCheckpoint = (id: number, name: string) => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat poistaa tämän rastin?")
-      if (confirmed) {
-        dispatch(removeCheckpointReducer(id, name))
-      }
-    } else {
-      Alert.alert(
-        "Vahvista poisto",
-        "Oletko varma että haluat poistaa tämän rastin?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Poista",
-            style: "destructive",
-            onPress: () => {
-              dispatch(removeCheckpointReducer(id, name))
-            }
-          }
-        ]
-      )
-    }
+    handleAlert({
+      confirmText: "Poista",
+      title: "Vahvista poisto",
+      message: "Oletko varma että haluat poistaa tämän rastin?",
+      onConfirm: () => dispatch(removeCheckpointReducer(id, name))
+    })
   }
 
   const ItemSeparator = () => <View style={styles.separator} />

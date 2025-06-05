@@ -4,12 +4,15 @@ import { styles } from "@/styles/commonStyles"
 import { RootState } from "@/store/store"
 import { useSelector } from "react-redux"
 import ArrivingGroups from "@/components/ArrivingGroups"
+import { getType } from "@/utils/checkpointUtils"
 
 const Checkpoint = () => {
   const { id } = useLocalSearchParams()
   const checkpoint = useSelector((state: RootState) =>
     state.checkpoints.find(g => g.id === Number(id))
   )
+
+  const translatedType = getType(checkpoint?.type || "") || "välirasti"
 
   return (
     <View style={styles.container}>
@@ -19,13 +22,7 @@ const Checkpoint = () => {
         />
         <Text style={styles.title}>{checkpoint?.name}</Text>
         <Text style={[styles.breadText, {fontWeight: "bold"}]}>
-          {checkpoint?.type === "START"
-            ? "Lähtö"
-            : checkpoint?.type === "FINISH"
-              ? "Maali"
-              : checkpoint?.type === "INTERMEDIATE"
-                ? "Välirasti"
-                : "Rasti"}
+          { translatedType }
         </Text>
         <ArrivingGroups checkpointId={Number(id)} />
       </View>
