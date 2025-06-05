@@ -178,9 +178,9 @@ groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
 groupsRouter.put("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
-  const { name, members } = req.body
+  const { name, members, easy } = req.body
 
-  const data: Partial<{ name: string, members: number }> = {}
+  const data: Partial<{ name: string, members: number, easy: boolean }> = {}
 
   const existingGroup = await prisma.group.findUnique({
     where: { id },
@@ -190,17 +190,20 @@ groupsRouter.put("/:id", async (req: Request, res: Response) => {
     res.status(404).json({ error: "Ryhmää ei löydy" })
     return
   }
-
-  if (!validateName(name, res)) {
-    return
+  if (name) {
+    if (!validateName(name, res)) {
+      return
+    }
+    data.name = name
+  }
+  if (members) {
+    if (!validateMembers(members, res)) {
+      return
+    }
+    data.members = Number(members)
   }
 
-  if (!validateMembers(members, res)) {
-    return
-  }
-
-  if (name !== undefined) data.name = name
-  if (members !== undefined) data.members = Number(members)
+  if (easy !== undefined) data.easy = easy
 
   const updatedGroup = await prisma.group.update({
     where: { id },
