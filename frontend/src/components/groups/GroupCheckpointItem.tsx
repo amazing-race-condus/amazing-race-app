@@ -44,7 +44,7 @@ const GroupCheckpointItem = (
           completeCheckpoint={completeCheckpoint}
         />
       )}
-      {((isActiveCheckpoint || isExpanded) && CheckpointPenalties.length > 0) && (
+      {((isActiveCheckpoint || isExpanded) && CheckpointPenalties?.length > 0) && (
         <ListGroupCheckpointPenalties
           groupId={group.id}
           usedHints={usedHints}
