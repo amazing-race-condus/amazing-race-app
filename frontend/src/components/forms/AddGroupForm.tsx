@@ -7,7 +7,7 @@ import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
 import { styles } from "@/styles/commonStyles"
-import BottomSheetModal from "./BottomSheetModal"
+import BottomSheetModal from "../ui/BottomSheetModal"
 
 const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()

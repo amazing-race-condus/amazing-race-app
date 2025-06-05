@@ -1,6 +1,6 @@
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import QRCode from "react-qr-code"
-import BottomSheetModal from "./BottomSheetModal"
+import BottomSheetModal from "../ui/BottomSheetModal"
 
 const HintMenu = ({ ref }: {ref: React.RefObject<BottomSheetMethods | null>}) => {
   return (

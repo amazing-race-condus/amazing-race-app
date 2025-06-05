@@ -1,7 +1,7 @@
 import { Group } from "@/types"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import { Pressable, Text } from "react-native"
-import BottomSheetModal from "./BottomSheetModal"
+import BottomSheetModal from "../ui/BottomSheetModal"
 
 const GroupActionMenu = (
   { group, ref, handleDNF, handleDisqualification }:

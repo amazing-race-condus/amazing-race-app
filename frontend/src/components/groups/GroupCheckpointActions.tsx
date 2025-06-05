@@ -3,8 +3,8 @@ import { AppDispatch } from "@/store/store"
 import { Checkpoint, Group, Penalty } from "@/types"
 import { View, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
-import ActionButton from "./ActionButton"
 import theme from "@/theme"
+import ActionButton from "../ui/ActionButton"
 
 const GroupCheckpointActions = (
   { checkpoint, group, usedHints, completeCheckpoint }:

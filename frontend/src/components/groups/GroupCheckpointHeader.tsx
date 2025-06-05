@@ -2,7 +2,7 @@ import { Checkpoint } from "@/types"
 import { getType } from "@/utils/checkpointUtils"
 import React from "react"
 import { Pressable, View, Text, StyleSheet } from "react-native"
-import ActionButton from "./ActionButton"
+import ActionButton from "../ui/ActionButton"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import theme from "@/theme"
 
