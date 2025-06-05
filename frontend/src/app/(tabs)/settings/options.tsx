@@ -1,60 +1,30 @@
-import { Text, TouchableOpacity, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { Text, View } from "react-native"
 import Notification from "@/components/ui/Notification"
 import { styles } from "@/styles/commonStyles"
-import { Link } from "expo-router"
-import { Entypo } from "@expo/vector-icons"
+import SettingsItem from "@/components/settings/SettingsItem"
 
 const Settings = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Notification />
-        <Text style={styles.title}>Asetukset</Text>
-        <Link href={"/settings/checkpoints"} asChild>
-          <TouchableOpacity style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkpointName}>
-                Hallinnoi rasteja
-              </Text>
-            </View>
-            <Entypo name="chevron-right" size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
-        <Link href={"/settings/groups"} asChild>
-          <TouchableOpacity style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkpointName}>
-                Hallinnoi ryhmiä
-              </Text>
-            </View>
-            <Entypo name="chevron-right" size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
-        <Link href={"/settings/routes"} asChild>
-          <TouchableOpacity style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkpointName}>
-                Hallinnoi reittejä
-              </Text>
-            </View>
-            <Entypo name="chevron-right" size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
-
-        <Link href={"/settings/game"} asChild>
-          <TouchableOpacity style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkpointName}>
-                Hallinnoi peliä
-              </Text>
-            </View>
-            <Entypo name="chevron-right" size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
-
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Notification />
+      <Text style={styles.title}>Asetukset</Text>
+      <SettingsItem
+        text="Hallinnoi rasteja"
+        link="/settings/checkpoints"
+      />
+      <SettingsItem
+        text="Hallinnoi ryhmiä"
+        link="/settings/groups"
+      />
+      <SettingsItem
+        text="Hallinnoi reittejä"
+        link="/settings/routes"
+      />
+      <SettingsItem
+        text="Hallinnoi peliä"
+        link="/settings/game"
+      />
+    </View>
   )
 }
 
