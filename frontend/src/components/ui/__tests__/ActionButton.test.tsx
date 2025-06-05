@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react-native"
-import ActionButton from "@/components/ActionButton"
+import ActionButton from "@/components/ui/ActionButton"
 
 describe("<ActionButton />", () => {
   let mockOnPress: any

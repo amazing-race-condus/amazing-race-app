@@ -1,8 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import Notification from "@/components/Notification"
+import Notification from "@/components/ui/Notification"
 import { styles } from "@/styles/commonStyles"
-
 import { Link } from "expo-router"
 import { Entypo } from "@expo/vector-icons"
 
@@ -42,6 +41,18 @@ const Settings = () => {
             <Entypo name="chevron-right" size={24} color="black" />
           </TouchableOpacity>
         </Link>
+
+        <Link href={"/settings/game"} asChild>
+          <TouchableOpacity style={styles.item}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.checkpointName}>
+                Hallinnoi peliä
+              </Text>
+            </View>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
+
       </View>
     </SafeAreaView>
   )

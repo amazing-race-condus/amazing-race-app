@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react-native"
-import Search from "../src/components/Search"
+import Search from "../Search"
 
 describe("<Search />", () => {
   let mockSetSearch: any
