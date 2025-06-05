@@ -10,12 +10,13 @@ import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/Notification"
 import GroupCheckpointItem from "@/components/GroupCheckpointItem"
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
+import BottomSheet from "@gorhom/bottom-sheet"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import QRCode from "react-qr-code"
 import GroupInfoHeader from "@/components/GroupInfoHeader"
 import { handleAlert } from "@/utils/handleAlert"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
+import BottomSheetModal from "@/components/BottomSheetModal"
 
 const GroupStatusDisplay = ({ group }: { group: Group }) => {
   return (
@@ -63,30 +64,17 @@ const OptionsMenuButton = ({ ref }: {ref: React.RefObject<BottomSheetMethods | n
 
 const HintMenu = ({ ref }: {ref: React.RefObject<BottomSheetMethods | null>}) => {
   return (
-    <BottomSheet
-      index={-1}
+    <BottomSheetModal
       ref={ref}
-      enablePanDownToClose={true}
       snapPoints={["75%"]}
-      backdropComponent={props => (
-        <BottomSheetBackdrop
-          {...props}
-          opacity={0.5}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          pressBehavior="close"
-        />
-      )}
     >
-      <BottomSheetView style={{ flex: 1, padding: 16 }}>
-        <QRCode
-          size={256}
-          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          value={"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-          viewBox={"0 0 256 256"}
-        />
-      </BottomSheetView>
-    </BottomSheet>
+      <QRCode
+        size={256}
+        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+        value={"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+        viewBox={"0 0 256 256"}
+      />
+    </BottomSheetModal>
   )
 }
 
@@ -100,45 +88,32 @@ const ActionMenu = (
   }
 ) => {
   return (
-    <BottomSheet
-      index={-1}
-      enablePanDownToClose={true}
+    <BottomSheetModal
       ref={ref}
       snapPoints={["25%"]}
-      backdropComponent={props => (
-        <BottomSheetBackdrop
-          {...props}
-          opacity={0.5}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          pressBehavior="close"
-        />
-      )}
     >
-      <BottomSheetView style={{ flex: 1, padding: 16 }}>
-        <Pressable onPress={handleDNF} style={{
-          backgroundColor: "#f54254",
-          borderRadius: 8,
-          padding: 12,
-          marginBottom: 16,
-        }}>
-          <Text>
-            {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
-          </Text>
-        </Pressable>
-        <Pressable onPress={handleDisqualification} style={{
-          backgroundColor: "#f54254",
-          borderRadius: 8,
-          padding: 12,
-          marginBottom: 16,
-        }}
-        >
-          <Text>
-            {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
-          </Text>
-        </Pressable>
-      </BottomSheetView>
-    </BottomSheet>
+      <Pressable onPress={handleDNF} style={{
+        backgroundColor: "#f54254",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+      }}>
+        <Text>
+          {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
+        </Text>
+      </Pressable>
+      <Pressable onPress={handleDisqualification} style={{
+        backgroundColor: "#f54254",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+      }}
+      >
+        <Text>
+          {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
+        </Text>
+      </Pressable>
+    </ BottomSheetModal>
   )
 }
 

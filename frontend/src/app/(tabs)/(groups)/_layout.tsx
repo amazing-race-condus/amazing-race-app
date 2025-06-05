@@ -1,9 +1,5 @@
 import { Stack } from "expo-router"
 
-export const unstableSettings = {
-  initialRouteName: "index"
-}
-
 export default function Layout() {
   return (
     <Stack
