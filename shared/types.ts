@@ -45,7 +45,6 @@ export interface Group {
     name: string,
     members: number,
     eventId: number | null,
-    startTime: number | null,
     finishTime: number | null,
     nextCheckpointId: number | null,
     disqualified: boolean,
