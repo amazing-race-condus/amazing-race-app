@@ -234,7 +234,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Rastin nimi on jo käytössä.")
+    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
     await prisma.checkpoint.deleteMany({})
   })
 })

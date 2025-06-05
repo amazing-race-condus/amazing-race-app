@@ -25,6 +25,7 @@ model Checkpoint {
   name     String  @unique
   type     Type
   hint     String?
+  easyHint     String?  @map("easy_hint")
   eventId  Int?    @map("event_id")
 
   event           Event?               @relation(fields: [eventId], references: [id])
