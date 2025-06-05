@@ -1,14 +1,12 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native"
+import { View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { RootState, AppDispatch } from "@/store/store"
-import { fetchCheckpoints, removeCheckpointReducer } from "@/reducers/checkpointsSlice"
-import { getType, sortCheckpoints } from "@/utils/checkpointUtils"
-import { usePathname, Link } from "expo-router"
-import { Entypo } from "@expo/vector-icons"
-import { Checkpoint } from "@/types"
-import { handleAlert } from "@/utils/handleAlert"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
+import { sortCheckpoints } from "@/utils/checkpointUtils"
+import { usePathname } from "expo-router"
+import CheckpointItem from "./CheckpointItem"
 
 const Checkpoints = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -21,54 +19,7 @@ const Checkpoints = () => {
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 
-  const handleRemoveCheckpoint = (id: number, name: string) => {
-    handleAlert({
-      confirmText: "Poista",
-      title: "Vahvista poisto",
-      message: "Oletko varma että haluat poistaa tämän rastin?",
-      onConfirm: () => dispatch(removeCheckpointReducer(id, name))
-    })
-  }
-
   const ItemSeparator = () => <View style={styles.separator} />
-
-  const CheckpointItem = ({ item }: { item: Checkpoint }) => {
-    // todo: better translatation tai jotain
-    const translatedType = getType(item.type)
-
-    if (pathname === "/settings/checkpoints") {
-      return (
-        <View style={styles.item}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.checkpointName}>
-              {item.name}
-              {translatedType !== "" && (
-                <Text style={styles.checkpointType}> ({translatedType})</Text>
-              )}
-            </Text>
-          </View>
-          <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
-            <Text style={styles.buttonText}>Poista</Text>
-          </Pressable>
-        </View>
-      )
-    }
-    return (
-      <Link href={`/checkpoints/${item.id}`} asChild>
-        <TouchableOpacity style={styles.item}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.checkpointName}>
-              {item.name}
-              {translatedType !== "" && (
-                <Text style={styles.checkpointType}> ({translatedType})</Text>
-              )}
-            </Text>
-          </View>
-          <Entypo name="chevron-right" size={24} color="black" />
-        </TouchableOpacity>
-      </Link>
-    )
-  }
 
   return (
     <View style={styles.content}>
