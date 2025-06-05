@@ -1,10 +1,10 @@
 import React, { createRef } from "react"
 import { render, fireEvent, waitFor, act, screen } from "@testing-library/react-native"
 import testStore from "@/store/testStore"
-import AddCheckpointForm from "@/components/AddCheckpointForm"
+import AddCheckpointForm from "@/components/forms/AddCheckpointForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
-import { mockStore } from "../src/utils/testUtils"
+import { mockStore } from "@/utils/testUtils"
 
 describe("<AddCheckpointForm />", () => {
   let store: any

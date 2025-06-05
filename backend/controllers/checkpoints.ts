@@ -62,6 +62,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
       name: body.name,
       type: body.type,
       hint: body.hint,
+      easyHint: body.easyHint,
       eventId: body.eventId
     }
   })

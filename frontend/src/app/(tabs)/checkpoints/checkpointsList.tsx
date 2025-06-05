@@ -2,8 +2,8 @@ import React from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import Notification from "@/components/Notification"
-import Checkpoints from "@/components/Checkpoints"
+import Notification from "@/components/ui/Notification"
+import Checkpoints from "@/components/checkpoints/Checkpoints"
 
 const CheckpointsList = () => {
 

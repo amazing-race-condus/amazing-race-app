@@ -6,10 +6,11 @@ export type Checkpoint = {
     id: number;
     eventId: number | null;
     name: string;
-    hint: string | null
+    hint: string | null;
+    easyHint: string | null;
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId" | "hint">
+export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId">
 
 export interface RouteLimit {
     id: number,
@@ -44,6 +45,7 @@ export interface Group {
     name: string,
     members: number,
     eventId: number | null,
+    startTime: number | null,
     finishTime: number | null,
     nextCheckpointId: number | null,
     disqualified: boolean,
@@ -53,4 +55,19 @@ export interface Group {
     easy: boolean
 }
 
-export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">
+export interface Event {
+    id: number,
+    name: string,
+    startTime: Date | null,
+    endTime: Date | null,
+    minRouteTime: number,
+    maxRouteTime: number,
+    group: Group[],
+    checkpoints: Checkpoint[],
+    routeLimits: RouteLimit[],
+    penalties: Penalty[]
+}
+
+
+export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
+
