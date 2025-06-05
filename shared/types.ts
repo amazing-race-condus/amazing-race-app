@@ -53,4 +53,17 @@ export interface Group {
     dnf: boolean
 }
 
+export interface Event {
+    id: number,
+    name: string,
+    startTime: Date | null,
+    endTime: Date | null,
+    minRouteTime: number,
+    maxRouteTime: number,
+    group: Group[],
+    checkpoints: Checkpoint[],
+    routeLimits: RouteLimit[],
+    penalties: Penalty[]
+}
+
 export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">

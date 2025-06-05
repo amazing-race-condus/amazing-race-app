@@ -3,10 +3,12 @@ import { View, Text, Pressable, Alert, Platform} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/Notification"
-import BottomSheet from "@gorhom/bottom-sheet"
+import store, { AppDispatch } from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { setStartReducer, setEndReducer } from "@/reducers/eventSlice"
 
 const CheckpointSettings = () => {
-  const bottomSheetRef = useRef<BottomSheet>(null)
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
 
   const Game = () => {
 
@@ -15,6 +17,7 @@ const CheckpointSettings = () => {
         const confirmed = window.confirm("Oletko varma että haluat aloittaa pelin?")
         if (confirmed) {
           console.log("Sebastian Beijar")
+          dispatch(setStartReducer(1))
         }
       } else {
         Alert.alert(
@@ -27,6 +30,7 @@ const CheckpointSettings = () => {
               style: "destructive",
               onPress: () => {
                 console.log("Sebastian Beijar")
+                dispatch(setStartReducer(1))
               }
             }
           ]
@@ -39,6 +43,7 @@ const CheckpointSettings = () => {
         const confirmed = window.confirm("Oletko varma että haluat lopettaa pelin?")
         if (confirmed) {
           console.log("Inte Sebastian Beijar")
+          dispatch(setEndReducer(1))
         }
       } else {
         Alert.alert(
@@ -51,6 +56,7 @@ const CheckpointSettings = () => {
               style: "destructive",
               onPress: () => {
                 console.log("Inte Sebastian Beijar")
+                dispatch(setEndReducer(1))
               }
             }
           ]
