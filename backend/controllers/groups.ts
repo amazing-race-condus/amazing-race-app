@@ -93,19 +93,13 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
-  if (!validateName(body.name, res)) {
+  const validName = await validateName(body.name, res)
+  if (!validName) {
     return
   }
 
-  if (!validateMembers(body.members, res)) {
-    return
-  }
-
-  const existingGroup = await prisma.group.findFirst({
-    where: { name: body.name }
-  })
-  if (existingGroup) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+  const validMembers = validateMembers(body.members, res)
+  if (!validMembers) {
     return
   }
 
@@ -182,28 +176,28 @@ groupsRouter.put("/:id", async (req: Request, res: Response) => {
 
   const data: Partial<{ name: string, members: number, easy: boolean }> = {}
 
-  const existingGroup = await prisma.group.findUnique({
+  const groupToModify = await prisma.group.findUnique({
     where: { id },
   })
 
-  if (!existingGroup) {
+  if (!groupToModify) {
     res.status(404).json({ error: "Ryhmää ei löydy" })
     return
   }
-  if (name) {
-    if (!validateName(name, res)) {
-      return
-    }
-    data.name = name
+
+  const validName = await validateName(name, res)
+  if (!validName) {
+    return
   }
-  if (members) {
-    if (!validateMembers(members, res)) {
-      return
-    }
-    data.members = Number(members)
+
+  const validMembers = validateMembers(members, res)
+  if (!validMembers) {
+    return
   }
 
   if (easy !== undefined) data.easy = easy
+  if (name !== undefined) data.name = name
+  if (members !== undefined) data.members = Number(members)
 
   const updatedGroup = await prisma.group.update({
     where: { id },

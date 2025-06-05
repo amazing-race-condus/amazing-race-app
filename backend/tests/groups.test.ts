@@ -1,5 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
+import { initialGroups } from "./test_helper"
 
 describe("Get Groups", () => {
   afterAll(async () => {
@@ -65,3 +66,82 @@ describe("Get Groups", () => {
     expect(response.body.easy).toBeTruthy()
   })
 })
+
+describe("modification of a group", () => {
+  beforeEach(async () => {
+    await prisma.group.deleteMany({})
+    await prisma.group.createMany({
+      data: initialGroups,
+    })
+  })
+
+  it("succeeds with status code 200 with valid data and id", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const response = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .send({
+        name: "Modified group",
+        members: 4,
+        easy: true
+      })
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      id: groupToModify.id,
+      name: "Modified group",
+      members: 4,
+      easy: true
+    })
+  })
+
+  it("fails with status code 400 and proper error message if modified name already exists", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const newGroup = {
+      name: "Existing name",
+      members: 4,
+    }
+
+    await request(app).post("/api/groups").send(newGroup)
+
+    const result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .send({
+        name: "Existing name",
+        members: 4,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Ryhmän nimi on jo käytössä. Syötä uniikki nimi.")
+    await prisma.group.deleteMany({})
+  })
+  it("fails with status code 400 and proper error message if data is invalid", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .send({
+        name: "Invalid data",
+        members: "aaa",
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Syötä jäsenten määrä numeromuodossa")
+    await prisma.group.deleteMany({})
+  })
+})
+
+
