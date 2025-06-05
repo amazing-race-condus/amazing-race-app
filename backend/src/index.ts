@@ -6,7 +6,7 @@ import checkpointsRouter from "../controllers/checkpoints"
 import groupsRouter from "../controllers/groups"
 import { unknownEndpoint, errorHandler } from "../utils/middleware"
 import routesRouter from "./routes/routes.route"
-import penaltyRouter from "../controllers/penalties"
+import penaltyRouter from "./routes/penalties.route"
 import eventRouter from "../controllers/event"
 
 const prisma = new PrismaClient()

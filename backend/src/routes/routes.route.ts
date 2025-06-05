@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express"
-import { getLimits, updateLimits, getDistances, updateDistances, createRoutes } from "../controllers/routes.controller"
+import { getLimits, updateLimits, getDistances, updateDistances,
+  createRoutes } from "../controllers/routes.controller"
 
 const eventId = 1
 

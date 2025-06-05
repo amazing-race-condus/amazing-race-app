@@ -1,6 +1,7 @@
 import { prisma } from "../index"
 import { getValidRoutes } from "../routes"
-import { Distances, Checkpoint, Route } from "@/types"
+import { validateMinAndMax, validateCheckpointDistances } from "../../utils/routeValidators"
+import { Distances, Route } from "@/types"
 
 export const getLimits = async (eventId: number) => {
   const event = await prisma.event.findUnique(
@@ -210,43 +211,5 @@ export const createRoutes = async (eventId: number) => {
     console.error("Unexpected error in /create_routes:", error)
     response.message =  "Järjestelmävirhe. Yritä myöhemmin uudelleen."
     return response
-  }
-}
-
-const validateMinAndMax = (min: number, max: number): string => {
-  if (!(Number.isInteger(min) && Number.isInteger(max))) {
-    return "Syöte on oltava kokonaisluku."
-  }
-
-  if (min > max) {
-    return "Minimiaika ei voi olla suurempi kuin maksimiaika."
-  }
-
-  if (min < 0 || max < 0) {
-    return "Ajat eivät voi olla negatiivisia."
-  }
-  return ""
-}
-
-const validateCheckpointDistances = async (distances: Distances, checkpoints: Checkpoint[]): Promise<boolean> => {
-  try {
-    if (Object.keys(distances).length === 0) {
-      return false
-    }
-    for (let i = 0; i < checkpoints.length; i++) {
-      for (let j = 0; j < checkpoints.length; j++) {
-        if (i !== j && checkpoints[i].type !== "FINISH" && checkpoints[j].type !== "START" && !(checkpoints[i].type === "START" && checkpoints[j].type === "FINISH")) {
-          const fromId = checkpoints[i].id
-          const toId = checkpoints[j].id
-          if (!(Number.isInteger(distances[fromId][toId]))) {
-            return false
-          }
-        }
-      }
-    }
-    return true
-  } catch (error) {
-    console.error(error)
-    return false
   }
 }
