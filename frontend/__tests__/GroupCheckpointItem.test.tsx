@@ -1,6 +1,6 @@
 import { Provider } from "react-redux"
 import { render, screen, fireEvent } from "@testing-library/react-native"
-import GroupCheckpointItem from "@/components/GroupCheckpointItem"
+import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import { group, checkpoint, mockStore } from "../src/utils/testUtils"
 
 describe("<GroupCheckpointItem />", () => {

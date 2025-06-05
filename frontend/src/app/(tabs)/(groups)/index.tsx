@@ -4,9 +4,9 @@ import { useDispatch } from "react-redux"
 import { Stack, useFocusEffect } from "expo-router"
 import { AppDispatch } from "@/store/store"
 import { styles } from "@/styles/commonStyles"
-import Notification from "@/components/Notification"
+import Notification from "@/components/ui/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
-import Groups from "@/components/Groups"
+import Groups from "@/components/groups/Groups"
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
