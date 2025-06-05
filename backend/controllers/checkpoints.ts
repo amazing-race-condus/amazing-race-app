@@ -37,7 +37,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
 
   const body = req.body
 
-  if (!body.name ) {
+  if (!body.name || !body.type) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
     return
   }
@@ -69,37 +69,37 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
 
   let parsedType: Type | undefined = undefined;
 
-  if (body.type) {
-    if (!Object.values(Type).includes(body.type)) {
-      res.status(400).json({ error: "Virheellinen tyyppi." })
+
+  if (!Object.values(Type).includes(body.type)) {
+    res.status(400).json({ error: "Virheellinen tyyppi." })
+    return
+  }
+
+  parsedType = body.type as Type
+
+  if (parsedType === Type.START) {
+    const existingStart = await prisma.checkpoint.findFirst({
+      where: { type: Type.START }
+    })
+    if (existingStart) {
+      res.status(400).json({ error: "Lähtörasti on jo luotu." })
       return
     }
-
-    parsedType = body.type as Type
-
-    if (parsedType === Type.START) {
-      const existingStart = await prisma.checkpoint.findFirst({
-        where: { type: Type.START }
-      })
-      if (existingStart) {
-        res.status(400).json({ error: "Lähtörasti on jo luotu." })
-        return
-      }
-    } else if (parsedType === Type.FINISH) {
-      const existingFinish = await prisma.checkpoint.findFirst({
-        where: { type: Type.FINISH }
-      })
-      if (existingFinish) {
-        res.status(400).json({ error: "Maali on jo luotu." })
-        return
-      }
-    } else if (parsedType === Type.INTERMEDIATE) {
-      const intermediateCheckpoints = allCheckpoints.filter(c => c.type === "INTERMEDIATE").length
-      if (intermediateCheckpoints >= 6) {
-        res.status(400).json({ error: "Välirastien maksimimäärä on 6 rastia." })
-        return
-      }
-    }}
+  } else if (parsedType === Type.FINISH) {
+    const existingFinish = await prisma.checkpoint.findFirst({
+      where: { type: Type.FINISH }
+    })
+    if (existingFinish) {
+      res.status(400).json({ error: "Maali on jo luotu." })
+      return
+    }
+  } else if (parsedType === Type.INTERMEDIATE) {
+    const intermediateCheckpoints = allCheckpoints.filter(c => c.type === "INTERMEDIATE").length
+    if (intermediateCheckpoints >= 6) {
+      res.status(400).json({ error: "Välirastien maksimimäärä on 6 rastia." })
+      return
+    }
+  }
 
   const savedCheckpoint = await prisma.checkpoint.create({
     data: {
