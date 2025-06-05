@@ -16,7 +16,7 @@ const RouteGeneration = () => {
   const createRoutes = async () => {
     try {
       const response = await axios.put(`${url}/settings/create_routes`)
-      const routesAmount = response.data.message
+      const routesAmount = response.data.routesAmount
       const groupsAmount = response.data.groupsAmount
       if (routesAmount >= groupsAmount) {
         dispatch(setNotification(`${routesAmount} reittiä luotu.`, "success"))
