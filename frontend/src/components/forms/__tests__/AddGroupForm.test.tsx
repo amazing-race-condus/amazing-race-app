@@ -4,7 +4,7 @@ import testStore from "@/store/testStore"
 import AddGroupForm from "@/components/forms/AddGroupForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
-import { mockStore } from "../src/utils/testUtils"
+import { mockStore } from "@/utils/testUtils"
 
 describe("<AddGroupForm />", () => {
   let store: any
