@@ -1,26 +1,18 @@
 import express, { Response, Request } from "express"
-import { prisma } from "../src/index"
+import { getPenalties, createPenalty, getPenaltyByGroup, deletePenalty,
+  deleteAllPenaltiesOfGroup } from "../controllers/penalties.controller"
 
 const penaltyRouter = express.Router()
 
 penaltyRouter.get("/", async (req: Request, res: Response) => {
-  const penalties = await prisma.penalty.findMany()
-
+  const penalties = await getPenalties()
   res.json(penalties)
 })
 
 penaltyRouter.post("/:groupid", async (req: Request, res: Response) => {
   const id = Number(req.params.groupid)
   const body = req.body
-
-  const newPenalty = await prisma.penalty.create({
-    data: {
-      groupId: id,
-      time: body.penaltyTime,
-      type: body.penaltyType,
-      checkpointId: body.checkpointId
-    }
-  })
+  const newPenalty = await createPenalty(id, body)
 
   if (newPenalty) {
     res.json(newPenalty)
@@ -30,11 +22,9 @@ penaltyRouter.post("/:groupid", async (req: Request, res: Response) => {
 })
 
 penaltyRouter.get("/:groupid", async (req: Request, res: Response) => {
-  const id = Number(req.params.groupid)
+  const groupId = Number(req.params.groupid)
 
-  const penalty = await prisma.penalty.findMany({
-    where: { groupId : id },
-  })
+  const penalty = await getPenaltyByGroup(groupId)
   if (penalty) {
     res.json(penalty)
   } else {
@@ -45,9 +35,7 @@ penaltyRouter.get("/:groupid", async (req: Request, res: Response) => {
 penaltyRouter.delete("/:penaltyid", async (req: Request, res: Response) => {
   const id = Number(req.params.penaltyid)
 
-  const deletedPenalty = await prisma.penalty.delete({
-    where: { id },
-  })
+  const deletedPenalty = await deletePenalty(id)
 
   if (deletedPenalty) {
     res.status(204).end()
@@ -58,9 +46,7 @@ penaltyRouter.delete("/:penaltyid", async (req: Request, res: Response) => {
 
 penaltyRouter.delete("/all/:groupid", async (req: Request, res: Response) => {
   const id = Number(req.params.groupid)
-  const groupsPenalties = await prisma.penalty.deleteMany({
-    where: { groupId : id }
-  })
+  const groupsPenalties = await deleteAllPenaltiesOfGroup(id)
 
   if (groupsPenalties) {
     res.json(groupsPenalties)
