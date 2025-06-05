@@ -53,4 +53,4 @@ export interface Group {
     easy: boolean
 }
 
-export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">
+export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">

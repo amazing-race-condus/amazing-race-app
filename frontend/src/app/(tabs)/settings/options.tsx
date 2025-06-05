@@ -2,7 +2,6 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Notification from "@/components/Notification"
 import { styles } from "@/styles/commonStyles"
-
 import { Link } from "expo-router"
 import { Entypo } from "@expo/vector-icons"
 

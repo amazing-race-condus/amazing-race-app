@@ -1,12 +1,13 @@
 import React, { useState, useRef } from "react"
 import { Keyboard, Platform, Pressable, Text, View } from "react-native"
 import { RadioButton } from "react-native-paper"
-import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
+import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
 import { styles } from "@/styles/commonStyles"
+import BottomSheetModal from "./BottomSheetModal"
 
 const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -31,78 +32,64 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   }
 
   return (
-    <BottomSheet
-      index={-1}
-      enablePanDownToClose={true}
+    <BottomSheetModal
       ref={bottomSheetRef}
-      keyboardBlurBehavior="restore"
       snapPoints={Platform.OS === "web" ? ["75%"] : []} // fix for mobile web
-      backdropComponent={props => (
-        <BottomSheetBackdrop
-          {...props}
-          opacity={0.5}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          pressBehavior="close"
-        />
-      )}
     >
-      <BottomSheetView style={{ flex: 1, padding: 16 }}>
-        <BottomSheetTextInput
-          onChangeText={setGroupname}
-          value={groupname}
-          placeholder="Syötä ryhmän nimi"
-          style={{
-            borderWidth: 1,
-            borderColor: "silver",
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}
-          returnKeyType="next"
-          submitBehavior="submit"
-          onSubmitEditing={() => nextRef.current?.focus()}
-        />
-        <BottomSheetTextInput
-          ref={nextRef}
-          onChangeText={text => setGroupMembers(Number(text))}
-          keyboardType="numeric"
-          placeholder="Syötä jäsenten määrä"
-          style={{
-            borderWidth: 1,
-            borderColor: "silver",
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}
-          returnKeyType="done"
-          onSubmitEditing={addNewGroup}
-        />
-        <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
-          <View style={styles.radiobuttonGroup}>
-            <View style={styles.radiobuttonItem}>
-              <RadioButton value="true" />
-              <Text>Helpotetut vihjeet</Text>
-            </View>
-            <View style={styles.radiobuttonItem}>
-              <RadioButton value="false" />
-              <Text>Tavalliset vihjeet</Text>
-            </View>
+      <BottomSheetTextInput
+        onChangeText={setGroupname}
+        value={groupname}
+        placeholder="Syötä ryhmän nimi"
+        style={{
+          borderWidth: 1,
+          borderColor: "silver",
+          borderRadius: 8,
+          padding: 12,
+          marginBottom: 16,
+        }}
+        returnKeyType="next"
+        submitBehavior="submit"
+        onSubmitEditing={() => nextRef.current?.focus()}
+      />
+      <BottomSheetTextInput
+        ref={nextRef}
+        onChangeText={text => setGroupMembers(Number(text))}
+        keyboardType="numeric"
+        placeholder="Syötä jäsenten määrä"
+        style={{
+          borderWidth: 1,
+          borderColor: "silver",
+          borderRadius: 8,
+          padding: 12,
+          marginBottom: 16,
+        }}
+        returnKeyType="done"
+        onSubmitEditing={addNewGroup}
+      />
+      <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
+        <View style={styles.radiobuttonGroup}>
+          <View style={styles.radiobuttonItem}>
+            <RadioButton value="true" />
+            <Text>Helpotetut vihjeet</Text>
           </View>
-        </RadioButton.Group>
-        <Pressable
-          onPress={addNewGroup}
-          style={{
-            backgroundColor: "orange",
-            padding: 12,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
-        </Pressable>
-      </BottomSheetView>
-    </BottomSheet>
+          <View style={styles.radiobuttonItem}>
+            <RadioButton value="false" />
+            <Text>Tavalliset vihjeet</Text>
+          </View>
+        </View>
+      </RadioButton.Group>
+      <Pressable
+        onPress={addNewGroup}
+        style={{
+          backgroundColor: "orange",
+          padding: 12,
+          borderRadius: 8,
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
+      </Pressable>
+    </BottomSheetModal>
   )
 }
 
