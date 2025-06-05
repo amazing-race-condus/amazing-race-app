@@ -124,6 +124,9 @@ export const styles = StyleSheet.create({
   breadText: {
     color: theme.colors.textBread,
   },
+  warningText: {
+    color: "black"
+  },
   formText: {
     color: theme.colors.background,
     fontWeight: "bold",
@@ -155,6 +158,17 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     padding: 10,
     marginBottom: 10
+  },
+  warning: {
+    backgroundColor: theme.colors.warningBackground,
+    borderStyle: "solid",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "black",
+    fontSize: 20,
+    padding: 10,
+    marginBottom: 10,
+    color: "black"
   },
   smallButton: {
     height: 30,

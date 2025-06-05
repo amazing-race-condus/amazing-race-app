@@ -17,7 +17,12 @@ const RouteGeneration = () => {
     try {
       const response = await axios.put(`${url}/settings/create_routes`)
       const routesAmount = response.data.message
-      dispatch(setNotification(routesAmount, "success"))
+      const groupsAmount = response.data.groupsAmount
+      if (routesAmount >= groupsAmount) {
+        dispatch(setNotification(`${routesAmount} reittiä luotu.`, "success"))
+      } else {
+        dispatch(setNotification(`${routesAmount} reittiä luotu. Jokaisella ryhmällä ei ole uniikkia reittiä.`, "warning"))
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
