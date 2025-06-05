@@ -63,5 +63,4 @@ describe("<AddCheckpointForm />", () => {
 
     expect(store.dispatch).toHaveBeenCalledTimes(1)
   })
-
 })

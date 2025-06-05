@@ -16,6 +16,7 @@ const BottomSheetModal = (
       enablePanDownToClose={true}
       ref={ref}
       snapPoints={snapPoints}
+      keyboardBlurBehavior="restore"
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
