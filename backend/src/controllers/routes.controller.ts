@@ -1,6 +1,6 @@
 import { prisma } from "../index"
-import { getValidRoutes } from "../routes"
-import { validateMinAndMax, validateCheckpointDistances } from "../../utils/routeValidators"
+import { getValidRoutes } from "../services/routes"
+import { validateMinAndMax, validateCheckpointDistances } from "../utils/routeValidators"
 import { Distances, Route } from "@/types"
 
 export const getLimits = async (eventId: number) => {
@@ -56,7 +56,7 @@ export const updateDistances = async (eventId: number, distances: Distances) => 
       const toId = Number(newToId)
 
       try {
-        const upsertedData = await prisma.checkpointDistance.upsert({
+        await prisma.checkpointDistance.upsert({
           where: {
             fromId_toId_eventId: {
               fromId: fromId,
@@ -68,10 +68,8 @@ export const updateDistances = async (eventId: number, distances: Distances) => 
           update: {time: Number(time)},
         })
 
-        console.log("upsertedData:", upsertedData)
         upserts += 1
       } catch {
-        console.log("Error while trying to upsert", fromId, toId, time, ":")
         failures += 1
       }
     }

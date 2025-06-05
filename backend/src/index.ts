@@ -1,13 +1,13 @@
 import express from "express"
-import { PrismaClient } from "../prisma/prisma/"
+import { PrismaClient } from "../prisma/prisma"
 import cors from "cors"
 import path from "path"
 import checkpointsRouter from "./routes/checkpoints.route"
-import groupsRouter from "../controllers/groups"
-import { unknownEndpoint, errorHandler } from "../utils/middleware"
+import groupsRouter from "./routes/groups.route"
 import routesRouter from "./routes/routes.route"
 import penaltyRouter from "./routes/penalties.route"
 import eventRouter from "./routes/event.route"
+import { unknownEndpoint, errorHandler } from "./utils/middleware"
 
 const prisma = new PrismaClient()
 

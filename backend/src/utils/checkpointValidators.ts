@@ -1,6 +1,6 @@
 import { Response } from "express"
-import { prisma } from "../src/index"
-import { Type } from "../prisma/prisma/"
+import { prisma } from "../index"
+import { Type } from "../../prisma/prisma"
 
 const validateName = async (name: unknown, res: Response): Promise<boolean> => {
   if (typeof name !== "string") {

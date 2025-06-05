@@ -1,8 +1,8 @@
 import { Response } from "express"
-import { prisma } from "../../src/index"
+import { prisma } from "../index"
 import { Type } from "../../prisma/prisma/"
 import { Checkpoint } from "@/types"
-import { validateName, validateCheckpointLayout } from "../../utils/checkpointVaildators"
+import { validateName, validateCheckpointLayout } from "../utils/checkpointValidators"
 
 type newCheckpoint = Omit<Checkpoint, "id">
 

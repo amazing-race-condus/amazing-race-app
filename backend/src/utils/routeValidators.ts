@@ -1,4 +1,4 @@
-import { Distances, Checkpoint } from "../../shared/types"
+import { Distances, Checkpoint } from "@/types"
 
 export const validateMinAndMax = (min: number, max: number): string => {
   if (!(Number.isInteger(min) && Number.isInteger(max))) {

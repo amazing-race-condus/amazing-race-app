@@ -1,4 +1,4 @@
-import { prisma } from "../../src/index"
+import { prisma } from "../index"
 import {Penalty } from "@/types"
 
 type newPenalty = Omit<Penalty, "id">
