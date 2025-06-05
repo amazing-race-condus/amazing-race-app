@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState, AppDispatch } from "@/store/store"
 import { usePathname, useFocusEffect } from "expo-router"
 import { fetchGroups } from "@/reducers/groupSlice"
-import Search from "@/components/Search"
+import Search from "@/components/ui/Search"
 import GroupList from "./GroupList"
 
 const Groups = () => {

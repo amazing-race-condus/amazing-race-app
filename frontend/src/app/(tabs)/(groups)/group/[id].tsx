@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store/store"
 import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
-import { FlatList, Pressable, Text, View } from "react-native"
+import { FlatList, View } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
@@ -8,114 +8,15 @@ import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
-import Notification from "@/components/Notification"
-import GroupCheckpointItem from "@/components/GroupCheckpointItem"
+import Notification from "@/components/ui/Notification"
+import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import BottomSheet from "@gorhom/bottom-sheet"
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-import QRCode from "react-qr-code"
-import GroupInfoHeader from "@/components/GroupInfoHeader"
+import GroupInfoHeader from "@/components/groups/GroupInfoHeader"
 import { handleAlert } from "@/utils/handleAlert"
-import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
-import BottomSheetModal from "@/components/BottomSheetModal"
-
-const GroupStatusDisplay = ({ group }: { group: Group }) => {
-  return (
-    <>
-      <Text
-        style={[ styles.title, { textDecorationLine: (group?.disqualified || group?.dnf) ? "line-through" : "none" } ]}
-      >
-        {group?.name}
-      </Text>
-
-      {group?.disqualified && (
-        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
-          DISKATTU
-        </Text>
-      )}
-
-      {group?.dnf && (
-        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
-          SUORITUS KESKEYTETTY
-        </Text>
-      )}
-    </>
-  )
-}
-
-const OptionsMenuButton = ({ ref }: {ref: React.RefObject<BottomSheetMethods | null>} ) => {
-  return (
-    <Pressable
-      style={{
-        position: "absolute",
-        top: 40,
-        right: 20,
-        width: 50,
-        height: 50,
-        zIndex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-      }}
-      onPress={() => ref.current?.expand()}
-    >
-      <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
-    </Pressable>
-  )
-}
-
-const HintMenu = ({ ref }: {ref: React.RefObject<BottomSheetMethods | null>}) => {
-  return (
-    <BottomSheetModal
-      ref={ref}
-      snapPoints={["75%"]}
-    >
-      <QRCode
-        size={256}
-        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-        value={"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-        viewBox={"0 0 256 256"}
-      />
-    </BottomSheetModal>
-  )
-}
-
-const ActionMenu = (
-  { group, ref, handleDNF, handleDisqualification }:
-  {
-    group: Group,
-    ref: React.RefObject<BottomSheetMethods | null>,
-    handleDNF: () => void,
-    handleDisqualification: () => void
-  }
-) => {
-  return (
-    <BottomSheetModal
-      ref={ref}
-      snapPoints={["25%"]}
-    >
-      <Pressable onPress={handleDNF} style={{
-        backgroundColor: "#f54254",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 16,
-      }}>
-        <Text>
-          {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
-        </Text>
-      </Pressable>
-      <Pressable onPress={handleDisqualification} style={{
-        backgroundColor: "#f54254",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 16,
-      }}
-      >
-        <Text>
-          {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
-        </Text>
-      </Pressable>
-    </ BottomSheetModal>
-  )
-}
+import GroupOptionsMenuButton from "@/components/groups/GroupOptionsMenuButton"
+import GroupStatusDisplay from "@/components/groups/GroupStatusDisplay"
+import HintMenu from "@/components/groups/HintMenu"
+import GroupActionMenu from "@/components/groups/GroupActionMenu"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -192,7 +93,7 @@ const Team = () => {
       />
       <Notification />
       <GroupStatusDisplay group={ group } />
-      <OptionsMenuButton ref={ bottomSheetRef } />
+      <GroupOptionsMenuButton ref={ bottomSheetRef } />
       <FlatList
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
@@ -210,7 +111,7 @@ const Team = () => {
         }
         keyExtractor={item => item.id.toString()}
       />
-      <ActionMenu
+      <GroupActionMenu
         group={group}
         ref={bottomSheetRef}
         handleDNF={handleDNF}

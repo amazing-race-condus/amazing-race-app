@@ -7,7 +7,7 @@ import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
 import { AddCheckpoint, CheckpointType } from "@/types"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
-import BottomSheetModal from "./BottomSheetModal"
+import BottomSheetModal from "../ui/BottomSheetModal"
 
 const styles2 = StyleSheet.create({
   editableField: {

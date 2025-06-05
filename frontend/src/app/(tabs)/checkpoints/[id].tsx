@@ -3,7 +3,7 @@ import { useLocalSearchParams, Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import { RootState } from "@/store/store"
 import { useSelector } from "react-redux"
-import ArrivingGroups from "@/components/ArrivingGroups"
+import ArrivingGroups from "@/components/checkpoints/ArrivingGroups"
 import { getType } from "@/utils/checkpointUtils"
 
 const Checkpoint = () => {

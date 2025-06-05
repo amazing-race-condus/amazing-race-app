@@ -1,10 +1,10 @@
 import React, { createRef } from "react"
 import { render, fireEvent, waitFor, act, screen } from "@testing-library/react-native"
 import testStore from "@/store/testStore"
-import AddGroupForm from "@/components/AddGroupForm"
+import AddGroupForm from "@/components/forms/AddGroupForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
-import { mockStore } from "../src/utils/testUtils"
+import { mockStore } from "@/utils/testUtils"
 
 describe("<AddGroupForm />", () => {
   let store: any
