@@ -29,7 +29,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   const addNewCheckpoint = async () => {
     const newCheckpoint: AddCheckpoint = {
       name: name,
-      type: type
+      type: type,
+      hint: hintUrl,
+      easyHint: easyHintUrl
     }
     await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")

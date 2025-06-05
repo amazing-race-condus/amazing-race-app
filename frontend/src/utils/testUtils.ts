@@ -15,7 +15,8 @@ export const checkpoint: Checkpoint = {
   name: "Whatever",
   type: "INTERMEDIATE",
   eventId: 1,
-  hint: null
+  hint: null,
+  easyHint: null
 }
 
 export const mockStore = configureStore([])
