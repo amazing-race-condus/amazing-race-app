@@ -9,6 +9,7 @@ const theme = {
     listItemBackground: "#CEDDF0",
     notificationBackground: "#1C4F10",
     errorBackground: "#661D24",
+    warningBackground: "#D3E200",
     button: "#007AFF",
   },
   fontSizes: {

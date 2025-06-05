@@ -52,4 +52,16 @@ describe("Get Groups", () => {
       })
     expect(response.status).toBe(200)
   })
+
+  it("Group can be specified to have easy hints", async () => {
+    const response = await request(app)
+      .post("/api/groups")
+      .send({
+        name: "Test group",
+        members: 4,
+        easy: true
+      })
+    expect(response.status).toBe(200)
+    expect(response.body.easy).toBeTruthy()
+  })
 })

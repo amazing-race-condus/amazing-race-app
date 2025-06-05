@@ -28,7 +28,7 @@ export interface Distances {
 
 export type Notification = {
     message: string,
-    type: "error" | "success" | null
+    type: "error" | "success" | "warning" | null
 }
 
 export interface Penalty {
@@ -50,7 +50,8 @@ export interface Group {
     disqualified: boolean,
     penalty: Penalty[],
     route: Checkpoint[],
-    dnf: boolean
+    dnf: boolean,
+    easy: boolean
 }
 
 export interface Event {
@@ -66,4 +67,6 @@ export interface Event {
     penalties: Penalty[]
 }
 
-export type AddGroup = Omit<Group, "id" | "disqualified" | "penalty" | "dnf">
+
+export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
+

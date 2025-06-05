@@ -1,7 +1,7 @@
 import { render, waitFor, fireEvent, screen } from "@testing-library/react-native"
 import { Provider } from "react-redux"
 import testStore from "@/store/testStore"
-import Checkpoints from "@/components/Checkpoints"
+import Checkpoints from "@/components/checkpoints/Checkpoints"
 import * as expoRouter from "expo-router"
 import { Platform, Alert } from "react-native"
 

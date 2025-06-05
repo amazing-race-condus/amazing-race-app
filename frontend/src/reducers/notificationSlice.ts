@@ -18,7 +18,7 @@ const messageSlice = createSlice({
 })
 
 export const setNotification =
-  ( message : string, type: "error" | "success" ) =>
+  ( message : string, type: "error" | "success" | "warning" ) =>
     async (dispatch: AppDispatch) => {
       dispatch(setMessage({ message, type }))
 
