@@ -60,12 +60,11 @@ export const getGroupByNextCheckpointId = async (id: number) => {
 export const updateNextCheckpoint = async (id: number, nextCheckpointId: number) => {
   if (nextCheckpointId === -1) {
     const now = new Date()
-    const finishTime = new Date(now.getTime() + 3 * 60 * 60 * 1000)
     const arrivingGroup = await prisma .group.update({
       where: { id: id},
       data: {
         nextCheckpointId: null,
-        finishTime: finishTime
+        finishTime: now
       }
     })
     return arrivingGroup
@@ -76,7 +75,6 @@ export const updateNextCheckpoint = async (id: number, nextCheckpointId: number)
         nextCheckpointId: nextCheckpointId
       }
     })
-    console.log("Tässä", arrivingGroup.finishTime)
     return arrivingGroup
   }
 }

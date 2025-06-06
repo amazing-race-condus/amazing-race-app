@@ -28,8 +28,6 @@ const Team = () => {
     state.groups.find(g => g.id === Number(id))
   )!
 
-  console.log(group.finishTime)
-
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
@@ -92,9 +90,10 @@ const Team = () => {
 
   const GroupFinishView = () => {
     if (!hasFinished) return null
+    const time = new Date(group.finishTime!)
     return (
       <View style={styles.groupFinishView}>
-          <Text>{group?.finishTime}</Text>
+          <Text>Ryhmä on tullut maaliin: {time.getHours()}.{time.getMinutes()}</Text>
       </View>
     )
   }

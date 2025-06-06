@@ -36,7 +36,6 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
   const body = req.body
 
   const arrivingGroups = await updateNextCheckpoint(id, body.nextCheckpointId)
-  console.log(arrivingGroups.finishTime)
 
   res.json(arrivingGroups)
 })
