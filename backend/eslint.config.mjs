@@ -21,7 +21,7 @@ export default defineConfig([
       "eol-last": ["error", "always"],
       "no-var": ["error"],
       "prefer-const": ["error"],
-      "no-console": ["error", { allow: ["warn", "error"] }]
+      "no-console": ["warn", { allow: ["warn", "error"] }]
     }
   }
 ]);

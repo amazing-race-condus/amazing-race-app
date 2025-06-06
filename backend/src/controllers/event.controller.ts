@@ -47,8 +47,6 @@ export const endEvent = async (eventId: number) => {
     }
   })
 
-  console.log(start)
-
   if (start?.startTime === null) {
     return null
   }
