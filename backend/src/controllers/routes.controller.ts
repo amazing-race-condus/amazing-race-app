@@ -1,7 +1,13 @@
 import { prisma } from "../index"
 import { getValidRoutes } from "../services/routes"
 import { validateMinAndMax, validateCheckpointDistances } from "../utils/routeValidators"
-import { Distances, Route } from "@/types"
+import { Distances, Route, RouteStep } from "@/types"
+
+interface Routes {
+  id: number,
+  routeTime: number,
+  routeSteps: RouteStep[]
+}
 
 export const getLimits = async (eventId: number) => {
   const event = await prisma.event.findUnique(
@@ -126,10 +132,25 @@ const updateRoutes = async (routes: Route[]) => {
   await prisma.$transaction(checkpointOperations)
 }
 
-const assignRoutesToGroups = async () => {
-  const routes = await prisma.route.findMany({
+// Sorts routes in order of distance to mean of min and max route time.
+const sortRoutes = (routes: Routes[], mean: number) => {
+  const compare = (a: Routes, b: Routes) => {
+    if (Math.abs(a.routeTime - mean) < Math.abs(b.routeTime - mean)) {
+      return -1
+    } else if (Math.abs(a.routeTime - mean) > Math.abs(b.routeTime - mean)) {
+      return 1
+    }
+    return 0
+  }
+  const sortedRoutes = routes.toSorted(compare)
+  return sortedRoutes
+}
+
+const assignRoutesToGroups = async (mean: number) => {
+  const unsortedRoutes = await prisma.route.findMany({
     select: {
       id: true,
+      routeTime: true,
       routeSteps: {
         orderBy: {
           checkpointOrder: "asc"
@@ -137,11 +158,13 @@ const assignRoutesToGroups = async () => {
       }
     }
   })
+  const routes = sortRoutes(unsortedRoutes, mean)
   const groups = await prisma.group.findMany({
     select: {
       id: true
     }
   })
+
   const routeIds = routes.map(route => route.id)
   const groupIds = groups.map(group => group.id)
 
@@ -199,7 +222,7 @@ export const createRoutes = async (eventId: number) => {
 
     await resetRoutes()
     await updateRoutes(routes)
-    const numberOfGroups = await assignRoutesToGroups()
+    const numberOfGroups = await assignRoutesToGroups((max!+min!)/2)
 
     response.status = "success"
     response.values.routeAmount = routes.length
