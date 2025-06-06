@@ -26,6 +26,7 @@ const ListCheckpointPenalties = (
                 Vihjepuhelin ({usedHints.length}x): {usedHints.length * usedHints[0]?.time}min
           </Text>
           <Pressable
+            testID="deleteHintButton"
             style={styles.deleteButton}
             onPress={() => dispatch(removePenaltyReducer(groupId, usedHints[0].id))}
           >

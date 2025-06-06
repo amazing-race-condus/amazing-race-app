@@ -1,5 +1,4 @@
 import { Response } from "express"
-import { prisma } from "../index"
 
 const validateName = async (name: unknown, res: Response): Promise<boolean> => {
   if (typeof name !== "string") {
@@ -15,25 +14,12 @@ const validateName = async (name: unknown, res: Response): Promise<boolean> => {
     res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
     return false
   }
-  const existingName = await prisma.group.findFirst({
-    where: {
-      name: {
-        equals: name.trim(),
-        mode: "insensitive"
-      }
-    }
-  })
-  if (existingName) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
-    return false
-  }
-
   return true
 }
 
 const validateMembers = (members: unknown, res: Response) : boolean => {
   if (!Number(members)) {
-    res.status(400).json({ error: "Syötä jäsenten määrä numeromuodossa" });
+    res.status(400).json({ error: "Syötä jäsenten määrä numeromuodossa" })
     return false
   }
   const amount = Number(members)
