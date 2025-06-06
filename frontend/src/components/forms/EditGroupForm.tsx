@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
@@ -12,12 +12,18 @@ import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 
-const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomSheetRef: React.RefObject<BottomSheet | null>, name: string, members: string, id: number, level: boolean }) => {
+const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group: Group }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef(null)
-  const [groupname, setGroupname] = useState<string>(name)
-  const [groupMembers, setGroupMembers] = useState<string>(members)
-  const [easy, setEasy] = useState<boolean>(level)
+  const [groupname, setGroupname] = useState<string>(group.name)
+  const [groupMembers, setGroupMembers] = useState<number>(group.members)
+  const [easy, setEasy] = useState<boolean>(group.easy)
+
+  useEffect(() => {
+    setGroupname(group.name)
+    setGroupMembers(group.members)
+    setEasy(group.easy)
+  }, [group])
 
   const handleEditGroup = async () => {
     const modifiedGroup: AddGroup = {
@@ -26,7 +32,7 @@ const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomShe
       easy: easy
     }
     try {
-      const updatedGroup: Group = await editGroup(id, modifiedGroup)
+      const updatedGroup: Group = await editGroup(group.id, modifiedGroup)
       dispatch(updateGroup(updatedGroup))
       dispatch(setNotification("Ryhmän muokkaus onnistui", "success"))
     } catch (error) {
@@ -62,8 +68,8 @@ const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomShe
       />
       <BottomSheetTextInput
         ref={nextRef}
-        onChangeText={text => setGroupMembers(text)}
-        value={groupMembers}
+        onChangeText={text => setGroupMembers(Number(text))}
+        value={groupMembers.toString()}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
         style={{
@@ -76,7 +82,7 @@ const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomShe
         returnKeyType="done"
         onSubmitEditing={handleEditGroup}
       />
-      <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
+      <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy === true ? "true" : "false"}>
         <View style={styles.radiobuttonGroup}>
           <View style={styles.radiobuttonItem}>
             <RadioButton value="true" />

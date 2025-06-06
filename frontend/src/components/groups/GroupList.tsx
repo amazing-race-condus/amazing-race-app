@@ -2,7 +2,7 @@ import { FlatList } from "react-native-gesture-handler"
 import GroupItem from "./GroupItem"
 import type { Group } from "@/types"
 
-const GroupList = ({ groups }: { groups: Group[] }) => {
+const GroupList = ({ groups, onEditGroup }: { groups: Group[], onEditGroup?: (group: Group) => void }) => {
   return (
     <FlatList
       data={groups}
@@ -10,6 +10,7 @@ const GroupList = ({ groups }: { groups: Group[] }) => {
       renderItem={({ item }) => (
         <GroupItem
           group={item}
+          onEditGroup={onEditGroup}
         />
       )}
     />

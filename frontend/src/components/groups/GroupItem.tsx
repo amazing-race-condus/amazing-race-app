@@ -8,7 +8,7 @@ import { removeGroupReducer } from "@/reducers/groupSlice"
 import { handleAlert } from "@/utils/handleAlert"
 import { Group } from "@/types"
 
-const GroupItem = ({ group }: { group: Group }) => {
+const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group: Group) => void }) => {
   const dispatch: AppDispatch = useDispatch()
   const pathname = usePathname()
 
@@ -30,7 +30,7 @@ const GroupItem = ({ group }: { group: Group }) => {
             <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveGroup(Number(group.id))}>
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => console.log("muokataan")}>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => onEditGroup?.(group)}>
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>
