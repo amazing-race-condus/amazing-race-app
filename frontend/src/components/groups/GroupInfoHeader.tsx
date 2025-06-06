@@ -29,10 +29,10 @@ const GroupInfoHeader = (
         {group.easy
           ? <><Feather name="check" size={20} color="green" />
             <Text style={styles.statLabel}>Helpotettu</Text>
-            <Text style={styles.statLabel}>Päällä</Text></>
+            <Text style={styles.statValue}>Päällä</Text></>
           : <><Feather name="x" size={20} color="red" />
             <Text style={styles.statLabel}>Helpotettu</Text>
-            <Text style={styles.statLabel}>Pois</Text></>}
+            <Text style={styles.statValue}>Pois</Text></>}
       </View>
     </View>
   )

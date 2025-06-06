@@ -117,7 +117,7 @@ const Team = () => {
         handleDNF={handleDNF}
         handleDisqualification={handleDisqualification}
       />
-      <HintMenu ref={hintBottomSheetRef} />
+      <HintMenu ref={hintBottomSheetRef} nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
     </View>
   )
 }

@@ -1,6 +1,5 @@
 import { Response } from "express"
 
-
 const validateName = async (name: unknown, res: Response): Promise<boolean> => {
   if (typeof name !== "string") {
     res.status(400).json({ error: "Nimen tulee olla merkkijono" });

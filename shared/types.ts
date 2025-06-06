@@ -10,7 +10,7 @@ export type Checkpoint = {
     easyHint: string | null;
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId">
+export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId" | "hint" | "easyHint">
 
 export interface RouteLimit {
     id: number,
@@ -21,6 +21,13 @@ export interface RouteLimit {
 export interface Route {
   route: number[],
   length: number
+}
+
+export interface RouteStep {
+  id: number,
+  routeId: number,
+  checkpointId: number,
+  checkpointOrder: number
 }
 
 export interface Distances {
@@ -45,7 +52,6 @@ export interface Group {
     name: string,
     members: number,
     eventId: number | null,
-    startTime: number | null,
     finishTime: number | null,
     nextCheckpointId: number | null,
     disqualified: boolean,
@@ -60,8 +66,8 @@ export interface Event {
     name: string,
     startTime: Date | null,
     endTime: Date | null,
-    minRouteTime: number,
-    maxRouteTime: number,
+    minRouteTime: number | null,
+    maxRouteTime: number | null,
     group: Group[],
     checkpoints: Checkpoint[],
     routeLimits: RouteLimit[],

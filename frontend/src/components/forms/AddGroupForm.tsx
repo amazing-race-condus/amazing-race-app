@@ -21,8 +21,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
-        easy: easy,
-        startTime: null
+        easy: easy
       }
 
       dispatch(addGroupReducer(newGroup))
@@ -41,6 +40,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         onChangeText={setGroupname}
         value={groupname}
         placeholder="Syötä ryhmän nimi"
+        placeholderTextColor={"grey"}
         style={{
           borderWidth: 1,
           borderColor: "silver",
@@ -57,6 +57,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         onChangeText={text => setGroupMembers(Number(text))}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
+        placeholderTextColor={"grey"}
         style={{
           borderWidth: 1,
           borderColor: "silver",

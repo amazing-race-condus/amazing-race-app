@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { AppDispatch, RootState } from "@/store/store"
+import type { AppDispatch } from "@/store/store"
 import { startGame, endGame , getEvent } from "@/services/eventService"
 import { setNotification } from "./notificationSlice"
 import type { Event } from "@/types"
@@ -9,10 +9,12 @@ const initialState: Event = {
   startTime: null,
   endTime: null,
   name: "",
-  groups: [],
+  group: [],
   checkpoints: [],
   routeLimits: [],
-  distances: {}
+  minRouteTime: null,
+  maxRouteTime: null,
+  penalties: []
 }
 
 const eventSlice = createSlice({
@@ -27,9 +29,7 @@ const eventSlice = createSlice({
 
 export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
-    console.log(id)
     const event = await getEvent(1)
-    console.log(event)
     dispatch(setEvents(event))
   } catch (error) {
     console.error("Failed to start the game:", error)
@@ -40,7 +40,6 @@ export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => 
 export const setStartReducer = (id : number) => async (dispatch: AppDispatch) => {
   try {
     const updatedEvent = await startGame(id)
-    console.log("Updated Event:", updatedEvent)
     dispatch(setEvents(updatedEvent))
     dispatch(setNotification("Peli aloitettu", "success"))
   } catch (error) {
@@ -52,7 +51,6 @@ export const setStartReducer = (id : number) => async (dispatch: AppDispatch) =>
 export const setEndReducer = (id : number) => async (dispatch: AppDispatch) => {
   try {
     const updatedEvent = await endGame(id)
-    console.log("Updated Event:", updatedEvent)
     dispatch(setEvents(updatedEvent))
     dispatch(setNotification("Peli päätetty", "success"))
   } catch (error) {

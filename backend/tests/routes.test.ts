@@ -1,4 +1,4 @@
-import { routeDistance, verifyRoute, getValidRoutes } from "../src/routes"
+import { routeDistance, verifyRoute, getValidRoutes } from "../src/services/routes"
 import { Checkpoint, CheckpointType } from "@/types"
 
 const checkpoints: Checkpoint[] = [ {

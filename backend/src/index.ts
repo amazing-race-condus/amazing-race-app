@@ -1,13 +1,13 @@
 import express from "express"
-import { PrismaClient } from "../prisma/prisma/"
+import { PrismaClient } from "../prisma/prisma"
 import cors from "cors"
 import path from "path"
-import checkpointsRouter from "../controllers/checkpoints"
-import groupsRouter from "../controllers/groups"
-import { unknownEndpoint, errorHandler } from "../utils/middleware"
-import settingsRouter from "../controllers/settings"
-import penaltyRouter from "../controllers/penalties"
-import eventRouter from "../controllers/event"
+import checkpointsRouter from "./routes/checkpoints.route"
+import groupsRouter from "./routes/groups.route"
+import routesRouter from "./routes/routes.route"
+import penaltyRouter from "./routes/penalties.route"
+import eventRouter from "./routes/event.route"
+import { unknownEndpoint, errorHandler } from "./utils/middleware"
 
 const prisma = new PrismaClient()
 
@@ -20,7 +20,7 @@ const port = 3000
 app.use("/api/checkpoints", checkpointsRouter)
 app.use("/api/groups", groupsRouter)
 app.use("/api/penalty", penaltyRouter)
-app.use("/api/settings", settingsRouter)
+app.use("/api/settings", routesRouter)
 app.use("/api/event", eventRouter)
 
 app.all("{*splat}", (req, res) => {

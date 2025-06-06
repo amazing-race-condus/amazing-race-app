@@ -23,10 +23,8 @@ const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomShe
     const modifiedGroup: AddGroup = {
       name: groupname,
       members: Number(groupMembers),
-      easy: easy,
-      startTime: null
+      easy: easy
     }
-    console.log(id, modifiedGroup)
     try {
       const updatedGroup: Group = await editGroup(id, modifiedGroup)
       dispatch(updateGroup(updatedGroup))

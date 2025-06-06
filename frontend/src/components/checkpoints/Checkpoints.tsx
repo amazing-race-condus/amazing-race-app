@@ -1,4 +1,4 @@
-import { View, Text } from "react-native"
+import { View, Text, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
@@ -19,22 +19,21 @@ const Checkpoints = () => {
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 
-  const ItemSeparator = () => <View style={styles.separator} />
-
   return (
-    <View style={styles.content}>
+    <View style={[styles.content, { flex: 1 }]}>
       {pathname.startsWith("/settings") && (
         <Text style={styles.header}>Hallinnoi rasteja:</Text>
       )}
       {pathname.startsWith("/checkpoints") && (
         <Text style={styles.title}>Rastit:</Text>
       )}
-      {sortedCheckpoints.map((item, index) => (
-        <View key={item.id}>
-          <CheckpointItem item = { item } />
-          {index < sortedCheckpoints.length - 1 && <ItemSeparator />}
-        </View>
-      ))}
+      <FlatList
+        data={sortedCheckpoints}
+        keyExtractor={(item) => item.id?.toString()}
+        renderItem={({ item }) => (
+          <CheckpointItem item ={item} />
+        )}
+      />
     </View>
   )
 }
