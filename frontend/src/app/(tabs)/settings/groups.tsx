@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
@@ -18,7 +18,9 @@ const GroupSettings = () => {
   const handleEdit = (group: Group) => {
     setSelectedGroup(group)
     setMode("edit")
-    bottomSheetRef.current?.expand()
+    setTimeout(() => {
+      bottomSheetRef.current?.expand()
+    }, 3)
   }
 
   const handleAdd = () => {
