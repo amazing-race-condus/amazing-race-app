@@ -19,8 +19,6 @@ const Checkpoints = () => {
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 
-  console.log(sortedCheckpoints)
-
   return (
     <View style={[styles.content, { flex: 1 }]}>
       {pathname.startsWith("/settings") && (
