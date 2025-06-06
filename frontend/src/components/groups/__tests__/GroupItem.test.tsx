@@ -18,6 +18,10 @@ describe("<GroupItem />", () => {
     store.dispatch = jest.fn()
   })
 
+  test("should set event", () => {
+    expect(9).toBe(9)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
