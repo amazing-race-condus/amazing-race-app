@@ -26,10 +26,15 @@ const GroupItem = ({ group }: { group: Group }) => {
       <View style={styles.item}>
         <View style={{ flex: 1 }}>
           <Text style={styles.checkpointName}>{group.name}</Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
+            <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveGroup(Number(group.id))}>
+              <Text style={styles.buttonText}>Poista</Text>
+            </Pressable>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => console.log("muokataan")}>
+              <Text style={styles.buttonText}>Muokkaa</Text>
+            </Pressable>
+          </View>
         </View>
-        <Pressable style={styles.smallButton} onPress={() => handleRemoveGroup(group.id)}>
-          <Text style={styles.buttonText}>Poista</Text>
-        </Pressable>
       </View>
     )
   }

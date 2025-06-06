@@ -78,6 +78,19 @@ export const createGroup = async (name: string, members: number, easy: boolean, 
     return
   }
 
+  const existingName = await prisma.group.findFirst({
+    where: {
+      name: {
+        equals: name.trim(),
+        mode: "insensitive"
+      }
+    }
+  })
+  if (existingName) {
+    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+    return
+  }
+
   const validMembers = validateMembers(members, res)
   if (!validMembers) {
     return
@@ -145,6 +158,19 @@ export const modifyGroup = async (groupId: number, name: string, members: number
 
   const validName = await validateName(name, res)
   if (!validName) {
+    return
+  }
+
+  const existingName = await prisma.group.findFirst({
+    where: {
+      name: {
+        equals: name.trim(),
+        mode: "insensitive"
+      }
+    }
+  })
+  if (existingName && existingName.id !== groupId) {
+    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
     return
   }
 
