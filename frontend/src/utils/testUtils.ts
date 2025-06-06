@@ -10,6 +10,49 @@ export const checkpoint: Checkpoint = {
   easyHint: null
 }
 
+export const listCheckpoints: Checkpoint[] = [
+  {
+    id: 436780235746,
+    name: "Oodi",
+    type: "INTERMEDIATE",
+    eventId: 1,
+    hint: null,
+    easyHint: null
+  },
+  {
+    id: 2937418,
+    name: "Kumpula",
+    type: "INTERMEDIATE",
+    eventId: 1,
+    hint: null,
+    easyHint: null
+  },
+  {
+    id: 123987123,
+    name: "Kalasatama",
+    type: "FINISH",
+    eventId: 1,
+    hint: null,
+    easyHint: null
+  },
+  {
+    id: 123987123,
+    name: "Saharan aavikko",
+    type: "START",
+    eventId: 1,
+    hint: null,
+    easyHint: null
+  },
+  {
+    id: 123987123,
+    name: "Mongolian erämää",
+    type: "INTERMEDIATE",
+    eventId: 1,
+    hint: null,
+    easyHint: null
+  }
+]
+
 export const group: Group = {
   name: "Testers",
   id: 1010353225246231,
