@@ -1,4 +1,4 @@
-import { routeDistance, verifyRoute, getValidRoutes } from "../src/routes"
+import { routeDistance, verifyRoute, getValidRoutes } from "../src/services/routes"
 import { Checkpoint, CheckpointType } from "@/types"
 
 const checkpoints: Checkpoint[] = [ {
@@ -6,56 +6,64 @@ const checkpoints: Checkpoint[] = [ {
   eventId: null,
   hint: null,
   name: "Oodi",
-  type: "FINISH" as CheckpointType
+  type: "FINISH" as CheckpointType,
+  easyHint: null
 },
 {
   id: 55,
   eventId: null,
   hint: null,
   name: "Tripla",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 22,
   eventId: null,
   hint: null,
   name: "Kumpulan kampus",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 11,
   eventId: null,
   hint: null,
   name: "Rautatieasema",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 66,
   eventId: null,
   hint: null,
   name: "Tuomiokirkko12",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 33,
   eventId: null,
   hint: null,
   name: "Esplanadi",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 44,
   eventId: null,
   hint: null,
   name: "Tuomiokirkko",
-  type: "INTERMEDIATE" as CheckpointType
+  type: "INTERMEDIATE" as CheckpointType,
+  easyHint: null
 },
 {
   id: 88,
   eventId: null,
   hint: null,
   name: "Tuomiokirkk1o",
-  type: "START" as CheckpointType
+  type: "START" as CheckpointType,
+  easyHint: null
 }
 ]
 const distances = {
@@ -75,7 +83,7 @@ const length = 4
 describe("Routes algorithm", () => {
   test("counts a route distance correctly", () => {
     const returnedDistance = routeDistance(route, distances)
-    expect(returnedDistance).toEqual(expectedDistance);
+    expect(returnedDistance).toEqual(expectedDistance)
   })
 
   test("verifies a route distance correctly", () => {
@@ -121,56 +129,64 @@ describe("Routes algorithm", () => {
       eventId: null,
       hint: null,
       name: "Oodi",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 55,
       eventId: null,
       hint: null,
       name: "Tripla",
-      type: "FINISH" as CheckpointType
+      type: "FINISH" as CheckpointType,
+      easyHint: null
     },
     {
       id: 22,
       eventId: null,
       hint: null,
       name: "Kumpulan kampus",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 11,
       eventId: null,
       hint: null,
       name: "Rautatieasema",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 66,
       eventId: null,
       hint: null,
       name: "Tuomiokirkko12",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 33,
       eventId: null,
       hint: null,
       name: "Esplanadi",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 44,
       eventId: null,
       hint: null,
       name: "Tuomiokirkko",
-      type: "INTERMEDIATE" as CheckpointType
+      type: "INTERMEDIATE" as CheckpointType,
+      easyHint: null
     },
     {
       id: 88,
       eventId: null,
       hint: null,
       name: "Tuomiokirkk1o",
-      type: "START" as CheckpointType
+      type: "START" as CheckpointType,
+      easyHint: null
     }
     ]
     const distances = {

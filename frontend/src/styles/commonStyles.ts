@@ -76,6 +76,35 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  button2: {
+    margin: 2,
+    height: 30,
+    flex: 1,
+    backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  bigButton:{
+    height: 50,
+    margin: 10,
+    marginBottom: 20,
+    width: Math.min(screenWidth * 0.8, 355),
+    backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
   buttonText: {
     color: theme.colors.textButton,
     fontSize: theme.fontSizes.button,
@@ -124,6 +153,9 @@ export const styles = StyleSheet.create({
   breadText: {
     color: theme.colors.textBread,
   },
+  warningText: {
+    color: "black"
+  },
   formText: {
     color: theme.colors.background,
     fontWeight: "bold",
@@ -155,6 +187,17 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     padding: 10,
     marginBottom: 10
+  },
+  warning: {
+    backgroundColor: theme.colors.warningBackground,
+    borderStyle: "solid",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "black",
+    fontSize: 20,
+    padding: 10,
+    marginBottom: 10,
+    color: "black"
   },
   smallButton: {
     height: 30,
@@ -205,4 +248,13 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  groupFinishView: {
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: theme.colors.listItemBackground,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20
+  }
 })

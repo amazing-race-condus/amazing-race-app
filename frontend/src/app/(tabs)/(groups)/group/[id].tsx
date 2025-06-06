@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store/store"
 import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
-import { Alert, FlatList, Platform, Pressable, Text, View } from "react-native"
+import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
@@ -8,12 +8,15 @@ import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
-import Notification from "@/components/Notification"
-import GroupCheckpointItem from "@/components/GroupCheckpointItem"
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet"
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
-import QRCode from "react-qr-code"
-import GroupInfoHeader from "@/components/GroupInfoHeader"
+import Notification from "@/components/ui/Notification"
+import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
+import BottomSheet from "@gorhom/bottom-sheet"
+import GroupInfoHeader from "@/components/groups/GroupInfoHeader"
+import { handleAlert } from "@/utils/handleAlert"
+import GroupOptionsMenuButton from "@/components/groups/GroupOptionsMenuButton"
+import GroupStatusDisplay from "@/components/groups/GroupStatusDisplay"
+import HintMenu from "@/components/groups/HintMenu"
+import GroupActionMenu from "@/components/groups/GroupActionMenu"
 
 const Team = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -27,9 +30,9 @@ const Team = () => {
 
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
+  const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
 
   const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
-
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
@@ -41,93 +44,59 @@ const Team = () => {
   )
 
   const completeCheckpoint = (id: number) => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat merkitä rastin suoritetuksi?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Suorita",
+      title: "Vahvista suoritus",
+      message: "Oletko varma että haluat merkitä rastin suoritetuksi?",
+      onConfirm: () => {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-        setNextCheckpointId(checkpoints[currentCheckpointIndex + 1]?.id || 0)
-        dispatch(giveNextCheckpointReducer(group.id, nextCheckpointId))
+        const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+        setNextCheckpointId(nextId)
+        dispatch(giveNextCheckpointReducer(group.id, nextId))
+        if (nextId === -1) {
+          setHasFinished(true)
+        }
       }
-    } else {
-      Alert.alert(
-        "Vahvista suoritus",
-        "Oletko varma että haluat merkitä rastin suoritetuksi?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Suorita",
-            onPress: () => {
-              const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-              const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
-              setNextCheckpointId(nextId)
-              dispatch(giveNextCheckpointReducer(group.id, nextId))
-            },
-          }
-        ]
-      )
-    }
+    })
   }
 
   const handleDNF = () => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat keskeyttää ryhmän suorituksen?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Poista",
+      title: "Vahvista poisto",
+      message: "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
+      onConfirm: () => {
         dispatch(dnfGroupReducer(Number(id)))
         bottomSheetRef.current?.close()
       }
-    } else {
-      Alert.alert(
-        "Vahvista poisto",
-        "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Poista",
-            style: "destructive",
-            onPress: () => {
-              dispatch(dnfGroupReducer(Number(id)))
-              bottomSheetRef.current?.close()
-            }
-          }
-        ]
-      )
-    }
+    })
   }
 
   const handleDisqualification = async () => {
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Oletko varma että haluat diskata tämän ryhmän?")
-      if (confirmed) {
+    handleAlert({
+      confirmText: "Diskaa",
+      title: "Vahvista diskaus",
+      message: "Oletko varma että haluat diskata tämän ryhmän?",
+      onConfirm: async () => {
         const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
         const disqualified = disqualifiedGroup.disqualified
         dispatch(updateGroup(disqualifiedGroup))
         dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
         bottomSheetRef.current?.close()
-
       }
-    } else {
-      Alert.alert(
-        "Vahvista diskaus",
-        "Oletko varma että haluat diskata tämän ryhmän?",
-        [
-          { text: "Peru", style: "cancel" },
-          {
-            text: "Diskaa",
-            style: "destructive",
-            onPress: async () => {
-              const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
-              const disqualified = disqualifiedGroup.disqualified
-              dispatch(updateGroup(disqualifiedGroup))
-              dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
-              bottomSheetRef.current?.close()
-            }
-          }
-        ]
-      )
-    }
+    })
   }
-
   const ItemSeparator = () => <View style={styles.separator} />
+
+  const GroupFinishView = () => {
+    if (!hasFinished) return null
+    const time = new Date(group.finishTime!)
+    return (
+      <View style={styles.groupFinishView}>
+        <Text>Ryhmä on tullut maaliin: {time.getHours()}.{time.getMinutes()}</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -135,41 +104,15 @@ const Team = () => {
         options={{ headerShown: false }}
       />
       <Notification />
-      <Text style={[
-        styles.title,
-        { textDecorationLine: (group?.disqualified || group?.dnf) ? "line-through" : "none" }
-      ]}>{group?.name}</Text>
-
-      {group?.disqualified && (
-        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
-          DISKATTU
-        </Text>
-      )}
-
-      {group?.dnf && (
-        <Text style={[styles.breadText, { color: "#f54254", fontWeight: "bold" }]}>
-          SUORITUS KESKEYTETTY
-        </Text>
-      )}
-      <Pressable
-        style={{
-          position: "absolute",
-          top: 40,
-          right: 20,
-          width: 50,
-          height: 50,
-          zIndex: 1,
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-        onPress={() => bottomSheetRef.current?.expand()}
-      >
-        <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
-      </Pressable>
+      <GroupStatusDisplay group={ group } />
+      <GroupOptionsMenuButton ref={ bottomSheetRef } />
       <FlatList
         data={checkpoints}
         ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={<GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>}
+        ListHeaderComponent={
+          <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
+        }
+        ListFooterComponent={GroupFinishView}
         renderItem={({ item }) =>
           <GroupCheckpointItem
             checkpoint = { item }
@@ -181,69 +124,13 @@ const Team = () => {
         }
         keyExtractor={item => item.id.toString()}
       />
-      <BottomSheet
-        index={-1}
-        enablePanDownToClose={true}
+      <GroupActionMenu
+        group={group}
         ref={bottomSheetRef}
-        snapPoints={["25%"]}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            opacity={0.5}
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            pressBehavior="close"
-          />
-        )}
-      >
-        <BottomSheetView style={{ flex: 1, padding: 16 }}>
-          <Pressable onPress={handleDNF} style={{
-            backgroundColor: "#f54254",
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}>
-            <Text>
-              {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
-            </Text>
-          </Pressable>
-          <Pressable onPress={handleDisqualification} style={{
-            backgroundColor: "#f54254",
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}
-          >
-            <Text>
-              {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
-            </Text>
-          </Pressable>
-        </BottomSheetView>
-      </BottomSheet>
-      <BottomSheet
-        index={-1}
-        ref={hintBottomSheetRef}
-        enablePanDownToClose={true}
-        snapPoints={["75%"]}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            opacity={0.5}
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            pressBehavior="close"
-          />
-        )}
-      >
-        <BottomSheetView style={{ flex: 1, padding: 16 }}>
-          <QRCode
-            size={256}
-            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-            value={"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-            viewBox={"0 0 256 256"}
-          />
-        </BottomSheetView>
-      </BottomSheet>
+        handleDNF={handleDNF}
+        handleDisqualification={handleDisqualification}
+      />
+      <HintMenu ref={hintBottomSheetRef} nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
     </View>
   )
 }

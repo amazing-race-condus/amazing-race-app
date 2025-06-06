@@ -53,8 +53,8 @@ describe("Penalties", () => {
       .post(`/api/penalty/${groupId.toString()}`)
       .send({
         groupId: groupId,
-        penaltyType: "SKIP",
-        penaltyTime: 30,
+        type: "SKIP",
+        time: 30,
         checkpointId: checkpointId,
       })
     penaltyId = response.body.id
@@ -69,8 +69,6 @@ describe("Penalties", () => {
     const response = await request(app)
       .get(`/api/groups/${groupId.toString()}`)
 
-    console.log(groupId)
-    console.log("Tässä")
     expect(response.status).toBe(200)
     expect(response.body.penalty[0].groupId).toBe(groupId)
     expect(response.body.penalty[0].time).toBe(30)

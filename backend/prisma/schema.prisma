@@ -25,6 +25,7 @@ model Checkpoint {
   name     String  @unique
   type     Type
   hint     String?
+  easyHint     String?  @map("easy_hint")
   eventId  Int?    @map("event_id")
 
   event           Event?               @relation(fields: [eventId], references: [id])
@@ -60,6 +61,7 @@ model Group {
   routeId            Int?      @map("route_id")
   disqualified       Boolean   @default(false)
   dnf                Boolean   @default(false)
+  easy               Boolean   @default(false)
 
   event           Event?      @relation(fields: [eventId], references: [id])
   route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
