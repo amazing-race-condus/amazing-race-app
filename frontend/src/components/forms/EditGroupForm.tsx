@@ -82,7 +82,7 @@ const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObj
         returnKeyType="done"
         onSubmitEditing={handleEditGroup}
       />
-      <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy === true ? "true" : "false"}>
+      <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
         <View style={styles.radiobuttonGroup}>
           <View style={styles.radiobuttonItem}>
             <RadioButton value="true" />
