@@ -139,12 +139,13 @@ export const giveNextCheckpointReducer =
   (id: number, checkpointId: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       const updatedGroup = await giveNextCheckpoint(id, checkpointId)
+      // console.log(JSON.stringify(updateGroup, null, 2))
       const currentGroups = getState().groups
       const updated = currentGroups.map((currentGroup) => {
         if (currentGroup.id === id) {
           return {
             ...currentGroup,
-            nextCheckpointId: updatedGroup.nextCheckpointId
+          ...(updateGroup.finishTime !== undefined && { finishTime: updateGroup.finishTime })
           }
         }
         return currentGroup

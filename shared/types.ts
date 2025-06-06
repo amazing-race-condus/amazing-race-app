@@ -52,7 +52,7 @@ export interface Group {
     name: string,
     members: number,
     eventId: number | null,
-    finishTime: number | null,
+    finishTime: Date | null,
     nextCheckpointId: number | null,
     disqualified: boolean,
     penalty: Penalty[],

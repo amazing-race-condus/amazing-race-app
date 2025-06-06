@@ -85,6 +85,15 @@ export const updateDistances = async (eventId: number, distances: Distances) => 
 
 const resetRoutes = async () => {
   await prisma.route.deleteMany()
+  await prisma.penalty.deleteMany()
+  await prisma.group.updateMany({
+    data: {
+      finishTime: null,
+      nextCheckpointId: null,
+      disqualified: false,
+      dnf: false
+    }
+  })
 }
 
 const updateRoutes = async (routes: Route[]) => {

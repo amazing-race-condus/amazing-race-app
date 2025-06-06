@@ -27,6 +27,16 @@ const GroupCheckpointActions = (
     )
   }
 
+  if (checkpoint.type === "FINISH") {
+    return (
+      <ActionButton
+        style={styles.button}
+        onPress={() => completeCheckpoint(checkpoint.id)}
+        text={"Lopeta"}
+      />
+    )
+  }
+
   return (
     <View style={{ flexDirection: "column"}}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
