@@ -10,6 +10,15 @@ export const checkpoint: Checkpoint = {
   easyHint: null
 }
 
+export const startCheckpoint: Checkpoint = {
+  id: 1,
+  name: "Start checkpoint",
+  type: "START",
+  eventId: 1,
+  hint: null,
+  easyHint: null
+}
+
 export const group: Group = {
   name: "Testers",
   id: 1010353225246231,
