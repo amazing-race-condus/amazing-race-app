@@ -15,7 +15,7 @@ export const getPenalty = async (groupId: number) => {
 
 export const givePenalty = async (groupId: number, checkpointId: number, penaltyType: PenaltyType, penaltyTime: number) => {
   const response = await axios
-    .post<Penalty>(`${url}/penalty/${groupId}`, { checkpointId: checkpointId, penaltyType: penaltyType, penaltyTime: penaltyTime })
+    .post<Penalty>(`${url}/penalty/${groupId}`, { checkpointId: checkpointId, type: penaltyType, time: penaltyTime })
   return response.data
 }
 
