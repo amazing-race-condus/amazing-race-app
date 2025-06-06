@@ -1,7 +1,7 @@
 import { render, fireEvent, act, screen } from "@testing-library/react-native"
 import GroupCheckpointHeader from "../GroupCheckpointHeader"
 import { Provider } from "react-redux"
-import { checkpoint, startCheckpoint, finishCheckpoint, mockStore } from "@/utils/testUtils"
+import { checkpoint, startCheckpoint, finishCheckpoint, createMockStore } from "@/utils/testUtils"
 
 describe("<GroupCheckpointHeader />", () => {
   let store: any
@@ -9,7 +9,7 @@ describe("<GroupCheckpointHeader />", () => {
   let mockToggleExpanded: any
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore({})
     store.dispatch = jest.fn()
     mockOpenHint = jest.fn()
     mockToggleExpanded = jest.fn()
