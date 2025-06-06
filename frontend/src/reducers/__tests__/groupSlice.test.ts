@@ -105,7 +105,6 @@ describe("groupSlice reducers", () => {
     expect(store.getState().groups[0].nextCheckpointId).toBeNull()
 
     await store.dispatch<any>(giveNextCheckpointReducer(1, 2))
-    console.log(store.getState().groups[0])
     expect(store.getState().groups[0].nextCheckpointId).toBe(2)
   })
 })
