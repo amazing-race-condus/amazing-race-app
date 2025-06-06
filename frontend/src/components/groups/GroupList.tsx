@@ -1,16 +1,15 @@
 import { FlatList } from "react-native-gesture-handler"
 import GroupItem from "./GroupItem"
+import type { Group } from "@/types"
 
-const GroupList = ({ groups = [{id: 0, name: "", members: 0}] }) => {
+const GroupList = ({ groups }: { groups: Group[] }) => {
   return (
     <FlatList
       data={groups}
       keyExtractor={(item) => item.id?.toString()}
       renderItem={({ item }) => (
         <GroupItem
-          name={item.name}
-          members={item.members}
-          id={item.id?.toString()}
+          group={item}
         />
       )}
     />
