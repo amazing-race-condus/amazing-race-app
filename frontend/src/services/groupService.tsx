@@ -44,3 +44,9 @@ export const disqualifyGroup = async (id: number) => {
   const response = await request
   return response.data
 }
+
+export const editGroup = async (id: number, newObject: AddGroup) => {
+  const request = axios.put(`${url}/groups/${id}`, newObject)
+  const response = await request
+  return response.data
+}

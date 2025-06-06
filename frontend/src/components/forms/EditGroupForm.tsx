@@ -1,35 +1,45 @@
 import React, { useState, useRef } from "react"
-import { Keyboard, Platform, Pressable, Text, View } from "react-native"
-import { RadioButton } from "react-native-paper"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import { addGroupReducer } from "@/reducers/groupSlice"
-import { AddGroup } from "@/types"
-import { styles } from "@/styles/commonStyles"
+import { Group, AddGroup } from "@/types"
 import BottomSheetModal from "../ui/BottomSheetModal"
+import { editGroup } from "@/services/groupService"
+import { setNotification } from "@/reducers/notificationSlice"
+import { updateGroup } from "@/reducers/groupSlice"
+import { Platform, Pressable, Text, View } from "react-native"
+import { RadioButton } from "react-native-paper"
+import { styles } from "@/styles/commonStyles"
+import { AxiosError } from "axios"
 
-const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
+const EditGroupForm = ({ bottomSheetRef, name, members, id, level }: { bottomSheetRef: React.RefObject<BottomSheet | null>, name: string, members: string, id: number, level: boolean }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef(null)
-  const [groupname, setGroupname] = useState<string>("")
-  const [groupMembers, setGroupMembers] = useState<number>(0)
-  const [easy, setEasy] = useState<boolean>(false)
+  const [groupname, setGroupname] = useState<string>(name)
+  const [groupMembers, setGroupMembers] = useState<string>(members)
+  const [easy, setEasy] = useState<boolean>(level)
 
-  const addNewGroup = async () => {
-    if (groupname.trim()) {
-      const newGroup: AddGroup = {
-        name: groupname,
-        members: groupMembers,
-        easy: easy,
-        startTime: null
-      }
-
-      dispatch(addGroupReducer(newGroup))
-      setGroupname("")
-      Keyboard.dismiss()
-      bottomSheetRef.current?.close()
+  const handleEditGroup = async () => {
+    const modifiedGroup: AddGroup = {
+      name: groupname,
+      members: Number(groupMembers),
+      easy: easy,
+      startTime: null
     }
+    console.log(id, modifiedGroup)
+    try {
+      const updatedGroup: Group = await editGroup(id, modifiedGroup)
+      dispatch(updateGroup(updatedGroup))
+      dispatch(setNotification("Ryhmän muokkaus onnistui", "success"))
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        dispatch(setNotification(
+          error.response?.data.error ?? `Ryhmän tietoja ei voitu päivittää: ${error.message}`, "error"
+        ))
+      }
+    }
+    bottomSheetRef.current?.close()
+
   }
 
   return (
@@ -54,7 +64,8 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       />
       <BottomSheetTextInput
         ref={nextRef}
-        onChangeText={text => setGroupMembers(Number(text))}
+        onChangeText={text => setGroupMembers(text)}
+        value={groupMembers}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
         style={{
@@ -65,7 +76,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
           marginBottom: 16,
         }}
         returnKeyType="done"
-        onSubmitEditing={addNewGroup}
+        onSubmitEditing={handleEditGroup}
       />
       <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
         <View style={styles.radiobuttonGroup}>
@@ -80,7 +91,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         </View>
       </RadioButton.Group>
       <Pressable
-        onPress={addNewGroup}
+        onPress={handleEditGroup}
         style={{
           backgroundColor: "orange",
           padding: 12,
@@ -88,10 +99,10 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa ryhmää</Text>
       </Pressable>
     </BottomSheetModal>
   )
 }
 
-export default AddGroupForm
+export default EditGroupForm

@@ -98,6 +98,19 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
+  const existingName = await prisma.group.findFirst({
+    where: {
+      name: {
+        equals: body.name.trim(),
+        mode: "insensitive"
+      }
+    }
+  })
+  if (existingName) {
+    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+    return
+  }
+
   const validMembers = validateMembers(body.members, res)
   if (!validMembers) {
     return
