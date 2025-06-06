@@ -1,4 +1,4 @@
-import { reanimatedMock, group, disqualifiedGroup, dnfGroup, mockStore } from "@/utils/testUtils"
+import { reanimatedMock, group, disqualifiedGroup, dnfGroup, createMockStore } from "@/utils/testUtils"
 import { Provider } from "react-redux"
 import { render, screen, act, fireEvent } from "@testing-library/react-native"
 import GroupActionMenu from "../GroupActionMenu"
@@ -12,7 +12,7 @@ describe("<GroupActionMenu />", () => {
   let group: Group
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore()
     store.dispatch = jest.fn()
     group = { ...initialGroup }
   })

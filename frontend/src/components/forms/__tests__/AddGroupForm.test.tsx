@@ -4,13 +4,13 @@ import testStore from "@/store/testStore"
 import AddGroupForm from "@/components/forms/AddGroupForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
-import { mockStore } from "@/utils/testUtils"
+import { createMockStore } from "@/utils/testUtils"
 
 describe("<AddGroupForm />", () => {
   let store: any
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore()
     store.dispatch = jest.fn()
   })
 

@@ -1,13 +1,13 @@
 import { Provider } from "react-redux"
 import { render, screen } from "@testing-library/react-native"
 import GroupStatusDisplay from "../GroupStatusDisplay"
-import { group, disqualifiedGroup, dnfGroup, mockStore } from "@/utils/testUtils"
+import { group, disqualifiedGroup, dnfGroup, createMockStore } from "@/utils/testUtils"
 
 describe("<GroupStatusDisplay />", () => {
   let store: any
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore()
     store.dispatch = jest.fn()
   })
 

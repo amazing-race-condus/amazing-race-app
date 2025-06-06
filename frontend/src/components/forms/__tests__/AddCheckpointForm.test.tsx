@@ -4,13 +4,13 @@ import testStore from "@/store/testStore"
 import AddCheckpointForm from "@/components/forms/AddCheckpointForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
-import { mockStore } from "@/utils/testUtils"
+import { createMockStore } from "@/utils/testUtils"
 
 describe("<AddCheckpointForm />", () => {
   let store: any
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore()
     store.dispatch = jest.fn()
   })
 
