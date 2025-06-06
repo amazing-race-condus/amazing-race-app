@@ -144,7 +144,8 @@ export const giveNextCheckpointReducer =
         if (currentGroup.id === id) {
           return {
             ...currentGroup,
-            nextCheckpointId: updatedGroup.nextCheckpointId
+            nextCheckpointId: updatedGroup.nextCheckpointId,
+            finishTime: updatedGroup.finishTime
           }
         }
         return currentGroup

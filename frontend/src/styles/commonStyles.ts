@@ -248,4 +248,13 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  groupFinishView: {
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: theme.colors.listItemBackground,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20
+  }
 })

@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store/store"
 import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
-import { FlatList, View } from "react-native"
+import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
@@ -30,9 +30,9 @@ const Team = () => {
 
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
+  const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
 
   const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
-
   useFocusEffect(
     useCallback(() => {
       const checkpointsRoute = async () => {
@@ -50,9 +50,12 @@ const Team = () => {
       message: "Oletko varma että haluat merkitä rastin suoritetuksi?",
       onConfirm: () => {
         const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-        const nextId = checkpoints[currentCheckpointIndex + 1]?.id || 0
+        const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
         setNextCheckpointId(nextId)
         dispatch(giveNextCheckpointReducer(group.id, nextId))
+        if (nextId === -1) {
+          setHasFinished(true)
+        }
       }
     })
   }
@@ -83,8 +86,17 @@ const Team = () => {
       }
     })
   }
-
   const ItemSeparator = () => <View style={styles.separator} />
+
+  const GroupFinishView = () => {
+    if (!hasFinished) return null
+    const time = new Date(group.finishTime!)
+    return (
+      <View style={styles.groupFinishView}>
+        <Text>Ryhmä on tullut maaliin: {time.getHours()}.{time.getMinutes()}</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -100,6 +112,7 @@ const Team = () => {
         ListHeaderComponent={
           <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
         }
+        ListFooterComponent={GroupFinishView}
         renderItem={({ item }) =>
           <GroupCheckpointItem
             checkpoint = { item }

@@ -25,13 +25,11 @@ export const getEventById = async (eventId: number) => {
 export const startEvent = async (eventId: number) => {
   const id = eventId
   const now = new Date()
-  // To do right way to add timezone
-  const plus3h = new Date(now.getTime() + 3 * 60 * 60 * 1000)
 
   const event = await prisma.event.update({
     where: { id },
     data: {
-      startTime: plus3h,
+      startTime: now,
       endTime: null
     }
   })
