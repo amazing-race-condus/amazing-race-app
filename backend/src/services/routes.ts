@@ -1,4 +1,4 @@
-import { Permutation } from "js-combinatorics";
+import { Permutation } from "js-combinatorics"
 import { Distances, Checkpoint, Route } from "@/types"
 
 export const routeDistance = (route: number[], distances: Distances): number => {
@@ -11,13 +11,13 @@ export const routeDistance = (route: number[], distances: Distances): number => 
     const curr_cp = route[i]
     currentDistance += distances[prev_cp][curr_cp]}
 
-  return currentDistance;
+  return currentDistance
 }
 
 // Verifies that the route length is within specified bounds.
 export const verifyRoute = (route: number[], distances: Distances, min: number, max: number): boolean => {
-  const distance = routeDistance(route, distances);
-  return distance >= min && distance <= max;
+  const distance = routeDistance(route, distances)
+  return distance >= min && distance <= max
 }
 
 

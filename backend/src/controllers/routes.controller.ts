@@ -98,7 +98,7 @@ const resetRoutes = async () => {
 
 const updateRoutes = async (routes: Route[]) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const operations: any[] = [];
+  const operations: any[] = []
 
   for (const route of routes) {
     // Create the route and get a reference to its future ID
@@ -195,8 +195,8 @@ export const createRoutes = async (eventId: number) => {
   const response = {status: "error", message: "", values: {routeAmount: 0, groupAmount: 0}}
   try {
     const checkpoints = await prisma.checkpoint.findMany()
-    const hasStart = checkpoints.some(cp => cp.type === "START");
-    const hasFinish = checkpoints.some(cp => cp.type === "FINISH");
+    const hasStart = checkpoints.some(cp => cp.type === "START")
+    const hasFinish = checkpoints.some(cp => cp.type === "FINISH")
 
     const distances = await getDistances(eventId)
     const limits = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})

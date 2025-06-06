@@ -2,7 +2,7 @@ import { Response } from "express"
 
 const validateName = async (name: unknown, res: Response): Promise<boolean> => {
   if (typeof name !== "string") {
-    res.status(400).json({ error: "Nimen tulee olla merkkijono" });
+    res.status(400).json({ error: "Nimen tulee olla merkkijono" })
     return false
   }
   if  (name.length > 50 ) {
@@ -24,7 +24,7 @@ const validateMembers = (members: unknown, res: Response) : boolean => {
   }
   const amount = Number(members)
   if (!Number.isInteger(amount)){
-    res.status(400).json({ error: "Syötä kokonaisluku" });
+    res.status(400).json({ error: "Syötä kokonaisluku" })
     return false
   }
   if (Number(members) < 4) {

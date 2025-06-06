@@ -1,9 +1,7 @@
-import { reanimatedMock, hintPenalties, skipPenalties, overtimePenalties, createMockStore } from "@/utils/testUtils"
+import { hintPenalties, skipPenalties, overtimePenalties, createMockStore } from "@/utils/testUtils"
 import { Provider } from "react-redux"
 import { render, screen, act, fireEvent } from "@testing-library/react-native"
 import ListCheckpointPenalties from "../ListGroupCheckpointPenalties"
-import testStore from "@/store/testStore"
-import { Group } from "@/types"
 
 describe("<ListCheckpointPenalties />", () => {
   let store: any

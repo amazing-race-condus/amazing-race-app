@@ -83,7 +83,7 @@ const length = 4
 describe("Routes algorithm", () => {
   test("counts a route distance correctly", () => {
     const returnedDistance = routeDistance(route, distances)
-    expect(returnedDistance).toEqual(expectedDistance);
+    expect(returnedDistance).toEqual(expectedDistance)
   })
 
   test("verifies a route distance correctly", () => {

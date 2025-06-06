@@ -30,7 +30,7 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
     return
   }
 
-  let parsedType: Type | undefined = undefined;
+  let parsedType: Type | undefined = undefined
 
 
   if (!Object.values(Type).includes(data.type)) {

@@ -29,7 +29,7 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
           const newArrivingGroups = await getArrivingGroups(checkpointId)
           setArrivingGroups(newArrivingGroups)
         } catch (error) {
-          console.log("A problem with fetching arriving groups:", error)
+          console.error("A problem with fetching arriving groups:", error)
         }
       }
       fetchArrivingGroups()
