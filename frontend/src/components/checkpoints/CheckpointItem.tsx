@@ -38,7 +38,7 @@ const CheckpointItem = ({ item }: { item: Checkpoint }) => {
             <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => console.log("muokataan")}>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]}>
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>

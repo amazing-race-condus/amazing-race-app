@@ -14,12 +14,14 @@ export default defineConfig([
     rules: {
       quotes: ["error", "double"],
       indent: ["error", 2],
+      semi: ["error", "never"],
       eqeqeq: ["error"],
       "no-trailing-spaces": ["error"],
       "no-duplicate-imports": ["error"],
       "eol-last": ["error", "always"],
       "no-var": ["error"],
       "prefer-const": ["error"],
+      "no-console": ["error", { allow: ["warn", "error"] }]
     }
   }
 ]);

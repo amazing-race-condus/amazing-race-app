@@ -1,4 +1,4 @@
-import { reanimatedMock, group, disqualifiedGroup, dnfGroup, createMockStore } from "@/utils/testUtils"
+import { group, disqualifiedGroup, dnfGroup, createMockStore } from "@/utils/testUtils"
 import { Provider } from "react-redux"
 import { render, screen, act, fireEvent } from "@testing-library/react-native"
 import GroupActionMenu from "../GroupActionMenu"

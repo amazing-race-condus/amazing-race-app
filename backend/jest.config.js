@@ -5,6 +5,6 @@ const config = {
 }
 
 export default config
-export const preset = "ts-jest";
-export const testEnvironment = "node";
-export const testMatch = ["**/tests/**/*.test.ts"];
+export const preset = "ts-jest"
+export const testEnvironment = "node"
+export const testMatch = ["**/tests/**/*.test.ts"]

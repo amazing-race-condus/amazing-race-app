@@ -45,6 +45,7 @@ export default defineConfig([
       'no-var': ['error'],
       'prefer-const': ['error'],
       'react/react-in-jsx-scope': 'off',
+      "no-console": ["warn", { allow: ["warn", "error"] }]
     },
     settings: {
       react: {

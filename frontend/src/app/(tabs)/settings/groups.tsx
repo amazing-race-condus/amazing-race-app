@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useRef, useState } from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
