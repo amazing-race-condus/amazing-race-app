@@ -30,7 +30,7 @@ eventRouter.put("/start/:id", async (_, res: Response) => {
   if (event) {
     res.json(event)
   } else {
-    res.status(404).json({ error: "Ryhmää ei löydy" })
+    res.status(404).json({ error: "Tapahtumaa ei voitu aloittaa." })
   }
   return
 })
@@ -43,7 +43,7 @@ eventRouter.put("/end/:id", async (_, res: Response) => {
   if (event) {
     res.json(event)
   } else {
-    res.status(404).json({ error: "Ryhmää ei löydy" })
+    res.status(404).json({ error: "Tapahtumaa ei voitu päättää. Onko tapahtuma aloitettu?" })
   }
   return
 })
