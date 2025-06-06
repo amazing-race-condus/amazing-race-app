@@ -1,22 +1,19 @@
 import notificationReducer, { setMessage, setNotification } from "../notificationSlice"
-import { configureStore } from "@reduxjs/toolkit"
 import type { Notification } from "@/types"
+import { createMockStore } from "@/utils/testUtils"
 
 describe("notificationSlice reducers", () => {
-  // let store
+  let store : ReturnType<typeof createMockStore>
 
-  // beforeAll(() => {
-  //   jest.useFakeTimers()
-  //   store = configureStore({
-  //     reducer: {
-  //       notification: notificationReducer,
-  //     },
-  //   })
-  // })
   const initialState: Notification = {
     message: "",
     type: null
   }
+
+  beforeEach(() => {
+    store = createMockStore({})
+    jest.useFakeTimers()
+  })
 
   test("should set notification", () => {
     const note = { message: "Test notification", type: null }
@@ -25,13 +22,6 @@ describe("notificationSlice reducers", () => {
   })
 
   test("setNotification thunk works", async () => {
-    jest.useFakeTimers()
-    const store = configureStore({
-      reducer: {
-        notification: notificationReducer,
-      },
-    })
-
     await store.dispatch<any>(setNotification("Hello", "success"))
     expect(store.getState().notification).toEqual({ message: "Hello", type: "success" })
 

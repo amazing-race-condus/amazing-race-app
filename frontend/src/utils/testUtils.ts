@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import eventSlice from "@/reducers/eventSlice"
 import notificationSlice from "@/reducers/notificationSlice"
 import groupSlice from "@/reducers/groupSlice"
+import checkpointSlice from "@/reducers/checkpointsSlice"
 
 export const checkpoint: Checkpoint = {
   id: 436780235746,
@@ -79,7 +80,8 @@ export const createMockStore = (preloadedState = {}) =>
     reducer: {
       groups: groupSlice,
       event: eventSlice,
-      notification: notificationSlice
+      notification: notificationSlice,
+      checkpoints: checkpointSlice
     },
     preloadedState
   })
