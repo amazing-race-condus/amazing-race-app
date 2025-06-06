@@ -34,10 +34,15 @@ const CheckpointItem = ({ item }: { item: Checkpoint }) => {
               <Text style={styles.checkpointType}> ({translatedType})</Text>
             )}
           </Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
+            <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
+              <Text style={styles.buttonText}>Poista</Text>
+            </Pressable>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => console.log("muokataan")}>
+              <Text style={styles.buttonText}>Muokkaa</Text>
+            </Pressable>
+          </View>
         </View>
-        <Pressable style={styles.smallButton} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
-          <Text style={styles.buttonText}>Poista</Text>
-        </Pressable>
       </View>
     )
   }
