@@ -1,5 +1,9 @@
 import type { Group, Checkpoint } from "@/types"
-import configureStore from "redux-mock-store"
+// import configureStore from "redux-mock-store"
+import { configureStore } from "@reduxjs/toolkit"
+import eventSlice from "@/reducers/eventSlice"
+import notificationSlice from "@/reducers/notificationSlice"
+import groupSlice from "@/reducers/groupSlice"
 
 export const checkpoint: Checkpoint = {
   id: 436780235746,
@@ -52,7 +56,15 @@ export const dnfGroup: Group = {
   finishTime: null
 }
 
-export const mockStore = configureStore([])
+export const createMockStore = (preloadedState = {}) =>
+  configureStore({
+    reducer: {
+      groups: groupSlice,
+      event: eventSlice,
+      notification: notificationSlice
+    },
+    preloadedState
+  })
 
 export const reanimatedMock = jest.mock("react-native-reanimated", () => {
   const Reanimated = jest.requireActual("react-native-reanimated/mock")

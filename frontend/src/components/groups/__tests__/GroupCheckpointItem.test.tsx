@@ -1,7 +1,7 @@
 import { Provider } from "react-redux"
 import { render, screen, fireEvent } from "@testing-library/react-native"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
-import { group, checkpoint, mockStore } from "@/utils/testUtils"
+import { group, checkpoint, createMockStore } from "@/utils/testUtils"
 
 describe("<GroupCheckpointItem />", () => {
   let store: any
@@ -9,7 +9,7 @@ describe("<GroupCheckpointItem />", () => {
   let mockOpenHint: any
 
   beforeEach(() => {
-    store = mockStore({})
+    store = createMockStore()
     store.dispatch = jest.fn()
     mockCompleteCheckpoint = jest.fn()
     mockOpenHint = jest.fn()
