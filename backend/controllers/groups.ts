@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express"
 import { prisma } from "../src/index"
+import { validateName, validateMembers } from "../utils/groupValidators"
 
 const groupsRouter = express.Router()
 
@@ -87,36 +88,18 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
 groupsRouter.post("/", async (req: Request, res: Response) => {
   const body = req.body
 
-  if (!body.name ) {
+  if (!body.name || !body.members) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
     return
   }
 
-  if  (body.name.length > 50 ) {
-    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta."})
+  const validName = await validateName(body.name, res)
+  if (!validName) {
     return
   }
 
-  if (body.name.length < 2 ) {
-    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
-    return
-  }
-
-  if (body.members < 4) {
-    res.status(400).json({ error: "Ryhmässä tulee olla vähintään 4 jäsentä." })
-    return
-  }
-
-  if (body.members > 20) {
-    res.status(400).json({ error: "WTF: monta teitä oikein on?" })
-    return
-  }
-
-  const existingStart = await prisma.group.findFirst({
-    where: { name: body.name }
-  })
-  if (existingStart) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+  const validMembers = validateMembers(body.members, res)
+  if (!validMembers) {
     return
   }
 
@@ -184,6 +167,46 @@ groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
     res.status(404).json({ error: "Ryhmää ei löydy" })
   }
   return
+})
+
+groupsRouter.put("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+
+  const { name, members, easy } = req.body
+
+  const data: Partial<{ name: string, members: number, easy: boolean }> = {}
+
+  const groupToModify = await prisma.group.findUnique({
+    where: { id },
+  })
+
+  if (!groupToModify) {
+    res.status(404).json({ error: "Ryhmää ei löydy" })
+    return
+  }
+
+  const validName = await validateName(name, res)
+  if (!validName) {
+    return
+  }
+
+  const validMembers = validateMembers(members, res)
+  if (!validMembers) {
+    return
+  }
+
+  if (easy !== undefined) data.easy = easy
+  if (name !== undefined) data.name = name
+  if (members !== undefined) data.members = Number(members)
+
+  const updatedGroup = await prisma.group.update({
+    where: { id },
+    data
+  })
+
+
+  res.status(200).json(updatedGroup)
+
 })
 
 export default groupsRouter

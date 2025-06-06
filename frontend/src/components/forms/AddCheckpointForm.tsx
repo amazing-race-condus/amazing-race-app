@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { Keyboard, Platform, Pressable, Text, View, StyleSheet } from "react-native"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
@@ -26,6 +26,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   const [hintUrl, setHintUrl] = useState<string>("")
   const [easyHintUrl, setEasyHintUrl] = useState<string>("")
 
+  const nextRef1 = useRef(null)
+  const nextRef2 = useRef(null)
+
   const addNewCheckpoint = async () => {
     const newCheckpoint: AddCheckpoint = {
       name: name,
@@ -48,8 +51,34 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
         onChangeText={setName}
         value={name}
         placeholder="Syötä rastin nimi"
+        placeholderTextColor={"grey"}
         style = {styles2.editableField}
+        onSubmitEditing={() => nextRef1.current?.focus()}
+        submitBehavior="submit"
+        returnKeyType="next"
       />
+      {type === "START" || <View>
+        <BottomSheetTextInput
+          ref={nextRef1}
+          onChangeText={setHintUrl}
+          value={hintUrl}
+          placeholder="Syötä vihjeen URL"
+          placeholderTextColor={"grey"}
+          style={styles2.editableField}
+          returnKeyType="next"
+          submitBehavior="submit"
+          onSubmitEditing={() => nextRef2.current?.focus()}
+        />
+        <BottomSheetTextInput
+          ref={nextRef2}
+          onChangeText={setEasyHintUrl}
+          value={easyHintUrl}
+          placeholder="Syötä helpotetun vihjeen URL"
+          placeholderTextColor={"grey"}
+          style={styles2.editableField}
+          returnKeyType="done"
+        />
+      </View>}
       <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
         <View style={styles.radiobuttonGroup}>
           <View style={styles.radiobuttonItem}>
@@ -66,20 +95,6 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
           </View>
         </View>
       </RadioButton.Group>
-      {type === "START" || <View>
-        <BottomSheetTextInput
-          onChangeText={setHintUrl}
-          value={hintUrl}
-          placeholder="Syötä vihjeen URL"
-          style={styles2.editableField}
-          returnKeyType="done" />
-        <BottomSheetTextInput
-          onChangeText={setEasyHintUrl}
-          value={easyHintUrl}
-          placeholder="Syötä helpotetun vihjeen URL"
-          style={styles2.editableField}
-          returnKeyType="done" />
-      </View>}
       <Pressable
         onPress={addNewCheckpoint}
         style={{

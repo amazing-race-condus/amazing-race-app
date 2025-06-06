@@ -40,6 +40,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         onChangeText={setGroupname}
         value={groupname}
         placeholder="Syötä ryhmän nimi"
+        placeholderTextColor={"grey"}
         style={{
           borderWidth: 1,
           borderColor: "silver",
@@ -56,6 +57,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         onChangeText={text => setGroupMembers(Number(text))}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
+        placeholderTextColor={"grey"}
         style={{
           borderWidth: 1,
           borderColor: "silver",

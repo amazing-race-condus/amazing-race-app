@@ -81,10 +81,12 @@ export const initialGroups = [
   {
     name: "Testiryhmä",
     members: 4,
+    easy: false
   },
   {
     name: "Toinen ryhmä",
     members: 3,
+    easy: true
   },
 ]
 
