@@ -1,17 +1,18 @@
-import type { Group, Checkpoint } from "@/types"
+import type { Group, Checkpoint, Penalty } from "@/types"
 // import configureStore from "redux-mock-store"
 import { configureStore } from "@reduxjs/toolkit"
 import eventSlice from "@/reducers/eventSlice"
 import notificationSlice from "@/reducers/notificationSlice"
 import groupSlice from "@/reducers/groupSlice"
+import checkpointSlice from "@/reducers/checkpointsSlice"
 
 export const checkpoint: Checkpoint = {
   id: 436780235746,
   name: "Whatever",
   type: "INTERMEDIATE",
   eventId: 1,
-  hint: null,
-  easyHint: null
+  hint: "http://hint.com",
+  easyHint: "http://easyhint.com"
 }
 
 export const listCheckpoints: Checkpoint[] = [
@@ -90,7 +91,7 @@ export const group: Group = {
 }
 
 export const disqualifiedGroup: Group = {
-  name: "Disqualified",
+  name: "Diskattavat",
   id: 1,
   members: 5,
   disqualified: true,
@@ -104,7 +105,7 @@ export const disqualifiedGroup: Group = {
 }
 
 export const dnfGroup: Group = {
-  name: "Disqualified",
+  name: "Kesken",
   id: 1,
   members: 5,
   disqualified: false,
@@ -117,12 +118,50 @@ export const dnfGroup: Group = {
   finishTime: null
 }
 
+export const hintPenalties: Penalty[] = [
+  {
+    id: 1,
+    type: "HINT",
+    time: 5,
+    groupId: 1,
+    checkpointId: 1
+  },
+  {
+    id: 2,
+    type: "HINT",
+    time: 5,
+    groupId: 1,
+    checkpointId: 1
+  }
+]
+
+export const skipPenalties: Penalty[] = [
+  {
+    id: 1,
+    type: "SKIP",
+    time: 5,
+    groupId: 1,
+    checkpointId: 1
+  },
+]
+
+export const overtimePenalties: Penalty[] = [
+  {
+    id: 1,
+    type: "OVERTIME",
+    time: 5,
+    groupId: 1,
+    checkpointId: 1
+  },
+]
+
 export const createMockStore = (preloadedState = {}) =>
   configureStore({
     reducer: {
       groups: groupSlice,
       event: eventSlice,
-      notification: notificationSlice
+      notification: notificationSlice,
+      checkpoints: checkpointSlice
     },
     preloadedState
   })

@@ -2,9 +2,11 @@ import { View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { RootState } from "@/store/store"
 import { useSelector } from "react-redux"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const Notification = () => {
   const { message, type } = useSelector((state: RootState) => state.message)
+  const insets = useSafeAreaInsets()
   if (!message) {
     return null
   }
@@ -24,7 +26,11 @@ const Notification = () => {
   }
 
   return (
-    <View style={backgroundStyle}>
+    <View style={[backgroundStyle, {
+      top: insets.top + 50,
+      position: "absolute",
+      alignSelf: "center",
+      zIndex: 999, }]}>
       <Text style={textStyle}>{ message }</Text>
     </View>
   )

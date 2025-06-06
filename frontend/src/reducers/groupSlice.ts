@@ -150,7 +150,7 @@ export const giveNextCheckpointReducer =
         return currentGroup
       })
       dispatch(setGroups(updated))
-      dispatch(setNotification(`Ryhmän '${updatedGroup.name}' siirtyi seuraavalle rastille `, "success"))
+      dispatch(setNotification(`Ryhmä '${updatedGroup.name}' siirtyi seuraavalle rastille `, "success"))
     } catch (error) {
       console.error("Failed to give next checkpoint to the group:", error)
       dispatch(setNotification("Ryhmän suoritusta ei voitu jatkaa", "error"))

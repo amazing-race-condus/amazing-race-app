@@ -29,7 +29,7 @@ const eventSlice = createSlice({
 
 export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
-    const event = await getEvent(1)
+    const event = await getEvent(id)
     dispatch(setEvents(event))
   } catch (error) {
     console.error("Failed to start the game:", error)

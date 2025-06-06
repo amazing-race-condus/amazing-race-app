@@ -8,7 +8,7 @@ const GroupOptionsMenuButton = ({ ref }: {ref: React.RefObject<BottomSheetMethod
     <Pressable
       style={{
         position: "absolute",
-        top: 40,
+        top: 49,
         right: 20,
         width: 50,
         height: 50,
@@ -17,8 +17,9 @@ const GroupOptionsMenuButton = ({ ref }: {ref: React.RefObject<BottomSheetMethod
         alignItems: "center"
       }}
       onPress={() => ref.current?.expand()}
+      testID="optionButton"
     >
-      <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
+      <FontAwesome6 name="ellipsis-vertical" size={24} color="white" />
     </Pressable>
   )
 }
