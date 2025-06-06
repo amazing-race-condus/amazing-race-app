@@ -90,7 +90,7 @@ export const group: Group = {
 }
 
 export const disqualifiedGroup: Group = {
-  name: "Disqualified",
+  name: "Diskattavat",
   id: 1,
   members: 5,
   disqualified: true,
@@ -104,7 +104,7 @@ export const disqualifiedGroup: Group = {
 }
 
 export const dnfGroup: Group = {
-  name: "Disqualified",
+  name: "Kesken",
   id: 1,
   members: 5,
   disqualified: false,
