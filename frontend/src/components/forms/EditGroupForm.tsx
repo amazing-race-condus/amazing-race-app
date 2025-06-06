@@ -25,8 +25,6 @@ const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObj
     setEasy(group.easy)
   }, [group])
 
-  console.log("hep", groupname, groupMembers, group.easy, easy, typeof(group.easy), group)
-
   const handleEditGroup = async () => {
     const modifiedGroup: AddGroup = {
       name: groupname,
