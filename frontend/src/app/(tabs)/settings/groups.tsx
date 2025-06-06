@@ -20,13 +20,15 @@ const GroupSettings = () => {
     setMode("edit")
     setTimeout(() => {
       bottomSheetRef.current?.expand()
-    }, 3)
+    }, 5)
   }
 
   const handleAdd = () => {
     setSelectedGroup(null)
     setMode("add")
-    bottomSheetRef.current?.expand()
+    setTimeout(() => {
+      bottomSheetRef.current?.expand()
+    }, 5)
   }
 
   return (
