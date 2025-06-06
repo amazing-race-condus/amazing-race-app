@@ -23,6 +23,13 @@ export interface Route {
   length: number
 }
 
+export interface RouteStep {
+  id: number,
+  routeId: number,
+  checkpointId: number,
+  checkpointOrder: number
+}
+
 export interface Distances {
   [start:number]: {[end:number]: number}
 }
