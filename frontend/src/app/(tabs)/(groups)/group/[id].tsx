@@ -93,7 +93,7 @@ const Team = () => {
     const time = new Date(group.finishTime!)
     return (
       <View style={styles.groupFinishView}>
-          <Text>Ryhmä on tullut maaliin: {time.getHours()}.{time.getMinutes()}</Text>
+        <Text>Ryhmä on tullut maaliin: {time.getHours()}.{time.getMinutes()}</Text>
       </View>
     )
   }
