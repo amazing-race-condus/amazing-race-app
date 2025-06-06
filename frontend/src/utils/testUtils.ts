@@ -93,3 +93,7 @@ export const reanimatedMock = jest.mock("react-native-reanimated", () => {
   return Reanimated
 })
 
+export const mockExpoRouter = jest.mock("expo-router", () => ({
+  ...jest.requireActual("expo-router"),
+  usePathname: jest.fn()
+}))
