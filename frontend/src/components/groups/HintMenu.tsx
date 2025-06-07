@@ -8,7 +8,7 @@ import { useFocusEffect } from "expo-router"
 import { useCallback } from "react"
 import { Text, View } from "react-native"
 
-const HintMenu = ({ ref, nextCheckpointId=1, easyMode=false }: {ref: React.RefObject<BottomSheetMethods | null>, nextCheckpointId: number, easyMode: boolean}) => {
+const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<BottomSheetMethods | null>, nextCheckpointId: number, easyMode: boolean}) => {
   const dispatch: AppDispatch = useDispatch()
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
 
