@@ -82,7 +82,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       <RadioButton.Group onValueChange={value => setType(value as CheckpointType)} value={type}>
         <View style={styles.radiobuttonGroup}>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="START" />
+            <RadioButton value="START" testID="radio-start" />
             <Text>Lähtö</Text>
           </View>
           <View style={styles.radiobuttonItem}>
@@ -90,7 +90,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
             <Text>Välirasti</Text>
           </View>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="FINISH" />
+            <RadioButton value="FINISH" testID="radio-finish" />
             <Text>Maali</Text>
           </View>
         </View>
