@@ -27,7 +27,7 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
       const fetchArrivingGroups = async() => {
         try {
           const newArrivingGroups = await getArrivingGroups(checkpointId)
-          setArrivingGroups(newArrivingGroups)
+          setArrivingGroups(newArrivingGroups.sort((a, b) => a.name.localeCompare(b.name)))
         } catch (error) {
           console.error("A problem with fetching arriving groups:", error)
         }
