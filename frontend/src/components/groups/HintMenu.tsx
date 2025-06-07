@@ -6,7 +6,7 @@ import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { AppDispatch, RootState } from "@/store/store"
 import { useFocusEffect } from "expo-router"
 import { useCallback } from "react"
-import { Text, View } from "react-native"
+import { Linking, Text, View } from "react-native"
 
 const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<BottomSheetMethods | null>, nextCheckpointId: number, easyMode: boolean}) => {
   const dispatch: AppDispatch = useDispatch()
@@ -36,15 +36,16 @@ const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<Bot
     >
       <Text>{easyMode ? "Helpotettu vihje:" : "Vihje:"}</Text>
       { hintUrl ?
-        <View>
+        <View style={{ marginVertical: 5 }}>
           <QRCode
             size={256}
             style={{ height: "auto", maxWidth: "100%", width: "100%" }}
             value={hintUrl}
             viewBox={"0 0 256 256"}
           />
+          <Text onPress={ async () => await Linking.openURL(hintUrl)} style={{ textDecorationLine: "underline", marginTop: 5 }}>{hintUrl}</Text>
         </View>
-        : <Text>Vihjettä seuraavalle rastille ei ole määritelty.</Text>
+        : <Text>Vihjettä seuraavalle rastille ei ole määritetty.</Text>
       }
     </BottomSheetModal>
   )
