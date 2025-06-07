@@ -30,7 +30,7 @@ const GameView = () => {
 
   return(
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinoi Peliä:</Text>
+      <Text style={styles.header}>Hallinnoi peliä:</Text>
 
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
