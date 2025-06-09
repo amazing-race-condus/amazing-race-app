@@ -214,7 +214,7 @@ export const createRoutes = async (eventId: number) => {
       errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty."
     } else if (!hasStart || !hasFinish) {
       errorMessage = "Lähtöä tai maalia ei ole määritelty."
-    } else if (!(await validateCheckpointDistances(distances, checkpoints))) {
+    } else if (!(validateCheckpointDistances(distances, checkpoints))) {
       errorMessage = "Kaikkien rastien välille ei ole määritelty matka-aikoja."
     }
     if (errorMessage) {
