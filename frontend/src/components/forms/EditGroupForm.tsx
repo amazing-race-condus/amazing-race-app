@@ -54,6 +54,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
     <BottomSheetModal
       ref={bottomSheetRef}
       snapPoints={Platform.OS === "web" ? ["75%"] : []} // fix for mobile web
+      onClose={() => setSelectedGroup(undefined)}
     >
       <BottomSheetTextInput
         onChangeText={setGroupname}

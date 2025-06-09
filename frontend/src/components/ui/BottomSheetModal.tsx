@@ -3,11 +3,12 @@ import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import React from "react"
 
 const BottomSheetModal = (
-  { ref, snapPoints, children }:
+  { ref, snapPoints, children, onClose }:
   {
     ref: React.RefObject<BottomSheetMethods | null>
     snapPoints?: string[]
     children: React.ReactNode
+    onClose?: () => void
   }
 ) => {
   return (
@@ -17,6 +18,7 @@ const BottomSheetModal = (
       ref={ref}
       snapPoints={snapPoints}
       keyboardBlurBehavior="restore"
+      onClose={onClose}
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
