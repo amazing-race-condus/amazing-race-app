@@ -1,11 +1,6 @@
 import axios from "axios"
-import { Platform } from "react-native"
+import { url } from "../config"
 import type { Penalty, PenaltyType } from "@/types"
-
-const url =
-  Platform.OS === "web"
-    ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
-    : process.env.EXPO_PUBLIC_BACKEND_URL
 
 export const getPenalty = async (groupId: number) => {
   const response = await axios
