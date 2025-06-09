@@ -12,7 +12,7 @@ const GroupCheckpointActions = (
     checkpoint: Checkpoint
     group: Group
     usedHints: Penalty[]
-    completeCheckpoint: (id: number) => void
+    completeCheckpoint: (id: number, skip: boolean) => void
   }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -21,7 +21,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id)}
+        onPress={() => completeCheckpoint(checkpoint.id, false)}
         text={"Aloita"}
       />
     )
@@ -31,7 +31,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id)}
+        onPress={() => completeCheckpoint(checkpoint.id, false)}
         text={"Lopeta"}
       />
     )
@@ -42,12 +42,14 @@ const GroupCheckpointActions = (
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
           style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))}
+          onPress={() => {
+            completeCheckpoint(checkpoint.id, true)
+          }}
           text={"Skip"}
         />
         <ActionButton
           style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id)}
+          onPress={() => completeCheckpoint(checkpoint.id, false)}
           text={"Suorita"}
         />
       </View>
