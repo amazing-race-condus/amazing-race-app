@@ -8,12 +8,12 @@ const validateName = async (name: unknown, res: Response): Promise<boolean> => {
     return false
   }
   if  (name.length > 100 ) {
-    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta."})
+    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta." })
     return false
   }
 
   if (name.length < 2 ) {
-    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
+    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta." })
     return false
   }
 
@@ -32,6 +32,50 @@ const validateName = async (name: unknown, res: Response): Promise<boolean> => {
 
   return true
 }
+
+const validateHint = async (hint: unknown, res: Response): Promise<boolean> => {
+  if (typeof hint !== "string") {
+    res.status(400).json({ error: "Vihjeen tulee olla merkkijono." })
+    return false
+  }
+
+  if  (hint.length > 2000 ) {
+    res.status(400).json({ error: "Vihje on liian pitkä. Enimmäispituus on 2000 merkkiä." })
+    return false
+  }
+
+  if  (!(hint.startsWith("http://") || hint.startsWith("https://"))) {
+    res.status(400).json({ error: "Vihjeen tulee alkaa http:// tai https://." })
+    return false
+  }
+
+  const existingHint = await prisma.checkpoint.findFirst({
+    where: {
+      OR: [
+        {
+          hint: {
+            equals: hint.trim(),
+            mode: "insensitive"
+          }
+        },
+        {
+          easyHint: {
+            equals: hint.trim(),
+            mode: "insensitive"
+          }
+        },
+      ]
+    }
+  })
+
+  if (existingHint) {
+    res.status(400).json({ error: "Vihje on jo käytössä. Syötä uniikki vihje." })
+    return false
+  }
+
+  return true
+}
+
 
 const validateCheckpointLayout = async (type: Type, res: Response): Promise<boolean> => {
   const allCheckpoints = await prisma.checkpoint.findMany()
@@ -68,4 +112,4 @@ const validateCheckpointLayout = async (type: Type, res: Response): Promise<bool
   return true
 }
 
-export { validateName, validateCheckpointLayout }
+export { validateName, validateCheckpointLayout, validateHint }

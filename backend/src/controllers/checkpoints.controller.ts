@@ -2,7 +2,7 @@ import { Response } from "express"
 import { prisma } from "../index"
 import { Type } from "../../prisma/prisma/"
 import { Checkpoint } from "@/types"
-import { validateName, validateCheckpointLayout } from "../utils/checkpointValidators"
+import { validateName, validateHint, validateCheckpointLayout } from "../utils/checkpointValidators"
 
 type newCheckpoint = Omit<Checkpoint, "id">
 
@@ -20,8 +20,8 @@ export const getCheckpointById = async (checkpointId: number) => {
 }
 
 export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
-  if (!data.name || !data.type) {
-    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
+  if (!data.name || !data.type ) {
+    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
     return
   }
 
@@ -30,8 +30,17 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
     return
   }
 
-  let parsedType: Type | undefined = undefined
+  const validHint = await validateHint(data.hint, res)
+  if (!validHint) {
+    return
+  }
 
+  const validEasyHint = await validateHint(data.hint, res)
+  if (!validEasyHint) {
+    return
+  }
+
+  let parsedType: Type | undefined = undefined
 
   if (!Object.values(Type).includes(data.type)) {
     res.status(400).json({ error: "Virheellinen tyyppi." })
