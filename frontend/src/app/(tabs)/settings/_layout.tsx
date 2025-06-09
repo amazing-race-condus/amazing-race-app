@@ -22,6 +22,9 @@ export default function Layout() {
       <Stack.Screen
         name="game"
       />
+      <Stack.Screen
+        name="results"
+      />
     </Stack>
   )
 }

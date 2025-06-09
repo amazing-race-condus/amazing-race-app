@@ -24,6 +24,10 @@ const Settings = () => {
         text="Hallinnoi peliä"
         link="/settings/game"
       />
+      <SettingsItem
+        text="Tulokset"
+        link="/settings/results"
+      />
     </View>
   )
 }
