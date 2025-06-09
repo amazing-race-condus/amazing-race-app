@@ -43,7 +43,9 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
 
   return (
     <Link
-      href={`/(groups)/group/${group.id}`}
+      href={{
+        pathname: `/(groups)/group/${group.id}`
+      }}
       asChild
     >
       <TouchableOpacity style={styles.item}>

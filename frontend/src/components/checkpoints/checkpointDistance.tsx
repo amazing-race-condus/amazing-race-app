@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, TouchableOpacity, Pressable, Platform } from "react-native"
-import axios, { AxiosError } from "axios"
+import { View, Text, TextInput, TouchableOpacity, Pressable } from "react-native"
+import { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState , AppDispatch } from "@/store/store"
 import { Checkpoint, Distances } from "@/types"
 import { styles } from "@/styles/commonStyles"
 import { setNotification } from "@/reducers/notificationSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
+import { getDistances, setDistances } from "@/services/routeService"
 
 const CheckpointDistance = () => {
-  const url =
-        Platform.OS === "web"
-          ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
-          : process.env.EXPO_PUBLIC_BACKEND_URL
   const checkpoints: Checkpoint[] = useSelector((state: RootState) => state.checkpoints)
-
   const eventId = 1
   const [expandedIndex, setExpandedIndex] = useState<number>(-1)
   const [formValues, setFormValues] = useState<Distances>({})
@@ -25,8 +21,7 @@ const CheckpointDistance = () => {
   }, [dispatch])
 
   const getCheckpointDistances = async () => {
-    const response = await axios.get(`${url}/settings/${eventId}/distances`)
-    const distances = response.data
+    const distances = await getDistances(eventId)
     if (distances) {
       setFormValues(distances)
     }
@@ -34,7 +29,7 @@ const CheckpointDistance = () => {
 
   const setCheckpointDistances = async () => {
     try {
-      await axios.put<Distances>(`${url}/settings/update_distances`, formValues)
+      await setDistances(formValues)
       dispatch(setNotification("Rastien väliset etäisyydet päivitetty", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
