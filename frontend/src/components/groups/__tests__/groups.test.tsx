@@ -49,9 +49,10 @@ describe("<Groups />", () => {
     await waitFor(() => {
       expect(screen.getByText("Hallinnoi ryhmiä:")).toBeTruthy()
     })
+
   })
 
-  test("renders search bar and correct header in groups view", async () => {
+  test("renders search bar, filter bar and correct header in groups view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/")
 
     const store = testStore({
@@ -66,8 +67,13 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("Ryhmät:")).toBeTruthy()
+      expect(screen.getByText("Ryhmät")).toBeTruthy()
     })
+
+    const segmentedControl = screen.getByTestId("RNCSegmentedControl")
+    expect(segmentedControl.props.values).toContain("Aakkosjärjestys")
+    expect(segmentedControl.props.values).toContain("Aika")
+    expect(segmentedControl.props.values).toContain("Status")
   })
 
   test("renders group's name correctly", async () => {

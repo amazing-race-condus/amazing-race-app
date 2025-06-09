@@ -26,6 +26,8 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
 
       dispatch(addGroupReducer(newGroup))
       setGroupname("")
+      setGroupMembers(0)
+      setEasy(false)
       Keyboard.dismiss()
       bottomSheetRef.current?.close()
     }
@@ -58,6 +60,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
         placeholderTextColor={"grey"}
+        value={groupMembers === 0 ? "" : groupMembers.toString()}
         style={{
           borderWidth: 1,
           borderColor: "silver",

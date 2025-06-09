@@ -1,10 +1,11 @@
 import { givePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
-import { Checkpoint, Group, Penalty } from "@/types"
+import { Checkpoint, CompleteType, Group, Penalty } from "@/types"
 import { View, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
 import theme from "@/theme"
 import ActionButton from "../ui/ActionButton"
+import { handleAlert } from "@/utils/handleAlert"
 
 const GroupCheckpointActions = (
   { checkpoint, group, usedHints, completeCheckpoint }:
@@ -12,7 +13,7 @@ const GroupCheckpointActions = (
     checkpoint: Checkpoint
     group: Group
     usedHints: Penalty[]
-    completeCheckpoint: (id: number) => void
+    completeCheckpoint: (id: number, completeType: CompleteType) => void
   }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -21,7 +22,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Aloita"}
       />
     )
@@ -31,7 +32,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Lopeta"}
       />
     )
@@ -42,25 +43,40 @@ const GroupCheckpointActions = (
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
           style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))}
+          onPress={() => {
+            completeCheckpoint(checkpoint.id, "SKIP")
+          }}
           text={"Skip"}
         />
         <ActionButton
           style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id)}
+          onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
           text={"Suorita"}
         />
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
           style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))}
+          onPress={() => {
+            if (usedHints.length === 3) {
+              handleAlert({
+                confirmText: "Vihjepuhelin",
+                title: "Vahvista vihjepuhelinrangaistus",
+                message: "Ryhmällä on jo 3 vihjepuhelinsoittoa. Haluatko varmasti antaa neljännen rangaistuksen?",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
+                },
+              })
+            } else {
+              dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
+            }
+          }}
           count={usedHints.length}
           text={"Vihjepuhelin"}
         />
         <ActionButton
           style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))}
+          onPress={() => completeCheckpoint(checkpoint.id, "OVERTIME")}
           text={"Yliaika"}
         />
       </View>

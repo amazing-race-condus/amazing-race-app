@@ -59,7 +59,9 @@ describe("Addition of a new checkpoint", () => {
   it("succeeds with valid data", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     await request(app).post("/api/checkpoints")
@@ -76,7 +78,9 @@ describe("Addition of a new checkpoint", () => {
 
   it("fails with status code 400 and proper error message if data invalid", async () => {
     const newCheckpoint = {
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -90,7 +94,9 @@ describe("Addition of a new checkpoint", () => {
   it("fails with status code 400 and proper error message with too long or short name", async () => {
     let newCheckpoint = {
       name: "S",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -105,7 +111,9 @@ describe("Addition of a new checkpoint", () => {
 
     newCheckpoint = {
       name: "S".repeat(101),
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -127,7 +135,9 @@ describe("Addition of a new checkpoint", () => {
 
     let newCheckpoint = {
       name: "Lähtö",
-      type: "START"
+      type: "START",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -139,7 +149,9 @@ describe("Addition of a new checkpoint", () => {
 
     newCheckpoint = {
       name: "Maali",
-      type: "FINISH"
+      type: "FINISH",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -162,7 +174,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Välirasti",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -185,7 +199,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Välirasti",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -204,7 +220,9 @@ describe("Addition of a new checkpoint", () => {
   it("fails with status code 400 and proper error message if type is invalid", async () => {
     const newCheckpoint = {
       name: "Rasti",
-      type: "INVALID"
+      type: "INVALID",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -222,7 +240,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Musiikkitalo",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     await request(app).post("/api/checkpoints").send(newCheckpoint)

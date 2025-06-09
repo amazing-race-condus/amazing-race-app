@@ -10,11 +10,12 @@ const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
   { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
-  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number) => void, openHint: () => void }
+  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number, skip: boolean) => void, openHint: () => void }
 ) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const CheckpointPenalties = group?.penalty?.filter(p => p.checkpointId === checkpoint.id)
+  const isPenalties = (CheckpointPenalties.length > 0)
   const isActiveCheckpoint = checkpoint.id === nextCheckpointId
 
   const usedHints = CheckpointPenalties?.filter(p => p.type === "HINT")
@@ -33,6 +34,7 @@ const GroupCheckpointItem = (
         checkpoint={checkpoint}
         isActive={isActiveCheckpoint}
         isExpanded={isExpanded}
+        isPenalties={isPenalties}
         openHint={openHint}
         toggleExpanded={toggleExpanded}
       />
