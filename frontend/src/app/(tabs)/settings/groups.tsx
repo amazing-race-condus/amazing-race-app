@@ -11,24 +11,18 @@ import { Group } from "@/types"
 import EditGroupForm from "@/components/forms/EditGroupForm"
 
 const GroupSettings = () => {
-  const bottomSheetRef = useRef<BottomSheet>(null)
-  const [mode, setMode] = useState<"add" | "edit">("add")
+  const addBottomSheetRef = useRef<BottomSheet>(null)
+  const editBottomSheetRef = useRef<BottomSheet>(null)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
 
   const handleEdit = (group: Group) => {
     setSelectedGroup(group)
-    setMode("edit")
-    setTimeout(() => {
-      bottomSheetRef.current?.expand()
-    }, 5)
+    editBottomSheetRef.current?.expand()
   }
 
   const handleAdd = () => {
+    addBottomSheetRef.current?.expand()
     setSelectedGroup(null)
-    setMode("add")
-    setTimeout(() => {
-      bottomSheetRef.current?.expand()
-    }, 5)
   }
 
   return (
@@ -37,11 +31,11 @@ const GroupSettings = () => {
       <Notification />
       <Groups onEditGroup={handleEdit} />
       <AddNewButton onPress={handleAdd} />
-      {mode === "add" && <AddGroupForm bottomSheetRef={bottomSheetRef} />}
-      {mode === "edit" && selectedGroup && (
+      <AddGroupForm bottomSheetRef={addBottomSheetRef} />
+      {selectedGroup && (
         <EditGroupForm
           key={selectedGroup.id}
-          bottomSheetRef={bottomSheetRef}
+          bottomSheetRef={editBottomSheetRef}
           group={selectedGroup}
         />
       )}
