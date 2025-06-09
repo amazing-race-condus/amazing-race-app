@@ -1,5 +1,6 @@
 export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
 export type PenaltyType = "HINT" | "SKIP" | "OVERTIME";
+export type CompleteType = "NORMAL" | "SKIP" | "OVERTIME";
 
 export type Checkpoint = {
     type: CheckpointType;

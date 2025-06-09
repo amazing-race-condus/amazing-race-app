@@ -8,7 +8,7 @@ export default function Layout() {
       }}
     >
       <Stack.Screen
-        name="checkpointsList"
+        name="index"
       />
       <Stack.Screen
         name="[id]"

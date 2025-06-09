@@ -10,6 +10,7 @@
     pull_request:
       branches:
         - 'main'
+        - 'dev'
       paths:
         - 'frontend/**'
         - 'backend/**'

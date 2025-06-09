@@ -1,7 +1,6 @@
 import { AppDispatch } from "@/store/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { Notification } from "@/types"
-import { time } from "console"
 
 const initialState: Notification = {
   message: "",

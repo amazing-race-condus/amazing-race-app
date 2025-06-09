@@ -30,14 +30,14 @@ async function main() {
   }
 
   const checkpoints: AddCheckpoint[] = [
-    { name: "Katri Valan puisto", type: "START", eventId: 1, hint: null },
-    { name: "Johanneksenkirkko", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Kulosaaren kenttä", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Katajanokka", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Lahnalahden puisto", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Oodi", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Kisahalli", type: "INTERMEDIATE", eventId: 1, hint: null },
-    { name: "Luonnontieteellinen museo", type: "FINISH", eventId: 1, hint: null },
+    { name: "Katri Valan puisto", type: "START", hint: null, easyHint: null },
+    { name: "Johanneksenkirkko", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Kulosaaren kenttä", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Katajanokka", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Lahnalahden puisto", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Oodi", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Kisahalli", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Luonnontieteellinen museo", type: "FINISH", hint: null, easyHint: null },
   ]
 
   await prisma.checkpoint.createMany({
@@ -46,19 +46,19 @@ async function main() {
   })
 
   const groups: AddGroup[] = [
-    { name: "Pööpöilijät", members: 4 },
-    { name: "Mestaritiimi", members: 6 },
-    { name: "Kannunkulma", members: 4 },
-    { name: "Luuserit", members: 5 },
-    { name: "Nimetön", members: 4 },
-    { name: "Höhlät", members: 5 },
-    { name: "Mansikat", members: 7 },
-    { name: "Kurikan nimipäivät", members: 8 },
-    { name: "Penat", members: 4 },
-    { name: "Vaivaiset", members: 6 },
-    { name: "Fifit", members: 5 },
-    { name: "Liiallisen pituuden suuret ystävät", members: 4 },
-    { name: "Draamailijat", members: 7 }
+    { name: "Pööpöilijät", members: 4, easy: true },
+    { name: "Mestaritiimi", members: 6, easy: false },
+    { name: "Kannunkulma", members: 4, easy: true },
+    { name: "Luuserit", members: 5, easy: false },
+    { name: "Nimetön", members: 4, easy: true },
+    { name: "Höhlät", members: 5, easy: false },
+    { name: "Mansikat", members: 7, easy: true },
+    { name: "Kurikan nimipäivät", members: 8, easy: true },
+    { name: "Penat", members: 4, easy: false },
+    { name: "Vaivaiset", members: 6, easy: false },
+    { name: "Fifit", members: 5, easy: true },
+    { name: "Liiallisen pituuden suuret ystävät", members: 4, easy: true },
+    { name: "Draamailijat", members: 7, easy: false }
   ]
 
   await prisma.group.createMany({
