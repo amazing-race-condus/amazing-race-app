@@ -3,8 +3,8 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer} from "@/reducers/groupSlice"
-import React, { startTransition, useCallback, useRef, useState } from "react"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer} from "@/reducers/groupSlice"
+import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
@@ -44,21 +44,39 @@ const Team = () => {
     }, [])
   )
 
-  const completeCheckpoint = (id: number) => {
-    handleAlert({
-      confirmText: "Suorita",
-      title: "Vahvista suoritus",
-      message: "Oletko varma että haluat merkitä rastin suoritetuksi?",
-      onConfirm: () => {
-        const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-        const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-        setNextCheckpointId(nextId)
-        dispatch(giveNextCheckpointReducer(group.id, nextId))
-        if (nextId === -1) {
-          setHasFinished(true)
+  const completeCheckpoint = (id: number, skip: boolean) => {
+    if (!skip) {
+      handleAlert({
+        confirmText: "Suorita",
+        title: "Vahvista suoritus",
+        message: "Oletko varma että haluat merkitä rastin suoritetuksi?",
+        onConfirm: () => {
+          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setNextCheckpointId(nextId)
+          dispatch(giveNextCheckpointReducer(group.id, nextId))
+          if (nextId === -1) {
+            setHasFinished(true)
+          }
         }
-      }
-    })
+      })
+    } else {
+      handleAlert({
+        confirmText: "Ohita",
+        title: "Ohita rasti",
+        message: "Oletko varma että haluat ohittaa rastin? Ryhmälle tulee 30 min rangaistus.",
+        onConfirm: () => {
+          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setNextCheckpointId(nextId)
+          dispatch(giveNextCheckpointReducer(group.id, nextId))
+          if (nextId === -1) {
+            setHasFinished(true)
+          }
+          dispatch(givePenaltyReducer(group.id, id, "SKIP", 30))
+        }
+      })
+    }
   }
 
   const handleDNF = () => {

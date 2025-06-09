@@ -136,12 +136,12 @@ export const dnfGroupReducer =
   }
 
 export const giveNextCheckpointReducer =
-  (id: number, checkpointId: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (groupId: number, checkpointId: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
-      const updatedGroup = await giveNextCheckpoint(id, checkpointId)
+      const updatedGroup = await giveNextCheckpoint(groupId, checkpointId)
       const currentGroups = getState().groups
       const updated = currentGroups.map((currentGroup) => {
-        if (currentGroup.id === id) {
+        if (currentGroup.id === groupId) {
           return {
             ...currentGroup,
             nextCheckpointId: updatedGroup.nextCheckpointId,

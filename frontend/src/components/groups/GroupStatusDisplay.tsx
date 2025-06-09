@@ -6,7 +6,11 @@ const GroupStatusDisplay = ({ group }: { group: Group }) => {
   return (
     <>
       <Text
-        style={[ styles.title, { textDecorationLine: (group?.disqualified || group?.dnf) ? "line-through" : "none" } ]}
+        style={[ styles.title,
+          { textDecorationLine: (group?.disqualified || group?.dnf) ? "line-through" : "none",
+            maxWidth: "70%"
+          }
+        ]}
       >
         {group?.name}
       </Text>
