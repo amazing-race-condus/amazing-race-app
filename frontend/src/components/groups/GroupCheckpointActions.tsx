@@ -1,6 +1,6 @@
 import { givePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
-import { Checkpoint, Group, Penalty } from "@/types"
+import { Checkpoint, CompleteType, Group, Penalty } from "@/types"
 import { View, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
 import theme from "@/theme"
@@ -13,7 +13,7 @@ const GroupCheckpointActions = (
     checkpoint: Checkpoint
     group: Group
     usedHints: Penalty[]
-    completeCheckpoint: (id: number, skip: boolean) => void
+    completeCheckpoint: (id: number, completeType: CompleteType) => void
   }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -22,7 +22,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id, false)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Aloita"}
       />
     )
@@ -32,7 +32,7 @@ const GroupCheckpointActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id, false)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Lopeta"}
       />
     )
@@ -44,13 +44,13 @@ const GroupCheckpointActions = (
         <ActionButton
           style={styles.button}
           onPress={() => {
-            completeCheckpoint(checkpoint.id, true)
+            completeCheckpoint(checkpoint.id, "SKIP")
           }}
           text={"Skip"}
         />
         <ActionButton
           style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id, false)}
+          onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
           text={"Suorita"}
         />
       </View>
@@ -76,7 +76,7 @@ const GroupCheckpointActions = (
         />
         <ActionButton
           style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))}
+          onPress={() => completeCheckpoint(checkpoint.id, "OVERTIME")}
           text={"Yliaika"}
         />
       </View>
