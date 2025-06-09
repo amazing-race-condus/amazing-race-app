@@ -71,7 +71,7 @@ describe("<GroupCheckpointItem />", () => {
     const skipButton = screen.getByText("Skip")
     fireEvent.press(skipButton)
 
-    expect(store.dispatch).toHaveBeenCalledTimes(1)
+    expect(mockCompleteCheckpoint).toHaveBeenCalledTimes(1)
   })
 
   test("overtime dispatches to store when pressed", () => {
