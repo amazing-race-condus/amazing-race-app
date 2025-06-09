@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
@@ -13,17 +13,22 @@ import EditGroupForm from "@/components/forms/EditGroupForm"
 const GroupSettings = () => {
   const addBottomSheetRef = useRef<BottomSheet>(null)
   const editBottomSheetRef = useRef<BottomSheet>(null)
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+  const [selectedGroup, setSelectedGroup] = useState<Group | undefined>(undefined)
 
   const handleEdit = (group: Group) => {
     setSelectedGroup(group)
-    editBottomSheetRef.current?.expand()
   }
 
   const handleAdd = () => {
     addBottomSheetRef.current?.expand()
-    setSelectedGroup(null)
+    setSelectedGroup(undefined)
   }
+
+  useEffect(() => {
+    if (selectedGroup && editBottomSheetRef.current) {
+      editBottomSheetRef.current.expand()
+    }
+  }, [selectedGroup])
 
   return (
     <View style={styles.container}>
@@ -32,13 +37,7 @@ const GroupSettings = () => {
       <Groups onEditGroup={handleEdit} />
       <AddNewButton onPress={handleAdd} />
       <AddGroupForm bottomSheetRef={addBottomSheetRef} />
-      {selectedGroup && (
-        <EditGroupForm
-          key={selectedGroup.id}
-          bottomSheetRef={editBottomSheetRef}
-          group={selectedGroup}
-        />
-      )}
+      <EditGroupForm bottomSheetRef={editBottomSheetRef} group={selectedGroup} />
     </View>
   )
 }

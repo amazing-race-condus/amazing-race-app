@@ -15,7 +15,7 @@ export const validateMinAndMax = (min: number, max: number): string => {
   return ""
 }
 
-export const validateCheckpointDistances = async (distances: Distances, checkpoints: Checkpoint[]): Promise<boolean> => {
+export const validateCheckpointDistances = (distances: Distances, checkpoints: Checkpoint[]): boolean => {
   try {
     if (Object.keys(distances).length === 0) {
       return false
@@ -32,8 +32,7 @@ export const validateCheckpointDistances = async (distances: Distances, checkpoi
       }
     }
     return true
-  } catch (error) {
-    console.error(error)
+  } catch {
     return false
   }
 }

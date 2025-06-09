@@ -3,9 +3,9 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer} from "@/reducers/groupSlice"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
-import type { Checkpoint, Group } from "@/types"
+import type { Checkpoint, Group, CompleteType } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/ui/Notification"
@@ -52,8 +52,8 @@ const Team = () => {
     }, [])
   )
 
-  const completeCheckpoint = (id: number, skip: boolean) => {
-    if (!skip) {
+  const completeCheckpoint = (id: number, completeType: CompleteType) => {
+    if (completeType === "NORMAL") {
       handleAlert({
         confirmText: "Suorita",
         title: "Vahvista suoritus",
@@ -68,7 +68,7 @@ const Team = () => {
           }
         }
       })
-    } else {
+    } else if (completeType === "SKIP") {
       handleAlert({
         confirmText: "Ohita",
         title: "Ohita rasti",
@@ -82,6 +82,22 @@ const Team = () => {
             setHasFinished(true)
           }
           dispatch(givePenaltyReducer(group.id, id, "SKIP", 30))
+        }
+      })
+    } else {
+      handleAlert({
+        confirmText: "Yliaika",
+        title: "Suoritettu yliajalla",
+        message: "Oletko varma että haluat merkitä rastin suoritetuksi yliajalla? Ryhmälle tulee 5 min rangaistus.",
+        onConfirm: () => {
+          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setNextCheckpointId(nextId)
+          dispatch(giveNextCheckpointReducer(group.id, nextId))
+          if (nextId === -1) {
+            setHasFinished(true)
+          }
+          dispatch(givePenaltyReducer(group.id, id, "OVERTIME", 5))
         }
       })
     }
@@ -105,10 +121,7 @@ const Team = () => {
       title: "Vahvista diskaus",
       message: "Oletko varma että haluat diskata tämän ryhmän?",
       onConfirm: async () => {
-        const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
-        const disqualified = disqualifiedGroup.disqualified
-        dispatch(updateGroup(disqualifiedGroup))
-        dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
+        dispatch(disqualifyGroupReducer(Number(id)))
         bottomSheetRef.current?.close()
       }
     })
