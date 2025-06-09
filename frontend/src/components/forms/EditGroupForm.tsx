@@ -12,7 +12,7 @@ import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 
-const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group?: Group }) => {
+const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group?: Group, setSelectedGroup: React.Dispatch<React.SetStateAction<Group | undefined>> }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef(null)
   const [groupname, setGroupname] = useState<string>("")
@@ -44,6 +44,7 @@ const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObj
           error.response?.data.error ?? `Ryhmän tietoja ei voitu päivittää: ${error.message}`, "error"
         ))
       }
+      setSelectedGroup(undefined)
     }
     bottomSheetRef.current?.close()
 

@@ -37,7 +37,11 @@ const GroupSettings = () => {
       <Groups onEditGroup={handleEdit} />
       <AddNewButton onPress={handleAdd} />
       <AddGroupForm bottomSheetRef={addBottomSheetRef} />
-      <EditGroupForm bottomSheetRef={editBottomSheetRef} group={selectedGroup} />
+      <EditGroupForm
+        bottomSheetRef={editBottomSheetRef}
+        group={selectedGroup}
+        setSelectedGroup={setSelectedGroup}
+      />
     </View>
   )
 }
