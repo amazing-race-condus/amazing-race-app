@@ -35,7 +35,9 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
       <Search search={search} setSearch={setSearch} />
       {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
 
-      <Filter order={order} setOrder={setOrder} />
+      {pathname === "/" &&
+        <Filter order={order} setOrder={setOrder} />
+      }
 
       <GroupList onEditGroup={onEditGroup} groups={filteredGroups} />
     </View>
