@@ -24,4 +24,4 @@ const AddNewButton = ({ onPress }: { onPress: () => void }) => {
   )
 }
 
-export default AddNewButtonplus
+export default AddNewButton
