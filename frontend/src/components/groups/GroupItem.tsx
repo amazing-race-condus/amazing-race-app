@@ -44,8 +44,7 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
   return (
     <Link
       href={{
-        pathname: `/(groups)/group/${group.id}`,
-        params: { name: group.name, members: group.members }
+        pathname: `/(groups)/group/${group.id}`
       }}
       asChild
     >

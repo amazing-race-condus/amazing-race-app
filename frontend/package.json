@@ -19,6 +19,7 @@
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
     "@gorhom/bottom-sheet": "^5.1.4",
+    "@react-native-segmented-control/segmented-control": "^2.5.7",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.9.0",
     "expo": "~53.0.9",
