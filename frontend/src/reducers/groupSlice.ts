@@ -51,7 +51,7 @@ export const givePenaltyReducer = (groupId: number, checkpointId: number, penalt
     })
 
     dispatch(setGroups(updatedGroups))
-    dispatch(setNotification("Ryhmä rangaistu", "success"))
+    dispatch(setNotification("Ryhmää rangaistu", "success"))
   } catch (error) {
     console.error("Failed to update penalty:", error)
     dispatch(setNotification("Rangaistus ei onnistunut", "error"))
