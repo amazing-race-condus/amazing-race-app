@@ -32,6 +32,7 @@ const Team = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
+  const [passedCheckpointIds, setPassedIds] = useState<number[]>([])
 
   const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
   useFocusEffect(
@@ -39,6 +40,13 @@ const Team = () => {
       const checkpointsRoute = async () => {
         setCheckpoints(group.route)
         setNextCheckpointId(group.nextCheckpointId!)
+        for (let i = 0; i < checkpoints.length; i++){
+          if (checkpoints[i].id === nextCheckpointId) {
+            break
+          }
+          setPassedIds(passedCheckpointIds.concat([checkpoints[i].id]))
+          console.log("Passed ids"+passedCheckpointIds.concat([checkpoints[i].id]))
+        }
       }
       checkpointsRoute()
     }, [])

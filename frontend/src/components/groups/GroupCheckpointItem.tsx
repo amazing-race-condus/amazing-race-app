@@ -5,12 +5,13 @@ import theme from "@/theme"
 import GroupCheckpointHeader from "./GroupCheckpointHeader"
 import GroupCheckpointActions from "./GroupCheckpointActions"
 import ListGroupCheckpointPenalties from "./ListGroupCheckpointPenalties"
+import GroupCheckpointNotActiveActions from "./GroupCheckpointNotActiveActions"
 
 const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
-  { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
-  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number, skip: boolean) => void, openHint: () => void }
+  { checkpoint, group, nextCheckpointId, passed, completeCheckpoint, openHint }:
+  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, passed:number[], completeCheckpoint: (id: number, skip: boolean) => void, openHint: () => void }
 ) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -39,21 +40,52 @@ const GroupCheckpointItem = (
         toggleExpanded={toggleExpanded}
       />
       { isActiveCheckpoint &&  (
-        <GroupCheckpointActions
-          checkpoint={checkpoint}
-          group={group}
-          usedHints={usedHints}
-          completeCheckpoint={completeCheckpoint}
-        />
+        <>
+          <GroupCheckpointActions
+            checkpoint={checkpoint}
+            group={group}
+            usedHints={usedHints}
+            completeCheckpoint={completeCheckpoint}
+          />
+
+          <ListGroupCheckpointPenalties
+            groupId={group.id}
+            usedHints={usedHints}
+            usedSkip={usedSkip}
+            usedOvertime={usedOvertime}
+          />
+        </>
       )}
-      {((isActiveCheckpoint || isExpanded) && CheckpointPenalties?.length > 0) && (
-        <ListGroupCheckpointPenalties
-          groupId={group.id}
-          usedHints={usedHints}
-          usedSkip={usedSkip}
-          usedOvertime={usedOvertime}
-        />
+
+      {(isExpanded && (checkpoint.type !== "START" ) && (passed.includes(checkpoint.id))) && (
+        <>
+          <GroupCheckpointNotActiveActions
+            checkpoint={checkpoint}
+            group={group}
+            usedHints={usedHints}
+            passed={passed}
+            completeCheckpoint={completeCheckpoint}
+          />
+
+          <ListGroupCheckpointPenalties
+            groupId={group.id}
+            usedHints={usedHints}
+            usedSkip={usedSkip}
+            usedOvertime={usedOvertime}
+          />
+        </>
       )}
+
+      {/* {(CheckpointPenalties?.length > 0) && (
+        <>
+          <ListGroupCheckpointPenalties
+            groupId={group.id}
+            usedHints={usedHints}
+            usedSkip={usedSkip}
+            usedOvertime={usedOvertime}
+          />
+        </>
+      )} */}
     </View>
   )
 }

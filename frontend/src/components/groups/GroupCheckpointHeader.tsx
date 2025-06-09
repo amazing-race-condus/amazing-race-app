@@ -36,7 +36,12 @@ const GroupCheckpointHeader = (
           />)
       ) :
         <View style={{ marginHorizontal: 10 }}>
-          {isPenalties && (
+          {/* {isPenalties && (
+            isExpanded
+              ? <FontAwesome6 name="chevron-up" size={24} color="black" />
+              : <FontAwesome6 name="chevron-down" size={24} color="black" />
+          )} */}
+          {checkpoint.type !== "START" && checkpoint.type !== "FINISH" && (
             isExpanded
               ? <FontAwesome6 name="chevron-up" size={24} color="black" />
               : <FontAwesome6 name="chevron-down" size={24} color="black" />
