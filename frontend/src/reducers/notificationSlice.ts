@@ -1,6 +1,7 @@
 import { AppDispatch } from "@/store/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { Notification } from "@/types"
+import { time } from "console"
 
 const initialState: Notification = {
   message: "",
@@ -17,13 +18,19 @@ const messageSlice = createSlice({
   },
 })
 
+let timeoutId: ReturnType<typeof setTimeout> | null = null
+
 export const setNotification =
   ( message : string, type: "error" | "success" | "warning" ) =>
     async (dispatch: AppDispatch) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       dispatch(setMessage({ message, type }))
 
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         dispatch(setMessage( { message: "", type: null }))
+        timeoutId = null
       }, 5000)
     }
 
