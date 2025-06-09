@@ -3,9 +3,9 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
-import type { Checkpoint, Group, CompleteType } from "@/types"
+import type { Checkpoint, Group } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
 import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/ui/Notification"
@@ -40,20 +40,27 @@ const Team = () => {
       const checkpointsRoute = async () => {
         setCheckpoints(group.route)
         setNextCheckpointId(group.nextCheckpointId!)
-        for (let i = 0; i < checkpoints.length; i++){
-          if (checkpoints[i].id === nextCheckpointId) {
-            break
-          }
-          setPassedIds(passedCheckpointIds.concat([checkpoints[i].id]))
-          console.log("Passed ids"+passedCheckpointIds.concat([checkpoints[i].id]))
-        }
+        // for (let i = 0; i < checkpoints.length; i++){
+        //   if (checkpoints[i].id === nextCheckpointId) {
+        //     break
+        //   }
+        //   setPassedIds(passedCheckpointIds.concat([checkpoints[i].id]))
+        // }
+
+        const passedIds = group.route
+          .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
+          .map(cp => cp.id)
+
+        console.log(passedIds)
+
+        setPassedIds(passedIds)
       }
       checkpointsRoute()
     }, [])
   )
 
-  const completeCheckpoint = (id: number, completeType: CompleteType) => {
-    if (completeType === "NORMAL") {
+  const completeCheckpoint = (id: number, skip: boolean) => {
+    if (!skip) {
       handleAlert({
         confirmText: "Suorita",
         title: "Vahvista suoritus",
@@ -61,6 +68,7 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setPassedIds(passedCheckpointIds.concat(currentCheckpointIndex))
           setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
@@ -68,7 +76,7 @@ const Team = () => {
           }
         }
       })
-    } else if (completeType === "SKIP") {
+    } else {
       handleAlert({
         confirmText: "Ohita",
         title: "Ohita rasti",
@@ -82,22 +90,6 @@ const Team = () => {
             setHasFinished(true)
           }
           dispatch(givePenaltyReducer(group.id, id, "SKIP", 30))
-        }
-      })
-    } else {
-      handleAlert({
-        confirmText: "Yliaika",
-        title: "Suoritettu yliajalla",
-        message: "Oletko varma että haluat merkitä rastin suoritetuksi yliajalla? Ryhmälle tulee 5 min rangaistus.",
-        onConfirm: () => {
-          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setNextCheckpointId(nextId)
-          dispatch(giveNextCheckpointReducer(group.id, nextId))
-          if (nextId === -1) {
-            setHasFinished(true)
-          }
-          dispatch(givePenaltyReducer(group.id, id, "OVERTIME", 5))
         }
       })
     }
@@ -121,7 +113,10 @@ const Team = () => {
       title: "Vahvista diskaus",
       message: "Oletko varma että haluat diskata tämän ryhmän?",
       onConfirm: async () => {
-        dispatch(disqualifyGroupReducer(Number(id)))
+        const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
+        const disqualified = disqualifiedGroup.disqualified
+        dispatch(updateGroup(disqualifiedGroup))
+        dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
         bottomSheetRef.current?.close()
       }
     })
@@ -169,6 +164,7 @@ const Team = () => {
                 checkpoint = { item }
                 group = { group }
                 nextCheckpointId={nextCheckpointId}
+                passed = {passedCheckpointIds}
                 completeCheckpoint={completeCheckpoint}
                 openHint = { () => hintBottomSheetRef.current?.expand() }
               />

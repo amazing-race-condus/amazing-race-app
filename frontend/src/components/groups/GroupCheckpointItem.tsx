@@ -36,6 +36,7 @@ const GroupCheckpointItem = (
         isActive={isActiveCheckpoint}
         isExpanded={isExpanded}
         isPenalties={isPenalties}
+        isPassed={passed.includes(checkpoint.id)}
         openHint={openHint}
         toggleExpanded={toggleExpanded}
       />
@@ -75,17 +76,6 @@ const GroupCheckpointItem = (
           />
         </>
       )}
-
-      {/* {(CheckpointPenalties?.length > 0) && (
-        <>
-          <ListGroupCheckpointPenalties
-            groupId={group.id}
-            usedHints={usedHints}
-            usedSkip={usedSkip}
-            usedOvertime={usedOvertime}
-          />
-        </>
-      )} */}
     </View>
   )
 }
