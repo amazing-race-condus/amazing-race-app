@@ -8,7 +8,7 @@ export default function Layout() {
       }}
     >
       <Stack.Screen
-        name="options"
+        name="index"
       />
       <Stack.Screen
         name="checkpoints"
