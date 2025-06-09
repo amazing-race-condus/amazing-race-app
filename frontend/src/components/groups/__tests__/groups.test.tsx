@@ -32,7 +32,7 @@ describe("<Groups />", () => {
   afterAll(() => {
     jest.restoreAllMocks()
   })
-  test("renders search bar, filter bar and correct header in settings view", async () => {
+  test("renders search bar and correct header in settings view", async () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const store = testStore({
@@ -50,10 +50,6 @@ describe("<Groups />", () => {
       expect(screen.getByText("Hallinnoi ryhmiä:")).toBeTruthy()
     })
 
-    const segmentedControl = screen.getByTestId("RNCSegmentedControl")
-    expect(segmentedControl.props.values).toContain("Aakkosjärjestys")
-    expect(segmentedControl.props.values).toContain("Aika")
-    expect(segmentedControl.props.values).toContain("Status")
   })
 
   test("renders search bar, filter bar and correct header in groups view", async () => {
@@ -71,7 +67,7 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("Ryhmät:")).toBeTruthy()
+      expect(screen.getByText("Ryhmät")).toBeTruthy()
     })
 
     const segmentedControl = screen.getByTestId("RNCSegmentedControl")

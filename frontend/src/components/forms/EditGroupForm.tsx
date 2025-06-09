@@ -12,20 +12,23 @@ import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 
-const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group: Group }) => {
+const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group?: Group }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef(null)
-  const [groupname, setGroupname] = useState<string>(group.name)
-  const [groupMembers, setGroupMembers] = useState<number>(group.members)
-  const [easy, setEasy] = useState<boolean>(group.easy)
+  const [groupname, setGroupname] = useState<string>("")
+  const [groupMembers, setGroupMembers] = useState<number>(0)
+  const [easy, setEasy] = useState<boolean>(false)
 
   useEffect(() => {
-    setGroupname(group.name)
-    setGroupMembers(group.members)
-    setEasy(group.easy)
+    if (group) {
+      setGroupname(group.name)
+      setGroupMembers(group.members)
+      setEasy(group.easy)
+    }
   }, [group])
 
   const handleEditGroup = async () => {
+    if (!group) return
     const modifiedGroup: AddGroup = {
       name: groupname,
       members: Number(groupMembers),

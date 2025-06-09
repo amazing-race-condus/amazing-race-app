@@ -29,7 +29,7 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
 
   return (
     <View style={styles.container}>
-      {pathname === "/" && <Text style={styles.title}>Ryhmät:</Text>}
+      {pathname === "/" && <Text style={styles.title}>Ryhmät</Text>}
       {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
 
       <Search search={search} setSearch={setSearch} />
