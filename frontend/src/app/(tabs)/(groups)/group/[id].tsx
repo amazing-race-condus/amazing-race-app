@@ -127,41 +127,41 @@ const Team = () => {
       <Notification />
       <GroupStatusDisplay group={ group } />
       {(group.route.length === 0) ?
-      <>
-        <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
-        <View style={styles.container}>
-          <Text style={{color:theme.colors.textBread, fontSize:theme.fontSizes.header}}>Ryhmälle ei ole määritelty reittiä.</Text>
-        </View>
-      </>
-      :
-      <>
-        <GroupOptionsMenuButton ref={ bottomSheetRef } />
-        <FlatList
-          data={checkpoints}
-          ItemSeparatorComponent={ItemSeparator}
-          ListHeaderComponent={
-            <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
-          }
-          ListFooterComponent={GroupFinishView}
-          renderItem={({ item }) =>
-            <GroupCheckpointItem
-              checkpoint = { item }
-              group = { group }
-              nextCheckpointId={nextCheckpointId}
-              completeCheckpoint={completeCheckpoint}
-              openHint = { () => hintBottomSheetRef.current?.expand() }
-            />
-          }
-          keyExtractor={item => item.id.toString()}
-        />
-        <GroupActionMenu
-          group={group}
-          ref={bottomSheetRef}
-          handleDNF={handleDNF}
-          handleDisqualification={handleDisqualification}
-        />
-        <HintMenu ref={hintBottomSheetRef} nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
-      </>}
+        <>
+          <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
+          <View style={styles.container}>
+            <Text style={{color:theme.colors.textBread, fontSize:theme.fontSizes.header}}>Ryhmälle ei ole määritelty reittiä.</Text>
+          </View>
+        </>
+        :
+        <>
+          <GroupOptionsMenuButton ref={ bottomSheetRef } />
+          <FlatList
+            data={checkpoints}
+            ItemSeparatorComponent={ItemSeparator}
+            ListHeaderComponent={
+              <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
+            }
+            ListFooterComponent={GroupFinishView}
+            renderItem={({ item }) =>
+              <GroupCheckpointItem
+                checkpoint = { item }
+                group = { group }
+                nextCheckpointId={nextCheckpointId}
+                completeCheckpoint={completeCheckpoint}
+                openHint = { () => hintBottomSheetRef.current?.expand() }
+              />
+            }
+            keyExtractor={item => item.id.toString()}
+          />
+          <GroupActionMenu
+            group={group}
+            ref={bottomSheetRef}
+            handleDNF={handleDNF}
+            handleDisqualification={handleDisqualification}
+          />
+          <HintMenu ref={hintBottomSheetRef} nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
+        </>}
     </View>
   )
 }

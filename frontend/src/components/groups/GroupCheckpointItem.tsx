@@ -15,6 +15,7 @@ const GroupCheckpointItem = (
   const [isExpanded, setIsExpanded] = useState(false)
 
   const CheckpointPenalties = group?.penalty?.filter(p => p.checkpointId === checkpoint.id)
+  const isPenalties = (CheckpointPenalties.length > 0)
   const isActiveCheckpoint = checkpoint.id === nextCheckpointId
 
   const usedHints = CheckpointPenalties?.filter(p => p.type === "HINT")
@@ -33,6 +34,7 @@ const GroupCheckpointItem = (
         checkpoint={checkpoint}
         isActive={isActiveCheckpoint}
         isExpanded={isExpanded}
+        isPenalties={isPenalties}
         openHint={openHint}
         toggleExpanded={toggleExpanded}
       />
