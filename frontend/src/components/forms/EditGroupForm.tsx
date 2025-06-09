@@ -85,11 +85,11 @@ const EditGroupForm = ({ bottomSheetRef, group }: { bottomSheetRef: React.RefObj
       <RadioButton.Group onValueChange={value => setEasy(value === "true")} value={easy.toString()}>
         <View style={styles.radiobuttonGroup}>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="true" />
+            <RadioButton value="true" testID="radio-easy" />
             <Text>Helpotetut vihjeet</Text>
           </View>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="false" />
+            <RadioButton value="false" testID="radio-normal" />
             <Text>Tavalliset vihjeet</Text>
           </View>
         </View>
