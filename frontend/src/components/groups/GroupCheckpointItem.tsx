@@ -10,7 +10,7 @@ const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
   { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
-  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number) => void, openHint: () => void }
+  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number, skip: boolean) => void, openHint: () => void }
 ) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
