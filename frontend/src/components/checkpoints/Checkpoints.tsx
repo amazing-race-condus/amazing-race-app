@@ -25,7 +25,7 @@ const Checkpoints = () => {
         <Text style={styles.header}>Hallinnoi rasteja:</Text>
       )}
       {pathname.startsWith("/checkpoints") && (
-        <Text style={styles.title}>Rastit:</Text>
+        <Text style={styles.title}>Rastit</Text>
       )}
       <FlatList
         data={sortedCheckpoints}

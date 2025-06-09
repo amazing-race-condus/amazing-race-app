@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
     flex: 1,
-    backgroundColor: theme.colors.background,
     alignItems: "center",
     justifyContent: "flex-start",
   },

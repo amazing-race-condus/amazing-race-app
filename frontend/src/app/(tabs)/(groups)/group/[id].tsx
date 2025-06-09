@@ -3,7 +3,7 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
 import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
-import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer} from "@/reducers/groupSlice"
+import { dnfGroupReducer, updateGroup, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
 import type { Checkpoint, Group, CompleteType } from "@/types"
 import { disqualifyGroup } from "@/services/groupService"
@@ -113,10 +113,7 @@ const Team = () => {
       title: "Vahvista diskaus",
       message: "Oletko varma että haluat diskata tämän ryhmän?",
       onConfirm: async () => {
-        const disqualifiedGroup: Group = await disqualifyGroup(Number(id))
-        const disqualified = disqualifiedGroup.disqualified
-        dispatch(updateGroup(disqualifiedGroup))
-        dispatch(setNotification(`Ryhmä ${disqualifiedGroup.name} ${disqualified ? "diskattu" : "epädiskattu"}`, "success"))
+        dispatch(disqualifyGroupReducer(Number(id)))
         bottomSheetRef.current?.close()
       }
     })

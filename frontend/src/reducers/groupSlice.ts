@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint} from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
@@ -51,7 +51,7 @@ export const givePenaltyReducer = (groupId: number, checkpointId: number, penalt
     })
 
     dispatch(setGroups(updatedGroups))
-    dispatch(setNotification("Ryhmä rangaistu", "success"))
+    dispatch(setNotification("Ryhmää rangaistu", "success"))
   } catch (error) {
     console.error("Failed to update penalty:", error)
     dispatch(setNotification("Rangaistus ei onnistunut", "error"))
@@ -117,8 +117,10 @@ export const dnfGroupReducer =
       const group = await dnfGroup(id)
 
       const currentGroups = getState().groups
+      let dnfState: boolean | undefined
       const updated = currentGroups.map((currentGroup) => {
         if (currentGroup.id === id) {
+          dnfState = !currentGroup.dnf
           return {
             ...currentGroup,
             dnf: !currentGroup.dnf
@@ -128,10 +130,44 @@ export const dnfGroupReducer =
       })
 
       dispatch(setGroups(updated))
-      dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty `, "success"))
+      if (dnfState) {
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty `, "success"))
+      } else {
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritusta jatkettu `, "success"))
+      }
     } catch (error) {
       console.error("Failed to dnf group:", error)
       dispatch(setNotification("Ryhmän suoritusta ei voitu keskeyttää", "error"))
+    }
+  }
+
+export const disqualifyGroupReducer =
+  (id: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      const group = await disqualifyGroup(id)
+
+      const currentGroups = getState().groups
+      let disqualifiedState: boolean | undefined
+      const updated = currentGroups.map((currentGroup) => {
+        if (currentGroup.id === id) {
+          disqualifiedState = !currentGroup.disqualified
+          return {
+            ...currentGroup,
+            disqualified: !currentGroup.disqualified
+          }
+        }
+        return currentGroup
+      })
+
+      dispatch(setGroups(updated))
+      if (disqualifiedState) {
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty `, "success"))
+      } else {
+        dispatch(setNotification(`Ryhmän '${group.name}' hylkäys peruttu `, "success"))
+      }
+    } catch (error) {
+      console.error("Failed to disqualify group:", error)
+      dispatch(setNotification("Ryhmän suoritusta ei voitu hylätä", "error"))
     }
   }
 
