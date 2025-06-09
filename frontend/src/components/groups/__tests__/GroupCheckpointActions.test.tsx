@@ -80,7 +80,8 @@ describe("<GroupCheckpointActions />", () => {
       })
     }
 
-    expect(store.dispatch).toHaveBeenCalledTimes(3)
+    expect(store.dispatch).toHaveBeenCalledTimes(2)
+    expect(mockCompleteCheckpoint).toHaveBeenCalledTimes(1)
   })
 
   test("pressing complete button calls completeCheckpoint", async () => {
