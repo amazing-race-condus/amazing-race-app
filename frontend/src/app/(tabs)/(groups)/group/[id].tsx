@@ -85,6 +85,23 @@ const Team = () => {
           dispatch(givePenaltyReducer(group.id, id, "SKIP", 30))
         }
       })
+    } else {
+      handleAlert({
+        confirmText: "Yliaika",
+        title: "Suoritettu yliajalla",
+        message: "Oletko varma että haluat merkitä rastin suoritetuksi yliajalla? Ryhmälle tulee 5 min rangaistus.",
+        onConfirm: () => {
+          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
+          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
+          setNextCheckpointId(nextId)
+          dispatch(giveNextCheckpointReducer(group.id, nextId))
+          if (nextId === -1) {
+            setHasFinished(true)
+          }
+          dispatch(givePenaltyReducer(group.id, id, "OVERTIME", 5))
+        }
+      })
     }
   }
 
