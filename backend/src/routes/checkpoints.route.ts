@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express"
 import { getAllCheckpoints, getCheckpointById, createCheckpoint,
-  deleteCheckpoint } from "../controllers/checkpoints.controller"
+  deleteCheckpoint, modifyCheckpoint } from "../controllers/checkpoints.controller"
 
 const checkpointsRouter = express.Router()
 
@@ -38,4 +38,15 @@ checkpointsRouter.delete("/:id", async (req: Request, res: Response) => {
   res.status(204).end()
 })
 
+checkpointsRouter.put("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const { name, type, hint, easyHint } = req.body
+  const updatedCheckpoint = await modifyCheckpoint(id, name, type, hint, easyHint, res)
+
+  res.status(200).json(updatedCheckpoint)
+
+})
+
 export default checkpointsRouter
+
+
