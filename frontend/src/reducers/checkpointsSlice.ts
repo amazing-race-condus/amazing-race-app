@@ -16,6 +16,12 @@ const checkpointSlice = createSlice({
     },
     appendCheckpoint(state, action: PayloadAction<Checkpoint>) {
       state.push(action.payload)
+    },
+    updateCheckpoint(state, action: PayloadAction<Checkpoint>) {
+      const index = state.findIndex(c => c.id === action.payload.id)
+      if (index !== -1) {
+        state[index] = action.payload
+      }
     }
   },
 })
@@ -61,5 +67,5 @@ export const removeCheckpointReducer =
     }
   }
 
-export const { setCheckpoints , appendCheckpoint } = checkpointSlice.actions
+export const { setCheckpoints , appendCheckpoint, updateCheckpoint } = checkpointSlice.actions
 export default checkpointSlice.reducer
