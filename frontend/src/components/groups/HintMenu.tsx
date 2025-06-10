@@ -39,7 +39,7 @@ const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<Bot
         <View style={{ marginVertical: 5 }}>
           <QRCode
             size={256}
-            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            style={{ height: "auto", maxWidth: "25%", width: "100%" }}
             value={hintUrl}
             viewBox={"0 0 256 256"}
           />
