@@ -1,19 +1,20 @@
+import { CheckpointType } from "@/types"
 import { getType, sortCheckpoints } from "../checkpointUtils"
 import { listCheckpoints } from "../testUtils"
 
 describe("getType returns correct string back:", () => {
   test("'START' should return 'Lähtö'", () => {
-    const result: string = getType("START")
+    const result: string = getType("START" as CheckpointType)
     expect(result).toBe("Lähtö")
   })
 
   test("'FINISH' should return 'Maali'", () => {
-    const result: string = getType("FINISH")
+    const result: string = getType("FINISH" as CheckpointType)
     expect(result).toBe("Maali")
   })
 
   test("'INTERMEDIATE' should return empty string", () => {
-    const result: string = getType("INTERMEDIATE")
+    const result: string = getType("INTERMEDIATE" as CheckpointType)
     expect(result).toBe("")
   })
 })
