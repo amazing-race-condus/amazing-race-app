@@ -5,7 +5,9 @@ import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
 import React, { useCallback, useRef, useState } from "react"
-import type { Checkpoint, CompleteType } from "@/types"
+import type { Checkpoint, CompleteType, Group } from "@/types"
+import { disqualifyGroup } from "@/services/groupService"
+import { setNotification } from "@/reducers/notificationSlice"
 import Notification from "@/components/ui/Notification"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import BottomSheet from "@gorhom/bottom-sheet"
@@ -30,6 +32,7 @@ const Team = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
   const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
+  const [passedCheckpointIds, setPassedIds] = useState<number[]>([])
 
   const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
   useFocusEffect(
@@ -37,6 +40,12 @@ const Team = () => {
       const checkpointsRoute = async () => {
         setCheckpoints(group.route)
         setNextCheckpointId(group.nextCheckpointId!)
+
+        const passedIds = group.route
+          .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
+          .map(cp => cp.id)
+
+        setPassedIds(passedIds)
       }
       checkpointsRoute()
     }, [])
@@ -51,6 +60,7 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
           setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
@@ -66,28 +76,13 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
           setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
             setHasFinished(true)
           }
           dispatch(givePenaltyReducer(group.id, id, "SKIP", 30))
-        }
-      })
-    } else {
-      handleAlert({
-        confirmText: "Yliaika",
-        title: "Suoritettu yliajalla",
-        message: "Oletko varma että haluat merkitä rastin suoritetuksi yliajalla? Ryhmälle tulee 5 min rangaistus.",
-        onConfirm: () => {
-          const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
-          const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setNextCheckpointId(nextId)
-          dispatch(giveNextCheckpointReducer(group.id, nextId))
-          if (nextId === -1) {
-            setHasFinished(true)
-          }
-          dispatch(givePenaltyReducer(group.id, id, "OVERTIME", 5))
         }
       })
     }
@@ -159,6 +154,7 @@ const Team = () => {
                 checkpoint = { item }
                 group = { group }
                 nextCheckpointId={nextCheckpointId}
+                passed = {passedCheckpointIds}
                 completeCheckpoint={completeCheckpoint}
                 openHint = { () => hintBottomSheetRef.current?.expand() }
               />

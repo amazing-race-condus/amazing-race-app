@@ -2,7 +2,7 @@ import { ViewStyle, Pressable, Text } from "react-native"
 
 const ActionButton = (
   { onPress, count, text, style }:
-  { onPress: () => void, count?: number, text: string, style?: ViewStyle}
+  { onPress: () => void, count?: number, text: string, style?: ViewStyle | ViewStyle[]}
 ) => {
   return (
     <Pressable

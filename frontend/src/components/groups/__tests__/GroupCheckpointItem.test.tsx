@@ -26,6 +26,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -43,6 +44,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -62,6 +64,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -81,6 +84,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
