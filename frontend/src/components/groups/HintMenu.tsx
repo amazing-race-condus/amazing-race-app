@@ -45,7 +45,7 @@ const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<Bot
           />
           <Text onPress={ async () => await Linking.openURL(hintUrl)} style={{ textDecorationLine: "underline", marginTop: 5 }}>{hintUrl}</Text>
         </View>
-        : <Text>Vihjettä seuraavalle rastille ei ole määritetty.</Text>
+        : <Text>Rastille ei ole määritetty vihjettä.</Text>
       }
     </BottomSheetModal>
   )
