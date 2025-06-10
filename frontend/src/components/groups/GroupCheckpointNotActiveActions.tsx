@@ -6,8 +6,6 @@ import { useDispatch } from "react-redux"
 import theme from "@/theme"
 import ActionButton from "../ui/ActionButton"
 import { handleAlert } from "@/utils/handleAlert"
-import { setNotification } from "@/reducers/notificationSlice"
-import { opacity } from "react-native-reanimated/lib/typescript/Colors"
 
 const GroupCheckpointNotActiveActions = (
   { checkpoint, group, usedHints, usedSkip, usedOvertime, completeCheckpoint }:

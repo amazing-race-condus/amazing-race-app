@@ -30,23 +30,23 @@ const Checkpoint = () => {
         <Text style={[styles.breadText, {fontWeight: "bold"}]}>
           { translatedType }
         </Text>
-          {(checkpoint?.type !== "START") && (
-            <View style={{flexDirection:"row", marginVertical:10, width: Math.min(screenWidth * 0.9, 355)}}>
-              <ActionButton
-                style={[styles.button, {marginHorizontal:15, flex:1}]}
-                onPress={() => hintBottomSheetRef.current?.expand()}
-                text={"Vihje"}
-              />
-              <ActionButton
-                style={[styles.button, {marginHorizontal:15, flex:1}]}
-                onPress={() => easyHintBottomSheetRef.current?.expand()}
-                text={"Helpotettu vihje"}
-              />
-            </View>)}
+        {(checkpoint?.type !== "START") && (
+          <View style={{flexDirection:"row", marginVertical:10, width: Math.min(screenWidth * 0.9, 355)}}>
+            <ActionButton
+              style={[styles.button, {marginHorizontal:15, flex:1}]}
+              onPress={() => hintBottomSheetRef.current?.expand()}
+              text={"Vihje"}
+            />
+            <ActionButton
+              style={[styles.button, {marginHorizontal:15, flex:1}]}
+              onPress={() => easyHintBottomSheetRef.current?.expand()}
+              text={"Helpotettu vihje"}
+            />
+          </View>)}
         <ArrivingGroups checkpointId={Number(id)} />
       </View>
-        <HintMenu ref={hintBottomSheetRef} nextCheckpointId={Number(id)} easyMode={ false }/>
-        <HintMenu ref={easyHintBottomSheetRef} nextCheckpointId={Number(id)} easyMode={ true }/>
+      <HintMenu ref={hintBottomSheetRef} nextCheckpointId={Number(id)} easyMode={ false }/>
+      <HintMenu ref={easyHintBottomSheetRef} nextCheckpointId={Number(id)} easyMode={ true }/>
     </View>
   )
 }
