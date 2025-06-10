@@ -66,7 +66,7 @@ const GroupCheckpointNotActiveActions = (
         <ActionButton
           style={styles.button}
           onPress={() => {
-            if (usedHints.length === 3) {
+            if (usedHints.length > 2) {
               handleAlert({
                 confirmText: "Vihjepuhelin",
                 title: "Vahvista vihjepuhelinrangaistus",

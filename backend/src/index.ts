@@ -33,6 +33,15 @@ const server = app.listen(port, () => {
   console.log(`App listening on port ${port}`) // eslint-disable-line no-console
 })
 
+setInterval(async () => {
+  try {
+    const result = await prisma.$queryRaw`SELECT count(*) as connections FROM pg_stat_activity WHERE datname = current_database();`
+    console.log("Active DB connections:", result)
+  } catch (error) {
+    console.error("Failed to check connections:", error)
+  }
+}, 5000)
+
 app.use(unknownEndpoint)
 app.use(errorHandler)
 

@@ -1,11 +1,11 @@
 import { AppDispatch, RootState } from "@/store/store"
-import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router"
+import { Stack, useLocalSearchParams } from "expo-router"
 import { FlatList, View, Text } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
-import React, { useCallback, useRef, useState } from "react"
-import type { Checkpoint, CompleteType } from "@/types"
+import React, { useRef, useState } from "react"
+import type { CompleteType } from "@/types"
 import Notification from "@/components/ui/Notification"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import BottomSheet from "@gorhom/bottom-sheet"
@@ -18,36 +18,25 @@ import GroupActionMenu from "@/components/groups/GroupActionMenu"
 import theme from "@/theme"
 
 const Team = () => {
+  const { id } = useLocalSearchParams<{id: string}>()
+
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const hintBottomSheetRef = useRef<BottomSheet>(null)
 
-  const { id } = useLocalSearchParams<{id: string}>()
   const group = useSelector((state: RootState) =>
     state.groups.find(g => g.id === Number(id))
   )!
 
-  const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([])
-  const [nextCheckpointId, setNextCheckpointId] = useState<number>(0)
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
-  const [passedCheckpointIds, setPassedIds] = useState<number[]>([])
 
+  const checkpoints = group.route
+  const nextCheckpointId = group.nextCheckpointId!
   const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
-  useFocusEffect(
-    useCallback(() => {
-      const checkpointsRoute = async () => {
-        setCheckpoints(group.route)
-        setNextCheckpointId(group.nextCheckpointId!)
 
-        const passedIds = group.route
-          .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
-          .map(cp => cp.id)
-
-        setPassedIds(passedIds)
-      }
-      checkpointsRoute()
-    }, [])
-  )
+  const passedIds = group.route
+    .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
+    .map(cp => cp.id)
 
   const completeCheckpoint = (id: number, completeType: CompleteType) => {
     if (completeType === "NORMAL") {
@@ -58,8 +47,6 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
-          setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
             setHasFinished(true)
@@ -74,8 +61,6 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
-          setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
             setHasFinished(true)
@@ -91,8 +76,6 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
-          setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
             setHasFinished(true)
@@ -149,7 +132,7 @@ const Team = () => {
       <GroupStatusDisplay group={ group } />
       {(group.route.length === 0) ?
         <>
-          <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
+          <GroupInfoHeader group={ group } totalPenalty={ totalPenaltyTime }/>
           <View style={styles.container}>
             <Text style={{color:theme.colors.textBread, fontSize:theme.fontSizes.header}}>Ryhmälle ei ole määritelty reittiä.</Text>
           </View>
@@ -161,15 +144,15 @@ const Team = () => {
             data={checkpoints}
             ItemSeparatorComponent={ItemSeparator}
             ListHeaderComponent={
-              <GroupInfoHeader group={ group } totalPenalty={totalPenaltyTime}/>
+              <GroupInfoHeader group={ group } totalPenalty={ totalPenaltyTime }/>
             }
             ListFooterComponent={GroupFinishView}
             renderItem={({ item }) =>
               <GroupCheckpointItem
                 checkpoint = { item }
                 group = { group }
-                nextCheckpointId={nextCheckpointId}
-                passed = {passedCheckpointIds}
+                nextCheckpointId={ nextCheckpointId }
+                passed = { passedIds }
                 completeCheckpoint={completeCheckpoint}
                 openHint = { () => hintBottomSheetRef.current?.expand() }
               />
@@ -182,7 +165,7 @@ const Team = () => {
             handleDNF={handleDNF}
             handleDisqualification={handleDisqualification}
           />
-          <HintMenu ref={hintBottomSheetRef} nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
+          <HintMenu ref={ hintBottomSheetRef } nextCheckpointId={ nextCheckpointId } easyMode={ group.easy } />
         </>}
     </View>
   )
