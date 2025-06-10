@@ -1,10 +1,9 @@
 import { View, Text } from "react-native"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState, AppDispatch } from "@/store/store"
-import { usePathname, useFocusEffect } from "expo-router"
-import { fetchGroups } from "@/reducers/groupSlice"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
+import { usePathname } from "expo-router"
 import Search from "@/components/ui/Search"
 import GroupList from "./GroupList"
 import { Group } from "@/types"
@@ -14,7 +13,6 @@ import { sortAlphabetically, sortByStatus, sortByTime } from "@/utils/groupUtils
 const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   const [search, setSearch] = useState<string>("")
   const [order, setOrder] = useState<number>(0)
-  const dispatch: AppDispatch = useDispatch()
   const groups = useSelector((state: RootState) => state.groups)
   const pathname = usePathname()
 
@@ -31,12 +29,6 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   } else if (order === 2) {
     sortByStatus(filteredGroups)
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(fetchGroups())
-    }, [dispatch])
-  )
 
   return (
     <View style={styles.container}>
