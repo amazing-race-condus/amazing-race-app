@@ -1,5 +1,5 @@
 import { View, Text } from "react-native"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { styles } from "@/styles/commonStyles"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store/store"
@@ -17,15 +17,17 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
     item.name.toLowerCase().startsWith(search.toLowerCase())
   )
 
-  const fetchArrivingGroups = async () => {
-    try {
-      const newArrivingGroups = await getArrivingGroups(checkpointId)
-      setArrivingGroups(newArrivingGroups.sort((a, b) => a.name.localeCompare(b.name)))
-    } catch (error) {
-      console.error("A problem with fetching arriving groups:", error)
+  useEffect(() => {
+    const fetchArrivingGroups = async () => {
+      try {
+        const newArrivingGroups = await getArrivingGroups(checkpointId)
+        setArrivingGroups(newArrivingGroups.sort((a, b) => a.name.localeCompare(b.name)))
+      } catch (error) {
+        console.error("A problem with fetching arriving groups:", error)
+      }
     }
-  }
-  fetchArrivingGroups()
+    fetchArrivingGroups()
+  }, [])
 
   return (
     <View style={styles.container}>
