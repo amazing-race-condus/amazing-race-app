@@ -1,6 +1,6 @@
 import { givePenaltyReducer } from "@/reducers/groupSlice"
 import { AppDispatch } from "@/store/store"
-import { Checkpoint, Group, Penalty } from "@/types"
+import { Checkpoint, CompleteType, Group, Penalty } from "@/types"
 import { View, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
 import theme from "@/theme"
@@ -16,7 +16,7 @@ const GroupCheckpointNotActiveActions = (
     usedSkip: Penalty[]
     usedOvertime: Penalty[]
     passed: number[]
-    completeCheckpoint: (id: number, skip: boolean) => void
+    completeCheckpoint: (id: number, skip: CompleteType) => void
   }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -25,7 +25,7 @@ const GroupCheckpointNotActiveActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id, false)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Aloita"}
       />
     )
@@ -35,7 +35,7 @@ const GroupCheckpointNotActiveActions = (
     return (
       <ActionButton
         style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id, false)}
+        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
         text={"Lopeta"}
       />
     )
@@ -47,17 +47,22 @@ const GroupCheckpointNotActiveActions = (
         <ActionButton
           style={[
             styles.button,
-            ...(usedSkip.length > 0 ? [{ opacity: 0.4}] : [])
+            ...(usedOvertime.length > 0 || usedSkip.length > 0  ? [{ opacity: 0.4}] : [])
           ]}
           onPress={() => {
-            if (usedSkip.length === 0) {
-              dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))
+            if (usedOvertime.length === 0 && usedSkip.length === 0) {
+              handleAlert({
+                confirmText: "Skip",
+                title: "Skippauksen rangaistus",
+                message: "Oletko varma, että haluat merkata rastin skipatuksi? Ryhmä saa 30 min rangaistuksen",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))
+                },
+              })
             }
           }}
           text={"Skip"}
         />
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
           style={styles.button}
           onPress={() => {
@@ -74,17 +79,24 @@ const GroupCheckpointNotActiveActions = (
               dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
             }
           }}
-          count={usedHints.length}
           text={"Vihjepuhelin"}
         />
         <ActionButton
           style={[
             styles.button,
-            ...(usedOvertime.length > 0 ? [{ opacity: 0.4}] : [])
+            ...(usedOvertime.length > 0 || usedSkip.length > 0 ? [{ opacity: 0.4}] : [])
           ]}
           onPress={() => {
-            if (usedOvertime.length === 0){
-              dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))
+            if (usedOvertime.length === 0 && usedSkip.length === 0){
+
+              handleAlert({
+                confirmText: "Yliaika",
+                title: "Yliaika rangaistus",
+                message: "Oletko varma, että haluat merkata rastin yliajaksi? Ryhmä saa 5 min rangaistuksen",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))
+                },
+              })
             }
           }}
           text={"Yliaika"}
