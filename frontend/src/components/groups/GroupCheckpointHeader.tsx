@@ -7,11 +7,12 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import theme from "@/theme"
 
 const GroupCheckpointHeader = (
-  {checkpoint, isActive, isExpanded, openHint, toggleExpanded}:
+  {checkpoint, isActive, isExpanded, isPassed, openHint, toggleExpanded}:
   {
     checkpoint: Checkpoint
     isActive: boolean
     isExpanded: boolean
+    isPassed: boolean
     openHint: () => void
     toggleExpanded: () => void
   }
@@ -35,10 +36,11 @@ const GroupCheckpointHeader = (
           />)
       ) :
         <View style={{ marginHorizontal: 10 }}>
-          {isExpanded
-            ? <FontAwesome6 name="chevron-up" size={24} color="black" />
-            : <FontAwesome6 name="chevron-down" size={24} color="black" />
-          }
+          {checkpoint.type !== "START" && checkpoint.type !== "FINISH" && isPassed && (
+            isExpanded
+              ? <FontAwesome6 name="chevron-up" size={24} color="black" />
+              : <FontAwesome6 name="chevron-down" size={24} color="black" />
+          )}
         </View>
       }
     </Pressable>

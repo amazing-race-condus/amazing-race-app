@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
@@ -11,25 +11,24 @@ import { Group } from "@/types"
 import EditGroupForm from "@/components/forms/EditGroupForm"
 
 const GroupSettings = () => {
-  const bottomSheetRef = useRef<BottomSheet>(null)
-  const [mode, setMode] = useState<"add" | "edit">("add")
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+  const addBottomSheetRef = useRef<BottomSheet>(null)
+  const editBottomSheetRef = useRef<BottomSheet>(null)
+  const [selectedGroup, setSelectedGroup] = useState<Group | undefined>(undefined)
 
   const handleEdit = (group: Group) => {
     setSelectedGroup(group)
-    setMode("edit")
-    setTimeout(() => {
-      bottomSheetRef.current?.expand()
-    }, 5)
   }
 
   const handleAdd = () => {
-    setSelectedGroup(null)
-    setMode("add")
-    setTimeout(() => {
-      bottomSheetRef.current?.expand()
-    }, 5)
+    addBottomSheetRef.current?.expand()
+    setSelectedGroup(undefined)
   }
+
+  useEffect(() => {
+    if (selectedGroup && editBottomSheetRef.current) {
+      editBottomSheetRef.current.expand()
+    }
+  }, [selectedGroup])
 
   return (
     <View style={styles.container}>
@@ -37,14 +36,12 @@ const GroupSettings = () => {
       <Notification />
       <Groups onEditGroup={handleEdit} />
       <AddNewButton onPress={handleAdd} />
-      {mode === "add" && <AddGroupForm bottomSheetRef={bottomSheetRef} />}
-      {mode === "edit" && selectedGroup && (
-        <EditGroupForm
-          key={selectedGroup.id}
-          bottomSheetRef={bottomSheetRef}
-          group={selectedGroup}
-        />
-      )}
+      <AddGroupForm bottomSheetRef={addBottomSheetRef} />
+      <EditGroupForm
+        bottomSheetRef={editBottomSheetRef}
+        group={selectedGroup}
+        setSelectedGroup={setSelectedGroup}
+      />
     </View>
   )
 }

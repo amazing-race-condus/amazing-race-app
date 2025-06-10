@@ -1,13 +1,16 @@
-import React, { useRef, useState } from "react"
-import { Keyboard, Platform, Pressable, Text, View, StyleSheet } from "react-native"
+import React, { useState, useRef, useEffect } from "react"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
-import { AddCheckpoint, CheckpointType } from "@/types"
+import { Checkpoint, AddCheckpoint, CheckpointType } from "@/types"
+import BottomSheetModal from "../ui/BottomSheetModal"
+import { editCheckpoint } from "@/services/checkpointService"
+import { setNotification } from "@/reducers/notificationSlice"
+import { updateCheckpoint } from "@/reducers/checkpointsSlice"
+import { Platform, Pressable, Text, View, StyleSheet } from "react-native"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
-import BottomSheetModal from "../ui/BottomSheetModal"
+import { AxiosError } from "axios"
 
 const styles2 = StyleSheet.create({
   editableField: {
@@ -19,7 +22,7 @@ const styles2 = StyleSheet.create({
   },
 })
 
-const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
+const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint }: { bottomSheetRef: React.RefObject<BottomSheet | null>, checkpoint?: Checkpoint, setSelectedCheckpoint: React.Dispatch<React.SetStateAction<Checkpoint | undefined>> }) => {
   const dispatch = useDispatch<AppDispatch>()
   const [name, setName] = useState<string>("")
   const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
@@ -29,26 +32,44 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   const nextRef1 = useRef(null)
   const nextRef2 = useRef(null)
 
-  const addNewCheckpoint = async () => {
-    const newCheckpoint: AddCheckpoint = {
+  useEffect(() => {
+    if (checkpoint) {
+      setName(checkpoint.name)
+      setType(checkpoint.type)
+      setHintUrl(checkpoint.hint ?? "")
+      setEasyHintUrl(checkpoint.easyHint ?? "")
+    }
+  }, [checkpoint])
+
+  const handleEditCheckpoint = async () => {
+    if (!checkpoint) return
+    const modifiedCheckpoint: AddCheckpoint = {
       name: name,
       type: type,
       hint: hintUrl,
       easyHint: easyHintUrl
     }
-    await dispatch(addCheckpointReducer(newCheckpoint))
-    setName("")
-    setType("INTERMEDIATE")
-    setHintUrl("")
-    setEasyHintUrl("")
-    Keyboard.dismiss()
+    try {
+      const updatedCheckpoint: Checkpoint = await editCheckpoint(checkpoint.id, modifiedCheckpoint)
+      dispatch(updateCheckpoint(updatedCheckpoint))
+      dispatch(setNotification("Rastin muokkaus onnistui", "success"))
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        dispatch(setNotification(
+          error.response?.data.error ?? `Rastin tietoja ei voitu päivittää: ${error.message}`, "error"
+        ))
+      }
+      setSelectedCheckpoint(undefined)
+    }
     bottomSheetRef.current?.close()
+
   }
 
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
-      snapPoints={Platform.OS === "web" ? ["75%"] : []}  // fix for mobile web
+      snapPoints={Platform.OS === "web" ? ["75%"] : []} // fix for mobile web
+      onClose={() => setSelectedCheckpoint(undefined)}
     >
       <BottomSheetTextInput
         onChangeText={setName}
@@ -56,9 +77,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
         placeholder="Syötä rastin nimi"
         placeholderTextColor={"grey"}
         style = {styles2.editableField}
-        onSubmitEditing={() => nextRef1.current?.focus()}
-        submitBehavior="submit"
         returnKeyType="next"
+        submitBehavior="submit"
+        onSubmitEditing={() => nextRef1.current?.focus()}
       />
       {type === "START" || <View>
         <BottomSheetTextInput
@@ -89,7 +110,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
             <Text>Lähtö</Text>
           </View>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="INTERMEDIATE" />
+            <RadioButton value="INTERMEDIATE" testID="radio-intermediate" />
             <Text>Välirasti</Text>
           </View>
           <View style={styles.radiobuttonItem}>
@@ -99,19 +120,18 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
         </View>
       </RadioButton.Group>
       <Pressable
-        onPress={addNewCheckpoint}
+        onPress={handleEditCheckpoint}
         style={{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-          marginTop: 16,
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>Lisää rasti</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa rastia</Text>
       </Pressable>
     </BottomSheetModal>
   )
 }
 
-export default AddCheckpointForm
+export default EditCheckpointForm

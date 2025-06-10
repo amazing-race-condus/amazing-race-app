@@ -57,7 +57,7 @@ describe("<GroupCheckpointActions />", () => {
     expect(startButton).toBeTruthy()
   })
 
-  test("pressing penalty buttons calls dispatch", async () => {
+  test("pressing penalty buttons calls dispatch or completeCheckpoint as required", async () => {
     render(
       <Provider store={store}>
         <GroupCheckpointActions
@@ -80,7 +80,8 @@ describe("<GroupCheckpointActions />", () => {
       })
     }
 
-    expect(store.dispatch).toHaveBeenCalledTimes(3)
+    expect(store.dispatch).toHaveBeenCalledTimes(1)
+    expect(mockCompleteCheckpoint).toHaveBeenCalledTimes(2)
   })
 
   test("pressing complete button calls completeCheckpoint", async () => {

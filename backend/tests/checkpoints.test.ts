@@ -59,7 +59,9 @@ describe("Addition of a new checkpoint", () => {
   it("succeeds with valid data", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     await request(app).post("/api/checkpoints")
@@ -76,7 +78,9 @@ describe("Addition of a new checkpoint", () => {
 
   it("fails with status code 400 and proper error message if data invalid", async () => {
     const newCheckpoint = {
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -90,7 +94,9 @@ describe("Addition of a new checkpoint", () => {
   it("fails with status code 400 and proper error message with too long or short name", async () => {
     let newCheckpoint = {
       name: "S",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -105,7 +111,9 @@ describe("Addition of a new checkpoint", () => {
 
     newCheckpoint = {
       name: "S".repeat(101),
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -127,7 +135,9 @@ describe("Addition of a new checkpoint", () => {
 
     let newCheckpoint = {
       name: "Lähtö",
-      type: "START"
+      type: "START",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -139,7 +149,9 @@ describe("Addition of a new checkpoint", () => {
 
     newCheckpoint = {
       name: "Maali",
-      type: "FINISH"
+      type: "FINISH",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -162,7 +174,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Välirasti",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -185,7 +199,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Välirasti",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -204,7 +220,9 @@ describe("Addition of a new checkpoint", () => {
   it("fails with status code 400 and proper error message if type is invalid", async () => {
     const newCheckpoint = {
       name: "Rasti",
-      type: "INVALID"
+      type: "INVALID",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -222,7 +240,9 @@ describe("Addition of a new checkpoint", () => {
 
     const newCheckpoint = {
       name: "Musiikkitalo",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
     }
 
     await request(app).post("/api/checkpoints").send(newCheckpoint)
@@ -261,6 +281,115 @@ describe("Deletion of a checkpoint", () => {
     const ids = checkpointsAtEnd.map(c => c.id)
     expect(ids).not.toContain(checkpointToDelete.id)
 
+  })
+})
+
+describe("modification of a checkpoint", () => {
+  beforeEach(async () => {
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: initialCheckpoints,
+    })
+  })
+
+  it("succeeds with status code 200 with valid data and id", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const response = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "FINISH",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      id: checkpointToModify.id,
+      name: "Modified checkpoint",
+      type: "FINISH",
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com"
+    })
+  })
+
+  it("fails with status code 400 and proper error message if modified name already exists", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const newcheckpoint = {
+      name: "Existing name",
+      type: "INTERMEDIATE",
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com"
+    }
+
+    await request(app).post("/api/checkpoints").send(newcheckpoint)
+
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .send({
+        name: "Existing name",
+        type: "INTERMEDIATE",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
+    await prisma.checkpoint.deleteMany({})
+  })
+  it("fails with status code 400 and proper error message if data is invalid", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "TYYPPI",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Virheellinen tyyppi.")
+    await prisma.checkpoint.deleteMany({})
+  })
+  it("succeeds with status code 200 with same type than before", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[2]
+
+    const response = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .send({
+        name: "Modified checkpoint",
+        type: checkpointToModify.type,
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+
+
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      id: checkpointToModify.id,
+      name: "Modified checkpoint",
+      type: checkpointToModify.type,
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com"
+    })
+    await prisma.checkpoint.deleteMany({})
   })
 })
 

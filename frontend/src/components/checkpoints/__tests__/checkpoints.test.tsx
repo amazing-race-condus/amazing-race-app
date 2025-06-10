@@ -61,7 +61,7 @@ describe("<Checkpoints />", () => {
       </Provider>
     )
     await waitFor(() => {
-      expect(screen.getByText("Rastit:")).toBeTruthy()
+      expect(screen.getByText("Rastit")).toBeTruthy()
     })
   })
 

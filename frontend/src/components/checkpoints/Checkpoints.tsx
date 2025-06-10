@@ -7,8 +7,9 @@ import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { sortCheckpoints } from "@/utils/checkpointUtils"
 import { usePathname } from "expo-router"
 import CheckpointItem from "./CheckpointItem"
+import { Checkpoint } from "@/types"
 
-const Checkpoints = () => {
+const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Checkpoint) => void }) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
   const pathname = usePathname()
@@ -25,13 +26,13 @@ const Checkpoints = () => {
         <Text style={styles.header}>Hallinnoi rasteja:</Text>
       )}
       {pathname.startsWith("/checkpoints") && (
-        <Text style={styles.title}>Rastit:</Text>
+        <Text style={styles.title}>Rastit</Text>
       )}
       <FlatList
         data={sortedCheckpoints}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
-          <CheckpointItem item ={item} />
+          <CheckpointItem item ={item} onEditCheckpoint={onEditCheckpoint}/>
         )}
       />
     </View>

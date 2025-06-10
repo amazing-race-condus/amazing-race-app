@@ -1,27 +1,22 @@
-import { View, Text, TextInput, Pressable, Platform } from "react-native"
+import { View, Text, TextInput, Pressable } from "react-native"
 import { Stack } from "expo-router"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
+import { getLimits, setLimits } from "@/services/routeService"
 
 const RouteMinMax = () => {
-  const url =
-      Platform.OS === "web"
-        ? process.env.EXPO_PUBLIC_WEB_BACKEND_URL
-        : process.env.EXPO_PUBLIC_BACKEND_URL
-
   const eventId = 1
   const [minimum, setMinimum] = useState("")
   const [maximum, setMaximum] = useState("")
   const dispatch = useDispatch<AppDispatch>()
 
   const getInitialLimits = async () => {
-    const response = await axios.get(`${url}/settings/${eventId}/limits`)
-    const initialLimits = response.data
+    const initialLimits = await getLimits(eventId)
     if (initialLimits.minRouteTime && initialLimits.maxRouteTime) {
       setMinimum(initialLimits.minRouteTime.toString())
       setMaximum(initialLimits.maxRouteTime.toString())
@@ -34,7 +29,7 @@ const RouteMinMax = () => {
 
   const updateLimit = async (limit: RouteLimit) => {
     try {
-      await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
+      await setLimits(limit)
       dispatch(setNotification("Minimi- ja maksimiajat päivitetty.", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -47,9 +42,9 @@ const RouteMinMax = () => {
 
   const updateRouteMinMax = () => {
     const data = {
-      "id": eventId,
-      "minRouteTime": Number(minimum),
-      "maxRouteTime": Number(maximum)
+      id: eventId,
+      minRouteTime: Number(minimum),
+      maxRouteTime: Number(maximum)
     }
     updateLimit(data)
   }

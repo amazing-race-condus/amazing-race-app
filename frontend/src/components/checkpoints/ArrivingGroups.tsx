@@ -1,10 +1,8 @@
 import { View, Text } from "react-native"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState, AppDispatch } from "@/store/store"
-import { useFocusEffect } from "expo-router"
-import { fetchGroups } from "@/reducers/groupSlice"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 import GroupList from "../groups/GroupList"
 import Search from "@/components/ui/Search"
 import { getArrivingGroups } from "@/services/groupService"
@@ -12,7 +10,6 @@ import { Group } from "@/types"
 
 const ArrivingGroups = ({ checkpointId = 1 }) => {
   const [search, setSearch] = useState<string>("")
-  const dispatch: AppDispatch = useDispatch()
   const groups = useSelector((state: RootState) => state.groups)
   const [arrivingGroups, setArrivingGroups] = useState<Group[]>([])
 
@@ -20,22 +17,15 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
     item.name.toLowerCase().startsWith(search.toLowerCase())
   )
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(fetchGroups())
-
-      const fetchArrivingGroups = async() => {
-        try {
-          const newArrivingGroups = await getArrivingGroups(checkpointId)
-          setArrivingGroups(newArrivingGroups)
-        } catch (error) {
-          console.error("A problem with fetching arriving groups:", error)
-        }
-      }
-      fetchArrivingGroups()
-
-    }, [dispatch, checkpointId])
-  )
+  const fetchArrivingGroups = async () => {
+    try {
+      const newArrivingGroups = await getArrivingGroups(checkpointId)
+      setArrivingGroups(newArrivingGroups.sort((a, b) => a.name.localeCompare(b.name)))
+    } catch (error) {
+      console.error("A problem with fetching arriving groups:", error)
+    }
+  }
+  fetchArrivingGroups()
 
   return (
     <View style={styles.container}>

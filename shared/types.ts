@@ -1,5 +1,6 @@
 export type CheckpointType = "START" | "FINISH" | "INTERMEDIATE";
 export type PenaltyType = "HINT" | "SKIP" | "OVERTIME";
+export type CompleteType = "NORMAL" | "SKIP" | "OVERTIME";
 
 export type Checkpoint = {
     type: CheckpointType;
@@ -10,7 +11,7 @@ export type Checkpoint = {
     easyHint: string | null;
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId" | "hint" | "easyHint">
+export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId">
 
 export interface RouteLimit {
     id: number,

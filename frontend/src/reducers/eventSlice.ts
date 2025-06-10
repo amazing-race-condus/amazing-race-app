@@ -41,8 +41,11 @@ export const setStartReducer = (id : number) => async (dispatch: AppDispatch) =>
   try {
     const updatedEvent = await startGame(id)
     const time = new Date(updatedEvent.startTime!)
+    const datetext = time.toTimeString().split(" ")[0].split(":")
+    const hours = datetext[0]
+    const minutes = datetext[1]
     dispatch(setEvents(updatedEvent))
-    dispatch(setNotification(`Peli aloitettu ${time.getHours()}.${time.getMinutes()}`, "success"))
+    dispatch(setNotification(`Peli aloitettu ${hours}:${minutes}`, "success"))
   } catch (error) {
     console.error("Failed to start the game:", error)
     dispatch(setNotification("Pelin aloitus epäonnistui", "error"))
@@ -53,8 +56,11 @@ export const setEndReducer = (id : number) => async (dispatch: AppDispatch) => {
   try {
     const updatedEvent = await endGame(id)
     const time = new Date(updatedEvent.endTime!)
+    const datetext = time.toTimeString().split(" ")[0].split(":")
+    const hours = datetext[0]
+    const minutes = datetext[1]
     dispatch(setEvents(updatedEvent))
-    dispatch(setNotification(`Peli päätetty ${time.getHours()}.${time.getMinutes()}`, "success"))
+    dispatch(setNotification(`Peli päätetty ${hours}:${minutes}`, "success"))
   } catch (error) {
     console.error("Failed to start the game:", error)
     dispatch(setNotification("Pelin päätös epäonnistui", "error"))

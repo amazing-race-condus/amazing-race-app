@@ -7,13 +7,16 @@ import theme from "@/theme"
 import ActionButton from "../ui/ActionButton"
 import { handleAlert } from "@/utils/handleAlert"
 
-const GroupCheckpointActions = (
-  { checkpoint, group, usedHints, completeCheckpoint }:
+const GroupCheckpointNotActiveActions = (
+  { checkpoint, group, usedHints, usedSkip, usedOvertime, completeCheckpoint }:
   {
     checkpoint: Checkpoint
     group: Group
     usedHints: Penalty[]
-    completeCheckpoint: (id: number, completeType: CompleteType) => void
+    usedSkip: Penalty[]
+    usedOvertime: Penalty[]
+    passed: number[]
+    completeCheckpoint: (id: number, skip: CompleteType) => void
   }
 ) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -42,19 +45,24 @@ const GroupCheckpointActions = (
     <View style={{ flexDirection: "column"}}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
-          style={styles.button}
+          style={[
+            styles.button,
+            ...(usedOvertime.length > 0 || usedSkip.length > 0  ? [{ opacity: 0.4}] : [])
+          ]}
           onPress={() => {
-            completeCheckpoint(checkpoint.id, "SKIP")
+            if (usedOvertime.length === 0 && usedSkip.length === 0) {
+              handleAlert({
+                confirmText: "Skip",
+                title: "Skippauksen rangaistus",
+                message: "Oletko varma, että haluat merkata rastin skipatuksi? Ryhmä saa 30 min rangaistuksen",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))
+                },
+              })
+            }
           }}
           text={"Skip"}
         />
-        <ActionButton
-          style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
-          text={"Suorita"}
-        />
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
           style={styles.button}
           onPress={() => {
@@ -74,8 +82,23 @@ const GroupCheckpointActions = (
           text={"Vihjepuhelin"}
         />
         <ActionButton
-          style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id, "OVERTIME")}
+          style={[
+            styles.button,
+            ...(usedOvertime.length > 0 || usedSkip.length > 0 ? [{ opacity: 0.4}] : [])
+          ]}
+          onPress={() => {
+            if (usedOvertime.length === 0 && usedSkip.length === 0){
+
+              handleAlert({
+                confirmText: "Yliaika",
+                title: "Yliaika rangaistus",
+                message: "Oletko varma, että haluat merkata rastin yliajaksi? Ryhmä saa 5 min rangaistuksen",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))
+                },
+              })
+            }
+          }}
           text={"Yliaika"}
         />
       </View>
@@ -83,7 +106,7 @@ const GroupCheckpointActions = (
   )
 }
 
-export default GroupCheckpointActions
+export default GroupCheckpointNotActiveActions
 
 const styles = StyleSheet.create({
   button: {

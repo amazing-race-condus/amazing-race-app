@@ -2,6 +2,11 @@ import { hintPenalties, skipPenalties, overtimePenalties, createMockStore } from
 import { Provider } from "react-redux"
 import { render, screen, act, fireEvent } from "@testing-library/react-native"
 import ListCheckpointPenalties from "../ListGroupCheckpointPenalties"
+import { handleAlert } from "@/utils/handleAlert"
+
+jest.mock("@/utils/handleAlert", () => ({
+  handleAlert: jest.fn()
+}))
 
 describe("<ListCheckpointPenalties />", () => {
   let store: any
@@ -9,6 +14,7 @@ describe("<ListCheckpointPenalties />", () => {
   beforeEach(() => {
     store = createMockStore()
     store.dispatch = jest.fn()
+    ;(handleAlert as jest.Mock).mockReset()
   })
 
   afterEach(() => {
@@ -80,6 +86,6 @@ describe("<ListCheckpointPenalties />", () => {
       fireEvent.press(deleteButton)
     })
 
-    expect(store.dispatch).toHaveBeenCalledTimes(1)
+    expect(handleAlert).toHaveBeenCalledTimes(1)
   })
 })

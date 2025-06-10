@@ -26,6 +26,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -43,6 +44,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -62,6 +64,7 @@ describe("<GroupCheckpointItem />", () => {
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -71,16 +74,17 @@ describe("<GroupCheckpointItem />", () => {
     const skipButton = screen.getByText("Skip")
     fireEvent.press(skipButton)
 
-    expect(store.dispatch).toHaveBeenCalledTimes(1)
+    expect(mockCompleteCheckpoint).toHaveBeenCalledTimes(1)
   })
 
-  test("overtime dispatches to store when pressed", () => {
+  test("overtime calls completeCheckpoint when pressed", () => {
     render(
       <Provider store={store}>
         <GroupCheckpointItem
           group={group}
           checkpoint={checkpoint}
           nextCheckpointId={checkpoint.id}
+          passed={[2,1]}
           completeCheckpoint={mockCompleteCheckpoint}
           openHint={mockOpenHint}
         />
@@ -90,6 +94,6 @@ describe("<GroupCheckpointItem />", () => {
     const overtimeButton = screen.getByText("Yliaika")
     fireEvent.press(overtimeButton)
 
-    expect(store.dispatch).toHaveBeenCalledTimes(1)
+    expect(mockCompleteCheckpoint).toHaveBeenCalledTimes(1)
   })
 })

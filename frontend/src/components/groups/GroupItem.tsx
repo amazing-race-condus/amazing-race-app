@@ -25,7 +25,9 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
     return (
       <View style={styles.item}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.checkpointName}>{group.name}</Text>
+          <Text
+            style={styles.checkpointName}
+          >{group.name}</Text>
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
             <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveGroup(Number(group.id))}>
               <Text style={styles.buttonText}>Poista</Text>
@@ -42,13 +44,14 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
   return (
     <Link
       href={{
-        pathname: `/(groups)/group/${group.id}`,
-        params: { name: group.name, members: group.members }
+        pathname: `/(groups)/group/${group.id}`
       }}
       asChild
     >
       <TouchableOpacity style={styles.item}>
-        <Text style={styles.checkpointName}>{group.name}</Text>
+        <Text style={[styles.checkpointName,
+          { maxWidth: "80%" }
+        ]}>{group.name}</Text>
         <Entypo name="chevron-right" size={24} color="black" />
       </TouchableOpacity>
     </Link>

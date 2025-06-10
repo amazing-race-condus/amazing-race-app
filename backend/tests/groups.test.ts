@@ -76,6 +76,12 @@ describe("modification of a group", () => {
     })
   })
 
+  afterAll(async () => {
+    await prisma.group.deleteMany({})
+    await prisma.$disconnect()
+    server.close()
+  })
+
   it("succeeds with status code 200 with valid data and id", async () => {
 
     const groupsAtStart = await prisma.group.findMany()
@@ -144,5 +150,3 @@ describe("modification of a group", () => {
     await prisma.group.deleteMany({})
   })
 })
-
-

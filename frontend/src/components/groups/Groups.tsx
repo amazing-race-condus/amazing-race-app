@@ -1,37 +1,46 @@
 import { View, Text } from "react-native"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState, AppDispatch } from "@/store/store"
-import { usePathname, useFocusEffect } from "expo-router"
-import { fetchGroups } from "@/reducers/groupSlice"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
+import { usePathname } from "expo-router"
 import Search from "@/components/ui/Search"
 import GroupList from "./GroupList"
 import { Group } from "@/types"
+import Filter from "../ui/Filter"
+import { sortAlphabetically, sortByStatus, sortByTime } from "@/utils/groupUtils"
 
 const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   const [search, setSearch] = useState<string>("")
-  const dispatch: AppDispatch = useDispatch()
+  const [order, setOrder] = useState<number>(0)
   const groups = useSelector((state: RootState) => state.groups)
   const pathname = usePathname()
+
+  const event = useSelector((state: RootState) => state.event)
 
   const filteredGroups = groups.filter(item =>
     item.name.toLowerCase().startsWith(search.toLowerCase())
   )
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(fetchGroups())
-    }, [dispatch])
-  )
+  if (order === 0) {
+    sortAlphabetically(filteredGroups)
+  } else if (order === 1) {
+    sortByTime(filteredGroups, event)
+  } else if (order === 2) {
+    sortByStatus(filteredGroups)
+  }
 
   return (
     <View style={styles.container}>
-      {pathname === "/" && <Text style={styles.title}>Ryhmät:</Text>}
+      {pathname === "/" && <Text style={styles.title}>Ryhmät</Text>}
       {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
 
       <Search search={search} setSearch={setSearch} />
       {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
+
+      {pathname === "/" &&
+        <Filter order={order} setOrder={setOrder} />
+      }
 
       <GroupList onEditGroup={onEditGroup} groups={filteredGroups} />
     </View>
