@@ -32,8 +32,8 @@ export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => 
     const event = await getEvent(id)
     dispatch(setEvents(event))
   } catch (error) {
-    console.error("Failed to start the game:", error)
-    dispatch(setNotification("Pelin aloitus epäonnistui", "error"))
+    console.error("Failed to fetch event:", error)
+    dispatch(setNotification("Tapahtuman haku epäonnistui", "error"))
   }
 }
 
@@ -62,7 +62,7 @@ export const setEndReducer = (id : number) => async (dispatch: AppDispatch) => {
     dispatch(setEvents(updatedEvent))
     dispatch(setNotification(`Peli päätetty ${hours}:${minutes}`, "success"))
   } catch (error) {
-    console.error("Failed to start the game:", error)
+    console.error("Failed to end the game:", error)
     dispatch(setNotification("Pelin päätös epäonnistui", "error"))
   }
 }
