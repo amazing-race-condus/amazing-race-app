@@ -7,13 +7,16 @@ import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/ui/Notification"
 import { fetchGroups } from "@/reducers/groupSlice"
 import Groups from "@/components/groups/Groups"
+import { getEventReducer } from "@/reducers/eventSlice"
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
+  const eventId = 1
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchGroups())
+      dispatch(getEventReducer(eventId))
     }, [dispatch])
   )
 

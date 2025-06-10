@@ -1,4 +1,4 @@
-import { Checkpoint, Group } from "@/types"
+import { Checkpoint, CompleteType, Group } from "@/types"
 import { View, StyleSheet, Dimensions } from "react-native"
 import { useState } from "react"
 import theme from "@/theme"
@@ -10,7 +10,7 @@ const screenWidth = Dimensions.get("window").width
 
 const GroupCheckpointItem = (
   { checkpoint, group, nextCheckpointId, completeCheckpoint, openHint }:
-  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number, skip: boolean) => void, openHint: () => void }
+  { checkpoint: Checkpoint, group: Group, nextCheckpointId: number, completeCheckpoint: (id: number, completeType: CompleteType) => void, openHint: () => void }
 ) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
