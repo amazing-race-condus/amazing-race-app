@@ -12,6 +12,8 @@ jest.mock("@/services/groupService", () => ({
 
 describe("<EditGroupForm />", () => {
   let store: any
+  const setSelectedGroup= jest.fn()
+  const bottomSheetRef = createRef<BottomSheet>()
 
   beforeEach(() => {
     store = createMockStore()
@@ -23,11 +25,10 @@ describe("<EditGroupForm />", () => {
   })
 
   test("renders correct default falues, radio button and modify button", async () => {
-    const bottomSheetRef = createRef<BottomSheet>()
 
     render(
       <Provider store={store}>
-        <EditGroupForm bottomSheetRef={bottomSheetRef} group={group} />
+        <EditGroupForm bottomSheetRef={bottomSheetRef} group={group} setSelectedGroup={setSelectedGroup}/>
       </Provider>
     )
 
@@ -44,9 +45,6 @@ describe("<EditGroupForm />", () => {
   })
 
   test("calls dispatch after sending the form", async () => {
-    const bottomSheetRef = {
-      current: { close: null }
-    }
 
     const mockEditGroup = editGroup as jest.Mock
     mockEditGroup.mockResolvedValue({
@@ -58,7 +56,7 @@ describe("<EditGroupForm />", () => {
 
     render(
       <Provider store={store}>
-        <EditGroupForm bottomSheetRef={bottomSheetRef as any} group={group} />
+        <EditGroupForm bottomSheetRef={bottomSheetRef} group={group} setSelectedGroup={setSelectedGroup}/>
       </Provider>
     )
 

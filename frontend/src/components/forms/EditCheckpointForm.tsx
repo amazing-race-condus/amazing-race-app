@@ -110,7 +110,7 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
             <Text>Lähtö</Text>
           </View>
           <View style={styles.radiobuttonItem}>
-            <RadioButton value="INTERMEDIATE" />
+            <RadioButton value="INTERMEDIATE" testID="radio-intermediate" />
             <Text>Välirasti</Text>
           </View>
           <View style={styles.radiobuttonItem}>
@@ -128,7 +128,7 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa ryhmää</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa rastia</Text>
       </Pressable>
     </BottomSheetModal>
   )
