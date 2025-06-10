@@ -53,7 +53,7 @@ const GameView = () => {
       <View style={style.container}>
         {event.startTime &&
           <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli aloitettu: {formatTime(new Date(event.startTime!))}</Text>}
-        {event.endTime && 
+        {event.endTime &&
           <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli lopetettu: {formatTime(new Date(event.endTime!))}</Text>}
       </View>}
     </View>
