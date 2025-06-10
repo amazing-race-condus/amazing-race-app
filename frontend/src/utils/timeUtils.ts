@@ -1,8 +1,9 @@
 import { Event, Group } from "@/types"
+import { getPenaltyMinutes } from "./groupUtils"
 
 export const getRaceTime = (group: Group, event: Event) => {
   let raceTime: string | null = null
-  const totalPenalty = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
+  const totalPenalty = getPenaltyMinutes(group)
 
   if (event.startTime) {
     const startTime = new Date(event.startTime)
