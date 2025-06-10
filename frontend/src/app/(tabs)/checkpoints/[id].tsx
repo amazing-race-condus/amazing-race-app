@@ -12,7 +12,7 @@ const Checkpoint = () => {
     state.checkpoints.find(g => g.id === Number(id))
   )
 
-  const translatedType = getType(checkpoint?.type || "") || "välirasti"
+  const translatedType = checkpoint?.type ? getType(checkpoint.type) : "välirasti"
 
   return (
     <View style={styles.container}>
