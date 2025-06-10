@@ -1,22 +1,12 @@
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import QRCode from "react-qr-code"
 import BottomSheetModal from "../ui/BottomSheetModal"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { AppDispatch, RootState } from "@/store/store"
-import { useFocusEffect } from "expo-router"
-import { useCallback } from "react"
+import { useSelector } from "react-redux"
 import { Linking, Text, View } from "react-native"
+import { RootState } from "@/store/store"
 
 const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<BottomSheetMethods | null>, nextCheckpointId: number, easyMode: boolean}) => {
-  const dispatch: AppDispatch = useDispatch()
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
-
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(fetchCheckpoints())
-    }, [dispatch])
-  )
 
   const nextCheckpoint = checkpoints.find(cp => cp.id === nextCheckpointId)
 
