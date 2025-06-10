@@ -44,7 +44,7 @@ const validateHint = async (hint: unknown, res: Response): Promise<boolean> => {
     return false
   }
 
-  if  (!(hint.startsWith("http://") || hint.startsWith("https://"))) {
+  if  (hint !== "" && !(hint.startsWith("http://") || hint.startsWith("https://"))) {
     res.status(400).json({ error: "Vihjeen tulee alkaa http:// tai https://." })
     return false
   }
@@ -65,10 +65,10 @@ const validateHint = async (hint: unknown, res: Response): Promise<boolean> => {
           }
         },
       ]
-    }
+    },
   })
 
-  if (existingHint) {
+  if (existingHint && existingHint.hint !== "" && existingHint.easyHint !== "") {
     res.status(400).json({ error: "Vihje on jo käytössä. Syötä uniikki vihje." })
     return false
   }
