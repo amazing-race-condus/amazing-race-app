@@ -10,7 +10,7 @@ import { View, Pressable, TouchableOpacity, Text } from "react-native"
 import { useDispatch } from "react-redux"
 import { Entypo } from "@expo/vector-icons"
 
-const CheckpointItem = ({ item }: { item: Checkpoint }) => {
+const CheckpointItem = ({ item, onEditCheckpoint }: { item: Checkpoint, onEditCheckpoint?: (checkpoint: Checkpoint) => void }) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const translatedType = getType(item.type)
   const pathname = usePathname()
@@ -38,7 +38,7 @@ const CheckpointItem = ({ item }: { item: Checkpoint }) => {
             <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]}>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => onEditCheckpoint?.(item)}>
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>
