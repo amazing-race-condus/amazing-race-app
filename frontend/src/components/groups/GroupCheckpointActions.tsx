@@ -71,7 +71,6 @@ const GroupCheckpointActions = (
               dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
             }
           }}
-          count={usedHints.length}
           text={"Vihjepuhelin"}
         />
         <ActionButton
