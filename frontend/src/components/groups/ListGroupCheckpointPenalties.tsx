@@ -5,6 +5,7 @@ import React from "react"
 import { View, Pressable, Text, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import { handleAlert } from "@/utils/handleAlert"
 
 const ListCheckpointPenalties = (
   { groupId, usedHints, usedSkip, usedOvertime }:
@@ -28,7 +29,16 @@ const ListCheckpointPenalties = (
           <Pressable
             testID="deleteHintButton"
             style={styles.deleteButton}
-            onPress={() => dispatch(removePenaltyReducer(groupId, usedHints[0].id))}
+            onPress={() => {
+              handleAlert({
+                confirmText: "Poista rangaistus",
+                title: "Vahvista vihjeen poisto",
+                message: "Haluatko poistaa rastin vihjerangaistuksen?",
+                onConfirm: async () => {
+                  dispatch(removePenaltyReducer(groupId, usedHints[0].id))
+                },
+              })
+            }}
           >
             <MaterialIcons name="delete" size={20} color="#ff4444" />
           </Pressable>
@@ -41,7 +51,16 @@ const ListCheckpointPenalties = (
           </Text>
           <Pressable
             style={styles.deleteButton}
-            onPress={() => dispatch(removePenaltyReducer(groupId, usedSkip[0].id))}
+            onPress={() => {
+              handleAlert({
+                confirmText: "Poista rangaistus",
+                title: "Vahvista skippauksen poisto",
+                message: "Haluatko poistaa rastin skippauksen?",
+                onConfirm: async () => {
+                  dispatch(removePenaltyReducer(groupId, usedSkip[0].id))
+                },
+              })
+            }}
           >
             <MaterialIcons name="delete" size={20} color="#ff4444" />
           </Pressable>
@@ -54,7 +73,16 @@ const ListCheckpointPenalties = (
           </Text>
           <Pressable
             style={styles.deleteButton}
-            onPress={() => dispatch(removePenaltyReducer(groupId, usedOvertime[0].id))}
+            onPress={() => {
+              handleAlert({
+                confirmText: "Poista rangaistus",
+                title: "Vahvista yliajan poisto",
+                message: "Haluatko poistaa rastin yliaika rangaistuksen?",
+                onConfirm: async () => {
+                  dispatch(removePenaltyReducer(groupId, usedOvertime[0].id))
+                },
+              })
+            }}
           >
             <MaterialIcons name="delete" size={20} color="#ff4444" />
           </Pressable>
