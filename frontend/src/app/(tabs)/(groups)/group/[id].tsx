@@ -40,18 +40,10 @@ const Team = () => {
       const checkpointsRoute = async () => {
         setCheckpoints(group.route)
         setNextCheckpointId(group.nextCheckpointId!)
-        // for (let i = 0; i < checkpoints.length; i++){
-        //   if (checkpoints[i].id === nextCheckpointId) {
-        //     break
-        //   }
-        //   setPassedIds(passedCheckpointIds.concat([checkpoints[i].id]))
-        // }
 
         const passedIds = group.route
           .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
           .map(cp => cp.id)
-
-        console.log(passedIds)
 
         setPassedIds(passedIds)
       }
@@ -68,7 +60,7 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
-          setPassedIds(passedCheckpointIds.concat(currentCheckpointIndex))
+          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
           setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {
@@ -84,6 +76,7 @@ const Team = () => {
         onConfirm: () => {
           const currentCheckpointIndex = checkpoints.findIndex(c => c.id === id)
           const nextId = checkpoints[currentCheckpointIndex + 1]?.id || -1
+          setPassedIds(passedCheckpointIds.concat([checkpoints[currentCheckpointIndex]?.id]))
           setNextCheckpointId(nextId)
           dispatch(giveNextCheckpointReducer(group.id, nextId))
           if (nextId === -1) {

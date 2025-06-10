@@ -35,7 +35,6 @@ const GroupCheckpointItem = (
         checkpoint={checkpoint}
         isActive={isActiveCheckpoint}
         isExpanded={isExpanded}
-        isPenalties={isPenalties}
         isPassed={passed.includes(checkpoint.id)}
         openHint={openHint}
         toggleExpanded={toggleExpanded}
@@ -49,31 +48,38 @@ const GroupCheckpointItem = (
             completeCheckpoint={completeCheckpoint}
           />
 
-          <ListGroupCheckpointPenalties
-            groupId={group.id}
-            usedHints={usedHints}
-            usedSkip={usedSkip}
-            usedOvertime={usedOvertime}
-          />
+          { (checkpoint.type !== "START" ) && (checkpoint.type !== "FINISH" ) && isPenalties &&(
+            <ListGroupCheckpointPenalties
+              groupId={group.id}
+              usedHints={usedHints}
+              usedSkip={usedSkip}
+              usedOvertime={usedOvertime}
+            />
+          )}
         </>
       )}
 
-      {(isExpanded && (checkpoint.type !== "START" ) && (passed.includes(checkpoint.id))) && (
+      {(isExpanded && (checkpoint.type !== "START" ) && (checkpoint.type !== "FINISH" ) && (passed.includes(checkpoint.id))) &&(
         <>
           <GroupCheckpointNotActiveActions
             checkpoint={checkpoint}
             group={group}
             usedHints={usedHints}
+            usedSkip={usedSkip}
+            usedOvertime={usedOvertime}
             passed={passed}
             completeCheckpoint={completeCheckpoint}
           />
 
-          <ListGroupCheckpointPenalties
-            groupId={group.id}
-            usedHints={usedHints}
-            usedSkip={usedSkip}
-            usedOvertime={usedOvertime}
-          />
+          {isPenalties &&(
+            <ListGroupCheckpointPenalties
+              groupId={group.id}
+              usedHints={usedHints}
+              usedSkip={usedSkip}
+              usedOvertime={usedOvertime}
+            />
+          )
+          }
         </>
       )}
     </View>

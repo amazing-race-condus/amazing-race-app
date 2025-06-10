@@ -6,13 +6,17 @@ import { useDispatch } from "react-redux"
 import theme from "@/theme"
 import ActionButton from "../ui/ActionButton"
 import { handleAlert } from "@/utils/handleAlert"
+import { setNotification } from "@/reducers/notificationSlice"
+import { opacity } from "react-native-reanimated/lib/typescript/Colors"
 
 const GroupCheckpointNotActiveActions = (
-  { checkpoint, group, usedHints, passed, completeCheckpoint }:
+  { checkpoint, group, usedHints, usedSkip, usedOvertime, completeCheckpoint }:
   {
     checkpoint: Checkpoint
     group: Group
     usedHints: Penalty[]
+    usedSkip: Penalty[]
+    usedOvertime: Penalty[]
     passed: number[]
     completeCheckpoint: (id: number, skip: boolean) => void
   }
@@ -43,17 +47,17 @@ const GroupCheckpointNotActiveActions = (
     <View style={{ flexDirection: "column"}}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
-          style={styles.button}
+          style={[
+            styles.button,
+            ...(usedSkip.length > 0 ? [{ opacity: 0.4}] : [])
+          ]}
           onPress={() => {
-            dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))
+            if (usedSkip.length === 0) {
+              dispatch(givePenaltyReducer(group.id, checkpoint.id, "SKIP", 30))
+            }
           }}
           text={"Skip"}
         />
-        {/* <ActionButton
-          style={styles.button}
-          onPress={() => completeCheckpoint(checkpoint.id, false)}
-          text={"Suorita"}
-        /> */}
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <ActionButton
@@ -76,8 +80,15 @@ const GroupCheckpointNotActiveActions = (
           text={"Vihjepuhelin"}
         />
         <ActionButton
-          style={styles.button}
-          onPress={() => dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))}
+          style={[
+            styles.button,
+            ...(usedOvertime.length > 0 ? [{ opacity: 0.4}] : [])
+          ]}
+          onPress={() => {
+            if (usedOvertime.length === 0){
+              dispatch(givePenaltyReducer(group.id, checkpoint.id, "OVERTIME", 5))
+            }
+          }}
           text={"Yliaika"}
         />
       </View>

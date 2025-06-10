@@ -7,12 +7,11 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import theme from "@/theme"
 
 const GroupCheckpointHeader = (
-  {checkpoint, isActive, isExpanded, isPenalties, isPassed, openHint, toggleExpanded}:
+  {checkpoint, isActive, isExpanded, isPassed, openHint, toggleExpanded}:
   {
     checkpoint: Checkpoint
     isActive: boolean
     isExpanded: boolean
-    isPenalties: boolean
     isPassed: boolean
     openHint: () => void
     toggleExpanded: () => void
