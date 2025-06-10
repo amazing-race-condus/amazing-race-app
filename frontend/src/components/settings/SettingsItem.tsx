@@ -4,10 +4,12 @@ import React from "react"
 import { TouchableOpacity, View, Text } from "react-native"
 import { Entypo } from "@expo/vector-icons"
 
-const SettingsItem = ({ text, link }: { text: string, link: string}) => {
+const SettingsItem = ({ text, link, dimmed=false }: { text: string, link: string, dimmed?: boolean}) => {
+  const style = dimmed ? styles.dimmedItem : styles.item
+
   return (
     <Link href={link} asChild>
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={style}>
         <View style={{ flex: 1 }}>
           <Text style={styles.checkpointName}>
             { text }

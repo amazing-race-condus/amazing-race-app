@@ -7,6 +7,7 @@ const theme = {
     textInput: "000",
     inputField: "#FFF",
     listItemBackground: "#CEDDF0",
+    dimmedListItemBackground: "#8A919C",
     notificationBackground: "#1C4F10",
     errorBackground: "#661D24",
     warningBackground: "#D3E200",
