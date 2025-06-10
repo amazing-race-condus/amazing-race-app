@@ -1,13 +1,19 @@
-import React from "react"
 import { View, Text, StyleSheet } from "react-native"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import Feather from "@expo/vector-icons/Feather"
 import { Group } from "@/types"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
+import { getRaceTime } from "@/utils/timeUtils"
 
 const GroupInfoHeader = (
   { group, totalPenalty }:
   { group: Group, totalPenalty: number }
 ) => {
+
+  const event = useSelector((state: RootState) => state.event)
+  const raceTime = getRaceTime(group, event)
+
   return (
     <View style={styles.statsContainer}>
       <View style={styles.statItem}>
@@ -18,7 +24,7 @@ const GroupInfoHeader = (
       <View style={styles.statItem}>
         <FontAwesome6 name="clock" size={20} color="#2196F3" />
         <Text style={styles.statLabel}>Aika</Text>
-        <Text style={styles.statValue}>--:--</Text>
+        <Text style={styles.statValue}>{raceTime === null ? "--:--" : raceTime}</Text>
       </View>
       <View style={styles.statItem}>
         <Feather name="x-octagon" size={20} color="#FF5722" />
