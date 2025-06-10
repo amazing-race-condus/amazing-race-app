@@ -15,7 +15,8 @@ const PassedGroupsResults = () => {
   let groups = useSelector((state: RootState) => state.groups)
   groups = sortByTime([...groups], event)
 
-  //const passedGroups = groups.filter(group => group.finishTime)
+  const passedGroups = groups.filter(group => group.finishTime)
+  const unPassedGroups = groups.filter(group => !group.finishTime)
 
   const printableTime = (group: Group, event: Event) => {
     const time = getRaceTime(group, event)
@@ -35,7 +36,7 @@ const PassedGroupsResults = () => {
       {!gameStarted && <Text style={styles.breadText}>Peliä ei ole aloitettu.</Text>}
       {(gameStarted && !gameFinished) && <Text style={styles.breadText}>Peli on käynnissä.</Text>}
       {gameFinished && <Text style={styles.breadText}>Peli on päättynyt.</Text>}
-      {groups.map((group, i)=>
+      {passedGroups.map((group, i)=>
         <Link
           key={group.id}
           href={{
@@ -49,6 +50,20 @@ const PassedGroupsResults = () => {
             <Text style={{ color: "gray" }}>{printableTime(group, event)}</Text>
           </Pressable>
         </Link>)}
+      {unPassedGroups.map((group, i)=>
+        <Link
+          key={group.id}
+          href={{
+            pathname: `/(groups)/group/${group.id}`
+          }}
+          asChild
+        >
+          <Pressable style={styles.item}>
+            <Text>{group.name}</Text>
+            <Text style={{ color: "gray" }}>{printableTime(group, event)}</Text>
+          </Pressable>
+        </Link>)}
+
     </View>
   )
 }
