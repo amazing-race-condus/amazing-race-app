@@ -1,8 +1,9 @@
 import { AppDispatch } from "@/store/store";
-import BottomSheet, { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
 import { Keyboard, Platform, Pressable, Text } from "react-native";
 import { useDispatch } from "react-redux";
+import BottomSheetModal from "../ui/BottomSheetModal";
 
 const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
