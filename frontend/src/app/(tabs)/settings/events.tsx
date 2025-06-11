@@ -3,16 +3,15 @@ import { View, Text } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/ui/Notification"
-import GameView from "@/components/settings/GameView"
 
-const CheckpointSettings = () => {
+const eventSettings = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Notification />
-      <Text>NENENENNENEE</Text>
+      <Text>Sebastian Beijar</Text>
     </View>
   )
 }
 
-export default CheckpointSettings
+export default eventSettings
