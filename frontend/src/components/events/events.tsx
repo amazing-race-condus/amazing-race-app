@@ -1,12 +1,8 @@
 import { View, Text, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import { RootState, AppDispatch } from "@/store/store"
 import { getEvents } from "@/services/eventService"
-import { usePathname } from "expo-router"
 import { Event } from "@/types"
-import Checkpoints from "../checkpoints/Checkpoints"
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([])
@@ -22,11 +18,15 @@ const Events = () => {
 
   return (
     <View style={[styles.content, { flex: 1 }]}>
-      <Text>Huulio</Text>
-      {/* <FlatList
-      /> */}
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item.id?.toString()}
+        renderItem={({ item }) => (
+          <Text>{item.name}</Text>
+        )}
+      />
     </View>
   )
 }
 
-export default Checkpoints
+export default Events
