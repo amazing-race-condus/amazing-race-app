@@ -55,13 +55,13 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
         <Text style={[styles.checkpointName,
           { maxWidth: "55%" }
         ]}>{group.name}</Text>
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ marginRight: 8 }}>
             <StatusBadge
               group={group}
             />
           </View>
-          <View style={{ marginRight: 8 }}>
+          <View style={{ marginRight: 8, minWidth: 40, alignItems: "flex-end" }}>
             <PrintableTime
               group={group}
               event={event}
