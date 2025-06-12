@@ -14,10 +14,10 @@ import { AddEvent, Event } from "@/types"
 import { AxiosError } from "axios"
 
 const AddEventForm = ({
-    bottomSheetRef,
-    events,
-    setEvents
-  }: {
+  bottomSheetRef,
+  events,
+  setEvents
+}: {
     bottomSheetRef: React.RefObject<BottomSheet | null>
     events: Event[]
     setEvents: (event: Event[]) => void

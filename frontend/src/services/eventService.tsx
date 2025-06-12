@@ -10,7 +10,7 @@ export const getEvents = async () => {
 export const getEvent = async (id: number) => {
   const response = await axios.get<Event>(`${url}/event/${id}`)
   return response.data
-} 
+}
 
 export const startGame = async (id: number) => {
   const response = await axios.put<Event>(`${url}/event/start/${id}`)

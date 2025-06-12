@@ -1,4 +1,4 @@
-import DateTimePicker, { DateType, useDefaultStyles } from "react-native-ui-datepicker";
+import DateTimePicker, { DateType, useDefaultStyles } from "react-native-ui-datepicker"
 
 const Calendar = ({
   selected,
@@ -7,7 +7,7 @@ const Calendar = ({
   selected: DateType
   setSelected: (date: DateType) => void
 }) => {
-  const defaultStyles = useDefaultStyles();
+  const defaultStyles = useDefaultStyles()
 
   return (
     <DateTimePicker
@@ -18,7 +18,7 @@ const Calendar = ({
       firstDayOfWeek={1}
       locale="fi"
     />
-  );
+  )
 }
 
 export default Calendar

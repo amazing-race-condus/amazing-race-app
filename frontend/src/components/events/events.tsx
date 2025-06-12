@@ -1,6 +1,6 @@
 import { View, Text, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { getEventReducer } from "@/reducers/eventSlice"
 import { getEvents } from "@/services/eventService"
@@ -10,9 +10,9 @@ import EventItem from "./eventItem"
 import { AppDispatch } from "@/store/store"
 
 const Events = ({
-    events,
-    setEvents
-  }: {
+  events,
+  setEvents
+}: {
     events: Event[]
     setEvents: (event: Event[]) => void
   }) => {
