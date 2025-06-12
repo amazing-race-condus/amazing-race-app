@@ -3,11 +3,10 @@ import { styles } from "@/styles/commonStyles"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store/store"
 import { Link } from "expo-router"
-import { getRaceTime } from "@/utils/timeUtils"
-import { Group, Event } from "@/types"
 import { sortByTime } from "@/utils/groupUtils"
 import { useState } from "react"
 import Filter from "../ui/Filter"
+import PrintableTime from "./GroupPrintableTime"
 
 const PassedGroupsResults = () => {
   const event = useSelector((state: RootState) => state.event)
@@ -20,21 +19,6 @@ const PassedGroupsResults = () => {
 
   const passedGroups = groups.filter(group => group.finishTime && group.easy === (filterOrder === 1))
   const unPassedGroups = groups.filter(group => !group.finishTime && group.easy === (filterOrder === 1))
-
-  const PrintableTime = (group: Group, event: Event) => {
-    const totalMinutes = getRaceTime(group, event)
-    const hours = Math.floor(totalMinutes! / 60)
-    const minutes = totalMinutes! % 60
-    const time = `${hours}:${minutes.toString().padStart(2, "0")}`
-
-    if (!time)
-      return <Text>-</Text>
-
-    if (!group.finishTime)
-      return <Text style={{ color: "#aaa" }}>{time}</Text>
-
-    return <Text style={{ color: "green", fontWeight: 700 }}>{time}</Text>
-  }
 
   return (
     <View>
@@ -54,7 +38,7 @@ const PassedGroupsResults = () => {
           <Pressable style={styles.item}>
             <Text>{i+1}.</Text>
             <Text>{group.name}</Text>
-            <Text style={{ color: "gray" }}>{PrintableTime(group, event)}</Text>
+            <Text style={{ color: "gray" }}>{PrintableTime({group, event})}</Text>
           </Pressable>
         </Link>)}
       {unPassedGroups.map((group, i)=>
@@ -67,7 +51,7 @@ const PassedGroupsResults = () => {
         >
           <Pressable style={styles.item}>
             <Text>{group.name}</Text>
-            <Text style={{ color: "gray" }}>{PrintableTime(group, event)}</Text>
+            <Text style={{ color: "gray" }}>{PrintableTime({group, event})}</Text>
           </Pressable>
         </Link>)}
 
