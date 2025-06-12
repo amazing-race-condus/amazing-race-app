@@ -2,6 +2,12 @@ import axios from "axios"
 import { url } from "../config"
 import { Event } from "@/types"
 
+export const getEvents = async () => {
+  const request = axios.get<Event[]>(`${url}/event`)
+  const response = await request
+  return response.data
+}
+
 export const getEvent = async (id : number) => {
   const request = axios.get<Event>(`${url}/event/${id}`)
   const response = await request

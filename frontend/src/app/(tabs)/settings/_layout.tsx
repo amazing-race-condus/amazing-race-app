@@ -25,6 +25,9 @@ export default function Layout() {
       <Stack.Screen
         name="results"
       />
+      <Stack.Screen
+        name="events"
+      />
     </Stack>
   )
 }
