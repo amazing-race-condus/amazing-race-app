@@ -14,6 +14,7 @@ const initialState: Event = {
   routeLimits: [],
   minRouteTime: null,
   maxRouteTime: null,
+  eventDate: null,
   penalties: []
 }
 

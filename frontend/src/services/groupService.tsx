@@ -18,8 +18,7 @@ export const createGroup = async (newGroup: AddGroup) => {
 }
 
 export const removeGroup = async (id: number) => {
-  const request = axios.delete(`${url}/groups/${id}`)
-  const response = await request
+  const response = await axios.delete(`${url}/groups/${id}`)
   return response.data
 }
 
@@ -29,19 +28,16 @@ export const giveNextCheckpoint = async (id: number, checkpointId: number) => {
 }
 
 export const dnfGroup = async (id: number) => {
-  const request = axios.put(`${url}/groups/${id}/dnf`)
-  const response = await request
+  const response = await axios.put(`${url}/groups/${id}/dnf`)
   return response.data
 }
 
 export const disqualifyGroup = async (id: number) => {
-  const request = axios.put(`${url}/groups/${id}/disqualify`)
-  const response = await request
+  const response = await axios.put(`${url}/groups/${id}/disqualify`)
   return response.data
 }
 
 export const editGroup = async (id: number, newObject: AddGroup) => {
-  const request = axios.put(`${url}/groups/${id}`, newObject)
-  const response = await request
+  const response = await axios.put(`${url}/groups/${id}`, newObject)
   return response.data
 }

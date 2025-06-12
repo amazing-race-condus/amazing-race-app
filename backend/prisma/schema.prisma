@@ -43,6 +43,7 @@ model Event {
   endTime        DateTime? @map("end_time")
   minRouteTime   Int?      @map("min_route_time")
   maxRouteTime   Int?      @map("max_route_time")
+  eventDate      DateTime? @map("event_date")
 
   checkpoints        Checkpoint[]
   group              Group[]

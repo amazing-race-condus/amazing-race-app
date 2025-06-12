@@ -69,6 +69,7 @@ export interface Event {
     endTime: Date | null,
     minRouteTime: number | null,
     maxRouteTime: number | null,
+    eventDate: Date | null,
     group: Group[],
     checkpoints: Checkpoint[],
     routeLimits: RouteLimit[],
