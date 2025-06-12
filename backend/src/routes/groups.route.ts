@@ -2,8 +2,15 @@ import express, { Response, Request } from "express"
 import { getGroupById, getAllGroups, getGroupByNextCheckpointId,
   updateNextCheckpoint, createGroup, deleteGroup, toggleDNF,
   toggleDisqualified, modifyGroup } from "../controllers/groups.controller"
+import jwt from "jsonwebtoken"
+import { User } from "@/types"
 
 const groupsRouter = express.Router()
+
+interface CustomRequest extends Request {
+  token?: string | null
+  user?: User | null
+}
 
 // Used in testing
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
@@ -40,7 +47,17 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
   res.json(arrivingGroups)
 })
 
-groupsRouter.post("/", async (req: Request, res: Response) => {
+groupsRouter.post("/", async (req: CustomRequest, res: Response) => {
+  const secret = process.env.SECRET
+  if (!secret) {
+    res.status(500).json({ error: "SECRET is not defined in environment." })
+    return
+  }
+  const decodedToken = jwt.verify(req.token ?? "", secret) as jwt.JwtPayload
+  if (!decodedToken.id) {
+    res.status(400).end()
+    return
+  }
   const { name, members, easy } = req.body
   const group = await createGroup(name, members, easy, res)
 

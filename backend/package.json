@@ -22,9 +22,11 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.26.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.27",
     "@types/supertest": "^6.0.3",
     "dotenv": "^16.5.0",
@@ -43,8 +45,10 @@
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "js-combinatorics": "^2.1.2"
+    "js-combinatorics": "^2.1.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }

@@ -48,6 +48,12 @@ export interface Penalty {
     checkpointId: number
 }
 
+export interface User {
+    id: number,
+    username: string
+    password?: string
+}
+
 export interface Group {
     id: number,
     name: string,
@@ -73,6 +79,11 @@ export interface Event {
     checkpoints: Checkpoint[],
     routeLimits: RouteLimit[],
     penalties: Penalty[]
+}
+
+export interface CustomRequest extends Request {
+  token?: string | null
+  user?: User | null
 }
 
 
