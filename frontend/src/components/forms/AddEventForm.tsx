@@ -1,10 +1,10 @@
-import { AppDispatch } from "@/store/store";
-import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { useRef, useState } from "react";
-import { Keyboard, Platform, Pressable, Text } from "react-native";
-import { useDispatch } from "react-redux";
-import BottomSheetModal from "../ui/BottomSheetModal";
-import { TextInput } from "react-native-gesture-handler";
+import { AppDispatch } from "@/store/store"
+import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
+import { useRef, useState } from "react"
+import { Keyboard, Platform, Pressable, Text } from "react-native"
+import { useDispatch } from "react-redux"
+import BottomSheetModal from "../ui/BottomSheetModal"
+import { TextInput } from "react-native-gesture-handler"
 
 const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()

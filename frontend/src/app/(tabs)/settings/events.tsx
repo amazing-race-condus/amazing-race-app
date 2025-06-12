@@ -8,7 +8,7 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import AddNewButton from "@/components/ui/addNewButton"
 import Events from "@/components/events/events"
 
-const eventSettings = () => {
+const EventSettings = () => {
   const addBottomSheetRef = useRef<BottomSheet>(null)
   const handleAdd = () => {
     addBottomSheetRef.current?.expand()
@@ -24,4 +24,4 @@ const eventSettings = () => {
   )
 }
 
-export default eventSettings
+export default EventSettings
