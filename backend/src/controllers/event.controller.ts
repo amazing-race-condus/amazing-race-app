@@ -65,7 +65,7 @@ export const createEvent = async (event: AddEvent) => {
   const createdEvent = await prisma.event.create({
     data: {
       name: event.name,
-      //eventDate: event.eventDate
+      eventDate: event.eventDate
     }
   })
   return createdEvent

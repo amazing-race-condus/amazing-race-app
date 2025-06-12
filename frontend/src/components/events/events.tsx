@@ -9,10 +9,15 @@ import { Event } from "@/types"
 import EventItem from "./eventItem"
 import { AppDispatch } from "@/store/store"
 
-const Events = () => {
-  const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const [events, setEvents] = useState<Event[]>([])
+const Events = ({
+    events,
+    setEvents
+  }: {
+    events: Event[]
+    setEvents: (event: Event[]) => void
+  }) => {
 
+  const dispatch: AppDispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     const fetchEvents = async () => {
       const getEv = await getEvents()
@@ -20,7 +25,7 @@ const Events = () => {
     }
 
     fetchEvents()
-  }, [])
+  }, [events])
 
   const handleEventChange = async (id : number) => {
     await getEventReducer(id)

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { url } from "../config"
-import { AddEvent } from "@/types"
+import { AddEvent, Event } from "@/types"
 
 export const getEvents = async () => {
   const response = await axios.get<Event[]>(`${url}/event`)

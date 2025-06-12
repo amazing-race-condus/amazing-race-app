@@ -10,26 +10,45 @@ import Calendar from "../ui/Calendar"
 import { DateType } from "react-native-ui-datepicker"
 import theme from "@/theme"
 import { setNotification } from "@/reducers/notificationSlice"
-import { AddEvent } from "@/types"
+import { AddEvent, Event } from "@/types"
+import { AxiosError } from "axios"
 
-const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
+const AddEventForm = ({
+    bottomSheetRef,
+    events,
+    setEvents
+  }: {
+    bottomSheetRef: React.RefObject<BottomSheet | null>
+    events: Event[]
+    setEvents: (event: Event[]) => void
+  }) => {
+
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef<TextInput>(null)
   const [eventName, setEventName] = useState<string>("")
   const [eventDate, setEventDate] = useState<DateType>(new Date())
 
   const addNewEvent = async () => {
-    if (eventName === "") dispatch(setNotification("Ryhmällä täytyy olla nimi.", "error"))
+    if (eventName === "") {
+      dispatch(setNotification("Ryhmällä täytyy olla nimi.", "error"))
+      return
+    }
     try {
-      const event: AddEvent = {
+      const newEvent: AddEvent = {
         name: eventName,
         eventDate: new Date(String(eventDate))
       }
-      createEvent(event)
-    } catch {
-      console.log("Hupsista")
+      createEvent(newEvent)
+      setEvents(events)
+      dispatch(setNotification("Tapahtuma luotu.", "success"))
+    } catch (error) {
+      console.error("Failed to create event", error)
+      if (error instanceof AxiosError) {
+        dispatch(setNotification(
+          error.response?.data.error ?? `Tapahtumaa ei voitu luoda: ${error.message}`, "error"
+        ))
+      }
     }
-    console.log(typeof(eventDate))
     setEventName("")
     setEventDate(new Date())
     Keyboard.dismiss()
