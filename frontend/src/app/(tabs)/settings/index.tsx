@@ -30,6 +30,10 @@ const Settings = () => {
         link="/settings/game"
       />
       <SettingsItem
+        text="Hallinnoi tapahtumia"
+        link="/settings/events"
+      />
+      <SettingsItem
         text="Tulokset"
         link="/settings/results"
         dimmed={!gameFinished}

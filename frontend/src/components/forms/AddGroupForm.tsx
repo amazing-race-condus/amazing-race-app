@@ -8,10 +8,11 @@ import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
 import { styles } from "@/styles/commonStyles"
 import BottomSheetModal from "../ui/BottomSheetModal"
+import { TextInput } from "react-native-gesture-handler"
 
 const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const nextRef = useRef(null)
+  const nextRef = useRef<TextInput>(null)
   const [groupname, setGroupname] = useState<string>("")
   const [groupMembers, setGroupMembers] = useState<number>(0)
   const [easy, setEasy] = useState<boolean>(false)
