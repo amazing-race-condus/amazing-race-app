@@ -6,17 +6,20 @@ import { Link } from "expo-router"
 import { getRaceTime } from "@/utils/timeUtils"
 import { Group, Event } from "@/types"
 import { sortByTime } from "@/utils/groupUtils"
+import { useState } from "react"
+import Filter from "../ui/Filter"
 
 const PassedGroupsResults = () => {
   const event = useSelector((state: RootState) => state.event)
   const gameStarted = Boolean(event.startTime)
   const gameFinished = Boolean(event.endTime)
+  const [filterOrder, setFilterOrder] = useState<number>(0)
 
   let groups = useSelector((state: RootState) => state.groups)
   groups = sortByTime([...groups], event)
 
-  const passedGroups = groups.filter(group => group.finishTime)
-  const unPassedGroups = groups.filter(group => !group.finishTime)
+  const passedGroups = groups.filter(group => group.finishTime && group.easy === (filterOrder === 1))
+  const unPassedGroups = groups.filter(group => !group.finishTime && group.easy === (filterOrder === 1))
 
   const PrintableTime = (group: Group, event: Event) => {
     const totalMinutes = getRaceTime(group, event)
@@ -39,6 +42,7 @@ const PassedGroupsResults = () => {
       {!gameStarted && <Text style={styles.breadText}>Peliä ei ole aloitettu.</Text>}
       {(gameStarted && !gameFinished) && <Text style={styles.breadText}>Peli on käynnissä.</Text>}
       {gameFinished && <Text style={styles.breadText}>Peli on päättynyt.</Text>}
+      <Filter order={filterOrder} setOrder={setFilterOrder} values={["Tavalliset", "Helpotetut"]} />
       {passedGroups.map((group, i)=>
         <Link
           key={group.id}
