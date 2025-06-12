@@ -36,6 +36,7 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-svg": "15.11.2",
+    "react-native-ui-datepicker": "^3.1.2",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
     "react-qr-code": "^2.0.15",

@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { View, Text } from "react-native"
+import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/ui/Notification"
@@ -9,10 +9,10 @@ import AddNewButton from "@/components/ui/addNewButton"
 import Events from "@/components/events/events"
 
 const eventSettings = () => {
+  const addBottomSheetRef = useRef<BottomSheet>(null)
   const handleAdd = () => {
     addBottomSheetRef.current?.expand()
   }
-  const addBottomSheetRef = useRef<BottomSheet>(null)
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
