@@ -36,6 +36,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
+      onClose={() => Keyboard.dismiss()}
       snapPoints={Platform.OS === "web" ? ["75%"] : []} // fix for mobile web
     >
       <BottomSheetTextInput

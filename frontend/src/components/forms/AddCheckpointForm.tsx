@@ -48,6 +48,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
+      onClose={() => Keyboard.dismiss()}
       snapPoints={Platform.OS === "web" ? ["75%"] : []}  // fix for mobile web
     >
       <BottomSheetTextInput
