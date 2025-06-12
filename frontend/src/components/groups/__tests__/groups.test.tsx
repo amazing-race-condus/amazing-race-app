@@ -85,7 +85,7 @@ describe("<Groups />", () => {
     ]
 
     const store = testStore({
-      groups: groups
+      groups: groups,
     })
 
     render(
