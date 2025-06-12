@@ -70,6 +70,13 @@ model Group {
   penalty         Penalty[]
 }
 
+model User {
+  id           Int     @id @default(autoincrement())
+  username     String  @unique
+  passwordHash String
+
+}
+
 model Route {
   id         Int  @id @default(autoincrement())
   routeTime  Int  @map("route_time")
