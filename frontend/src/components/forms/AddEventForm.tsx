@@ -10,6 +10,7 @@ import Calendar from "../ui/Calendar"
 import { DateType } from "react-native-ui-datepicker"
 import theme from "@/theme"
 import { setNotification } from "@/reducers/notificationSlice"
+<<<<<<< HEAD
 import { AddEvent, Event } from "@/types"
 import { AxiosError } from "axios"
 
@@ -23,12 +24,18 @@ const AddEventForm = ({
     setEvents: (event: Event[]) => void
   }) => {
 
+=======
+import { AddEvent } from "@/types"
+
+const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
+>>>>>>> 5270bc3 (Fixes to event creation functionality)
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef<TextInput>(null)
   const [eventName, setEventName] = useState<string>("")
   const [eventDate, setEventDate] = useState<DateType>(new Date())
 
   const addNewEvent = async () => {
+<<<<<<< HEAD
     if (eventName === "") {
       dispatch(setNotification("Ryhmällä täytyy olla nimi.", "error"))
       return
@@ -49,6 +56,19 @@ const AddEventForm = ({
         ))
       }
     }
+=======
+    if (eventName === "") dispatch(setNotification("Ryhmällä täytyy olla nimi.", "error"))
+    try {
+      const event: AddEvent = {
+        name: eventName,
+        eventDate: new Date(String(eventDate))
+      }
+      createEvent(event)
+    } catch {
+      console.log("Hupsista")
+    }
+    console.log(typeof(eventDate))
+>>>>>>> 5270bc3 (Fixes to event creation functionality)
     setEventName("")
     setEventDate(new Date())
     Keyboard.dismiss()
