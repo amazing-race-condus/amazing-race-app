@@ -9,12 +9,19 @@ export const getRaceTime = (group: Group, event: Event) => {
 
   if (event.startTime) {
     const startTime = new Date(event.startTime)
-    if (!group.finishTime) {
+    if (!group.finishTime && !event.endTime) {
       const now = new Date
       totalMinutes = Math.floor((now.getTime() - startTime.getTime()) / (1000 * 60)) + totalPenalty
     } else {
-      const finishTime = new Date(group.finishTime)
-      totalMinutes = Math.floor((finishTime.getTime() - startTime.getTime()) / (1000 * 60)) + totalPenalty
+      // finishTime is either group.finishTime or event.endTime, whichever exists and is earlier
+      const finishTimeRaw = !group.finishTime
+        ? event.endTime
+        : !event.endTime
+          ? group.finishTime
+          : (group.finishTime < event.endTime ? group.finishTime : event.endTime)
+
+      const finishTime = new Date(finishTimeRaw!)
+      totalMinutes = Math.floor((finishTime!.getTime() - startTime.getTime()) / (1000 * 60)) + totalPenalty
     }
     return totalMinutes
   }
