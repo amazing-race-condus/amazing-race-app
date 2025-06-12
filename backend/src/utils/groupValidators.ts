@@ -45,8 +45,8 @@ const validateMembers = (members: unknown, res: Response) : boolean => {
     return false
   }
 
-  if (Number(members) > 20) {
-    res.status(400).json({ error: "WTF: monta teitä oikein on?" })
+  if (Number(members) > 6) {
+    res.status(400).json({ error: "Ryhmässä voi olla korkeintaan 6 jäsentä?" })
     return false
   }
   return true
