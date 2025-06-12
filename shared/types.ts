@@ -71,7 +71,6 @@ export interface Event {
     maxRouteTime: number | null,
     group: Group[],
     checkpoints: Checkpoint[],
-    routeLimits: RouteLimit[],
     penalties: Penalty[]
 }
 
