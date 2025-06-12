@@ -17,8 +17,10 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.get("/", async (_, res: Response) => {
-  const groupsWithCheckpoints = await getAllGroups()
+groupsRouter.get("/", async (req: Request, res: Response) => {
+  // const groupsWithCheckpoints = await getAllGroups()
+  const eventId = Number(req.query.eventId)
+  const groupsWithCheckpoints = await getAllGroups(eventId)
 
   res.send(groupsWithCheckpoints)
 })
@@ -41,8 +43,8 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
 })
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
-  const { name, members, easy } = req.body
-  const group = await createGroup(name, members, easy, res)
+  const { name, members, easy, eventId } = req.body
+  const group = await createGroup(name, members, easy, eventId, res)
 
   res.json(group)
 })

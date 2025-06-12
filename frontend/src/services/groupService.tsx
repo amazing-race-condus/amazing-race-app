@@ -2,8 +2,13 @@ import axios from "axios"
 import { url } from "../config"
 import { AddGroup, Group } from "@/types"
 
-export const getAllGroups = async (): Promise<Group[]> => {
-  const response = await axios.get<Group[]>(`${url}/groups`)
+export const getAllGroups = async (eventId: number): Promise<Group[]> => {
+  const response = await axios.get<Group[]>(`${url}/groups`,{
+    params :{
+      eventId: eventId
+    }
+  }
+  )
   return response.data
 }
 
@@ -12,8 +17,11 @@ export const getArrivingGroups = async (checkpointId: number): Promise<Group[]> 
   return response.data
 }
 
-export const createGroup = async (newGroup: AddGroup) => {
-  const response = await axios.post<Group>(`${url}/groups`, newGroup)
+export const createGroup = async (newGroup: AddGroup, eventId: number) => {
+  const response = await axios.post<Group>(`${url}/groups`,{
+    ...newGroup,
+    eventId: eventId
+  })
   return response.data
 }
 

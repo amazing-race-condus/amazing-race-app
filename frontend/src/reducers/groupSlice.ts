@@ -29,7 +29,7 @@ const groupSlice = createSlice({
 
 export const fetchGroups = () => async (dispatch: AppDispatch) => {
   try {
-    const allGroups = await getAllGroups()
+    const allGroups = await getAllGroups(1)
 
     dispatch(setGroups(allGroups))
   } catch (error) {
@@ -82,7 +82,7 @@ export const removePenaltyReducer = (groupId: number, penaltyId:number) => async
 
 export const addGroupReducer = (newObject: AddGroup) => async (dispatch: AppDispatch) => {
   try {
-    const newGroup = await createGroup(newObject)
+    const newGroup = await createGroup(newObject, 1)
     dispatch(appendGroup(newGroup))
     dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {
