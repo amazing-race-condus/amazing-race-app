@@ -1,14 +1,16 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native"
+import { View, Text, Pressable, TouchableOpacity, StyleSheet } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/store/store"
 import { usePathname, Link } from "expo-router"
-import { Entypo } from "@expo/vector-icons"
+import { Entypo, FontAwesome } from "@expo/vector-icons"
 import { removeGroupReducer } from "@/reducers/groupSlice"
 import { handleAlert } from "@/utils/handleAlert"
-import { Group } from "@/types"
+import { Event, Group } from "@/types"
+import { getRaceTime } from "@/utils/timeUtils"
 
 const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group: Group) => void }) => {
+  const event: Event = useSelector((state: RootState) => state.event)
   const dispatch: AppDispatch = useDispatch()
   const pathname = usePathname()
 
@@ -20,6 +22,42 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
       onConfirm: () => dispatch(removeGroupReducer(id))
     })
   }
+
+  const dns = group?.nextCheckpointId === group?.route[0]?.id
+
+  const getGroupStatus = (group: Group): { label: string; color: string } | null => {
+    if (group.disqualified) return { label: "DSQ", color: "purple" }
+    if (dns) return { label: "DNS", color: "orange" }
+    if (group.dnf) return { label: "DNF", color: "red" }
+    if (group.finishTime) return { label: "FIN", color: "green" }
+    return null
+  }
+
+  const StatusBadge = ({ label, color }: { label: string; color: string }) => (
+    <View style={[localStyles.badge, { backgroundColor: color }]}>
+      {label === "FIN" ? (
+        <FontAwesome name="flag-checkered" size={12} color="white" />
+      ) : null }
+      <Text style={localStyles.badgeText}>{label}</Text>
+    </View>
+  )
+
+  const PrintableTime = (group: Group, event: Event) => {
+    const totalMinutes = getRaceTime(group, event)
+    const hours = Math.floor(totalMinutes! / 60)
+    const minutes = totalMinutes! % 60
+    const time = `${hours}:${minutes.toString().padStart(2, "0")}`
+
+    if (!time)
+      return <Text>-</Text>
+
+    if (!group.finishTime)
+      return <Text style={{ color: "#aaa" }}>{time}</Text>
+
+    return <Text style={{ color: "green", fontWeight: 700 }}>{time}</Text>
+  }
+
+  const status = getGroupStatus(group)
 
   if (pathname ==="/settings/groups") {
     return (
@@ -50,12 +88,36 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
     >
       <TouchableOpacity style={styles.item}>
         <Text style={[styles.checkpointName,
-          { maxWidth: "80%" }
+          { maxWidth: "55%" }
         ]}>{group.name}</Text>
-        <Entypo name="chevron-right" size={24} color="black" />
+        <View style={{flexDirection: "row"}}>
+          {status && (
+            <View style={{ marginRight: 8 }}>
+              <StatusBadge label={status.label} color={status.color} />
+            </View>
+          )}
+          <View style={{ marginRight: 8 }}>
+            {PrintableTime(group, event)}
+          </View>
+          <Entypo name="chevron-right" size={24} color="black" />
+        </View>
       </TouchableOpacity>
     </Link>
   )
 }
+
+const localStyles = StyleSheet.create({
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    alignSelf: "flex-start",
+  },
+  badgeText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+})
 
 export default GroupItem

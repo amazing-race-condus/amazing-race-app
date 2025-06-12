@@ -8,7 +8,7 @@ export const sortAlphabetically = (groups: Group[]) => groups.sort((a, b) => a.n
 
 export const sortByTime = (groups: Group[], event: Event) => {
   if (event.startTime) {
-    return groups.sort((a, b) => getRaceTime(a, event)!.localeCompare(getRaceTime(b, event)!))
+    return groups.sort((a, b) => getRaceTime(a, event)! - (getRaceTime(b, event)!))
   } else {
     return groups.sort((a, b) => getPenaltyMinutes(a) - getPenaltyMinutes(b))
   }
@@ -18,7 +18,11 @@ export const sortByStatus = (groups: Group[]) => {
   return groups.sort((a, b) => {
     const getStatus = (group: Group): number => {
       if (group.disqualified) return 1
-      if (group.dnf) return 2
+      if (group.nextCheckpointId && group.route) {
+        if (group.nextCheckpointId === group.route[0].id) return 2
+      }
+      if (group.dnf) return 3
+      if (!group.finishTime) return 4
       return 0
     }
 
