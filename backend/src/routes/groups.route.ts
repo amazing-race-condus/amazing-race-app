@@ -5,6 +5,7 @@ import { getGroupById, getAllGroups, getGroupByNextCheckpointId,
 
 const groupsRouter = express.Router()
 
+
 // Used in testing
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
@@ -41,6 +42,7 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
 })
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
+
   const { name, members, easy } = req.body
   const group = await createGroup(name, members, easy, res)
 
