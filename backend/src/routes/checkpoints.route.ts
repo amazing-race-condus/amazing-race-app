@@ -4,9 +4,11 @@ import { getAllCheckpoints, getCheckpointById, createCheckpoint,
 
 const checkpointsRouter = express.Router()
 
-checkpointsRouter.get("/", async (_, res: Response) => {
+checkpointsRouter.get("/", async (req: Request, res: Response) => {
 
-  const allCheckpoints = await getAllCheckpoints()
+  const eventId = Number(req.query.eventId)
+
+  const allCheckpoints = await getAllCheckpoints(eventId)
 
   res.send(allCheckpoints)
 })

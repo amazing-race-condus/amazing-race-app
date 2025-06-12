@@ -2,8 +2,11 @@ import { Response } from "express"
 import { prisma } from "../index"
 import { validateName, validateMembers } from "../utils/groupValidators"
 
-export const getAllGroups = async () => {
+export const getAllGroups = async (eventId: number) => {
   const groups = await prisma.group.findMany({
+    where : {
+      eventId : eventId
+    },
     include: {
       penalty: true,
       route: {
@@ -18,6 +21,7 @@ export const getAllGroups = async () => {
       }
     }
   })
+
   const groupsWithCheckpoints = groups.map(group => ({
     ...group,
     route: group.route?.routeSteps.map(step => step.checkpoint) ?? []
@@ -36,6 +40,7 @@ export const getGroupById = async (groupId: number) => {
           routeSteps: {
             orderBy: { checkpointOrder: "asc" },
             include: {
+
               checkpoint: true
             }
           }

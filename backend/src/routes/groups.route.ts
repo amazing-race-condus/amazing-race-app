@@ -17,8 +17,11 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.get("/", async (_, res: Response) => {
-  const groupsWithCheckpoints = await getAllGroups()
+groupsRouter.get("/", async (req: Request, res: Response) => {
+  const eventId = Number(req.query.eventId)
+  const groupsWithCheckpoints = await getAllGroups(eventId)
+
+  console.log(groupsWithCheckpoints)
 
   res.send(groupsWithCheckpoints)
 })
