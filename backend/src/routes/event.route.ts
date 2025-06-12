@@ -1,6 +1,7 @@
 import express, { Response } from "express"
 import { getAllEvents, getEventById, startEvent,
   endEvent } from "../controllers/event.controller"
+import { verifyToken } from "../utils/middleware"
 
 const eventRouter = express.Router()
 
@@ -22,7 +23,7 @@ eventRouter.get("/:id", async (_, res: Response) => {
   return
 })
 
-eventRouter.put("/start/:id", async (_, res: Response) => {
+eventRouter.put("/start/:id", verifyToken, async (_, res: Response) => {
   const id = Number(_.params.id)
 
   const event = await startEvent(id)
@@ -35,7 +36,7 @@ eventRouter.put("/start/:id", async (_, res: Response) => {
   return
 })
 
-eventRouter.put("/end/:id", async (_, res: Response) => {
+eventRouter.put("/end/:id", verifyToken, async (_, res: Response) => {
   const id = Number(_.params.id)
 
   const event = await endEvent(id)

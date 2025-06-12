@@ -1,6 +1,7 @@
 import express, { Response, Request } from "express"
 import { getLimits, updateLimits, getDistances, updateDistances,
   createRoutes } from "../controllers/routes.controller"
+import { verifyToken } from "../utils/middleware"
 
 const eventId = 1
 
@@ -12,7 +13,7 @@ routesRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
   res.send(event)
 })
 
-routesRouter.put("/update_limits", async (req: Request, res: Response) => {
+routesRouter.put("/update_limits", verifyToken, async (req: Request, res: Response) => {
   const eventId = req.body.id
   const newMinRouteTime = req.body.minRouteTime
   const newMaxRouteTime = req.body.maxRouteTime
@@ -33,13 +34,13 @@ routesRouter.get("/:event_id/distances", async (req: Request, res: Response) => 
   res.send(times)
 })
 
-routesRouter.put("/update_distances", async (req: Request, res: Response) => {
+routesRouter.put("/update_distances", verifyToken, async (req: Request, res: Response) => {
   const distances = req.body
   const result = await updateDistances(eventId, distances)
   res.status(200).json(result)
 })
 
-routesRouter.put("/create_routes", async (req: Request, res: Response) => {
+routesRouter.put("/create_routes", verifyToken, async (req: Request, res: Response) => {
   const response = await createRoutes(eventId)
   if (response.status === "error") {
     res.status(400).json({error: response.message})

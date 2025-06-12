@@ -1,6 +1,7 @@
 import express, { Response, Request } from "express"
 import { getPenalties, createPenalty, getPenaltyByGroup, deletePenalty,
   deleteAllPenaltiesOfGroup } from "../controllers/penalties.controller"
+import { verifyToken } from "../utils/middleware"
 
 const penaltyRouter = express.Router()
 
@@ -9,7 +10,7 @@ penaltyRouter.get("/", async (req: Request, res: Response) => {
   res.json(penalties)
 })
 
-penaltyRouter.post("/:groupid", async (req: Request, res: Response) => {
+penaltyRouter.post("/:groupid", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.groupid)
   const body = req.body
   const newPenalty = await createPenalty(id, body)
@@ -32,7 +33,7 @@ penaltyRouter.get("/:groupid", async (req: Request, res: Response) => {
   }
 })
 
-penaltyRouter.delete("/:penaltyid", async (req: Request, res: Response) => {
+penaltyRouter.delete("/:penaltyid", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.penaltyid)
 
   const deletedPenalty = await deletePenalty(id)
@@ -44,7 +45,7 @@ penaltyRouter.delete("/:penaltyid", async (req: Request, res: Response) => {
   }
 })
 
-penaltyRouter.delete("/all/:groupid", async (req: Request, res: Response) => {
+penaltyRouter.delete("/all/:groupid", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.groupid)
   const groupsPenalties = await deleteAllPenaltiesOfGroup(id)
 
