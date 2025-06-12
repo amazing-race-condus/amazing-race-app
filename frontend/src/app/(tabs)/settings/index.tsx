@@ -29,10 +29,10 @@ const Settings = () => {
         text="Hallinnoi peliä"
         link="/settings/game"
       />
-      <SettingsItem
+      {/* <SettingsItem
         text="Hallinnoi tapahtumia"
         link="/settings/events"
-      />
+      /> */}
       <SettingsItem
         text="Tulokset"
         link="/settings/results"
