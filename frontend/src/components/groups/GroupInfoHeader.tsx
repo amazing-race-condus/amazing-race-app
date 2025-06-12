@@ -12,7 +12,10 @@ const GroupInfoHeader = (
 ) => {
 
   const event = useSelector((state: RootState) => state.event)
-  const raceTime = getRaceTime(group, event)
+  const totalMinutes = getRaceTime(group, event)
+  const hours = Math.floor(totalMinutes! / 60)
+  const minutes = totalMinutes! % 60
+  const raceTime = `${hours}:${minutes.toString().padStart(2, "0")}`
 
   return (
     <View style={styles.statsContainer}>

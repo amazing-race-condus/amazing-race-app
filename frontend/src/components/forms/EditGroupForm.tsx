@@ -11,10 +11,11 @@ import { Platform, Pressable, Text, View } from "react-native"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
+import { TextInput } from "react-native-gesture-handler"
 
 const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group?: Group, setSelectedGroup: React.Dispatch<React.SetStateAction<Group | undefined>> }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const nextRef = useRef(null)
+  const nextRef = useRef<TextInput>(null)
   const [groupname, setGroupname] = useState<string>("")
   const [groupMembers, setGroupMembers] = useState<number>(0)
   const [easy, setEasy] = useState<boolean>(false)
@@ -31,7 +32,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
     if (!group) return
     const modifiedGroup: AddGroup = {
       name: groupname,
-      members: Number(groupMembers),
+      members: groupMembers,
       easy: easy
     }
     try {
@@ -47,7 +48,6 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       setSelectedGroup(undefined)
     }
     bottomSheetRef.current?.close()
-
   }
 
   return (

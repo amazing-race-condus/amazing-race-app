@@ -11,6 +11,7 @@ import { Platform, Pressable, Text, View, StyleSheet } from "react-native"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
+import { TextInput } from "react-native-gesture-handler"
 
 const styles2 = StyleSheet.create({
   editableField: {
@@ -29,8 +30,8 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
   const [hintUrl, setHintUrl] = useState<string>("")
   const [easyHintUrl, setEasyHintUrl] = useState<string>("")
 
-  const nextRef1 = useRef(null)
-  const nextRef2 = useRef(null)
+  const nextRef1 = useRef<TextInput>(null)
+  const nextRef2 = useRef<TextInput>(null)
 
   useEffect(() => {
     if (checkpoint) {

@@ -8,6 +8,7 @@ import { AddCheckpoint, CheckpointType } from "@/types"
 import { RadioButton } from "react-native-paper"
 import { styles } from "@/styles/commonStyles"
 import BottomSheetModal from "../ui/BottomSheetModal"
+import { TextInput } from "react-native-gesture-handler"
 
 const styles2 = StyleSheet.create({
   editableField: {
@@ -26,8 +27,8 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   const [hintUrl, setHintUrl] = useState<string>("")
   const [easyHintUrl, setEasyHintUrl] = useState<string>("")
 
-  const nextRef1 = useRef(null)
-  const nextRef2 = useRef(null)
+  const nextRef1 = useRef<TextInput>(null)
+  const nextRef2 = useRef<TextInput>(null)
 
   const addNewCheckpoint = async () => {
     const newCheckpoint: AddCheckpoint = {
@@ -48,6 +49,7 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
+      onClose={() => Keyboard.dismiss()}
       snapPoints={Platform.OS === "web" ? ["75%"] : []}  // fix for mobile web
     >
       <BottomSheetTextInput

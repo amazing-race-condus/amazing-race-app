@@ -134,6 +134,17 @@ export const styles = StyleSheet.create({
     width: Math.min(screenWidth * 0.9, 320),
     borderRadius: 12,
   },
+  dimmedItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    backgroundColor: theme.colors.dimmedListItemBackground,
+    width: Math.min(screenWidth * 0.9, 320),
+    borderRadius: 12,
+  },
   title: {
     fontSize: 35,
     margin: 10,

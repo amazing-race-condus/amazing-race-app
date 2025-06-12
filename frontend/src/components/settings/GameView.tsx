@@ -14,21 +14,39 @@ const GameView = () => {
   const event = useSelector((state: RootState) => state.event)
 
   const handleStart = () => {
-    handleAlert({
-      confirmText: "Aloita",
-      title: "Vahvista aloitus",
-      message: "Oletko varma että haluat aloittaa pelin?",
-      onConfirm: () => dispatch(setStartReducer(EVENTID))
-    })
+    if (!event.startTime) {
+      handleAlert({
+        confirmText: "Aloita",
+        title: "Vahvista aloitus",
+        message: "Oletko varma että haluat aloittaa pelin?",
+        onConfirm: () => dispatch(setStartReducer(EVENTID))
+      })
+    } else {
+      handleAlert({
+        confirmText: "Aloita",
+        title: "Vahvista aloitus",
+        message: "Peli on jo aloitettu. Haluatko varmasti muuttaa aloitusaikaa?",
+        onConfirm: () => dispatch(setStartReducer(EVENTID))
+      })
+    }
   }
 
   const handleEnd = () => {
-    handleAlert({
-      confirmText: "Lopeta",
-      title: "Vahvista lopetus",
-      message: "Oletko varma että haluat lopettaa pelin?",
-      onConfirm: () => dispatch(setEndReducer(EVENTID))
-    })
+    if (!event.endTime) {
+      handleAlert({
+        confirmText: "Lopeta",
+        title: "Vahvista lopetus",
+        message: "Oletko varma että haluat lopettaa pelin?",
+        onConfirm: () => dispatch(setEndReducer(EVENTID))
+      })
+    } else {
+      handleAlert({
+        confirmText: "Lopeta",
+        title: "Vahvista lopetus",
+        message: "Peli on jo lopetettu. Haluatko varmasti muuttaa pelin lopetusaikaa?",
+        onConfirm: () => dispatch(setEndReducer(EVENTID))
+      })
+    }
   }
 
   const formatTime = (time: Date) => {
