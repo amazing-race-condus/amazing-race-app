@@ -12,6 +12,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
 
   if (!username || !password) {
     res.status(400).json({ error: "Anna käyttäjätunnus sekä salasana." })
+    return
   }
 
   const user = await getUserByUsername(username)
@@ -41,10 +42,13 @@ loginRouter.post("/", async (req: Request, res: Response) => {
     { expiresIn: 60*60*24 }
   )
 
-
   res
     .status(200)
-    .send({ token, username: user.username })
+    .send({
+      token,
+      username: user.username,
+      id: user.id
+    })
 })
 
 export default loginRouter
