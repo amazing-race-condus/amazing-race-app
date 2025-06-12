@@ -78,7 +78,6 @@ export interface Event {
     eventDate: Date | null,
     group: Group[],
     checkpoints: Checkpoint[],
-    routeLimits: RouteLimit[],
     penalties: Penalty[]
 }
 
@@ -87,6 +86,7 @@ export interface CustomRequest extends Request {
   user?: User | null
 }
 
+export type AddEvent = Omit<Event, "id" | "startTime" | "endTime" | "minRouteTime" | "maxRouteTime" | "group" | "checkpoints" | "penalties">
 
 export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
 

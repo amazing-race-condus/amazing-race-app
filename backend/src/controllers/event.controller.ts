@@ -1,5 +1,5 @@
 import { prisma } from "../index"
-import { Event } from "@/types"
+import { AddEvent } from "@/types"
 
 export const getAllEvents = async () => {
   const events = await prisma.event.findMany({
@@ -58,7 +58,7 @@ export const endEvent = async (eventId: number) => {
   return event
 }
 
-export const createEvent = async (event: Event) => {
+export const createEvent = async (event: AddEvent) => {
   if (event.name === "" || event.name === null) {
     return null
   }

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { url } from "../config"
-import { Event } from "@/types"
+import { AddEvent } from "@/types"
 
 export const getEvents = async () => {
   const response = await axios.get<Event[]>(`${url}/event`)
@@ -22,7 +22,7 @@ export const endGame = async (id: number) => {
   return response.data
 }
 
-export const createEvent = async (event: Event) => {
-  const response = await axios.post<Event>(`${url}/event/create`, event)
+export const createEvent = async (event: AddEvent) => {
+  const response = await axios.post<AddEvent>(`${url}/event/create`, event)
   return response.data
 }
