@@ -32,7 +32,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
     if (!group) return
     const modifiedGroup: AddGroup = {
       name: groupname,
-      members: Number(groupMembers),
+      members: groupMembers,
       easy: easy
     }
     try {
@@ -48,7 +48,6 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       setSelectedGroup(undefined)
     }
     bottomSheetRef.current?.close()
-
   }
 
   return (

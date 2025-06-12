@@ -3,7 +3,7 @@ import { Provider } from "react-redux"
 import store from "@/store/store"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ThemeProvider } from "@react-navigation/native"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { getEventReducer } from "@/reducers/eventSlice"
@@ -11,6 +11,8 @@ import { getEventReducer } from "@/reducers/eventSlice"
 const EVENT_ID = 1
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
+  const [isReady, setIsReady] = useState(false)
+
   useEffect(() => {
     const refreshData = () => {
       store.dispatch(fetchGroups())
@@ -19,11 +21,15 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
     }
 
     refreshData()
+    setIsReady(true)
 
     const interval = setInterval(refreshData, 10000)
-
     return () => clearInterval(interval)
   }, [])
+
+  if (!isReady) {
+    return null
+  }
 
   return <>{children}</>
 }
