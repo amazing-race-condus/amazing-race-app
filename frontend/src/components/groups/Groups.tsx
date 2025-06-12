@@ -14,11 +14,12 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   const [search, setSearch] = useState<string>("")
   const [order, setOrder] = useState<number>(0)
   const groups = useSelector((state: RootState) => state.groups)
+  console.log("Groups REACT:  " + groups)
   const pathname = usePathname()
 
   const event = useSelector((state: RootState) => state.event)
 
-  const filteredGroups = groups.filter(item =>
+  const filteredGroups = groups?.filter(item =>
     item.name.toLowerCase().startsWith(search.toLowerCase())
   )
 

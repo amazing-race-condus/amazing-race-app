@@ -3,7 +3,7 @@ import type { AppDispatch, RootState } from "@/store/store"
 import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
-import { AxiosError } from "axios"
+import { all, AxiosError } from "axios"
 import type { AddGroup, Group, PenaltyType } from "@/types"
 
 const initialState: Group[] = []
@@ -30,7 +30,6 @@ const groupSlice = createSlice({
 export const fetchGroups = () => async (dispatch: AppDispatch) => {
   try {
     const allGroups = await getAllGroups()
-
     dispatch(setGroups(allGroups))
   } catch (error) {
     console.error("Failed to fetch groups:", error)

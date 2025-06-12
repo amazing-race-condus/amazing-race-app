@@ -8,22 +8,24 @@ import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { getEventReducer } from "@/reducers/eventSlice"
 
-const EVENT_ID = 1
-
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
+
+  const EVENTID = 1
+
   useEffect(() => {
-    const refreshData = () => {
-      store.dispatch(fetchGroups())
-      store.dispatch(fetchCheckpoints())
-      store.dispatch(getEventReducer(EVENT_ID))
-    }
+    console.log("arni")
+    // const refreshData = () => {
+    //   // store.dispatch(fetchGroups())
+    //   // store.dispatch(fetchCheckpoints())
+    //   store.dispatch(getEventReducer(EVENTID))
+    // }
 
-    refreshData()
+    // refreshData()
 
-    const interval = setInterval(refreshData, 10000)
+    // const interval = setInterval(refreshData, 10000)
 
-    return () => clearInterval(interval)
-  }, [])
+    // return () => clearInterval(interval)
+  }, [EVENTID])
 
   return <>{children}</>
 }
@@ -33,6 +35,8 @@ export const unstable_settings = {
 }
 
 export default function RootLayout() {
+  console.log("arndiowajdoiwa")
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>

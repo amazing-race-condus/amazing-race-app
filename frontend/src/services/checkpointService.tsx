@@ -1,6 +1,7 @@
 import axios from "axios"
 import { url } from "../config"
 import { Checkpoint, AddCheckpoint } from "@/types"
+import store from "@/store/store"
 
 export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> => {
   const response = await axios.get<Checkpoint>(`${url}/checkpoints/${id}`)
@@ -8,12 +9,20 @@ export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> 
 }
 
 export const getAllCheckpoints = async (): Promise<Checkpoint[]> => {
-  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`)
+  const eventId = store.getState().event.id
+  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`,
+    {
+      params: { eventId : eventId }
+    }
+  )
   return response.data
 }
 
 export const createCheckpoint = async (newObject: AddCheckpoint) => {
-  const response = await axios.post<Checkpoint>(`${url}/checkpoints`, newObject)
+  const eventId = store.getState().event.id
+  const response = await axios.post<Checkpoint>(`${url}/checkpoints`,
+    { ...newObject, eventId : eventId }
+  )
   return response.data
 }
 

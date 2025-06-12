@@ -9,8 +9,10 @@ export const getEvents = async () => {
 }
 
 export const getEvent = async (id : number) => {
+  console.log("kwaljdlwakjd")
   const request = axios.get<Event>(`${url}/event/${id}`)
   const response = await request
+  console.log(response)
   return response.data
 }
 

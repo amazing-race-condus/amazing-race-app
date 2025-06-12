@@ -23,7 +23,7 @@ const Events = () => {
   }, [])
 
   const handleEventChange = async (id : number) => {
-    await getEventReducer(id)
+    dispatch(getEventReducer(id))
     dispatch(setNotification("Tapahtumanäkymä vaihdettu","success"))
   }
 
