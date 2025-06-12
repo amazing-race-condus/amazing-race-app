@@ -5,6 +5,8 @@ export const getRaceTime = (group: Group, event: Event) => {
   let totalMinutes: number | null = null
   const totalPenalty = getPenaltyMinutes(group)
 
+  if (!event) return totalMinutes
+
   if (event.startTime) {
     const startTime = new Date(event.startTime)
     if (!group.finishTime) {
