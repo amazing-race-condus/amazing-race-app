@@ -18,21 +18,23 @@ import GroupActionMenu from "@/components/groups/GroupActionMenu"
 import theme from "@/theme"
 
 const Team = () => {
-  const { id } = useLocalSearchParams<{id: string}>()
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const group = useSelector((state: RootState) =>
+    state.groups.find(g => g.id === Number(id))
+  )
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const hintBottomSheetRef = useRef<BottomSheet>(null)
-
-  const group = useSelector((state: RootState) =>
-    state.groups.find(g => g.id === Number(id))
-  )!
-
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
+
+  if (!group) {
+    return null
+  }
 
   const checkpoints = group.route
   const nextCheckpointId = group.nextCheckpointId!
-  const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
+  const totalPenaltyTime = group.penalty.reduce((total, penalty) => total + penalty.time, 0) || 0
 
   const passedIds = group.route
     .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
