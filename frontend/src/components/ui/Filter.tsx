@@ -3,11 +3,11 @@ import { Dimensions } from "react-native"
 
 const screenWidth = Dimensions.get("window").width
 
-const Filter = ({ order, setOrder }: { order: number, setOrder: (num: number) => void }) => {
+const Filter = ({ order, setOrder, values=["Aakkosjärjestys", "Aika", "Status"] }: { order: number, setOrder: (num: number) => void, values?: string[] }) => {
   return (
     <SegmentedControl
       testID="RNCSegmentedControl"
-      values={["Aakkosjärjestys", "Aika", "Status"]}
+      values={values}
       sliderStyle={{ borderRadius: 15, backgroundColor: "grey" }}
       backgroundColor="white"
       style={{
