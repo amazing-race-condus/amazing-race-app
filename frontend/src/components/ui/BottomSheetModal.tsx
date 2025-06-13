@@ -4,16 +4,16 @@ import React, { useEffect, useState } from "react"
 import { BackHandler, Platform } from "react-native"
 
 const BottomSheetModal = (
-  { ref, snapPoints, children, onClose }:
+  { ref, snapPoints, isHint=false, children, onClose }:
   {
     ref: React.RefObject<BottomSheetMethods | null>
     snapPoints?: string[]
+    isHint?: boolean
     children: React.ReactNode
     onClose?: () => void
   }
 ) => {
   const [isOpen, setIsOpen] = useState(false)
-
   useEffect(() => {
     if (Platform.OS === "android") {
       const backAction = () => {
@@ -47,7 +47,7 @@ const BottomSheetModal = (
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
-          opacity={0.5}
+          opacity={isHint ? 1 : 0.5}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
           pressBehavior="close"

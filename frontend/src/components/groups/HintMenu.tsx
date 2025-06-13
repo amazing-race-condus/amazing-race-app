@@ -12,7 +12,7 @@ const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<Bot
 
   if (!nextCheckpoint)
     return (
-      <BottomSheetModal ref={ref} snapPoints={["75%"]}>
+      <BottomSheetModal ref={ref} snapPoints={["75%"]} isHint={true}>
         <Text>Virhe: seuraavaa rastia ei löydetty.</Text>
       </BottomSheetModal>
     )
@@ -23,19 +23,20 @@ const HintMenu = ({ ref, nextCheckpointId, easyMode }: {ref: React.RefObject<Bot
     <BottomSheetModal
       ref={ref}
       snapPoints={["75%"]}
+      isHint={true}
     >
-      <Text>{easyMode ? "Helpotettu vihje:" : "Vihje:"}</Text>
+      <Text style={{alignSelf:"center", fontWeight:"bold"}}>{easyMode ? "Helpotettu vihje:" : "Vihje:"}</Text>
       { hintUrl ?
-        <View style={{ marginVertical: 5 }}>
+        <View style={{ marginVertical: 10, alignSelf:"center"}}>
           <QRCode
             size={256}
-            style={{ height: "auto", maxWidth: "25%", width: "100%" }}
+            style={{width:"100%"}}
             value={hintUrl}
             viewBox={"0 0 256 256"}
           />
-          <Text onPress={ async () => await Linking.openURL(hintUrl)} style={{ textDecorationLine: "underline", marginTop: 5 }}>{hintUrl}</Text>
+          <Text onPress={ async () => await Linking.openURL(hintUrl)} style={{ textDecorationLine: "underline", marginTop: 5, alignSelf:"center" }}>{hintUrl}</Text>
         </View>
-        : <Text>Rastille ei ole määritetty vihjettä.</Text>
+        : <Text style={{alignSelf:"center"}}>Rastille ei ole määritetty vihjettä.</Text>
       }
     </BottomSheetModal>
   )
