@@ -26,9 +26,9 @@ const checkpointSlice = createSlice({
   },
 })
 
-export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
+export const fetchCheckpoints = (eventId : number) => async (dispatch: AppDispatch) => {
   try {
-    const allCheckpoints = await getAllCheckpoints(1)
+    const allCheckpoints = await getAllCheckpoints(eventId)
     dispatch(setCheckpoints(allCheckpoints))
   } catch (error) {
     console.error("Failed to fetch checkpoints:", error)

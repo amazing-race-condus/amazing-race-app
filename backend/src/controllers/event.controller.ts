@@ -10,6 +10,17 @@ export const getAllEvents = async () => {
   return events
 }
 
+export const getDefaultEvent = async () => {
+  const events = await prisma.event.findFirst({
+    include: {
+      group: true,
+      checkpoints: true,
+    }
+  })
+  return events
+
+}
+
 export const getEventById = async (eventId: number) => {
   const id = eventId
   const event = await prisma.event.findUnique({

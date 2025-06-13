@@ -13,7 +13,6 @@ const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   const [eventDate, setEventDate] = useState<string>("")
 
   const addNewEvent = async () => {
-    console.log("Hello world")
     Keyboard.dismiss()
     bottomSheetRef.current?.close()
   }

@@ -1,11 +1,18 @@
 import express, { Response } from "express"
 import { getAllEvents, getEventById, startEvent,
-  endEvent } from "../controllers/event.controller"
+  endEvent,
+  getDefaultEvent} from "../controllers/event.controller"
 
 const eventRouter = express.Router()
 
 eventRouter.get("/", async (_, res: Response) => {
   const events = await getAllEvents()
+  res.json(events)
+  return
+})
+
+eventRouter.get("/default", async (_, res: Response) => {
+  const events = await getDefaultEvent()
   res.json(events)
   return
 })

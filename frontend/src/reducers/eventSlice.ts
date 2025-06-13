@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch } from "@/store/store"
-import { startGame, endGame , getEvent } from "@/services/eventService"
+import { startGame, endGame , getEvent, getDefaultEvent } from "@/services/eventService"
 import { setNotification } from "./notificationSlice"
 import type { Event } from "@/types"
 
@@ -30,6 +30,17 @@ const eventSlice = createSlice({
 export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
     const event = await getEvent(id)
+    console.log(event.id)
+    dispatch(setEvents(event))
+  } catch (error) {
+    console.error("Failed to fetch event:", error)
+    dispatch(setNotification("Tapahtuman haku epäonnistui", "error"))
+  }
+}
+
+export const getDefaultEventReducer = () => async (dispatch: AppDispatch) => {
+  try {
+    const event = await getDefaultEvent()
     dispatch(setEvents(event))
   } catch (error) {
     console.error("Failed to fetch event:", error)
