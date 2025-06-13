@@ -3,16 +3,16 @@ import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import Notification from "@/components/ui/Notification"
-import LoginForm from "@/components/forms/LoginForm"
+import Logout from "@/components/ui/Logout"
 
-const Login = () => {
+const userSettings = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Notification />
-      <LoginForm />
+      <Logout />
     </View>
   )
 }
 
-export default Login
+export default userSettings

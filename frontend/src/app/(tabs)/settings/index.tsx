@@ -26,6 +26,10 @@ const Settings = () => {
         link="/settings/routes"
       />
       <SettingsItem
+        text="Hallinnoi käyttäjiä"
+        link="/settings/users"
+      />
+      <SettingsItem
         text="Hallinnoi peliä"
         link="/settings/game"
       />
