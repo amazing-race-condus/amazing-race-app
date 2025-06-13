@@ -1,16 +1,16 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack } from "expo-router"
+import { Stack, router } from "expo-router"
 import { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useState } from "react"
-import { User } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
 import { login } from "@/services/loginService"
 import { setToken } from "@/utils/tokenUtils"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const LoginForm = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<User | undefined>> }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const dispatch = useDispatch<AppDispatch>()
@@ -18,15 +18,12 @@ const LoginForm = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<Use
   const handleLogin = async () => {
     try {
       const user = await login( username, password )
-      window.localStorage.setItem(
-        "loggedAmazingRaceAppUser", JSON.stringify(user)
-      )
+      await AsyncStorage.setItem("user-info", user.token)
       setToken(user.token)
       setUsername("")
       setPassword("")
-      setUser(user)
       dispatch(setNotification("Kirjautuminen onnistui!", "success"))
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      router.replace("/")
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
