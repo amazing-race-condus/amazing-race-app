@@ -4,7 +4,6 @@ import { handleAlert } from "@/utils/handleAlert"
 import React from "react"
 import { View, Pressable, Text } from "react-native"
 
-
 const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChange: (id : number) => void }) => {
   // const item = item
   const handleChangeEvent = (id: number) => {

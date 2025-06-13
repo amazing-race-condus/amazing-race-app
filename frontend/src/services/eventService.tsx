@@ -12,7 +12,6 @@ export const getEvent = async (id: number) => {
   return response.data
 }
 
-
 export const getDefaultEvent = async () => {
   const request = axios.get<Event>(`${url}/event/default`)
   const response = await request
