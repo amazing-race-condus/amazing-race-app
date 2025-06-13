@@ -43,6 +43,7 @@ model Event {
   endTime        DateTime? @map("end_time")
   minRouteTime   Int?      @map("min_route_time")
   maxRouteTime   Int?      @map("max_route_time")
+  eventDate      DateTime? @map("event_date")
 
   checkpoints        Checkpoint[]
   group              Group[]
@@ -67,6 +68,13 @@ model Group {
   route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
   next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  passwordHash      String
+  admin             Boolean   @default(false)
 }
 
 model Route {

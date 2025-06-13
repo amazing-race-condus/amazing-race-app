@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
 import React, { useRef, useState } from "react"
 import type { CompleteType } from "@/types"
-import Notification from "@/components/ui/Notification"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import BottomSheet from "@gorhom/bottom-sheet"
 import GroupInfoHeader from "@/components/groups/GroupInfoHeader"
@@ -18,21 +17,23 @@ import GroupActionMenu from "@/components/groups/GroupActionMenu"
 import theme from "@/theme"
 
 const Team = () => {
-  const { id } = useLocalSearchParams<{id: string}>()
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const group = useSelector((state: RootState) =>
+    state.groups.find(g => g.id === Number(id))
+  )
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const hintBottomSheetRef = useRef<BottomSheet>(null)
-
-  const group = useSelector((state: RootState) =>
-    state.groups.find(g => g.id === Number(id))
-  )!
-
   const [hasFinished, setHasFinished] = useState<boolean>(Boolean(group?.finishTime))
+
+  if (!group) {
+    return null
+  }
 
   const checkpoints = group.route
   const nextCheckpointId = group.nextCheckpointId!
-  const totalPenaltyTime = group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
+  const totalPenaltyTime = group.penalty.reduce((total, penalty) => total + penalty.time, 0) || 0
 
   const passedIds = group.route
     .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
@@ -128,7 +129,6 @@ const Team = () => {
       <Stack.Screen
         options={{ headerShown: false }}
       />
-      <Notification />
       <GroupStatusDisplay group={ group } />
       {(group.route.length === 0) ?
         <>

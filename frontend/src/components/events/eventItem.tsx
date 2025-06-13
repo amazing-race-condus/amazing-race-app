@@ -2,12 +2,11 @@ import { styles } from "@/styles/commonStyles"
 import { Event } from "@/types"
 import { handleAlert } from "@/utils/handleAlert"
 import React from "react"
-import { View, Pressable,Text } from "react-native"
+import { View, Pressable, Text } from "react-native"
+
 
 const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChange: (id : number) => void }) => {
-
   // const item = item
-
   const handleChangeEvent = (id: number) => {
     handleAlert({
       confirmText: "Vaihda näkymä",
@@ -22,9 +21,6 @@ const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChang
       <View style={{ flex: 1 }}>
         <Text style={styles.checkpointName}>
           {item.name}
-          {/* {translatedType !== "(
-            <Text style={styles.checkpointType}> ({translatedType})</Text>
-          )} */}
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
           <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => handleChangeEvent(item.id)}>
@@ -34,22 +30,6 @@ const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChang
       </View>
     </View>
   )
-
-//   return (
-//     <Link href={`/checkpoints/${item.id}`} asChild>
-//       <TouchableOpacity style={styles.item}>
-//         <View style={{ flex: 1 }}>
-//           <Text style={styles.checkpointName}>
-//             {item.name}
-//             {translatedType !== "" && (
-//               <Text style={styles.checkpointType}> ({translatedType})</Text>
-//             )}
-//           </Text>
-//         </View>
-//         <Entypo name="chevron-right" size={24} color="black" />
-//       </TouchableOpacity>
-//     </Link>
-//   )
 }
 
 export default EventItem

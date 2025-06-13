@@ -48,6 +48,12 @@ export interface Penalty {
     checkpointId: number
 }
 
+export interface User {
+    id: number,
+    username: string
+    password?: string
+}
+
 export interface Group {
     id: number,
     name: string,
@@ -69,12 +75,17 @@ export interface Event {
     endTime: Date | null,
     minRouteTime: number | null,
     maxRouteTime: number | null,
+    eventDate: Date | null,
     group: Group[],
     checkpoints: Checkpoint[],
-    routeLimits: RouteLimit[],
     penalties: Penalty[]
 }
 
+export interface CustomRequest extends Request {
+  token?: string | null
+  user?: User | null
+}
 
-export type AddGroup = Omit<Group, "id" | "finishTime" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
+export type AddEvent = Omit<Event, "id" | "startTime" | "endTime" | "minRouteTime" | "maxRouteTime" | "group" | "checkpoints" | "penalties">
 
+export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">

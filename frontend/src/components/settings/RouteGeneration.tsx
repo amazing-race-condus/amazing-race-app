@@ -6,12 +6,19 @@ import { useDispatch } from "react-redux"
 import { setNotification } from "@/reducers/notificationSlice"
 import store, { AppDispatch } from "@/store/store"
 import { generateRoutes } from "@/services/routeService"
+import { handleAlert } from "@/utils/handleAlert"
 
 const RouteGeneration = () => {
   const dispatch = useDispatch<AppDispatch>()
   const eventId = store.getState().event.id
 
   const createRoutes = async () => {
+
+    handleAlert({
+      confirmText: "Luo reitit",
+      title: "Vahvista reittien luonti",
+      message: "Reittien luominen poistaa aikaisemmat reitit ja korvaa ne uusilla. Oletko varma että haluat luoda reitit?",
+      onConfirm: async () =>  {
     try {
       const data = await generateRoutes(eventId)
       const routesAmount = data.routesAmount

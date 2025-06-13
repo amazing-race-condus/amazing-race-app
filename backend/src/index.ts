@@ -7,7 +7,9 @@ import groupsRouter from "./routes/groups.route"
 import routesRouter from "./routes/routes.route"
 import penaltyRouter from "./routes/penalties.route"
 import eventRouter from "./routes/event.route"
-import { unknownEndpoint, errorHandler } from "./utils/middleware"
+import authenticationRouter from "./routes/authentication.route"
+import loginRouter from "./routes/login.route"
+import { unknownEndpoint, errorHandler, tokenExtractor } from "./utils/middleware"
 
 const prisma = new PrismaClient()
 
@@ -17,11 +19,15 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public/dist")))
 const port = 3000
 
+app.use(tokenExtractor)
+
 app.use("/api/checkpoints", checkpointsRouter)
 app.use("/api/groups", groupsRouter)
 app.use("/api/penalty", penaltyRouter)
 app.use("/api/settings", routesRouter)
 app.use("/api/event", eventRouter)
+app.use("/api/authentication", authenticationRouter)
+app.use("/api/login", loginRouter)
 
 app.all("{*splat}", (req, res) => {
   if (!req.path.startsWith("/api")) {

@@ -31,7 +31,6 @@ export const removeCheckpoint = async (id: number) => {
 }
 
 export const editCheckpoint = async (id: number, newObject: AddCheckpoint) => {
-  const request = axios.put(`${url}/checkpoints/${id}`, newObject)
-  const response = await request
+  const response = await axios.put(`${url}/checkpoints/${id}`, newObject)
   return response.data
 }

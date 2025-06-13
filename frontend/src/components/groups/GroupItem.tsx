@@ -1,14 +1,17 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native"
+import { View, Text, Pressable, TouchableOpacity  } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/store/store"
 import { usePathname, Link } from "expo-router"
 import { Entypo } from "@expo/vector-icons"
 import { removeGroupReducer } from "@/reducers/groupSlice"
 import { handleAlert } from "@/utils/handleAlert"
-import { Group } from "@/types"
+import { Event, Group } from "@/types"
+import StatusBadge from "./GroupStatusBadge"
+import PrintableTime from "./GroupPrintableTime"
 
 const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group: Group) => void }) => {
+  const event: Event = useSelector((state: RootState) => state.event)
   const dispatch: AppDispatch = useDispatch()
   const pathname = usePathname()
 
@@ -50,9 +53,22 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
     >
       <TouchableOpacity style={styles.item}>
         <Text style={[styles.checkpointName,
-          { maxWidth: "80%" }
+          { maxWidth: "55%" }
         ]}>{group.name}</Text>
-        <Entypo name="chevron-right" size={24} color="black" />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ marginRight: 8 }}>
+            <StatusBadge
+              group={group}
+            />
+          </View>
+          <View style={{ marginRight: 8, minWidth: 40, alignItems: "flex-end" }}>
+            <PrintableTime
+              group={group}
+              event={event}
+            />
+          </View>
+          <Entypo name="chevron-right" size={24} color="black" />
+        </View>
       </TouchableOpacity>
     </Link>
   )

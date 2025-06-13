@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch } from "@/store/store"
 import { startGame, endGame , getEvent, getDefaultEvent } from "@/services/eventService"
 import { setNotification } from "./notificationSlice"
-import type { Event } from "@/types"
+import { Event } from "@/types"
 
 const initialState: Event = {
   id: 1,
@@ -11,9 +11,9 @@ const initialState: Event = {
   name: "",
   group: [],
   checkpoints: [],
-  routeLimits: [],
   minRouteTime: null,
   maxRouteTime: null,
+  eventDate: null,
   penalties: []
 }
 

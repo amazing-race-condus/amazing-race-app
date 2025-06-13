@@ -175,7 +175,27 @@ export const modifyGroup = async (groupId: number, name: string, members: number
 
   const updatedGroup = await prisma.group.update({
     where: { id },
-    data
+    data,
+    include: {
+      penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: "asc" },
+            include: {
+              checkpoint: true
+            }
+          }
+        }
+      }
+    }
   })
-  return updatedGroup
+
+
+  const groupWithCheckpoints = {
+    ...updatedGroup,
+    route: updatedGroup.route?.routeSteps.map(step => step.checkpoint) ?? []
+  }
+
+  return groupWithCheckpoints
 }
