@@ -75,7 +75,6 @@ model User {
   username          String    @unique
   passwordHash      String
   admin             Boolean   @default(false)
-}
 
 model Route {
   id         Int  @id @default(autoincrement())
