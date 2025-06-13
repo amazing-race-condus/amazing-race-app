@@ -6,19 +6,24 @@ import { ThemeProvider } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { getEventReducer } from "@/reducers/eventSlice"
-import Notification from "@/components/ui/Notification"
 
-const EVENT_ID = 1
+
+import { getDefaultEventReducer } from "@/reducers/eventSlice"
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
+  store.dispatch(getDefaultEventReducer())
+
   useEffect(() => {
-    const refreshData = () => {
-      store.dispatch(fetchGroups())
-      store.dispatch(fetchCheckpoints())
-      store.dispatch(getEventReducer(EVENT_ID))
+    const refreshData = async () => {
+      const eventId = store.getState().event.id
+      if (eventId) {
+        await Promise.all([
+          store.dispatch(fetchGroups(eventId)),
+          store.dispatch(fetchCheckpoints(eventId))
+        ])
+      }
     }
 
     refreshData()

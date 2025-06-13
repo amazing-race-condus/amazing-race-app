@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { View, Text, TextInput, TouchableOpacity, Pressable } from "react-native"
 import { AxiosError } from "axios"
 import { useSelector, useDispatch } from "react-redux"
-import { RootState , AppDispatch } from "@/store/store"
+import store, { RootState , AppDispatch } from "@/store/store"
 import { Checkpoint, Distances } from "@/types"
 import { styles } from "@/styles/commonStyles"
 import { setNotification } from "@/reducers/notificationSlice"
@@ -11,13 +11,16 @@ import { getDistances, setDistances } from "@/services/routeService"
 
 const CheckpointDistance = () => {
   const checkpoints: Checkpoint[] = useSelector((state: RootState) => state.checkpoints)
-  const eventId = 1
+  const eventId = store.getState().event.id
+
+  console.log("Eventto id", eventId)
   const [expandedIndex, setExpandedIndex] = useState<number>(-1)
   const [formValues, setFormValues] = useState<Distances>({})
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    dispatch(fetchCheckpoints())
+    // const eventId = store.getState().event.id
+    dispatch(fetchCheckpoints(eventId))
   }, [dispatch])
 
   const getCheckpointDistances = async () => {
@@ -29,7 +32,7 @@ const CheckpointDistance = () => {
 
   const setCheckpointDistances = async () => {
     try {
-      await setDistances(formValues)
+      await setDistances(formValues, eventId)
       dispatch(setNotification("Rastien väliset etäisyydet päivitetty", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
