@@ -17,8 +17,8 @@ const PassedGroupsResults = () => {
   let groups = useSelector((state: RootState) => state.groups)
   groups = sortByTime([...groups], event)
 
-  const passedGroups = groups.filter(group => group.finishTime && group.easy === (filterOrder === 1))
-  const unPassedGroups = groups.filter(group => !group.finishTime && group.easy === (filterOrder === 1))
+  const passedGroups = groups.filter(group => group.finishTime && !group.disqualified && !group.dnf && group.nextCheckpointId === null && group.easy === (filterOrder === 1))
+  const unPassedGroups = groups.filter(group => (!(group.finishTime && !group.disqualified && !group.dnf && group.nextCheckpointId === null)) && group.easy === (filterOrder === 1))
 
   return (
     <View>

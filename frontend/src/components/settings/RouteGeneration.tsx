@@ -12,12 +12,12 @@ const RouteGeneration = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const createRoutes = async () => {
-    try {
-      handleAlert({
-        confirmText: "Luo reitit",
-        title: "Vahvista reittien luonti",
-        message: "Reittien luominen poistaa aikaisemmat reitit ja korvaa ne uusilla. Oletko varma että haluat luoda reitit?",
-        onConfirm: async () =>  {
+    handleAlert({
+      confirmText: "Luo reitit",
+      title: "Vahvista reittien luonti",
+      message: "Reittien luominen poistaa aikaisemmat reitit ja korvaa ne uusilla. Oletko varma että haluat luoda reitit?",
+      onConfirm: async () =>  {
+        try {
           const data = await generateRoutes()
           const routesAmount = data.routesAmount
           const groupsAmount = data.groupsAmount
@@ -27,14 +27,14 @@ const RouteGeneration = () => {
             dispatch(setNotification(`${routesAmount} reittiä luotu. Jokaisella ryhmällä ei ole uniikkia reittiä.`, "warning"))
           }
         }
-      })
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        dispatch(setNotification(
-          error.response?.data.error ?? `Reittejä ei voitu luoda: ${error.message}`, "error"
-        ))
-      }
-    }
+        catch (error) {
+          if (error instanceof AxiosError) {
+            dispatch(setNotification(
+              error.response?.data.error ?? `Reittejä ei voitu luoda: ${error.message}`, "error"
+            ))
+          }
+        }}
+    })
   }
 
   return (
