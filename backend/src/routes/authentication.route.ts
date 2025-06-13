@@ -1,7 +1,6 @@
-import bcrypt from "bcrypt"
 import express, { Response, Request } from "express"
 import { createUser, getAllUsers, deleteUser, getUserByAdminRights } from "../controllers/authentication.controller"
-import { validatePassword } from "../utils/passwordValidator"
+
 
 const authenticationRouter = express.Router()
 
@@ -25,14 +24,7 @@ authenticationRouter.post("/", async (req: Request, res: Response) => {
     return
   }
 
-  if (!validatePassword(password, res)) {
-    return
-  }
-
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  const savedUser = await createUser(username, passwordHash, admin, res)
+  const savedUser = await createUser(username, password, admin, res)
 
   res.status(201).json(savedUser)
 

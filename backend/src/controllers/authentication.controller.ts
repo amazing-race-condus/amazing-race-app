@@ -1,5 +1,7 @@
 import { Response } from "express"
 import { prisma } from "../index"
+import { validatePassword } from "../utils/passwordValidator"
+import bcrypt from "bcrypt"
 
 export const getAllUsers = async () => {
 
@@ -38,12 +40,32 @@ export const getUserById = async (id: number) => {
   return user
 }
 
-export const createUser = async (username: string, passwordHash: string, admin: boolean, res: Response) => {
-
-  if (!passwordHash || !username) {
+export const createUser = async (username: string, password: string, admin: boolean, res: Response) => {
+  if (!password || !username) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
     return
   }
+
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      username: {
+        equals: username.trim(),
+        mode: "insensitive"
+      }
+    }
+  })
+  if (existingUser) {
+    res.status(400).json({ error: "Käyttäjänimi on jo käytössä." })
+    return false
+  }
+  const validPassword = await validatePassword(password, res)
+
+  if (!validPassword) {
+    return
+  }
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const savedUser = await prisma.user.create({
     data: {

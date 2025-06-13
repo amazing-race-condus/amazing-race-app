@@ -20,12 +20,12 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   if (user.admin === true) {
 
     if (!username || !password) {
-      res.status(400).json({ error: "Anna käyttäjätunnus sekä pääkäyttäjän salasana." })
+      res.status(401).json({ error: "Anna käyttäjätunnus sekä pääkäyttäjän salasana." })
       return
     }
 
     if (username !== user.username) {
-      res.status(400).json({ error: "Virheelliset tunnukset." })
+      res.status(401).json({ error: "Virheelliset tunnukset." })
       return
 
     }
@@ -33,7 +33,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   } else {
 
     if (!password) {
-      res.status(400).json({ error: "Anna tavallisen käyttäjän salasana." })
+      res.status(401).json({ error: "Anna tavallisen käyttäjän salasana." })
       return
     }
   }
