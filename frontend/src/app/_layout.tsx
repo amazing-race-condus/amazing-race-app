@@ -42,8 +42,8 @@ export default function RootLayout() {
   useEffect(() => {
     const loadToken = async () => {
       try {
-        const token = await AsyncStorage.getItem("user-info")
-        setUserToken(token)
+        const userJson = await AsyncStorage.getItem("user-info")
+        setUserToken(userJson)
         setIsLoading(false)
       } catch (error) {
         console.error("Failed to load user token:", error)

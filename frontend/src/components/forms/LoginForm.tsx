@@ -20,7 +20,8 @@ const LoginForm = () => {
   const handleLogin = async () => {
     try {
       const user = await login( username, password, admin )
-      await AsyncStorage.setItem("user-info", user.token)
+      const jsonUser = JSON.stringify(user)
+      await AsyncStorage.setItem("user-info", jsonUser)
       setToken(user.token)
       setUsername("")
       setPassword("")

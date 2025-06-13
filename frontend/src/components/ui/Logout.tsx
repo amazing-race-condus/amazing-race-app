@@ -2,18 +2,22 @@ import React from "react"
 import { setToken } from "@/utils/tokenUtils"
 import { Text, Pressable } from "react-native"
 import { setNotification } from "@/reducers/notificationSlice"
-import { User } from "@/types"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const Logout = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<User | undefined>> }) => {
+const Logout = () => {
   const dispatch = useDispatch<AppDispatch>()
 
-  const handleLogout = () => {
-    setUser(undefined)
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("user-info")
+    } catch (error) {
+      // todo: better error handling
+      console.error(error)
+    }
     setToken("")
-    window.localStorage.clear()
     dispatch(setNotification("Olet nyt kirjautunut ulos", "success"))
   }
 
