@@ -1,5 +1,4 @@
 import { Text, View } from "react-native"
-import Notification from "@/components/ui/Notification"
 import { styles } from "@/styles/commonStyles"
 import SettingsItem from "@/components/settings/SettingsItem"
 import { useSelector } from "react-redux"
@@ -11,7 +10,6 @@ const Settings = () => {
 
   return (
     <View style={styles.container}>
-      <Notification />
       <Text style={styles.title}>Asetukset</Text>
       <SettingsItem
         text="Hallinnoi rasteja"
