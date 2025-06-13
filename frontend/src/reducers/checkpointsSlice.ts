@@ -26,18 +26,18 @@ const checkpointSlice = createSlice({
   },
 })
 
-export const fetchCheckpoints = () => async (dispatch: AppDispatch) => {
+export const fetchCheckpoints = (eventId : number) => async (dispatch: AppDispatch) => {
   try {
-    const allCheckpoints = await getAllCheckpoints()
+    const allCheckpoints = await getAllCheckpoints(eventId)
     dispatch(setCheckpoints(allCheckpoints))
   } catch (error) {
     console.error("Failed to fetch checkpoints:", error)
   }
 }
 
-export const addCheckpointReducer = (newObject: AddCheckpoint) => async (dispatch: AppDispatch) => {
+export const addCheckpointReducer = (newObject: AddCheckpoint, eventId: number) => async (dispatch: AppDispatch) => {
   try {
-    const newCheckpoint = await createCheckpoint(newObject)
+    const newCheckpoint = await createCheckpoint(newObject, eventId)
     dispatch(appendCheckpoint(newCheckpoint))
     dispatch(setNotification(`Rasti '${newObject.name}' lisätty`, "success"))
   } catch (error) {

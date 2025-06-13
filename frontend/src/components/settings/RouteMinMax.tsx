@@ -3,14 +3,14 @@ import { Stack } from "expo-router"
 import { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
-import { AppDispatch } from "@/store/store"
+import store, { AppDispatch } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
 import { getLimits, setLimits } from "@/services/routeService"
 
 const RouteMinMax = () => {
-  const eventId = 1
+  const eventId = store.getState().event.id
   const [minimum, setMinimum] = useState("")
   const [maximum, setMaximum] = useState("")
   const dispatch = useDispatch<AppDispatch>()

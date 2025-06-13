@@ -11,7 +11,7 @@ export type Checkpoint = {
     easyHint: string | null;
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId">
+export type AddCheckpoint = Omit<Checkpoint, "id" >
 
 export interface RouteLimit {
     id: number,
