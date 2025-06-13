@@ -1,13 +1,5 @@
 import { prisma } from "../index"
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { AddEvent } from "@/types"
-=======
-import { Event } from "@/types"
->>>>>>> 12b89a7 (Add calender and backend functionality for event creation)
-=======
-import { AddEvent } from "@/types"
->>>>>>> 5270bc3 (Fixes to event creation functionality)
 
 export const getAllEvents = async () => {
   const events = await prisma.event.findMany({
@@ -66,26 +58,15 @@ export const endEvent = async (eventId: number) => {
   return event
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 export const createEvent = async (event: AddEvent) => {
-=======
-export const createEvent = async (event: Event) => {
->>>>>>> 12b89a7 (Add calender and backend functionality for event creation)
-=======
-export const createEvent = async (event: AddEvent) => {
->>>>>>> 5270bc3 (Fixes to event creation functionality)
   if (event.name === "" || event.name === null) {
     return null
   }
   const createdEvent = await prisma.event.create({
     data: {
       name: event.name,
-<<<<<<< HEAD
       eventDate: event.eventDate
-=======
-      //eventDate: event.eventDate
->>>>>>> 12b89a7 (Add calender and backend functionality for event creation)
     }
   })
   return createdEvent
