@@ -4,15 +4,16 @@ import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 import { useDispatch } from "react-redux"
 import { setNotification } from "@/reducers/notificationSlice"
-import { AppDispatch } from "@/store/store"
+import store, { AppDispatch } from "@/store/store"
 import { generateRoutes } from "@/services/routeService"
 
 const RouteGeneration = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const eventId = store.getState().event.id
 
   const createRoutes = async () => {
     try {
-      const data = await generateRoutes()
+      const data = await generateRoutes(eventId)
       const routesAmount = data.routesAmount
       const groupsAmount = data.groupsAmount
       if (routesAmount >= groupsAmount) {

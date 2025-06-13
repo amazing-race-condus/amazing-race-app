@@ -6,7 +6,7 @@ import { ThemeProvider } from "@react-navigation/native"
 import { useEffect } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { getEventReducer, getDefaultEventReducer } from "@/reducers/eventSlice"
+import { getDefaultEventReducer } from "@/reducers/eventSlice"
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
 

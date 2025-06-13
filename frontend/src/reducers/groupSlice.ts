@@ -29,7 +29,6 @@ const groupSlice = createSlice({
 
 export const fetchGroups = (eventId : number) => async (dispatch: AppDispatch) => {
   try {
-    console.log(eventId)
     const allGroups = await getAllGroups(eventId)
 
     dispatch(setGroups(allGroups))

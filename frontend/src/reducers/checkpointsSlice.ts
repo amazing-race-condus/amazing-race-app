@@ -35,9 +35,9 @@ export const fetchCheckpoints = (eventId : number) => async (dispatch: AppDispat
   }
 }
 
-export const addCheckpointReducer = (newObject: AddCheckpoint) => async (dispatch: AppDispatch) => {
+export const addCheckpointReducer = (newObject: AddCheckpoint, eventId: number) => async (dispatch: AppDispatch) => {
   try {
-    const newCheckpoint = await createCheckpoint(newObject, 1)
+    const newCheckpoint = await createCheckpoint(newObject, eventId)
     dispatch(appendCheckpoint(newCheckpoint))
     dispatch(setNotification(`Rasti '${newObject.name}' lisätty`, "success"))
   } catch (error) {

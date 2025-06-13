@@ -32,7 +32,7 @@ const CheckpointDistance = () => {
 
   const setCheckpointDistances = async () => {
     try {
-      await setDistances(formValues)
+      await setDistances(formValues, eventId)
       dispatch(setNotification("Rastien väliset etäisyydet päivitetty", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
