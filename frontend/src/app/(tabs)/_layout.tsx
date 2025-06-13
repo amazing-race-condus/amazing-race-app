@@ -1,6 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome"
 import { Tabs } from "expo-router"
 
+export const unstable_settings = {
+  initialRouteName: "/(tabs)/(groups)/index",
+}
+
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
@@ -26,15 +30,6 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Asetukset",
-          headerShown: false,
-          popToTopOnBlur: true,
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="login"
-        options={{
-          title: "Kirjautuminen",
           headerShown: false,
           popToTopOnBlur: true,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { getEventReducer } from "@/reducers/eventSlice"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const EVENT_ID = 1
 
@@ -34,11 +35,28 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-export const unstable_settings = {
-  initialRouteName: "/(tabs)/(groups)/index",
-}
-
 export default function RootLayout() {
+  const [userToken, setUserToken] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("user-info")
+        setUserToken(token)
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Failed to load user token:", error)
+        setIsLoading(false)
+      }
+    }
+    loadToken()
+  }, [])
+
+  if (isLoading) {
+    return null
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
@@ -73,7 +91,12 @@ export default function RootLayout() {
             }
           }}>
             <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Protected guard={Boolean(userToken)}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack.Protected>
+              <Stack.Protected guard={Boolean(!userToken)}>
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+              </Stack.Protected>
             </Stack>
           </ThemeProvider>
         </DataRefreshProvider>
