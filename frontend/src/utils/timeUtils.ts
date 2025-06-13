@@ -11,7 +11,7 @@ export const getRaceTime = (group: Group, event: Event) => {
     const startTime = new Date(event.startTime)
     if (!group.finishTime && !event.endTime) {
       const now = new Date
-      totalSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000) + totalPenalty
+      totalSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000) + totalPenalty * 60
     } else {
       // finishTime is either group.finishTime or event.endTime, whichever exists and is earlier
       const finishTimeRaw = !group.finishTime
@@ -21,7 +21,7 @@ export const getRaceTime = (group: Group, event: Event) => {
           : (group.finishTime < event.endTime ? group.finishTime : event.endTime)
 
       const finishTime = new Date(finishTimeRaw!)
-      totalSeconds = Math.floor((finishTime!.getTime() - startTime.getTime()) / 1000) + totalPenalty
+      totalSeconds = Math.floor((finishTime!.getTime() - startTime.getTime()) / 1000) + totalPenalty * 60
     }
     return totalSeconds
   }
