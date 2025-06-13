@@ -70,10 +70,10 @@ model Group {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  username     String  @unique
-  passwordHash String
-
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  passwordHash      String
+  admin             Boolean   @default(false)
 }
 
 model Route {
