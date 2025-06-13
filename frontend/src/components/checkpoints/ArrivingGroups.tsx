@@ -42,18 +42,17 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
     <View style={styles.container}>
       <Search search={search} setSearch={setSearch} placeHolder="Hae kaikista ryhmistä..." />
       {search.length > 0
-        ?
-        <View>
+        ? <>
           {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
           <GroupList groups={filteredGroups} />
-        </View>
+        </>
         :
-        <View>
+        <>
           <Filter order={order} setOrder={setOrder} values={["Seuraavaksi saapuvat", "Myöhemmin saapuvat", "Ei tänne"]}/>
           { order === 0 && <NextGroups groups={groups} checkpointId={checkpointId} /> }
           { order === 1 && <LaterGroups groups={groups} checkpointId={checkpointId} /> }
           { order === 2 && <WrongGroups groups={groups} checkpointId={checkpointId} /> }
-        </View>
+        </>
       }
     </View>
   )
