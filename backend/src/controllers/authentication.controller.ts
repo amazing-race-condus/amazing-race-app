@@ -6,19 +6,21 @@ export const getAllUsers = async () => {
   const users = await prisma.user.findMany({
     select: {
       id: true,
-      username: true
+      username: true,
+      admin: true
     }
   })
   return users
 }
 
-export const getUserByUsername = async (username: string) => {
-  const user = await prisma.user.findUnique({
-    where: { username: username },
+export const getUserByAdminRights = async (admin: boolean) => {
+  const user = await prisma.user.findFirst({
+    where: { admin: admin },
     select: {
       id: true,
       username: true,
-      passwordHash: true
+      passwordHash: true,
+      admin: true
     }
   })
   return user
@@ -30,14 +32,15 @@ export const getUserById = async (id: number) => {
     select: {
       id: true,
       username: true,
+      admin: true
     }
   })
   return user
 }
 
-export const createUser = async (username: string, password: string, res: Response) => {
+export const createUser = async (username: string, passwordHash: string, admin: boolean, res: Response) => {
 
-  if (!password || !username) {
+  if (!passwordHash || !username) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
     return
   }
@@ -45,11 +48,13 @@ export const createUser = async (username: string, password: string, res: Respon
   const savedUser = await prisma.user.create({
     data: {
       username: username,
-      passwordHash: password,
+      passwordHash: passwordHash,
+      admin: admin
     },
     select: {
       id: true,
-      username: true
+      username: true,
+      admin: true
     }
   })
   return savedUser

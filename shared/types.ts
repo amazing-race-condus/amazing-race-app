@@ -51,8 +51,8 @@ export interface Penalty {
 export interface User {
     id: number,
     username: string
-    password?: string
     token: string
+    admin: boolean
 }
 
 export interface Group {

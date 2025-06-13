@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt"
 import express, { Response, Request } from "express"
-import { createUser, getAllUsers, deleteUser } from "../controllers/authentication.controller"
+import { createUser, getAllUsers, deleteUser, getUserByAdminRights } from "../controllers/authentication.controller"
 import { validatePassword } from "../utils/passwordValidator"
 
 const authenticationRouter = express.Router()
 
+// GET POST ja DELETE endpointit voi poistaa, kun viedään tuotantoon
 authenticationRouter.get("/", async (_, res: Response) => {
   const allUsers = await getAllUsers()
 
@@ -13,18 +14,27 @@ authenticationRouter.get("/", async (_, res: Response) => {
 
 
 authenticationRouter.post("/", async (req: Request, res: Response) => {
-  const { username, password } = req.body
+  const { username, password, admin } = req.body
+  const user = await getUserByAdminRights(admin)
+  if (user) {
+    if (user.admin) {
+      res.status(400).json({ error: "Pääkäyttäjä on jo luotu." })
+      return
+    }
+    res.status(400).json({ error: "Tavallinen käyttäjä on jo luotu." })
+    return
+  }
+
   if (!validatePassword(password, res)) {
     return
   }
 
-
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  const savedPassword = await createUser(username, passwordHash, res)
+  const savedUser = await createUser(username, passwordHash, admin, res)
 
-  res.status(201).json(savedPassword)
+  res.status(201).json(savedUser)
 
 })
 

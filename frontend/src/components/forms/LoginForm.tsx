@@ -9,15 +9,17 @@ import { User } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
 import { login } from "@/services/loginService"
 import { setToken } from "@/utils/tokenUtils"
+import { Checkbox } from "react-native-paper"
 
 const LoginForm = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<User | undefined>> }) => {
+  const dispatch = useDispatch<AppDispatch>()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const dispatch = useDispatch<AppDispatch>()
+  const [admin, setAdmin] = useState<boolean>(false)
 
   const handleLogin = async () => {
     try {
-      const user = await login( username, password )
+      const user = await login( username, password, admin )
       window.localStorage.setItem(
         "loggedAmazingRaceAppUser", JSON.stringify(user)
       )
@@ -25,8 +27,9 @@ const LoginForm = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<Use
       setUsername("")
       setPassword("")
       setUser(user)
+      console.log("logged in user", user)
       dispatch(setNotification("Kirjautuminen onnistui!", "success"))
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
@@ -57,6 +60,13 @@ const LoginForm = ({setUser}: { setUser: React.Dispatch<React.SetStateAction<Use
           value={password}
           onChangeText={setPassword}
         />
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            status={admin ? "checked" : "unchecked"}
+            onPress={() => setAdmin(!admin)}
+          />
+          <Text>Kirjaudu pääkäyttäjänä</Text>
+        </View>
         <Pressable style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Kirjaudu sisään</Text>
         </Pressable>
