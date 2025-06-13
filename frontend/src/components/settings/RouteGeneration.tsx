@@ -47,7 +47,7 @@ const RouteGeneration: React.FC = () => {
       <Text style={styles.header}>Luo reitit:</Text>
       <View style={styles.formContainer}>
         <Pressable style={styles.button} onPress={createRoutes}>
-          <Text>Luo reitit</Text>
+          <Text style={styles.buttonText}>Luo reitit</Text>
         </Pressable>
       </View>
     </View>

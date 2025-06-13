@@ -25,9 +25,7 @@ routesRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 routesRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
-
   const times = await getDistances(eventId)
-
   res.send(times)
 })
 
@@ -40,7 +38,6 @@ routesRouter.put("/:event_id/update_distances", async (req: Request, res: Respon
 
 routesRouter.put("/:event_id/create_routes", async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
-  console.log("tässä", eventId)
   const response = await createRoutes(eventId)
   if (response.status === "error") {
     res.status(400).json({error: response.message})
