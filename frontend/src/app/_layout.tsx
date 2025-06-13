@@ -6,9 +6,8 @@ import { ThemeProvider } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-
-
 import { getDefaultEventReducer } from "@/reducers/eventSlice"
+import Notification from "@/components/ui/Notification"
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)

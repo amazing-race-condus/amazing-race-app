@@ -51,7 +51,6 @@ const AddEventForm = ({
     }
     setEventName("")
     setEventDate(new Date())
-        
     Keyboard.dismiss()
     bottomSheetRef.current?.close()
   }
