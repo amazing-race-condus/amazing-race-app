@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { getEventReducer } from "@/reducers/eventSlice"
+import Notification from "@/components/ui/Notification"
 
 const EVENT_ID = 1
 
@@ -72,6 +73,7 @@ export default function RootLayout() {
               },
             }
           }}>
+            <Notification />
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
