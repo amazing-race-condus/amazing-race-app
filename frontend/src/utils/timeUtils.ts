@@ -2,16 +2,16 @@ import { Event, Group } from "@/types"
 import { getPenaltyMinutes } from "./groupUtils"
 
 export const getRaceTime = (group: Group, event: Event) => {
-  let totalMinutes: number | null = null
+  let totalSeconds: number | null = null
   const totalPenalty = getPenaltyMinutes(group)
 
-  if (!event) return totalMinutes
+  if (!event) return totalSeconds
 
   if (event.startTime) {
     const startTime = new Date(event.startTime)
     if (!group.finishTime && !event.endTime) {
       const now = new Date
-      totalMinutes = Math.floor((now.getTime() - startTime.getTime()) / (1000 * 60)) + totalPenalty
+      totalSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000) + totalPenalty * 60
     } else {
       // finishTime is either group.finishTime or event.endTime, whichever exists and is earlier
       const finishTimeRaw = !group.finishTime
@@ -21,9 +21,9 @@ export const getRaceTime = (group: Group, event: Event) => {
           : (group.finishTime < event.endTime ? group.finishTime : event.endTime)
 
       const finishTime = new Date(finishTimeRaw!)
-      totalMinutes = Math.floor((finishTime!.getTime() - startTime.getTime()) / (1000 * 60)) + totalPenalty
+      totalSeconds = Math.floor((finishTime!.getTime() - startTime.getTime()) / 1000) + totalPenalty * 60
     }
-    return totalMinutes
+    return totalSeconds
   }
-  return totalMinutes
+  return totalSeconds
 }
