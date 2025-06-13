@@ -17,12 +17,12 @@ export const getDistances = async (eventId: number) => {
   return response.data
 }
 
-export const setDistances = async (distances: Distances) => {
-  const response = await axios.put<Distances>(`${url}/settings/update_distances`, distances)
+export const setDistances = async (distances: Distances, eventId: number) => {
+  const response = await axios.put<Distances>(`${url}/settings/${eventId}/update_distances`, distances)
   return response.data
 }
 
-export const generateRoutes = async () => {
-  const response = await axios.put(`${url}/settings/create_routes`)
+export const generateRoutes = async (eventId: number) => {
+  const response = await axios.put(`${url}/settings/${eventId}/create_routes`)
   return response.data
 }

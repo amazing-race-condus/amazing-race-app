@@ -1,5 +1,7 @@
-import express, { Response } from "express"
+import express, { Response, Request } from "express"
 import { getAllEvents, getEventById, startEvent,
+  endEvent,getDefaultEvent, createEvent} from "../controllers/event.controller"
+
   endEvent } from "../controllers/event.controller"
 import { verifyToken } from "../utils/middleware"
 
@@ -7,6 +9,12 @@ const eventRouter = express.Router()
 
 eventRouter.get("/", async (_, res: Response) => {
   const events = await getAllEvents()
+  res.json(events)
+  return
+})
+
+eventRouter.get("/default", async (_, res: Response) => {
+  const events = await getDefaultEvent()
   res.json(events)
   return
 })
@@ -45,6 +53,17 @@ eventRouter.put("/end/:id", verifyToken, async (_, res: Response) => {
     res.json(event)
   } else {
     res.status(404).json({ error: "Tapahtumaa ei voitu päättää. Onko tapahtuma aloitettu?" })
+  }
+  return
+})
+
+eventRouter.post("/create", async (req: Request, res: Response) => {
+  const event = await createEvent(req.body)
+
+  if (event) {
+    res.json(event)
+  } else {
+    res.status(400).json({ error: "Tapahtumaa ei voitu luoda."})
   }
   return
 })
