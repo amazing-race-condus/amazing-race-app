@@ -1,15 +1,11 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack, router } from "expo-router"
-import { AxiosError } from "axios"
+import { Stack } from "expo-router"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useState } from "react"
-import { setNotification } from "@/reducers/notificationSlice"
-import { login } from "@/services/loginService"
-import { setToken } from "@/utils/tokenUtils"
 import { Checkbox } from "react-native-paper"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { loginUser } from "@/reducers/userSlice"
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -18,25 +14,10 @@ const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const handleLogin = async () => {
-    try {
-      const user = await login( username, password, admin )
-      const jsonUser = JSON.stringify(user)
-      await AsyncStorage.setItem("user-info", jsonUser)
-      setToken(user.token)
-      setUsername("")
-      setPassword("")
-      setAdmin(false)
-      dispatch(setNotification("Kirjautuminen onnistui!", "success"))
-      router.replace("/")
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        dispatch(setNotification(
-          error.response?.data.error ?? `Kirjautuminen epäonnistui: ${error.message}`, "error"
-        ))
-        setUsername("")
-        setPassword("")
-      }
-    }
+    await dispatch(loginUser(username, password, admin))
+    setUsername("")
+    setPassword("")
+    setAdmin(false)
   }
 
   return (
