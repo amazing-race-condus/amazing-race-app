@@ -30,7 +30,6 @@ const eventSlice = createSlice({
 export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
     const event = await getEvent(id)
-    console.log(event.id)
     dispatch(setEvents(event))
   } catch (error) {
     console.error("Failed to fetch event:", error)

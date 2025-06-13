@@ -23,7 +23,6 @@ export const setDistances = async (distances: Distances, eventId: number) => {
 }
 
 export const generateRoutes = async (eventId: number) => {
-  console.log("Hep", eventId)
   const response = await axios.put(`${url}/settings/${eventId}/create_routes`)
   return response.data
 }

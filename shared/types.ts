@@ -11,7 +11,7 @@ export type Checkpoint = {
     easyHint: string | null;
 }
 
-export type AddCheckpoint = Omit<Checkpoint, "id" | "eventId">
+export type AddCheckpoint = Omit<Checkpoint, "id" >
 
 export interface RouteLimit {
     id: number,
@@ -76,5 +76,5 @@ export interface Event {
 }
 
 
-export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
+export type AddGroup = Omit<Group, "id" | "finishTime" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
 

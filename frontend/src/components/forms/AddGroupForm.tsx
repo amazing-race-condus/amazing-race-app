@@ -22,7 +22,8 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
-        easy: easy
+        easy: easy,
+        eventId: null
       }
 
       const eventId = store.getState().event.id

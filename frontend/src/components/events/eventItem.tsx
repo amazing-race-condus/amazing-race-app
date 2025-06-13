@@ -1,14 +1,8 @@
-import { removeCheckpointReducer } from "@/reducers/checkpointsSlice"
-import { AppDispatch } from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import { Event } from "@/types"
-import { getType } from "@/utils/checkpointUtils"
 import { handleAlert } from "@/utils/handleAlert"
-import { Link, usePathname } from "expo-router"
 import React from "react"
-import { View, Pressable, TouchableOpacity, Text } from "react-native"
-import { useDispatch } from "react-redux"
-import { Entypo } from "@expo/vector-icons"
+import { View, Pressable,Text } from "react-native"
 
 const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChange: (id : number) => void }) => {
 

@@ -8,6 +8,8 @@ import { setNotification } from "@/reducers/notificationSlice"
 import { Event } from "@/types"
 import EventItem from "./eventItem"
 import { AppDispatch } from "@/store/store"
+import { fetchGroups } from "@/reducers/groupSlice"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 
 const Events = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -24,6 +26,8 @@ const Events = () => {
 
   const handleEventChange = async (id : number) => {
     dispatch(getEventReducer(id))
+    dispatch(fetchGroups(id))
+    dispatch(fetchCheckpoints(id))
     dispatch(setNotification("Tapahtumanäkymä vaihdettu","success"))
   }
 

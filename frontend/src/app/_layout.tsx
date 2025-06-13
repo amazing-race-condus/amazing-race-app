@@ -14,7 +14,7 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const refreshData = async () => {
-      const eventId = await store.getState().event.id
+      const eventId = store.getState().event.id
       if (eventId) {
         await Promise.all([
           store.dispatch(fetchGroups(eventId)),
