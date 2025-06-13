@@ -13,13 +13,11 @@ const CheckpointDistance = () => {
   const checkpoints: Checkpoint[] = useSelector((state: RootState) => state.checkpoints)
   const eventId = store.getState().event.id
 
-  console.log("Eventto id", eventId)
   const [expandedIndex, setExpandedIndex] = useState<number>(-1)
   const [formValues, setFormValues] = useState<Distances>({})
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    // const eventId = store.getState().event.id
     dispatch(fetchCheckpoints(eventId))
   }, [dispatch])
 
