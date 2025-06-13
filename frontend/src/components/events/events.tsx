@@ -25,7 +25,7 @@ const Events = ({
     }
 
     fetchEvents()
-  }, [events])
+  }, [events, setEvents])
 
   const handleEventChange = async (id : number) => {
     await getEventReducer(id)
