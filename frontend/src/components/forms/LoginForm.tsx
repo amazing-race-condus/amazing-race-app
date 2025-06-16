@@ -49,6 +49,7 @@ const LoginForm = () => {
           style={styles.inputField}
           value={password}
           onChangeText={setPassword}
+          secureTextEntry
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>
