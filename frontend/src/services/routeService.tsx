@@ -1,28 +1,27 @@
-import axios from "axios"
+import axiosInstance from "./api"
 import { RouteLimit, Distances } from "@/types"
-import { url } from "../config"
 
 export const getLimits = async (eventId: number) => {
-  const response = await axios.get(`${url}/settings/${eventId}/limits`)
+  const response = await axiosInstance.get(`/settings/${eventId}/limits`)
   return response.data
 }
 
 export const setLimits = async (limit: RouteLimit) => {
-  const response = await axios.put<RouteLimit>(`${url}/settings/update_limits`, limit)
+  const response = await axiosInstance.put<RouteLimit>("/settings/update_limits", limit)
   return response.data
 }
 
 export const getDistances = async (eventId: number) => {
-  const response = await axios.get(`${url}/settings/${eventId}/distances`)
+  const response = await axiosInstance.get(`/settings/${eventId}/distances`)
   return response.data
 }
 
 export const setDistances = async (distances: Distances, eventId: number) => {
-  const response = await axios.put<Distances>(`${url}/settings/${eventId}/update_distances`, distances)
+  const response = await axiosInstance.put<Distances>(`/settings/${eventId}/update_distances`, distances)
   return response.data
 }
 
 export const generateRoutes = async (eventId: number) => {
-  const response = await axios.put(`${url}/settings/${eventId}/create_routes`)
+  const response = await axiosInstance.put(`/settings/${eventId}/create_routes`)
   return response.data
 }

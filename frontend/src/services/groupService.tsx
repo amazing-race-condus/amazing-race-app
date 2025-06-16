@@ -1,10 +1,9 @@
-import axios from "axios"
-import { url } from "../config"
+import axiosInstance from "./api"
 import { AddGroup, Group } from "@/types"
 
 export const getAllGroups = async (eventId: number): Promise<Group[]> => {
-  const response = await axios.get<Group[]>(`${url}/groups`,{
-    params :{
+  const response = await axiosInstance.get<Group[]>("/groups",{
+    params: {
       eventId: eventId
     }
   }
@@ -13,12 +12,12 @@ export const getAllGroups = async (eventId: number): Promise<Group[]> => {
 }
 
 export const getArrivingGroups = async (checkpointId: number): Promise<Group[]> => {
-  const response = await axios.get<Group[]>(`${url}/groups/by_next_checkpoint/${checkpointId}`)
+  const response = await axiosInstance.get<Group[]>(`/groups/by_next_checkpoint/${checkpointId}`)
   return response.data
 }
 
 export const createGroup = async (newGroup: AddGroup, eventId: number) => {
-  const response = await axios.post<Group>(`${url}/groups`,{
+  const response = await axiosInstance.post<Group>("/groups",{
     ...newGroup,
     eventId: eventId
   })
@@ -26,26 +25,26 @@ export const createGroup = async (newGroup: AddGroup, eventId: number) => {
 }
 
 export const removeGroup = async (id: number) => {
-  const response = await axios.delete(`${url}/groups/${id}`)
+  const response = await axiosInstance.delete(`/groups/${id}`)
   return response.data
 }
 
 export const giveNextCheckpoint = async (id: number, checkpointId: number) => {
-  const response = await axios.put<Group>(`${url}/groups/next_checkpoint/${id}`, {nextCheckpointId: checkpointId})
+  const response = await axiosInstance.put<Group>(`/groups/next_checkpoint/${id}`, {nextCheckpointId: checkpointId})
   return response.data
 }
 
 export const dnfGroup = async (id: number) => {
-  const response = await axios.put(`${url}/groups/${id}/dnf`)
+  const response = await axiosInstance.put(`/groups/${id}/dnf`)
   return response.data
 }
 
 export const disqualifyGroup = async (id: number) => {
-  const response = await axios.put(`${url}/groups/${id}/disqualify`)
+  const response = await axiosInstance.put(`/groups/${id}/disqualify`)
   return response.data
 }
 
 export const editGroup = async (id: number, newObject: AddGroup) => {
-  const response = await axios.put(`${url}/groups/${id}`, newObject)
+  const response = await axiosInstance.put(`/groups/${id}`, newObject)
   return response.data
 }
