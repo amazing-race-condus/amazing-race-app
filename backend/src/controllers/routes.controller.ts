@@ -265,3 +265,40 @@ export const createRoutes = async (eventId: number) => {
     return response
   }
 }
+
+export const getRoutesInfo = async (eventId: number) => {
+  const routes = await prisma.route.findMany({
+    where: {
+      eventId: eventId
+    },
+    select: {
+      id: true,
+      routeTime: true
+    },
+    orderBy: {
+      routeTime: "asc"
+    }
+  })
+
+  return routes
+}
+
+export const getActiveRoutesInfo = async (eventId: number) => {
+  const activeRoutes = await prisma.route.findMany({
+    where: {
+      eventId: eventId,
+      group: {
+        some: {}
+      }
+    },
+    select: {
+      id: true,
+      routeTime: true
+    },
+    orderBy: {
+      routeTime: "asc"
+    }
+  })
+
+  return activeRoutes
+}

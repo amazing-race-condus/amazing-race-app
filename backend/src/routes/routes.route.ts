@@ -1,6 +1,9 @@
 import express, { Response, Request } from "express"
 import { getLimits, updateLimits, getDistances, updateDistances,
-  createRoutes } from "../controllers/routes.controller"
+  createRoutes,
+  getRoutesInfo,
+  getActiveRoutesInfo
+} from "../controllers/routes.controller"
 import { verifyToken } from "../utils/middleware"
 
 const routesRouter = express.Router()
@@ -28,6 +31,38 @@ routesRouter.get("/:event_id/distances", verifyToken, async (req: Request, res: 
   const eventId = Number(req.params.event_id)
   const times = await getDistances(eventId)
   res.send(times)
+})
+
+routesRouter.get("/:event_id/routes_info", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+
+  const routes = await getRoutesInfo(eventId)
+
+  res.send(routes)
+})
+
+routesRouter.get("/:event_id/active_routes_info", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+
+  const activeRoutes = await getActiveRoutesInfo(eventId)
+
+  res.send(activeRoutes)
+})
+
+routesRouter.get("/:event_id/routes_info", verifyToken, async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+
+  const routes = await getRoutesInfo(eventId)
+
+  res.send(routes)
+})
+
+routesRouter.get("/:event_id/active_routes_info", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+
+  const activeRoutes = await getActiveRoutesInfo(eventId)
+
+  res.send(activeRoutes)
 })
 
 routesRouter.put("/:event_id/update_distances", verifyToken, async (req: Request, res: Response) => {
