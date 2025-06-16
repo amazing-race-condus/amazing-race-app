@@ -1,4 +1,5 @@
 import DateTimePicker, { DateType, useDefaultStyles } from "react-native-ui-datepicker"
+import { View } from "react-native"
 
 const Calendar = ({
   selected,
@@ -10,14 +11,16 @@ const Calendar = ({
   const defaultStyles = useDefaultStyles()
 
   return (
-    <DateTimePicker
-      mode="single"
-      date={selected}
-      onChange={({ date }) => setSelected(date)}
-      styles={defaultStyles}
-      firstDayOfWeek={1}
-      locale="fi"
-    />
+    <View testID="calendar-wrapper">
+      <DateTimePicker
+        mode="single"
+        date={selected}
+        onChange={({ date }) => setSelected(date)}
+        styles={defaultStyles}
+        firstDayOfWeek={1}
+        locale="fi"
+      />
+    </View>
   )
 }
 

@@ -145,7 +145,7 @@ export const toggleDisqualified = async (groupId: number) => {
   return group
 }
 
-export const modifyGroup = async (groupId: number, name: string, members: number, easy: boolean, res: Response) => {
+export const modifyGroup = async (groupId: number, name: string, members: number, easy: boolean, eventId : number, res: Response) => {
   const id = groupId
 
   const data: Partial<{ name: string, members: number, easy: boolean }> = {}
@@ -159,7 +159,7 @@ export const modifyGroup = async (groupId: number, name: string, members: number
     return
   }
 
-  const validName = await validateName(name, res, groupId)
+  const validName = await validateName(name, res, eventId, groupId)
   if (!validName) {
     return
   }
