@@ -104,7 +104,7 @@ const NotStartedGroups = ({ groups, event }: { groups: Group[], event: Event }) 
       return false
     if (!group.route[0].id)
       return false
-    return group.nextCheckpointId !== group.route[0].id
+    return group.nextCheckpointId === group.route[0].id
   })
 
   return (
