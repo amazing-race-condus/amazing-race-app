@@ -1,4 +1,4 @@
-import type { Group, Checkpoint, Penalty } from "@/types"
+import type { Group, Checkpoint, Penalty, Event } from "@/types"
 // import configureStore from "redux-mock-store"
 import { configureStore } from "@reduxjs/toolkit"
 import eventSlice from "@/reducers/eventSlice"
@@ -153,6 +153,21 @@ export const overtimePenalties: Penalty[] = [
     groupId: 1,
     checkpointId: 1
   },
+]
+
+export const events: Event[] = [
+  {
+    id: 1,
+    name: "MockEvent",
+    startTime: null,
+    endTime: null,
+    minRouteTime: null,
+    maxRouteTime: null,
+    eventDate: new Date("2025-06-25 21:00:00"),
+    group: [],
+    checkpoints: [],
+    penalties: []
+  }
 ]
 
 export const createMockStore = (preloadedState = {}) =>
