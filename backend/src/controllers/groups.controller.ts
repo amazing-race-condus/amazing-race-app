@@ -88,7 +88,7 @@ export const createGroup = async (name: string, members: number, easy: boolean, 
     return
   }
 
-  const validName = await validateName(name, res)
+  const validName = await validateName(name, res, eventId)
   if (!validName) {
     return
   }
