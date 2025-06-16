@@ -3,7 +3,7 @@ import { Keyboard, Platform, Pressable, Text, View } from "react-native"
 import { RadioButton } from "react-native-paper"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import store, { AppDispatch } from "@/store/store"
 import { addGroupReducer } from "@/reducers/groupSlice"
 import { AddGroup } from "@/types"
 import { styles } from "@/styles/commonStyles"
@@ -22,10 +22,13 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
-        easy: easy
+        easy: easy,
+        eventId: null
       }
 
-      dispatch(addGroupReducer(newGroup))
+      const eventId = store.getState().event.id
+
+      dispatch(addGroupReducer(newGroup, eventId))
       setGroupname("")
       setGroupMembers(0)
       setEasy(false)

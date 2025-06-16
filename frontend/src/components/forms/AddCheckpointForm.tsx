@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 import { Keyboard, Platform, Pressable, Text, View, StyleSheet } from "react-native"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import store, { AppDispatch } from "@/store/store"
 import { addCheckpointReducer } from "@/reducers/checkpointsSlice"
 import { AddCheckpoint, CheckpointType } from "@/types"
 import { RadioButton } from "react-native-paper"
@@ -22,6 +22,7 @@ const styles2 = StyleSheet.create({
 
 const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
+  const eventId = store.getState().event.id
   const [name, setName] = useState<string>("")
   const [type, setType] = useState<CheckpointType>("INTERMEDIATE")
   const [hintUrl, setHintUrl] = useState<string>("")
@@ -35,9 +36,10 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       name: name,
       type: type,
       hint: hintUrl,
-      easyHint: easyHintUrl
+      easyHint: easyHintUrl,
+      eventId: null
     }
-    await dispatch(addCheckpointReducer(newCheckpoint))
+    await dispatch(addCheckpointReducer(newCheckpoint, eventId))
     setName("")
     setType("INTERMEDIATE")
     setHintUrl("")

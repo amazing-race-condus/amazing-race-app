@@ -22,7 +22,7 @@ enum PenaltyType {
 
 model Checkpoint {
   id       Int     @id @default(autoincrement())
-  name     String  @unique
+  name     String
   type     Type
   hint     String?
   easyHint     String?  @map("easy_hint")
@@ -34,6 +34,8 @@ model Checkpoint {
   group           Group[]
   penalty         Penalty[]
   routeCheckpoint RouteCheckpoint[]
+
+  @@unique([name, eventId])
 }
 
 model Event {
@@ -43,6 +45,7 @@ model Event {
   endTime        DateTime? @map("end_time")
   minRouteTime   Int?      @map("min_route_time")
   maxRouteTime   Int?      @map("max_route_time")
+  eventDate      DateTime? @map("event_date")
 
   checkpoints        Checkpoint[]
   group              Group[]
@@ -70,10 +73,10 @@ model Group {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  username     String  @unique
-  passwordHash String
-
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  passwordHash      String
+  admin             Boolean   @default(false)
 }
 
 model Route {
