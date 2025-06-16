@@ -12,7 +12,7 @@ const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChang
     handleAlert({
       confirmText: "Vaihda näkymä",
       title: "Vahvista tapahtuman vaihto",
-      message: "Oletko varma että haluat tarkistaa toista tapahtumaa? Pääset näkemään menneen tapahtuman ryhmät, rastit ja tulokset.",
+      message: "Oletko varma että haluat tarkastella toista tapahtumaa? Pääset näkemään menneen tapahtuman ryhmät, rastit ja tulokset.",
       onConfirm: () => handleEventChange(id)
     })
   }
@@ -31,7 +31,7 @@ const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChang
               style={[ styles.button2, { flex: 1, marginLeft: 8 } ]}
               onPress={() => handleChangeEvent(item.id)}
             >
-              <Text style={styles.buttonText}>Tarkista tapahtumaa</Text>
+              <Text style={styles.buttonText}>Tarkastele tapahtumaa</Text>
             </Pressable>
           ) : (
             <View style={{
