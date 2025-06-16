@@ -17,7 +17,7 @@ const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Che
 
   useEffect(() => {
     dispatch(fetchCheckpoints(eventId))
-  }, [dispatch])
+  }, [dispatch, eventId])
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 

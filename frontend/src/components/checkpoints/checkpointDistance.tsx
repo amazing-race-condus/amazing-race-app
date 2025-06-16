@@ -19,7 +19,7 @@ const CheckpointDistance = () => {
 
   useEffect(() => {
     dispatch(fetchCheckpoints(eventId))
-  }, [dispatch])
+  }, [dispatch, eventId])
 
   const getCheckpointDistances = async () => {
     const distances = await getDistances(eventId)

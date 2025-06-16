@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import store, { AppDispatch } from "@/store/store"
 import { Group, AddGroup } from "@/types"
 import BottomSheetModal from "../ui/BottomSheetModal"
 import { editGroup } from "@/services/groupService"
@@ -14,6 +14,7 @@ import { AxiosError } from "axios"
 import { TextInput } from "react-native-gesture-handler"
 
 const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomSheetRef: React.RefObject<BottomSheet | null>, group?: Group, setSelectedGroup: React.Dispatch<React.SetStateAction<Group | undefined>> }) => {
+  const eventId = store.getState().event.id
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef<TextInput>(null)
   const [groupname, setGroupname] = useState<string>("")
@@ -36,7 +37,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       easy: easy
     }
     try {
-      const updatedGroup: Group = await editGroup(group.id, modifiedGroup)
+      const updatedGroup: Group = await editGroup(group.id, modifiedGroup, eventId)
       dispatch(updateGroup(updatedGroup))
       dispatch(setNotification("Ryhmän muokkaus onnistui", "success"))
     } catch (error) {
