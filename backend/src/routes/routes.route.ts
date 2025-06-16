@@ -1,7 +1,8 @@
 import express, { Response, Request } from "express"
 import { getLimits, updateLimits, getDistances, updateDistances,
   createRoutes,
-  getRoutesInfo} from "../controllers/routes.controller"
+  getRoutesInfo,
+  getActiveRoutesInfo} from "../controllers/routes.controller"
 
 const routesRouter = express.Router()
 
@@ -38,6 +39,14 @@ routesRouter.get("/:event_id/routes_info", async (req: Request, res: Response) =
   const routes = await getRoutesInfo(eventId)
 
   res.send(routes)
+})
+
+routesRouter.get("/:event_id/active_routes_info", async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+
+  const activeRoutes = await getActiveRoutesInfo(eventId)
+
+  res.send(activeRoutes)
 })
 
 routesRouter.put("/:event_id/update_distances", async (req: Request, res: Response) => {

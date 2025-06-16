@@ -282,3 +282,23 @@ export const getRoutesInfo = async (eventId: number) => {
 
   return routes
 }
+
+export const getActiveRoutesInfo = async (eventId: number) => {
+  const activeRoutes = await prisma.route.findMany({
+    where: {
+      eventId: eventId,
+      group: {
+        some: {}
+      }
+    },
+    select: {
+      id: true,
+      routeTime: true
+    },
+    orderBy: {
+      routeTime: "asc"
+    }
+  })
+
+  return activeRoutes
+}
