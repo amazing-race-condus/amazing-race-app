@@ -26,9 +26,7 @@ routesRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 routesRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
-
   const times = await getDistances(eventId)
-
   res.send(times)
 })
 

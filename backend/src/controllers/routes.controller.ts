@@ -219,21 +219,21 @@ export const createRoutes = async (eventId: number) => {
     })
     const hasStart = checkpoints.some(cp => cp.type === "START")
     const hasFinish = checkpoints.some(cp => cp.type === "FINISH")
-    console.log(eventId)
     const distances = await getDistances(eventId)
-    const limits = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
-    console.log(limits)
-    if (!limits) {
+    const event = await prisma.event.findUnique({where: {id: eventId }})
+    if (!event) {
       response.message = "Tapahtumaa ei löytynyt annetulla ID:llä."
       return response
     }
 
-    const min = limits.minRouteTime
-    const max = limits.maxRouteTime
+    const min = event.minRouteTime
+    const max = event.maxRouteTime
     let errorMessage = ""
 
     if (!min || !max) {
       errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty."
+    } else if (event.startTime && !event.endTime) {
+      errorMessage = "Reittejä ei voitu luoda. Peli on jo käynnissä."
     } else if (!hasStart || !hasFinish) {
       errorMessage = "Lähtöä tai maalia ei ole määritelty."
     } else if (!(validateCheckpointDistances(distances, checkpoints))) {
