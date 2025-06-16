@@ -4,7 +4,9 @@ import { initialCheckpoints, checkpoints, intermediateCheckpoints, users } from 
 
 
 describe("Get all checkpoints", () => {
+
   beforeEach(async () => {
+
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
