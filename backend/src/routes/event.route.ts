@@ -1,8 +1,6 @@
 import express, { Response, Request } from "express"
 import { getAllEvents, getEventById, startEvent,
   endEvent,getDefaultEvent, createEvent} from "../controllers/event.controller"
-
-  endEvent } from "../controllers/event.controller"
 import { verifyToken } from "../utils/middleware"
 
 const eventRouter = express.Router()
