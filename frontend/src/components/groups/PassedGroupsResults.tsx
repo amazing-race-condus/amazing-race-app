@@ -37,7 +37,7 @@ const PlayingGroups = ({ groups, event }: { groups: Group[], event: Event }) => 
 
   return (
     <>
-      <Text style={styles.header}>Pelissä ({playingGroups.length})</Text>{playingGroups.map((group) =>
+      <Text style={styles.header}>Peli kesken ({playingGroups.length})</Text>{playingGroups.map((group) =>
         <Link
           key={group.id}
           href={{
