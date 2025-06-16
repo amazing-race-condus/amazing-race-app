@@ -385,23 +385,22 @@ describe("modification of a checkpoint", () => {
   //     eventId: 1
   //   }
 
-  // await request(app).post("/api/checkpoints").send(newcheckpoint)
+  //   await request(app).post("/api/checkpoints").send(newcheckpoint)
 
-  // await request(app)
-  //   .put(`/api/checkpoints/${checkpointToModify.id}`)
-  //   .send({
-  //     name: "Existing name",
-  //     type: "INTERMEDIATE",
-  //     hint:"http://vihje12.com",
-  //     easyHint: "http://helppovihje12.com"
-  //   })
-  //   .expect(400)
-  //   .expect("Content-Type", /application\/json/)
+  //   await request(app)
+  //     .put(`/api/checkpoints/${checkpointToModify.id}`)
+  //     .send({
+  //       name: "Existing name",
+  //       type: "INTERMEDIATE",
+  //       hint:"http://vihje12.com",
+  //       easyHint: "http://helppovihje12.com"
+  //     })
+  //     .expect(400)
+  //     .expect("Content-Type", /application\/json/)
 
   //   //expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
   //   await prisma.checkpoint.deleteMany({})
   // })
-
   it("fails with status code 400 and proper error message if data is invalid", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()

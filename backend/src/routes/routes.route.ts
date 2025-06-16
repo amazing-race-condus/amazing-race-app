@@ -57,14 +57,6 @@ routesRouter.get("/:event_id/routes_info", verifyToken, async (req: Request, res
   res.send(routes)
 })
 
-routesRouter.get("/:event_id/active_routes_info", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.event_id)
-
-  const activeRoutes = await getActiveRoutesInfo(eventId)
-
-  res.send(activeRoutes)
-})
-
 routesRouter.put("/:event_id/update_distances", verifyToken, async (req: Request, res: Response) => {
   const distances = req.body
   const eventId = Number(req.params.event_id)
