@@ -3,6 +3,14 @@ import type { Event } from "@/types"
 import { createMockStore } from "@/utils/testUtils"
 import { getEvent, startGame, endGame } from "@/services/eventService"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 jest.mock("@/services/eventService", () => ({
   getEvent: jest.fn(),
   startGame: jest.fn(),

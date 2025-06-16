@@ -5,6 +5,14 @@ import GroupActionMenu from "../GroupActionMenu"
 import testStore from "@/store/testStore"
 import { Group } from "@/types"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 const initialGroup = group
 
 describe("<GroupActionMenu />", () => {

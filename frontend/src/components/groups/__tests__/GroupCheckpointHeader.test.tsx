@@ -3,6 +3,14 @@ import GroupCheckpointHeader from "../GroupCheckpointHeader"
 import { Provider } from "react-redux"
 import { checkpoint, startCheckpoint, finishCheckpoint, createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupCheckpointHeader />", () => {
   let store: any
   let mockOpenHint: any

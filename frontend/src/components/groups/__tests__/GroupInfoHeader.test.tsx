@@ -3,6 +3,14 @@ import GroupInfoHeader from "../GroupInfoHeader"
 import { Provider } from "react-redux"
 import { createMockStore, group } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupInfoHeader />", () => {
   let store: any
 

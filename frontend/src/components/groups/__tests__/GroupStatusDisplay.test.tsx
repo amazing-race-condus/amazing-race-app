@@ -3,6 +3,14 @@ import { render, screen } from "@testing-library/react-native"
 import GroupStatusDisplay from "../GroupStatusDisplay"
 import { group, disqualifiedGroup, dnfGroup, createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupStatusDisplay />", () => {
   let store: any
 
