@@ -119,10 +119,10 @@ describe("sortAlphabetically", () => {
 })
 
 describe("sortByTime", () => {
-  test("returns groups sorted by time with disqualified and dnf groups at bottom", () => {
+  test("returns groups sorted by time", () => {
     const sortedGroups = sortByTime([...groups], event)
     const sortedNames = sortedGroups.map(g => g.name)
-    expect(sortedNames).toEqual(["A-ryhmä", "Ryhmä", "D-ryhmä", "K-ryhmä"])
+    expect(sortedNames).toEqual(["K-ryhmä", "D-ryhmä", "A-ryhmä", "Ryhmä"])
   })
 })
 

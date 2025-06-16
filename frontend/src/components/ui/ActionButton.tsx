@@ -1,4 +1,3 @@
-import { styles } from "@/styles/commonStyles"
 import { ViewStyle, Pressable, Text } from "react-native"
 
 const ActionButton = (
@@ -10,7 +9,7 @@ const ActionButton = (
       onPress={onPress}
       style={style}
     >
-      <Text style={styles.buttonText}> {text} {count ? `(${count}x)` : ""} </Text>
+      <Text> {text} {count ? `(${count}x)` : ""} </Text>
     </Pressable>
   )
 }

@@ -1,7 +1,7 @@
 import { Response } from "express"
 import { prisma } from "../index"
 
-const validateName = async (name: unknown, res: Response, eventId: number, id?: number): Promise<boolean> => {
+const validateName = async (name: unknown, res: Response, id?: number): Promise<boolean> => {
   if (typeof name !== "string") {
     res.status(400).json({ error: "Nimen tulee olla merkkijono" })
     return false
@@ -20,8 +20,7 @@ const validateName = async (name: unknown, res: Response, eventId: number, id?: 
       name: {
         equals: name.trim(),
         mode: "insensitive"
-      },
-      eventId : eventId
+      }
     }
   })
   if (existingName && existingName.id !== id) {

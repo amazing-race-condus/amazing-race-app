@@ -6,23 +6,18 @@ import { ThemeProvider } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { getDefaultEventReducer } from "@/reducers/eventSlice"
-import Notification from "@/components/ui/Notification"
+import { getEventReducer } from "@/reducers/eventSlice"
+
+const EVENT_ID = 1
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
-  store.dispatch(getDefaultEventReducer())
-
   useEffect(() => {
-    const refreshData = async () => {
-      const eventId = store.getState().event.id
-      if (eventId) {
-        await Promise.all([
-          store.dispatch(fetchGroups(eventId)),
-          store.dispatch(fetchCheckpoints(eventId))
-        ])
-      }
+    const refreshData = () => {
+      store.dispatch(fetchGroups())
+      store.dispatch(fetchCheckpoints())
+      store.dispatch(getEventReducer(EVENT_ID))
     }
 
     refreshData()
@@ -77,7 +72,6 @@ export default function RootLayout() {
               },
             }
           }}>
-            <Notification />
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>

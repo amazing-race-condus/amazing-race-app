@@ -1,16 +1,14 @@
-import React, { useRef, useState } from "react"
+import React, { useRef } from "react"
 import { View } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
+import Notification from "@/components/ui/Notification"
 import AddEventForm from "@/components/forms/AddEventForm"
 import BottomSheet from "@gorhom/bottom-sheet"
 import AddNewButton from "@/components/ui/addNewButton"
 import Events from "@/components/events/events"
-import { Event } from "@/types"
 
 const EventSettings = () => {
-  const [events, setEvents] = useState<Event[]>([])
-
   const addBottomSheetRef = useRef<BottomSheet>(null)
   const handleAdd = () => {
     addBottomSheetRef.current?.expand()
@@ -18,9 +16,10 @@ const EventSettings = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <Events events={events} setEvents={setEvents}/>
+      <Notification />
+      <Events/>
       <AddNewButton onPress={handleAdd} />
-      <AddEventForm events={events} setEvents={setEvents} bottomSheetRef={addBottomSheetRef}/>
+      <AddEventForm bottomSheetRef={addBottomSheetRef}/>
     </View>
   )
 }

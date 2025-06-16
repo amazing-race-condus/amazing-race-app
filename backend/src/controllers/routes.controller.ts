@@ -83,21 +83,10 @@ export const updateDistances = async (eventId: number, distances: Distances) => 
   return {upserts: upserts, failures: failures}
 }
 
-const resetRoutes = async (eventId: number) => {
-  await prisma.route.deleteMany({
-    where: {
-      eventId : eventId
-    }
-  })
-  await prisma.penalty.deleteMany({
-    where: {
-      eventId : eventId
-    }
-  })
+const resetRoutes = async () => {
+  await prisma.route.deleteMany()
+  await prisma.penalty.deleteMany()
   await prisma.group.updateMany({
-    where: {
-      eventId : eventId
-    },
     data: {
       finishTime: null,
       nextCheckpointId: null,
@@ -107,7 +96,7 @@ const resetRoutes = async (eventId: number) => {
   })
 }
 
-const updateRoutes = async (routes: Route[], eventId : number) => {
+const updateRoutes = async (routes: Route[]) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const operations: any[] = []
 
@@ -115,8 +104,7 @@ const updateRoutes = async (routes: Route[], eventId : number) => {
     // Create the route and get a reference to its future ID
     const createRoute = prisma.route.create({
       data: {
-        routeTime: route.length,
-        eventId: eventId
+        routeTime: route.length
       }
     })
 
@@ -167,11 +155,8 @@ const sortRoutes = (routes: Routes[], mean: number) => {
   return sortedRoutes
 }
 
-const assignRoutesToGroups = async (mean: number, eventId: number) => {
+const assignRoutesToGroups = async (mean: number) => {
   const unsortedRoutes = await prisma.route.findMany({
-    where : {
-      eventId : eventId
-    },
     select: {
       id: true,
       routeTime: true,
@@ -184,9 +169,6 @@ const assignRoutesToGroups = async (mean: number, eventId: number) => {
   })
   const routes = sortRoutes(unsortedRoutes, mean)
   const groups = await prisma.group.findMany({
-    where : {
-      eventId : eventId
-    },
     select: {
       id: true
     }
@@ -212,28 +194,24 @@ const assignRoutesToGroups = async (mean: number, eventId: number) => {
 export const createRoutes = async (eventId: number) => {
   const response = {status: "error", message: "", values: {routeAmount: 0, groupAmount: 0}}
   try {
-    const checkpoints = await prisma.checkpoint.findMany({
-      where: {
-        eventId: eventId
-      }
-    })
+    const checkpoints = await prisma.checkpoint.findMany()
     const hasStart = checkpoints.some(cp => cp.type === "START")
     const hasFinish = checkpoints.some(cp => cp.type === "FINISH")
+
     const distances = await getDistances(eventId)
-    const event = await prisma.event.findUnique({where: {id: eventId }})
-    if (!event) {
+    const limits = await prisma.event.findUnique({ select: { maxRouteTime : true, minRouteTime: true }, where: {id: eventId }})
+
+    if (!limits) {
       response.message = "Tapahtumaa ei löytynyt annetulla ID:llä."
       return response
     }
 
-    const min = event.minRouteTime
-    const max = event.maxRouteTime
+    const min = limits.minRouteTime
+    const max = limits.maxRouteTime
     let errorMessage = ""
 
     if (!min || !max) {
       errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty."
-    } else if (event.startTime && !event.endTime) {
-      errorMessage = "Reittejä ei voitu luoda. Peli on jo käynnissä."
     } else if (!hasStart || !hasFinish) {
       errorMessage = "Lähtöä tai maalia ei ole määritelty."
     } else if (!(validateCheckpointDistances(distances, checkpoints))) {
@@ -251,9 +229,9 @@ export const createRoutes = async (eventId: number) => {
       return response
     }
 
-    await resetRoutes(eventId)
-    await updateRoutes(routes, eventId)
-    const numberOfGroups = await assignRoutesToGroups((max!+min!)/2, eventId)
+    await resetRoutes()
+    await updateRoutes(routes)
+    const numberOfGroups = await assignRoutesToGroups((max!+min!)/2)
 
     response.status = "success"
     response.values.routeAmount = routes.length

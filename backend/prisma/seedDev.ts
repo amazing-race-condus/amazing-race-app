@@ -1,5 +1,5 @@
 import { PrismaClient } from "./prisma"
-import { AddGroup, AddCheckpoint, Event } from "../../shared/types"
+import { AddGroup, AddCheckpoint } from "../../shared/types"
 
 const prisma = new PrismaClient()
 
@@ -17,36 +17,27 @@ async function main() {
   }) 
 
   if (!existing) {
-    await prisma.event.createMany({
-      data: [{
+    await prisma.event.create({
+      data: {
         name: "Eventti",
         minRouteTime: 90,
         maxRouteTime: 120
       },
-      {
-        name: "Eventti2",
-        minRouteTime: 80,
-        maxRouteTime: 100
-      }]
     })
     console.log("Inserted event")
   } else {
     console.log("Event already exists")
   }
 
-  const event = await prisma.event.findUnique({
-    where: { name: "Eventti" },
-  })
-
   const checkpoints: AddCheckpoint[] = [
-    { name: "Katri Valan puisto", type: "START", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Johanneksenkirkko", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Kulosaaren kenttä", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Katajanokka", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Lahnalahden puisto", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Oodi", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Kisahalli", type: "INTERMEDIATE", hint: null, easyHint: null, eventId: event!.id },
-    { name: "Luonnontieteellinen museo", type: "FINISH", hint: null, easyHint: null, eventId: event!.id },
+    { name: "Katri Valan puisto", type: "START", hint: null, easyHint: null },
+    { name: "Johanneksenkirkko", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Kulosaaren kenttä", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Katajanokka", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Lahnalahden puisto", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Oodi", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Kisahalli", type: "INTERMEDIATE", hint: null, easyHint: null },
+    { name: "Luonnontieteellinen museo", type: "FINISH", hint: null, easyHint: null },
   ]
 
   await prisma.checkpoint.createMany({
@@ -55,19 +46,19 @@ async function main() {
   })
 
   const groups: AddGroup[] = [
-    { name: "Pööpöilijät", members: 4, easy: true, eventId: event!.id },
-    { name: "Mestaritiimi", members: 6, easy: false, eventId: event!.id },
-    { name: "Kannunkulma", members: 4, easy: true, eventId: event!.id },
-    { name: "Luuserit", members: 5, easy: false, eventId: event!.id },
-    { name: "Nimetön", members: 4, easy: true, eventId: event!.id },
-    { name: "Höhlät", members: 5, easy: false, eventId: event!.id },
-    { name: "Mansikat", members: 7, easy: true, eventId: event!.id },
-    { name: "Kurikan nimipäivät", members: 8, easy: true, eventId: event!.id },
-    { name: "Penat", members: 4, easy: false, eventId: event!.id },
-    { name: "Vaivaiset", members: 6, easy: false, eventId: event!.id },
-    { name: "Fifit", members: 5, easy: true, eventId: event!.id },
-    { name: "Liiallisen pituuden suuret ystävät", members: 4, easy: true, eventId: event!.id },
-    { name: "Draamailijat", members: 7, easy: false, eventId: event!.id }
+    { name: "Pööpöilijät", members: 4, easy: true },
+    { name: "Mestaritiimi", members: 6, easy: false },
+    { name: "Kannunkulma", members: 4, easy: true },
+    { name: "Luuserit", members: 5, easy: false },
+    { name: "Nimetön", members: 4, easy: true },
+    { name: "Höhlät", members: 5, easy: false },
+    { name: "Mansikat", members: 7, easy: true },
+    { name: "Kurikan nimipäivät", members: 8, easy: true },
+    { name: "Penat", members: 4, easy: false },
+    { name: "Vaivaiset", members: 6, easy: false },
+    { name: "Fifit", members: 5, easy: true },
+    { name: "Liiallisen pituuden suuret ystävät", members: 4, easy: true },
+    { name: "Draamailijat", members: 7, easy: false }
   ]
 
   await prisma.group.createMany({
@@ -173,7 +164,7 @@ async function main() {
           fromId,
           toId,
           time,
-          eventId: event!.id
+          eventId: 1
         })
       }
     }

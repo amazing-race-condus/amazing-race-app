@@ -7,21 +7,13 @@ export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> 
   return response.data
 }
 
-export const getAllCheckpoints = async (eventId: number): Promise<Checkpoint[]> => {
-  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`,{
-    params :{
-      eventId: eventId
-    }
-  }
-  )
+export const getAllCheckpoints = async (): Promise<Checkpoint[]> => {
+  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`)
   return response.data
 }
 
-export const createCheckpoint = async (newObject: AddCheckpoint, eventId: number) => {
-  const response = await axios.post<Checkpoint>(`${url}/checkpoints`, {
-    ...newObject,
-    eventId: eventId
-  })
+export const createCheckpoint = async (newObject: AddCheckpoint) => {
+  const response = await axios.post<Checkpoint>(`${url}/checkpoints`, newObject)
   return response.data
 }
 
@@ -31,6 +23,7 @@ export const removeCheckpoint = async (id: number) => {
 }
 
 export const editCheckpoint = async (id: number, newObject: AddCheckpoint) => {
-  const response = await axios.put(`${url}/checkpoints/${id}`, newObject)
+  const request = axios.put(`${url}/checkpoints/${id}`, newObject)
+  const response = await request
   return response.data
 }

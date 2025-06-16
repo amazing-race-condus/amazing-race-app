@@ -2,13 +2,8 @@ import axios from "axios"
 import { url } from "../config"
 import { AddGroup, Group } from "@/types"
 
-export const getAllGroups = async (eventId: number): Promise<Group[]> => {
-  const response = await axios.get<Group[]>(`${url}/groups`,{
-    params :{
-      eventId: eventId
-    }
-  }
-  )
+export const getAllGroups = async (): Promise<Group[]> => {
+  const response = await axios.get<Group[]>(`${url}/groups`)
   return response.data
 }
 
@@ -17,16 +12,14 @@ export const getArrivingGroups = async (checkpointId: number): Promise<Group[]> 
   return response.data
 }
 
-export const createGroup = async (newGroup: AddGroup, eventId: number) => {
-  const response = await axios.post<Group>(`${url}/groups`,{
-    ...newGroup,
-    eventId: eventId
-  })
+export const createGroup = async (newGroup: AddGroup) => {
+  const response = await axios.post<Group>(`${url}/groups`, newGroup)
   return response.data
 }
 
 export const removeGroup = async (id: number) => {
-  const response = await axios.delete(`${url}/groups/${id}`)
+  const request = axios.delete(`${url}/groups/${id}`)
+  const response = await request
   return response.data
 }
 
@@ -36,19 +29,19 @@ export const giveNextCheckpoint = async (id: number, checkpointId: number) => {
 }
 
 export const dnfGroup = async (id: number) => {
-  const response = await axios.put(`${url}/groups/${id}/dnf`)
+  const request = axios.put(`${url}/groups/${id}/dnf`)
+  const response = await request
   return response.data
 }
 
 export const disqualifyGroup = async (id: number) => {
-  const response = await axios.put(`${url}/groups/${id}/disqualify`)
+  const request = axios.put(`${url}/groups/${id}/disqualify`)
+  const response = await request
   return response.data
 }
 
-export const editGroup = async (id: number, newObject: AddGroup, eventId : number) => {
-  const response = await axios.put(`${url}/groups/${id}`, {
-    ...newObject,
-    eventId: eventId
-  })
+export const editGroup = async (id: number, newObject: AddGroup) => {
+  const request = axios.put(`${url}/groups/${id}`, newObject)
+  const response = await request
   return response.data
 }

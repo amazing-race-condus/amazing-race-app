@@ -1,10 +1,6 @@
 import { Type } from "../prisma/prisma/"
 import { Checkpoint, CheckpointType } from "@/types"
 
-export const initialEvent = {
-  name: "eventti1"
-}
-
 export const initialCheckpoints = [
   {
     name: "Oodi",

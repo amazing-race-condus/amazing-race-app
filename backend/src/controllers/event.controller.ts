@@ -1,5 +1,4 @@
 import { prisma } from "../index"
-import { AddEvent } from "@/types"
 
 export const getAllEvents = async () => {
   const events = await prisma.event.findMany({
@@ -9,20 +8,6 @@ export const getAllEvents = async () => {
     }
   })
   return events
-}
-
-export const getDefaultEvent = async () => {
-  const events = await prisma.event.findFirst({
-    include: {
-      group: true,
-      checkpoints: true,
-    },
-    orderBy: {
-      eventDate: "desc"
-    }
-  })
-  return events
-
 }
 
 export const getEventById = async (eventId: number) => {
@@ -70,18 +55,4 @@ export const endEvent = async (eventId: number) => {
     data: { endTime : now }
   })
   return event
-}
-
-
-export const createEvent = async (event: AddEvent) => {
-  if (event.name === "" || event.name === null) {
-    return null
-  }
-  const createdEvent = await prisma.event.create({
-    data: {
-      name: event.name,
-      eventDate: event.eventDate
-    }
-  })
-  return createdEvent
 }

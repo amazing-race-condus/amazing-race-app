@@ -2,11 +2,8 @@ import { Response } from "express"
 import { prisma } from "../index"
 import { validateName, validateMembers } from "../utils/groupValidators"
 
-export const getAllGroups = async (eventId: number) => {
+export const getAllGroups = async () => {
   const groups = await prisma.group.findMany({
-    where : {
-      eventId : eventId
-    },
     include: {
       penalty: true,
       route: {
@@ -82,13 +79,13 @@ export const updateNextCheckpoint = async (id: number, nextCheckpointId: number)
   }
 }
 
-export const createGroup = async (name: string, members: number, easy: boolean, eventId: number,res: Response) => {
+export const createGroup = async (name: string, members: number, easy: boolean, res: Response) => {
   if (!name || !members) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
     return
   }
 
-  const validName = await validateName(name, res, eventId)
+  const validName = await validateName(name, res)
   if (!validName) {
     return
   }
@@ -102,8 +99,7 @@ export const createGroup = async (name: string, members: number, easy: boolean, 
     data: {
       name: name,
       members: Number(members),
-      easy: easy,
-      eventId: eventId,
+      easy: easy
     }
   })
   return group
@@ -145,7 +141,7 @@ export const toggleDisqualified = async (groupId: number) => {
   return group
 }
 
-export const modifyGroup = async (groupId: number, name: string, members: number, easy: boolean, eventId : number, res: Response) => {
+export const modifyGroup = async (groupId: number, name: string, members: number, easy: boolean, res: Response) => {
   const id = groupId
 
   const data: Partial<{ name: string, members: number, easy: boolean }> = {}
@@ -159,7 +155,7 @@ export const modifyGroup = async (groupId: number, name: string, members: number
     return
   }
 
-  const validName = await validateName(name, res, eventId, groupId)
+  const validName = await validateName(name, res, groupId)
   if (!validName) {
     return
   }

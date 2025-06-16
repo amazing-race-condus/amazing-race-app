@@ -18,9 +18,8 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.get("/", async (req: Request, res: Response) => {
-  const eventId = Number(req.query.eventId)
-  const groupsWithCheckpoints = await getAllGroups(eventId)
+groupsRouter.get("/", async (_, res: Response) => {
+  const groupsWithCheckpoints = await getAllGroups()
 
   res.send(groupsWithCheckpoints)
 })
@@ -44,8 +43,8 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
 
 groupsRouter.post("/", async (req: Request, res: Response) => {
 
-  const { name, members, easy, eventId } = req.body
-  const group = await createGroup(name, members, easy, eventId, res)
+  const { name, members, easy } = req.body
+  const group = await createGroup(name, members, easy, res)
 
   res.json(group)
 })
@@ -87,9 +86,9 @@ groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
 
 groupsRouter.put("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
-  const { name, members, easy, eventId } = req.body
+  const { name, members, easy } = req.body
 
-  const updatedGroup = await modifyGroup(id, name, members, easy, eventId , res)
+  const updatedGroup = await modifyGroup(id, name, members, easy, res)
 
   res.status(200).json(updatedGroup)
 

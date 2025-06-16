@@ -2,7 +2,7 @@ import { Response } from "express"
 import { prisma } from "../index"
 import { Type } from "../../prisma/prisma"
 
-const validateName = async (name: unknown, res: Response, eventId : number, id?:number): Promise<boolean> => {
+const validateName = async (name: unknown, res: Response, id?:number): Promise<boolean> => {
   if (typeof name !== "string") {
     res.status(400).json({ error: "Nimen tulee olla merkkijono" })
     return false
@@ -19,7 +19,6 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
 
   const existingName = await prisma.checkpoint.findFirst({
     where: {
-      eventId : eventId,
       name: {
         equals: name.trim(),
         mode: "insensitive"
@@ -78,12 +77,8 @@ const validateHint = async (hint: unknown, res: Response, id?: number): Promise<
 }
 
 
-const validateCheckpointLayout = async (type: Type, res: Response, eventId: number, id?: number): Promise<boolean> => {
-  const allCheckpoints = await prisma.checkpoint.findMany({
-    where: {
-      eventId: eventId
-    }
-  })
+const validateCheckpointLayout = async (type: Type, res: Response, id?: number): Promise<boolean> => {
+  const allCheckpoints = await prisma.checkpoint.findMany()
 
   if (allCheckpoints.length >= 8 && !id) {
     res.status(400).json({ error: "Rastien maksimimäärä on 8 rastia."})
@@ -93,7 +88,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
 
   if (type === Type.START) {
     const existingStart = await prisma.checkpoint.findFirst({
-      where: { type: Type.START, eventId : eventId }
+      where: { type: Type.START }
     })
     if (existingStart && existingStart.id !== id) {
       res.status(400).json({ error: "Lähtörasti on jo luotu." })
@@ -101,7 +96,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
     }
   } else if (type === Type.FINISH) {
     const existingFinish = await prisma.checkpoint.findFirst({
-      where: { type: Type.FINISH , eventId : eventId}
+      where: { type: Type.FINISH }
     })
     if (existingFinish && existingFinish.id !== id) {
       res.status(400).json({ error: "Maali on jo luotu." })

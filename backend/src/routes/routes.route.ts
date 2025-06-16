@@ -2,6 +2,8 @@ import express, { Response, Request } from "express"
 import { getLimits, updateLimits, getDistances, updateDistances,
   createRoutes } from "../controllers/routes.controller"
 
+const eventId = 1
+
 const routesRouter = express.Router()
 
 routesRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
@@ -25,19 +27,19 @@ routesRouter.put("/update_limits", async (req: Request, res: Response) => {
 
 routesRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
+
   const times = await getDistances(eventId)
+
   res.send(times)
 })
 
-routesRouter.put("/:event_id/update_distances", async (req: Request, res: Response) => {
+routesRouter.put("/update_distances", async (req: Request, res: Response) => {
   const distances = req.body
-  const eventId = Number(req.params.event_id)
   const result = await updateDistances(eventId, distances)
   res.status(200).json(result)
 })
 
-routesRouter.put("/:event_id/create_routes", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.event_id)
+routesRouter.put("/create_routes", async (req: Request, res: Response) => {
   const response = await createRoutes(eventId)
   if (response.status === "error") {
     res.status(400).json({error: response.message})
