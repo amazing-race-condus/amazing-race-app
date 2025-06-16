@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express"
-import { createUser, getAllUsers, deleteUser, getUserByAdminRights } from "../controllers/authentication.controller"
+import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, getUserByUsername, sendMailToUser } from "../controllers/authentication.controller"
+import { verifyToken } from "../utils/middleware"
 
 
 const authenticationRouter = express.Router()
@@ -30,6 +31,25 @@ authenticationRouter.post("/", async (req: Request, res: Response) => {
 
 })
 
+authenticationRouter.post("/reset_password", async (req: Request, res: Response) => {
+  const { username, html } = req.body
+  /*const user = await getUserByUsername(username, res)
+
+  if (!user || user.admin !== true) {
+    res.status(400).json({ error: "Sähköpostia ei voitu lähettää." })
+    return
+  }*/
+
+  try {
+    await sendMailToUser("katri.laamala@outlook.com", html)
+    res.status(200).json({ message: "Sähköposti lähetetty onnistuneesti." })
+  } catch (error) {
+    console.error("Sähköpostin lähetys epäonnistui:", error)
+    res.status(500).json({ error: "Sähköpostia ei voitu lähettää." })
+  }
+
+})
+
 authenticationRouter.delete("/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
@@ -41,6 +61,15 @@ authenticationRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
+
+authenticationRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const { username, password } = req.body
+  const updatedUser = await modifyUser(id, username, password, res)
+
+  res.status(200).json(updatedUser)
+
+})
 
 export default authenticationRouter
 
