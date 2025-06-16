@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ActivityIndicator } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 import { useDispatch, useSelector } from "react-redux"
@@ -12,6 +12,9 @@ import RouteStats from "./RouteStats"
 
 const RouteGeneration: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const [routes, setRoutes] = useState<RouteInfo[]>([])
+  const [activeRoutes, setActiveRoutes] = useState<RouteInfo[]>([])
+  const [loading, setLoading] = useState(false)
   const eventId = store.getState().event.id
 
   useEffect(() => {
@@ -24,6 +27,7 @@ const RouteGeneration: React.FC = () => {
       title: "Vahvista reittien luonti",
       message: "Reittien luominen poistaa aikaisemmat reitit ja korvaa ne uusilla. Oletko varma että haluat luoda reitit?",
       onConfirm: async () => {
+        setLoading(true)
         try {
           const data = await generateRoutes(eventId)
           const routesAmount = data.routesAmount
@@ -44,14 +48,12 @@ const RouteGeneration: React.FC = () => {
               "error"
             ))
           }
+        } finally {
+          setLoading(false)
         }
       }
     })
   }
-
-  const groups = useSelector((state: RootState) => state.groups)
-  const [routes, setRoutes] = useState<RouteInfo[]>([])
-  const [activeRoutes, setActiveRoutes] = useState<RouteInfo[]>([])
 
   const fetchRoutes = async () => {
     const routesData = await getRoutesInfo(eventId)
@@ -60,17 +62,20 @@ const RouteGeneration: React.FC = () => {
     setActiveRoutes(activeRoutesData)
   }
 
-  const routeTimes = activeRoutes.map(r => r.routeTime)
-
-  const median = routeTimes.length === 0
-    ? 0
-    : routeTimes[Math.floor(routeTimes.length / 2)]
-
   return (
     <View style={styles.content}>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#003366" />
+        </View>
+      )}
       <Text style={styles.header}>Reitit:</Text>
       <View style={styles.formContainer}>
-        <RouteStats />
+        <RouteStats
+          routes={routes}
+          activeRoutes={activeRoutes}
+          groupsLength={useSelector((state: RootState) => state.groups.length)}
+        />
         <Pressable style={styles.button} onPress={createRoutes}>
           <Text style={styles.buttonText}>Luo reitit</Text>
         </Pressable>

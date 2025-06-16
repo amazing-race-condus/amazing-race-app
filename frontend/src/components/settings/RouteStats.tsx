@@ -1,32 +1,16 @@
 import { styles } from "@/styles/commonStyles"
 import { Text, View } from "react-native"
-import { useEffect, useState } from "react"
-import store, { RootState } from "@/store/store"
-import { getRoutesInfo, getActiveRoutesInfo } from "@/services/routeService"
 import { RouteInfo } from "@/types"
-import { useSelector } from "react-redux"
 import { Entypo, FontAwesome5 } from "@expo/vector-icons"
 
-const RouteStats = () => {
-  const eventId = store.getState().event.id
+type RouteStatsProps = {
+  routes: RouteInfo[]
+  activeRoutes: RouteInfo[]
+  groupsLength: number
+}
 
-  useEffect(() => {
-    fetchRoutes()
-  }, [eventId])
-
-  const groups = useSelector((state: RootState) => state.groups)
-  const [routes, setRoutes] = useState<RouteInfo[]>([])
-  const [activeRoutes, setActiveRoutes] = useState<RouteInfo[]>([])
-
-  const fetchRoutes = async () => {
-    const routesData = await getRoutesInfo(eventId)
-    setRoutes(routesData)
-    const activeRoutesData = await getActiveRoutesInfo(eventId)
-    setActiveRoutes(activeRoutesData)
-  }
-
+const RouteStats: React.FC<RouteStatsProps> = ({ routes, activeRoutes, groupsLength }) => {
   const routeTimes = activeRoutes.map(r => r.routeTime)
-
   const median = routeTimes.length === 0
     ? 0
     : routeTimes[Math.floor(routeTimes.length / 2)]
@@ -46,7 +30,7 @@ const RouteStats = () => {
           </View>
           <View style={styles.statRow}>
             <Entypo name="dot-single" size={22} color="#333" />
-            <Text style={styles.statItem}>Käytössä: <Text style={styles.statValue}>{routeTimes.length}</Text> / Ryhmiä yhteensä <Text style={styles.statValue}>{groups.length}</Text></Text>
+            <Text style={styles.statItem}>Käytössä: <Text style={styles.statValue}>{routeTimes.length}</Text> / Ryhmiä yhteensä <Text style={styles.statValue}>{groupsLength}</Text></Text>
           </View>
           <View style={styles.statRow}>
             <Entypo name="dot-single" size={22} color="#333" />
