@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react"
 import { View} from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
-import Notification from "@/components/ui/Notification"
 import Checkpoints from "@/components/checkpoints/Checkpoints"
 import BottomSheet from "@gorhom/bottom-sheet"
 import AddNewButton from "@/components/ui/addNewButton"
@@ -33,7 +32,6 @@ const CheckpointSettings = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <Notification />
       <Checkpoints onEditCheckpoint={handleEdit}/>
       <AddNewButton onPress={handleAdd} />
       <AddCheckpointForm bottomSheetRef={addBottomSheetRef} />

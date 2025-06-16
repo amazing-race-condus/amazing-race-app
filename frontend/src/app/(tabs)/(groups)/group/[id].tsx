@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { dnfGroupReducer, giveNextCheckpointReducer, givePenaltyReducer, disqualifyGroupReducer} from "@/reducers/groupSlice"
 import React, { useRef, useState } from "react"
 import type { CompleteType } from "@/types"
-import Notification from "@/components/ui/Notification"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import BottomSheet from "@gorhom/bottom-sheet"
 import GroupInfoHeader from "@/components/groups/GroupInfoHeader"
@@ -130,7 +129,6 @@ const Team = () => {
       <Stack.Screen
         options={{ headerShown: false }}
       />
-      <Notification />
       <GroupStatusDisplay group={ group } />
       {(group.route.length === 0) ?
         <>

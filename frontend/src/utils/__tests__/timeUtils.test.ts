@@ -61,7 +61,7 @@ describe("getRaceTime", () => {
     }
 
     const raceTime = getRaceTime(group, event)
-    expect(raceTime).toEqual(120)
+    expect(raceTime).toEqual(7200)
   })
 
   test("event with startTime + group with finishTime returns finishTime-startTime if event has later endTime", () => {
@@ -92,7 +92,7 @@ describe("getRaceTime", () => {
     }
 
     const raceTime = getRaceTime(group, event)
-    expect(raceTime).toEqual(60)
+    expect(raceTime).toEqual(3600)
   })
 
   test("if event endTime is before group finishTime, returns event endTime-startTime", () => {
@@ -123,6 +123,6 @@ describe("getRaceTime", () => {
     }
 
     const raceTime = getRaceTime(group, event)
-    expect(raceTime).toEqual(120)
+    expect(raceTime).toEqual(7200)
   })
 })

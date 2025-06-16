@@ -5,7 +5,7 @@ import { verifyToken } from "../utils/middleware"
 
 const penaltyRouter = express.Router()
 
-penaltyRouter.get("/", async (req: Request, res: Response) => {
+penaltyRouter.get("/", verifyToken, async (req: Request, res: Response) => {
   const penalties = await getPenalties()
   res.json(penalties)
 })
@@ -22,7 +22,7 @@ penaltyRouter.post("/:groupid", verifyToken, async (req: Request, res: Response)
   }
 })
 
-penaltyRouter.get("/:groupid", async (req: Request, res: Response) => {
+penaltyRouter.get("/:groupid", verifyToken, async (req: Request, res: Response) => {
   const groupId = Number(req.params.groupid)
 
   const penalty = await getPenaltyByGroup(groupId)

@@ -48,7 +48,8 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
       name: name,
       type: type,
       hint: hintUrl,
-      easyHint: easyHintUrl
+      easyHint: easyHintUrl,
+      eventId: null
     }
     try {
       const updatedCheckpoint: Checkpoint = await editCheckpoint(checkpoint.id, modifiedCheckpoint)

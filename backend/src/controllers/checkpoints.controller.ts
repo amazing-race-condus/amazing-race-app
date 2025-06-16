@@ -6,8 +6,13 @@ import { validateName, validateHint, validateCheckpointLayout } from "../utils/c
 
 type newCheckpoint = Omit<Checkpoint, "id">
 
-export const getAllCheckpoints = async () => {
-  const allCheckpoints = await prisma.checkpoint.findMany()
+export const getAllCheckpoints = async (eventId: number) => {
+  const allCheckpoints = await prisma.checkpoint.findMany({
+    where: {
+      eventId: eventId
+    }
+  }
+  )
   return allCheckpoints
 }
 
@@ -25,7 +30,7 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
     return
   }
 
-  const validName = await validateName(data.name, res)
+  const validName = await validateName(data.name, res, data.eventId!)
   if (!validName) {
     return
   }
@@ -49,7 +54,7 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
 
   parsedType = data.type as Type
 
-  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res)
+  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, data.eventId!)
   if (!validCheckpointLayout) {
     return
   }

@@ -2,9 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch } from "@/store/store"
 import { login } from "@/services/loginService"
 import { setNotification } from "./notificationSlice"
-import { setToken } from "@/utils/tokenUtils"
 import type { User } from "@/types"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { storageUtil } from "@/utils/storageUtil"
 
 const initialState: User = {
   id: 0,
@@ -30,9 +29,7 @@ export const loginUser = (username: string, password: string, admin: boolean) =>
   async (dispatch: AppDispatch) => {
     try {
       const user = await login(username, password, admin)
-      const jsonUser = JSON.stringify(user)
-      await AsyncStorage.setItem("user-info", jsonUser)
-      setToken(user.token)
+      storageUtil.setUser(user)
       dispatch(setUser(user))
       dispatch(setNotification("Kirjautuminen onnistui", "success"))
       return user
@@ -44,8 +41,7 @@ export const loginUser = (username: string, password: string, admin: boolean) =>
 
 export const logoutUser = () => async (dispatch: AppDispatch) => {
   try {
-    await AsyncStorage.removeItem("user-info")
-    setToken("")
+    await storageUtil.removeUser()
     dispatch(clearUser())
     dispatch(setNotification("Olet nyt kirjautunut ulos", "success"))
   } catch (error) {
@@ -56,10 +52,8 @@ export const logoutUser = () => async (dispatch: AppDispatch) => {
 
 export const loadUserFromStorage = () => async (dispatch: AppDispatch) => {
   try {
-    const userInfo = await AsyncStorage.getItem("user-info")
-    if (userInfo) {
-      const user = JSON.parse(userInfo)
-      setToken(user.token)
+    const user = await storageUtil.getUser()
+    if (user) {
       dispatch(setUser(user))
     }
   } catch (error) {
