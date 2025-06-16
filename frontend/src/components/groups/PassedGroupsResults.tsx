@@ -69,7 +69,7 @@ const DnfGroups = ({ groups, event }: { groups: Group[], event: Event }) => {
         >
           <Pressable style={styles.item}>
             <Text style={{ color: "maroon" }}>{group.name}</Text>
-            <Text style={{ color: "gray" }}>{PrintableTime({group, event})}{PrintableTime({group, event})}</Text>
+            <Text style={{ color: "gray" }}>{PrintableTime({group, event})}</Text>
           </Pressable>
         </Link>)}
     </>
