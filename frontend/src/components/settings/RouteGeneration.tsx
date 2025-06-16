@@ -8,6 +8,7 @@ import store, { AppDispatch, RootState } from "@/store/store"
 import { generateRoutes, getActiveRoutesInfo, getRoutesInfo } from "@/services/routeService"
 import { handleAlert } from "@/utils/handleAlert"
 import { RouteInfo } from "@/types"
+import RouteStats from "./RouteStats"
 
 const RouteGeneration: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -67,17 +68,9 @@ const RouteGeneration: React.FC = () => {
 
   return (
     <View style={styles.content}>
-      <Text style={styles.header}>Luo reitit:</Text>
+      <Text style={styles.header}>Reitit:</Text>
       <View style={styles.formContainer}>
-        {routeTimes.length > 0 &&
-        <>
-          <Text style={styles.formText} >Reittien lukumäärä: {routes.length} kpl </Text>
-          <Text style={styles.formText}>Käytössä: {routeTimes.length} kpl / Ryhmiä yhteensä {groups.length} kpl </Text>
-          <Text style={styles.formText}>Mediaanipituus: {median} min </Text>
-          <Text style={styles.formText}>Lyhin reitti: {routeTimes[0]} min </Text>
-          <Text style={styles.formText}>Pisin reitti: {routeTimes[routeTimes.length - 1]} min </Text>
-        </>
-        }
+        <RouteStats />
         <Pressable style={styles.button} onPress={createRoutes}>
           <Text style={styles.buttonText}>Luo reitit</Text>
         </Pressable>

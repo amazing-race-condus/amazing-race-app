@@ -280,5 +280,40 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20
-  }
+  },
+  statItem: {
+    fontSize: 14,
+    marginBottom: 6,
+    color: "#333",
+  },
+
+  statValue: {
+    fontWeight: "600",
+    color: "#000",
+  },
+  routeStatsCard: {
+    backgroundColor: "#ffffff",
+    width: Math.min(screenWidth * 0.8, 355),
+    borderRadius: 16,
+    padding: 16,
+    marginVertical: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  statTitle: {
+    flexDirection: "row",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#003366",
+  },
+  statRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 3,
+  },
 })
+
