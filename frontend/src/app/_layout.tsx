@@ -12,9 +12,10 @@ import Notification from "@/components/ui/Notification"
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
+  store.dispatch(getDefaultEventReducer())
+
   useEffect(() => {
     const refreshData = async () => {
-      await store.dispatch(getDefaultEventReducer())
       const eventId = store.getState().event.id
       if (eventId) {
         await Promise.all([
