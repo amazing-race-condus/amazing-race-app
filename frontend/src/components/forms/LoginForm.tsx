@@ -52,7 +52,7 @@ const LoginForm = () => {
         )}
         <Text style={styles.formText}>Salasana:</Text>
         <TextInput
-         ref={passwordInputRef}
+          ref={passwordInputRef}
           style={styles.inputField}
           value={password}
           onChangeText={setPassword}
