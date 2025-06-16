@@ -1,4 +1,4 @@
-import axiosInstance from "axios"
+import axiosInstance from "./api"
 import { AddEvent, Event } from "@/types"
 
 export const getEvents = async () => {

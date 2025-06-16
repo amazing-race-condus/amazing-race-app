@@ -6,7 +6,6 @@ import { verifyToken } from "../utils/middleware"
 
 const groupsRouter = express.Router()
 
-
 // Used in testing
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
 
@@ -20,7 +19,7 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.get("/", async (req: Request, res: Response) => {
+groupsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
   // const groupsWithCheckpoints = await getAllGroups()
   const eventId = Number(req.query.eventId)
   const groupsWithCheckpoints = await getAllGroups(eventId)
@@ -28,7 +27,7 @@ groupsRouter.get("/", async (req: Request, res: Response) => {
   res.send(groupsWithCheckpoints)
 })
 
-groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
+groupsRouter.get("/by_next_checkpoint/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const arrivingGroups = await getGroupByNextCheckpointId(id)

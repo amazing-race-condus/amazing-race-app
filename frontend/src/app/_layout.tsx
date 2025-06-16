@@ -8,10 +8,7 @@ import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { getDefaultEventReducer } from "@/reducers/eventSlice"
 import Notification from "@/components/ui/Notification"
-import { getEventReducer } from "@/reducers/eventSlice"
 import { loadUserFromStorage } from "@/reducers/userSlice"
-
-const EVENT_ID = 1
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)

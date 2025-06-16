@@ -5,7 +5,7 @@ import { verifyToken } from "../utils/middleware"
 
 const routesRouter = express.Router()
 
-routesRouter.get("/:event_id/limits", async (req: Request, res: Response) => {
+routesRouter.get("/:event_id/limits", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
   const event = await getLimits(eventId)
   res.send(event)
@@ -24,7 +24,7 @@ routesRouter.put("/update_limits", verifyToken, async (req: Request, res: Respon
   }
 })
 
-routesRouter.get("/:event_id/distances", async (req: Request, res: Response) => {
+routesRouter.get("/:event_id/distances", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
   const times = await getDistances(eventId)
   res.send(times)

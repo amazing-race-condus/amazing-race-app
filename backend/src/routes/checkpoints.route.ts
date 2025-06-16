@@ -5,7 +5,7 @@ import { verifyToken } from "../utils/middleware"
 
 const checkpointsRouter = express.Router()
 
-checkpointsRouter.get("/", async (req: Request, res: Response) => {
+checkpointsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
 
   // const allCheckpoints = await getAllCheckpoints()
   const eventId = Number(req.query.eventId)
@@ -15,7 +15,7 @@ checkpointsRouter.get("/", async (req: Request, res: Response) => {
   res.send(allCheckpoints)
 })
 
-checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
+checkpointsRouter.get("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const checkpoint = await getCheckpointById(id)
