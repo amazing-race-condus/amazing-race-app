@@ -11,8 +11,7 @@ export const getAllCheckpoints = async (eventId: number) => {
     where: {
       eventId: eventId
     }
-  }
-  )
+  })
   return allCheckpoints
 }
 
@@ -83,31 +82,17 @@ export const deleteCheckpoint = async (checkpointId: number) => {
 export const modifyCheckpoint = async (checkpointId: number, name: string, type: CheckpointType, hint: string, easyHint: string, res: Response) => {
   const id = checkpointId
   const data: Partial<{ name: string, type: CheckpointType, hint: string, easyHint: string}> = {}
+
   const checkpointToModify = await prisma.checkpoint.findUnique({
     where: { id },
   })
+
   if (!checkpointToModify) {
     res.status(404).json({ error: "Rastia ei löydy" })
     return
   }
 
-  let parsedType: Type | undefined = undefined
-  if (!Object.values(Type).includes(type)) {
-    res.status(400).json({ error: "Virheellinen tyyppi." })
-    return
-  }
-  parsedType = type as Type
-  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, checkpointId)
-  if (!validCheckpointLayout) {
-    return
-  }
-
-  // FIX: Pass correct eventId and checkpointId to validateName, handle possible null eventId
-  if (checkpointToModify.eventId === null || checkpointToModify.eventId === undefined) {
-    res.status(400).json({ error: "Rastilla ei ole tapahtumaa." })
-    return
-  }
-  const validName = await validateName(name, res, checkpointToModify.eventId, checkpointId)
+  const validName = await validateName(name, res, checkpointId)
   if (!validName) {
     return
   }
@@ -119,6 +104,20 @@ export const modifyCheckpoint = async (checkpointId: number, name: string, type:
 
   const validEasyHint = await validateHint(easyHint, res, checkpointId)
   if (!validEasyHint) {
+    return
+  }
+
+  let parsedType: Type | undefined = undefined
+
+  if (!Object.values(Type).includes(type)) {
+    res.status(400).json({ error: "Virheellinen tyyppi." })
+    return
+  }
+
+  parsedType = type as Type
+
+  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, checkpointId)
+  if (!validCheckpointLayout) {
     return
   }
 

@@ -29,17 +29,17 @@ describe("Penalties", () => {
     server.close()
   })
 
-  // todo: fix later
-
-  // it("event is returned as json", async () => {
-  //   const response = await request(app).get(`/api/event/${EventId}`)
-  //   expect(response.status).toBe(200)
-  //   expect(response.headers["content-type"]).toMatch(/application\/json/)
-  //   expect(response.body).toMatchObject({
-  //     id: EventId,
-  //     name: "Test Event",
-  //   })
-  // })
+  it("event is returned as json", async () => {
+    const response = await request(app)
+      .get(`/api/event/${EventId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+    expect(response.status).toBe(200)
+    expect(response.headers["content-type"]).toMatch(/application\/json/)
+    expect(response.body).toMatchObject({
+      id: EventId,
+      name: "Test Event",
+    })
+  })
 
   it("Start time is set correctly", async () => {
     const response = await request(app)

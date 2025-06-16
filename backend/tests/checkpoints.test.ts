@@ -4,15 +4,17 @@ import { initialCheckpoints, checkpoints, intermediateCheckpoints, users } from 
 
 let adminToken: string
 
+beforeEach(async () => {
+  await prisma.user.deleteMany({})
+  await request(app).post("/api/authentication")
+    .send(users[0])
+  const adminLoginResponse = await request(app).post("/api/login")
+    .send(users[0])
+  adminToken = adminLoginResponse.body.token
+})
+
 describe("Get all checkpoints", () => {
   beforeEach(async () => {
-    await prisma.user.deleteMany({})
-    await request(app).post("/api/authentication")
-      .send(users[0])
-    const adminLoginResponse = await request(app).post("/api/login")
-      .send(users[0])
-    adminToken = adminLoginResponse.body.token
-
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
@@ -37,13 +39,6 @@ describe("Get all checkpoints", () => {
 
 describe("Viewing a specific checkpoint", () => {
   beforeEach(async () => {
-    await prisma.user.deleteMany({})
-    await request(app).post("/api/authentication")
-      .send(users[0])
-    const adminLoginResponse = await request(app).post("/api/login")
-      .send(users[0])
-    adminToken = adminLoginResponse.body.token
-
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
@@ -75,17 +70,6 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
-  let adminToken: string
-
-  beforeEach(async () => {
-    await prisma.user.deleteMany({})
-    await request(app).post("/api/authentication")
-      .send(users[0])
-    const adminLoginResponse = await request(app).post("/api/login")
-      .send(users[0])
-    adminToken = adminLoginResponse.body.token
-  })
-
   it("succeeds with valid data", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
@@ -295,18 +279,11 @@ describe("Addition of a new checkpoint", () => {
 })
 
 describe("Deletion of a checkpoint", () => {
-  let adminToken: string
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
     })
-    await prisma.user.deleteMany({})
-    await request(app).post("/api/authentication")
-      .send(users[0])
-    const adminLoginResponse = await request(app).post("/api/login")
-      .send(users[0])
-    adminToken = adminLoginResponse.body.token
   })
 
   it("succeeds with status code 204 if id is valid", async () => {
@@ -329,48 +306,40 @@ describe("Deletion of a checkpoint", () => {
 })
 
 describe("modification of a checkpoint", () => {
-  let adminToken: string
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
     })
-    await prisma.user.deleteMany({})
-    await request(app).post("/api/authentication")
-      .send(users[0])
-    const adminLoginResponse = await request(app).post("/api/login")
-      .send(users[0])
-    adminToken = adminLoginResponse.body.token
   })
 
-  // todo: fix later
+  it("succeeds with status code 200 with valid data and id", async () => {
 
-  // it("succeeds with status code 200 with valid data and id", async () => {
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
 
-  //   const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToModify = checkpointsAtStart[0]
 
-  //   const checkpointToModify = checkpointsAtStart[0]
+    const response = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "FINISH",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(200)
 
-  //   const response = await request(app)
-  //     .put(`/api/checkpoints/${checkpointToModify.id}`)
-  //     .set("Authorization", `Bearer ${adminToken}`)
-  //     .send({
-  //       name: "Modified checkpoint",
-  //       type: "FINISH",
-  //       hint:"http://vihje.com",
-  //       easyHint: "http://helppovihje.com"
-  //     })
-  //     .expect(200)
+    expect(response.body).toMatchObject({
+      id: checkpointToModify.id,
+      name: "Modified checkpoint",
+      type: "FINISH",
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com"
+    })
+  })
 
-  //   expect(response.body).toMatchObject({
-  //     id: checkpointToModify.id,
-  //     name: "Modified checkpoint",
-  //     type: "FINISH",
-  //     hint:"http://vihje.com",
-  //     easyHint: "http://helppovihje.com"
-  //   })
-  // })
-
+  // todo fix later
   // it("fails with status code 400 and proper error message if modified name already exists", async () => {
 
   //   const checkpointsAtStart = await prisma.checkpoint.findMany()
@@ -401,6 +370,7 @@ describe("modification of a checkpoint", () => {
   //   //expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
   //   await prisma.checkpoint.deleteMany({})
   // })
+
   it("fails with status code 400 and proper error message if data is invalid", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
@@ -423,35 +393,33 @@ describe("modification of a checkpoint", () => {
     await prisma.checkpoint.deleteMany({})
   })
 
-  // todo fix later
-  // it("succeeds with status code 200 with same type than before", async () => {
+  it("succeeds with status code 200 with same type than before", async () => {
 
-  //   const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
 
-  //   const checkpointToModify = checkpointsAtStart[2]
+    const checkpointToModify = checkpointsAtStart[2]
 
-  //   const response = await request(app)
-  //     .put(`/api/checkpoints/${checkpointToModify.id}`)
-  //     .set("Authorization", `Bearer ${adminToken}`)
-  //     .send({
-  //       name: "Modified checkpoint",
-  //       type: checkpointToModify.type,
-  //       hint:"http://vihje.com",
-  //       easyHint: "http://helppovihje.com"
-  //     })
-  //     .expect(200)
+    const response = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Modified checkpoint",
+        type: checkpointToModify.type,
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(200)
 
-  //   expect(response.body).toMatchObject({
-  //     id: checkpointToModify.id,
-  //     name: "Modified checkpoint",
-  //     type: checkpointToModify.type,
-  //     hint:"http://vihje.com",
-  //     easyHint: "http://helppovihje.com"
-  //   })
-  //   await prisma.checkpoint.deleteMany({})
-  // })
+    expect(response.body).toMatchObject({
+      id: checkpointToModify.id,
+      name: "Modified checkpoint",
+      type: checkpointToModify.type,
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com"
+    })
+    await prisma.checkpoint.deleteMany({})
+  })
 })
-
 
 afterAll(async () => {
   await prisma.checkpoint.deleteMany({})
