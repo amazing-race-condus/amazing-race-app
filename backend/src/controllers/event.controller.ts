@@ -16,6 +16,9 @@ export const getDefaultEvent = async () => {
     include: {
       group: true,
       checkpoints: true,
+    },
+    orderBy: {
+      eventDate: "desc"
     }
   })
   return events
