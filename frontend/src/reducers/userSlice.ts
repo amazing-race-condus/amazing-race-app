@@ -3,7 +3,7 @@ import type { AppDispatch } from "@/store/store"
 import { login } from "@/services/loginService"
 import { setNotification } from "./notificationSlice"
 import type { User } from "@/types"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { storageUtil } from "@/utils/storageUtil"
 
 const initialState: User = {
   id: 0,
@@ -29,8 +29,7 @@ export const loginUser = (username: string, password: string, admin: boolean) =>
   async (dispatch: AppDispatch) => {
     try {
       const user = await login(username, password, admin)
-      const jsonUser = JSON.stringify(user)
-      await AsyncStorage.setItem("user-info", jsonUser)
+      storageUtil.setUser(user)
       dispatch(setUser(user))
       dispatch(setNotification("Kirjautuminen onnistui", "success"))
       return user
@@ -42,7 +41,7 @@ export const loginUser = (username: string, password: string, admin: boolean) =>
 
 export const logoutUser = () => async (dispatch: AppDispatch) => {
   try {
-    await AsyncStorage.removeItem("user-info")
+    await storageUtil.removeUser()
     dispatch(clearUser())
     dispatch(setNotification("Olet nyt kirjautunut ulos", "success"))
   } catch (error) {
@@ -53,9 +52,8 @@ export const logoutUser = () => async (dispatch: AppDispatch) => {
 
 export const loadUserFromStorage = () => async (dispatch: AppDispatch) => {
   try {
-    const userInfo = await AsyncStorage.getItem("user-info")
-    if (userInfo) {
-      const user = JSON.parse(userInfo)
+    const user = await storage.getUser()
+    if (user) {
       dispatch(setUser(user))
     }
   } catch (error) {

@@ -1,7 +1,7 @@
 import axios from "axios"
 import { url } from "../config"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 // import { useRouter } from "expo-router"
+import { storageUtil } from "@/utils/storageUtil"
 
 const axiosInstance = axios.create({
   baseURL: url,
@@ -10,14 +10,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const userInfo = await AsyncStorage.getItem("user-info")
-    if (userInfo) {
-      const user = JSON.parse(userInfo)
-      const userToken = user.token
-
-      if (userToken) {
-        config.headers.Authorization = `Bearer ${userToken}`
-      }
+    const user = await storageUtil.getUser()
+    if (user?.token) {
+      config.headers.Authorization = `Bearer ${userToken}`
     }
 
     return config
