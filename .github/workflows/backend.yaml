@@ -60,4 +60,5 @@ jobs:
     - name: Run tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        SECRET: test-jwt-secret-key-for-ci
       run: npm run test
