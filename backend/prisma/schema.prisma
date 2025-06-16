@@ -22,7 +22,7 @@ enum PenaltyType {
 
 model Checkpoint {
   id       Int     @id @default(autoincrement())
-  name     String  @unique
+  name     String
   type     Type
   hint     String?
   easyHint     String?  @map("easy_hint")
@@ -34,6 +34,8 @@ model Checkpoint {
   group           Group[]
   penalty         Penalty[]
   routeCheckpoint RouteCheckpoint[]
+
+  @@unique([name, eventId])
 }
 
 model Event {
