@@ -2,6 +2,9 @@ name: "backend pipeline"
 
 on:
   workflow_call:
+    secrets:
+      SECRET:
+        required: true
 
 jobs:
   lint:
@@ -60,5 +63,5 @@ jobs:
     - name: Run tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
-        SECRET: test-jwt-secret-key-for-ci
+        SECRET: ${{ secrets.SECRET }}
       run: npm run test
