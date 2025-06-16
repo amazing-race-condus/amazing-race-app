@@ -52,7 +52,7 @@ export const logoutUser = () => async (dispatch: AppDispatch) => {
 
 export const loadUserFromStorage = () => async (dispatch: AppDispatch) => {
   try {
-    const user = await storage.getUser()
+    const user = await storageUtil.getUser()
     if (user) {
       dispatch(setUser(user))
     }

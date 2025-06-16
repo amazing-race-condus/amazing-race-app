@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const user = await storageUtil.getUser()
     if (user?.token) {
-      config.headers.Authorization = `Bearer ${userToken}`
+      config.headers.Authorization = `Bearer ${user?.token}`
     }
 
     return config
