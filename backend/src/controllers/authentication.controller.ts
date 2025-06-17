@@ -112,7 +112,7 @@ export const modifyUser = async (userId: number, username: string, password: str
   }
 
   if (password) {
-    const validPassword = await validatePassword(password, res)
+    const validPassword = validatePassword(password, res)
 
     if (!validPassword) {
       return
@@ -162,4 +162,24 @@ export const sendMailToUser = async (to: string, html: string) => {
     text: "Vaihda salasana 15 minuutin kuluessa: " + html
   }
   await Mailer(message)
+}
+
+export const changePassword = async (password: string, confirmPassword: string, res: Response) => {
+  if ((!password || !confirmPassword) || (password !== confirmPassword)) {
+    res.status(400).json({ error: "Salasanat eivät täsmää." })
+    return
+  }
+  if (validatePassword(password, res)) {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const updatedUser = await prisma.user.updateMany({
+      where: {
+        admin: false
+      },
+      data: {
+        passwordHash: passwordHash
+      }
+    })
+    return updatedUser
+  }
 }

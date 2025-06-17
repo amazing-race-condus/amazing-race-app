@@ -4,7 +4,7 @@ import { Response } from "express"
 const validatePassword = (password: string, res: Response) : boolean => {
 
   if (password.length < 8){
-    res.status(400).json({ error: "Salasanan tulee olla vähintään 8 kirjainta." })
+    res.status(400).json({ error: "Salasanan tulee olla vähintään 8 merkkiä." })
     return false
   }
   if (!/[a-z]/.test(password)) {
