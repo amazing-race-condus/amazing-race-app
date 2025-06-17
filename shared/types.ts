@@ -86,6 +86,8 @@ export interface CustomRequest extends Request {
   user?: User | null
 }
 
+export type RouteInfo = { id: number, routeTime: number }
+
 export type AddEvent = Omit<Event, "id" | "startTime" | "endTime" | "minRouteTime" | "maxRouteTime" | "group" | "checkpoints" | "penalties">
 
-export type AddGroup = Omit<Group, "id" | "finishTime" | "eventId" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">
+export type AddGroup = Omit<Group, "id" | "finishTime" | "nextCheckpointId" | "route" | "disqualified" | "penalty" | "dnf">

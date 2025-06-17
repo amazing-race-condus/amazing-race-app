@@ -5,7 +5,7 @@ import { setNotification } from "./notificationSlice"
 import { Event } from "@/types"
 
 const initialState: Event = {
-  id: 1,
+  id: null as unknown as number,
   startTime: null,
   endTime: null,
   name: "",
