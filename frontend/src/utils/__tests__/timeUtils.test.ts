@@ -1,6 +1,14 @@
 import { Event, Group } from "@/types"
 import { getRaceTime } from "../timeUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("getRaceTime", () => {
   test("with event that doesn't have a startTime, return null", () => {
     const event: Event = {

@@ -1,18 +1,28 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialEvent, initialGroups } from "./test_helper"
+import { initialEvent, initialGroups, users } from "./test_helper"
+
+let adminToken: string
+let eventId: number
+
+beforeEach(async () => {
+  await prisma.user.deleteMany({})
+  await request(app).post("/api/authentication")
+    .send(users[0])
+  const adminLoginResponse = await request(app).post("/api/login")
+    .send(users[0])
+  adminToken = adminLoginResponse.body.token
+})
+
+beforeAll(async () => {
+  const response = await prisma.event.create({
+    data: initialEvent,
+  })
+  eventId = response.id
+})
 
 describe("Get Groups", () => {
   let groupId: unknown
-  let eventId: number
-
-  beforeAll(async () => {
-    const response = await prisma.event.create({
-      data: initialEvent,
-    })
-
-    eventId = response.id
-  })
 
   afterAll(async () => {
     await prisma.group.deleteMany({})
@@ -21,7 +31,9 @@ describe("Get Groups", () => {
   })
 
   it("Groups are returned as json", async () => {
-    const response = await request(app).get("/api/groups")
+    const response = await request(app)
+      .get("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
       .query({ eventId : eventId })
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
@@ -30,6 +42,7 @@ describe("Get Groups", () => {
   it("Group is created", async () => {
     const response = await request(app)
       .post("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Test group",
         members: 4,
@@ -49,6 +62,7 @@ describe("Get Groups", () => {
   it("Group is not created with existing name", async () => {
     const response = await request(app)
       .post("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Test group",
         members: 4,
@@ -61,6 +75,7 @@ describe("Get Groups", () => {
   it("Group is deleted", async () => {
     const response = await request(app)
       .delete(`/api/groups/${groupId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         id: groupId
       })
@@ -70,6 +85,7 @@ describe("Get Groups", () => {
   it("Group can be specified to have easy hints", async () => {
     const response = await request(app)
       .post("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Test group",
         members: 4,
@@ -82,18 +98,7 @@ describe("Get Groups", () => {
 })
 
 describe("modification of a group", () => {
-  let eventId: number
-
-  beforeAll(async () => {
-    await prisma.event.deleteMany({})
-    const response = await prisma.event.create({
-      data: initialEvent,
-    })
-
-    eventId = response.id
-  })
   beforeEach(async () => {
-
     const groupsWithEventId = initialGroups.map(group => ({
       ...group,
       eventId
@@ -107,7 +112,6 @@ describe("modification of a group", () => {
 
   afterAll(async () => {
     await prisma.group.deleteMany({})
-    await prisma.event.deleteMany({})
     await prisma.$disconnect()
     server.close()
   })
@@ -120,6 +124,7 @@ describe("modification of a group", () => {
 
     const response = await request(app)
       .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Modified group",
         members: 4,
@@ -135,7 +140,6 @@ describe("modification of a group", () => {
   })
 
   it("fails with status code 400 and proper error message if modified name already exists", async () => {
-
     const groupsAtStart = await prisma.group.findMany()
 
     const groupToModify = groupsAtStart[0]
@@ -145,10 +149,13 @@ describe("modification of a group", () => {
       members: 4,
     }
 
-    await request(app).post("/api/groups").send(newGroup)
+    await request(app).post("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newGroup)
 
     const result = await request(app)
       .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Existing name",
         members: 4,
@@ -168,6 +175,7 @@ describe("modification of a group", () => {
 
     const result = await request(app)
       .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Invalid data",
         members: "aaa",
@@ -179,4 +187,12 @@ describe("modification of a group", () => {
     expect(result.body.error).toContain("Syötä jäsenten määrä numeromuodossa")
     await prisma.group.deleteMany({})
   })
+})
+
+afterAll(async () => {
+  await prisma.group.deleteMany({})
+  await prisma.user.deleteMany({})
+  await prisma.event.deleteMany({})
+  await prisma.$disconnect()
+  server.close()
 })

@@ -3,6 +3,14 @@ import GroupCheckpointActions from "../GroupCheckpointActions"
 import { Provider } from "react-redux"
 import { group, checkpoint, startCheckpoint, createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupCheckpointActions />", () => {
   let store: any
   let mockCompleteCheckpoint: any

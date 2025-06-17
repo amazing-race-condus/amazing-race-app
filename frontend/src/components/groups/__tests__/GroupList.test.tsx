@@ -3,6 +3,14 @@ import GroupList from "../GroupList"
 import { Provider } from "react-redux"
 import { group, dnfGroup, disqualifiedGroup, createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupList />", () => {
   let store: any
 

@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from "express"
 import { User } from "@/types"
+import jwt from "jsonwebtoken"
+
 
 interface CustomRequest extends Request {
   token?: string | null
   user?: User | null
 }
+
 
 const unknownEndpoint = (req: Request, res: Response) => {
   res.status(404).send({ error: "Unknown endpoint." })
@@ -54,7 +57,28 @@ const tokenExtractor = (req: CustomRequest, res: Response, next: NextFunction) =
   next()
 }
 
+const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): void => {
+  const secret = process.env.SECRET
+  if (!secret) {
+    res.status(500).json({ error: "SECRET is not defined in environment." })
+    return
+  }
 
-export { unknownEndpoint, errorHandler, tokenExtractor }
+  try {
+    const decodedToken = jwt.verify(req.token ?? "", secret) as jwt.JwtPayload
+    if (!decodedToken.id) {
+      res.status(400).json({ error: "Invalid token" })
+      return
+    }
+
+    req.user = decodedToken as User
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export { unknownEndpoint, errorHandler, tokenExtractor, verifyToken }
 
 

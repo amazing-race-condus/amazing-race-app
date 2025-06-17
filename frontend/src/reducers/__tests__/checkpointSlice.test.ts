@@ -1,4 +1,3 @@
-
 import type { AddCheckpoint, Checkpoint} from "@/types"
 import { createMockStore } from "@/utils/testUtils"
 import checkpointReducer, { addCheckpointReducer, appendCheckpoint, fetchCheckpoints, removeCheckpointReducer, setCheckpoints } from "../checkpointsSlice"
@@ -8,6 +7,14 @@ jest.mock("@/services/checkpointService", () => ({
   getAllCheckpoints: jest.fn(),
   removeCheckpoint: jest.fn(),
   createCheckpoint: jest.fn()
+}))
+
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
 }))
 
 describe("checkpointsSlice reducers", () => {

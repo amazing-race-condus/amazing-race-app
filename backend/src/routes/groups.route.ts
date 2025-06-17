@@ -2,12 +2,13 @@ import express, { Response, Request } from "express"
 import { getGroupById, getAllGroups, getGroupByNextCheckpointId,
   updateNextCheckpoint, createGroup, deleteGroup, toggleDNF,
   toggleDisqualified, modifyGroup } from "../controllers/groups.controller"
+import { verifyToken } from "../utils/middleware"
 
 const groupsRouter = express.Router()
 
-
 // Used in testing
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
+
   const id = Number(req.params.id)
   const groupWithCheckpoints = await getGroupById(id)
 
@@ -18,14 +19,14 @@ groupsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.get("/", async (req: Request, res: Response) => {
+groupsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.query.eventId)
   const groupsWithCheckpoints = await getAllGroups(eventId)
 
   res.send(groupsWithCheckpoints)
 })
 
-groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) => {
+groupsRouter.get("/by_next_checkpoint/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const arrivingGroups = await getGroupByNextCheckpointId(id)
@@ -33,7 +34,7 @@ groupsRouter.get("/by_next_checkpoint/:id", async (req: Request, res: Response) 
   res.json(arrivingGroups)
 })
 
-groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => {
+groupsRouter.put("/next_checkpoint/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const body = req.body
 
@@ -42,7 +43,7 @@ groupsRouter.put("/next_checkpoint/:id", async (req: Request, res: Response) => 
   res.json(arrivingGroups)
 })
 
-groupsRouter.post("/", async (req: Request, res: Response) => {
+groupsRouter.post("/", verifyToken, async (req: Request, res: Response) => {
 
   const { name, members, easy, eventId } = req.body
   const group = await createGroup(name, members, easy, eventId, res)
@@ -50,7 +51,7 @@ groupsRouter.post("/", async (req: Request, res: Response) => {
   res.json(group)
 })
 
-groupsRouter.delete("/:id", async (req: Request, res: Response) => {
+groupsRouter.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const group = await deleteGroup(id)
@@ -61,7 +62,7 @@ groupsRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.put("/:id/dnf", async (req: Request, res: Response) => {
+groupsRouter.put("/:id/dnf", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const group = await toggleDNF(id)
@@ -73,7 +74,7 @@ groupsRouter.put("/:id/dnf", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
+groupsRouter.put("/:id/disqualify", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const group = await toggleDisqualified(id)
@@ -85,7 +86,7 @@ groupsRouter.put("/:id/disqualify", async (req: Request, res: Response) => {
   }
 })
 
-groupsRouter.put("/:id", async (req: Request, res: Response) => {
+groupsRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const { name, members, easy, eventId } = req.body
 

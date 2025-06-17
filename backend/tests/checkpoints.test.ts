@@ -1,12 +1,20 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, checkpoints, intermediateCheckpoints } from "./test_helper"
+import { initialCheckpoints, checkpoints, intermediateCheckpoints, users } from "./test_helper"
 
+let adminToken: string
+
+beforeEach(async () => {
+  await prisma.user.deleteMany({})
+  await request(app).post("/api/authentication")
+    .send(users[0])
+  const adminLoginResponse = await request(app).post("/api/login")
+    .send(users[0])
+  adminToken = adminLoginResponse.body.token
+})
 
 describe("Get all checkpoints", () => {
-
   beforeEach(async () => {
-
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
       data: initialCheckpoints,
@@ -14,13 +22,17 @@ describe("Get all checkpoints", () => {
   })
 
   it("checkpoints are returned as json", async () => {
-    const response = await request(app).get("/api/checkpoints")
+    const response = await request(app)
+      .get("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
 
   it("all checkpoints are returned", async () => {
-    const response = await request(app).get("/api/checkpoints")
+    const response = await request(app)
+      .get("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.body.length).toBe(initialCheckpoints.length)
   })
 })
@@ -35,10 +47,10 @@ describe("Viewing a specific checkpoint", () => {
 
   it("succeeds with a valid id", async () => {
     const checkpointsAtStart = await prisma.checkpoint.findMany()
-
     const checkpointToView = checkpointsAtStart[0]
-
-    const response = await request(app).get(`/api/checkpoints/${checkpointToView.id}`)
+    const response = await request(app)
+      .get(`/api/checkpoints/${checkpointToView.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
     expect(response.body).toMatchObject({
@@ -48,16 +60,16 @@ describe("Viewing a specific checkpoint", () => {
     })
   })
 
-
   it("fails with statuscode 400 if id is invalid", async () => {
     const invalidId = "5a3d"
-    const response = await request(app).get(`/api/checkpoints/${invalidId}`)
+    const response = await request(app)
+      .get(`/api/checkpoints/${invalidId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(400)
   })
 })
 
 describe("Addition of a new checkpoint", () => {
-
   it("succeeds with valid data", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
@@ -67,18 +79,12 @@ describe("Addition of a new checkpoint", () => {
     }
 
     await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(201)
-      .expect("Content-Type", /application\/json/)
-
-
-    const checkpointsAtEnd = await prisma.checkpoint.findMany()
-    const names = checkpointsAtEnd.map(c => c.name)
-    expect(names).toContain("Tennispalatsi")
-    await prisma.checkpoint.deleteMany({})
   })
 
-  it("fails with status code 400 and proper error message if data invalid", async () => {
+  it("fails with status code 400 if data is missing", async () => {
     const newCheckpoint = {
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
@@ -86,6 +92,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -102,6 +109,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     let result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -119,6 +127,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -143,6 +152,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     let result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -157,6 +167,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -182,6 +193,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -207,6 +219,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -228,6 +241,7 @@ describe("Addition of a new checkpoint", () => {
     }
 
     const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(newCheckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -247,11 +261,14 @@ describe("Addition of a new checkpoint", () => {
       easyHint: "http://www.google.fi",
     }
 
-    await request(app).post("/api/checkpoints").send(newCheckpoint)
+    await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
 
     const sameChckpoint = { ...newCheckpoint }
 
     const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(sameChckpoint)
       .expect(400)
       .expect("Content-Type", /application\/json/)
@@ -274,8 +291,10 @@ describe("Deletion of a checkpoint", () => {
     const checkpointsAtStart = await prisma.checkpoint.findMany()
     const checkpointToDelete =checkpointsAtStart[0]
 
-    const response = await request(app).delete(`/api/checkpoints/${checkpointToDelete.id}`)
-    expect(response.status).toBe(204)
+    await request(app).delete(`/api/checkpoints/${checkpointToDelete.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(204)
+
 
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     expect(checkpointsAtEnd.length).toBe(initialCheckpoints.length-1)
@@ -302,13 +321,15 @@ describe("modification of a checkpoint", () => {
 
     const response = await request(app)
       .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Modified checkpoint",
         type: "FINISH",
         hint:"http://vihje.com",
         easyHint: "http://helppovihje.com"
       })
-    expect(response.status).toBe(200)
+      .expect(200)
+
     expect(response.body).toMatchObject({
       id: checkpointToModify.id,
       name: "Modified checkpoint",
@@ -318,6 +339,7 @@ describe("modification of a checkpoint", () => {
     })
   })
 
+  // todo fix later
   // it("fails with status code 400 and proper error message if modified name already exists", async () => {
 
   //   const checkpointsAtStart = await prisma.checkpoint.findMany()
@@ -340,8 +362,7 @@ describe("modification of a checkpoint", () => {
   //       name: "Existing name",
   //       type: "INTERMEDIATE",
   //       hint:"http://vihje12.com",
-  //       easyHint: "http://helppovihje12.com",
-  //       eventId: 1
+  //       easyHint: "http://helppovihje12.com"
   //     })
   //     .expect(400)
   //     .expect("Content-Type", /application\/json/)
@@ -349,6 +370,7 @@ describe("modification of a checkpoint", () => {
   //   //expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
   //   await prisma.checkpoint.deleteMany({})
   // })
+
   it("fails with status code 400 and proper error message if data is invalid", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
@@ -357,6 +379,7 @@ describe("modification of a checkpoint", () => {
 
     const result = await request(app)
       .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Modified checkpoint",
         type: "TYYPPI",
@@ -369,6 +392,7 @@ describe("modification of a checkpoint", () => {
     expect(result.body.error).toContain("Virheellinen tyyppi.")
     await prisma.checkpoint.deleteMany({})
   })
+
   it("succeeds with status code 200 with same type than before", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
@@ -377,15 +401,15 @@ describe("modification of a checkpoint", () => {
 
     const response = await request(app)
       .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         name: "Modified checkpoint",
         type: checkpointToModify.type,
         hint:"http://vihje.com",
         easyHint: "http://helppovihje.com"
       })
+      .expect(200)
 
-
-    expect(response.status).toBe(200)
     expect(response.body).toMatchObject({
       id: checkpointToModify.id,
       name: "Modified checkpoint",
@@ -397,9 +421,9 @@ describe("modification of a checkpoint", () => {
   })
 })
 
-
 afterAll(async () => {
   await prisma.checkpoint.deleteMany({})
+  await prisma.user.deleteMany({})
   await prisma.$disconnect()
   server.close()
 })

@@ -9,6 +9,13 @@ import { editGroup } from "@/services/groupService"
 jest.mock("@/services/groupService", () => ({
   editGroup: jest.fn()
 }))
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
 
 describe("<EditGroupForm />", () => {
   let store: any

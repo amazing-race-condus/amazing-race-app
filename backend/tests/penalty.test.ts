@@ -1,13 +1,21 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, initialGroups } from "./test_helper"
+import { initialCheckpoints, initialGroups, users } from "./test_helper"
 
 describe("Penalties", () => {
   let groupId: number
   let checkpointId: number
   let penaltyId: number
+  let adminToken: string
+
 
   beforeAll(async () => {
+    await prisma.user.deleteMany({})
+    await request(app).post("/api/authentication")
+      .send(users[0])
+    const adminLoginResponse = await request(app).post("/api/login")
+      .send(users[0])
+    adminToken = adminLoginResponse.body.token
     await prisma.group.deleteMany({})
     await prisma.group.createMany({
       data: initialGroups,
@@ -43,7 +51,9 @@ describe("Penalties", () => {
   })
 
   it("Penalties are returned as json", async () => {
-    const response = await request(app).get("/api/penalty")
+    const response = await request(app)
+      .get("/api/penalty")
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
@@ -51,6 +61,7 @@ describe("Penalties", () => {
   it("Penalty is created", async () => {
     const response = await request(app)
       .post(`/api/penalty/${groupId.toString()}`)
+      .set("Authorization", `Bearer ${adminToken}`)
       .send({
         groupId: groupId,
         type: "SKIP",
@@ -77,6 +88,7 @@ describe("Penalties", () => {
   it("Delete a penalty", async () => {
     const deleteRes = await request(app)
       .delete(`/api/penalty/${penaltyId.toString()}`)
+      .set("Authorization", `Bearer ${adminToken}`)
 
     expect(deleteRes.status).toBe(204)
 

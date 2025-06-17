@@ -1,10 +1,11 @@
 import express, { Response, Request } from "express"
 import { getAllCheckpoints, getCheckpointById, createCheckpoint,
   deleteCheckpoint, modifyCheckpoint } from "../controllers/checkpoints.controller"
+import { verifyToken } from "../utils/middleware"
 
 const checkpointsRouter = express.Router()
 
-checkpointsRouter.get("/", async (req: Request, res: Response) => {
+checkpointsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
 
   // const allCheckpoints = await getAllCheckpoints()
   const eventId = Number(req.query.eventId)
@@ -14,7 +15,7 @@ checkpointsRouter.get("/", async (req: Request, res: Response) => {
   res.send(allCheckpoints)
 })
 
-checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
+checkpointsRouter.get("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   const checkpoint = await getCheckpointById(id)
@@ -25,7 +26,7 @@ checkpointsRouter.get("/:id", async (req: Request, res: Response) => {
   }
 })
 
-checkpointsRouter.post("/", async (req: Request, res: Response) => {
+checkpointsRouter.post("/", verifyToken, async (req: Request, res: Response) => {
   const body = req.body
 
   const savedCheckpoint = await createCheckpoint(body, res)
@@ -33,7 +34,7 @@ checkpointsRouter.post("/", async (req: Request, res: Response) => {
   res.status(201).json(savedCheckpoint)
 })
 
-checkpointsRouter.delete("/:id", async (req: Request, res: Response) => {
+checkpointsRouter.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
 
   deleteCheckpoint(id)
@@ -41,7 +42,7 @@ checkpointsRouter.delete("/:id", async (req: Request, res: Response) => {
   res.status(204).end()
 })
 
-checkpointsRouter.put("/:id", async (req: Request, res: Response) => {
+checkpointsRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const { name, type, hint, easyHint } = req.body
   const updatedCheckpoint = await modifyCheckpoint(id, name, type, hint, easyHint, res)

@@ -1,6 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome"
 import { Tabs } from "expo-router"
 
+export const unstable_settings = {
+  initialRouteName: "/(tabs)/(groups)/index",
+}
+
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>

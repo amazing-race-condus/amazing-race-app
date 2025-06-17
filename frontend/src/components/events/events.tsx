@@ -20,6 +20,7 @@ const Events = ({
   }) => {
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
+
   useEffect(() => {
     const fetchEvents = async () => {
       const getEv = await getEvents()
@@ -27,7 +28,7 @@ const Events = ({
     }
 
     fetchEvents()
-  }, [events, setEvents])
+  }, [setEvents])
 
   const handleEventChange = async (id : number) => {
     dispatch(getEventReducer(id))

@@ -6,6 +6,14 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import { Provider } from "react-redux"
 import { createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<AddCheckpointForm />", () => {
   let store: any
 

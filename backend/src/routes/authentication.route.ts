@@ -1,10 +1,11 @@
-import bcrypt from "bcrypt"
 import express, { Response, Request } from "express"
-import { createUser, getAllUsers, deleteUser } from "../controllers/authentication.controller"
-import { validatePassword } from "../utils/passwordValidator"
+import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, sendMailToUser } from "../controllers/authentication.controller"
+import { verifyToken } from "../utils/middleware"
+
 
 const authenticationRouter = express.Router()
 
+// GET POST ja DELETE endpointit voi poistaa, kun viedään tuotantoon
 authenticationRouter.get("/", async (_, res: Response) => {
   const allUsers = await getAllUsers()
 
@@ -13,18 +14,39 @@ authenticationRouter.get("/", async (_, res: Response) => {
 
 
 authenticationRouter.post("/", async (req: Request, res: Response) => {
-  const { username, password } = req.body
-  if (!validatePassword(password, res)) {
+  const { username, password, admin } = req.body
+  const user = await getUserByAdminRights(admin)
+  if (user) {
+    if (user.admin) {
+      res.status(400).json({ error: "Pääkäyttäjä on jo luotu." })
+      return
+    }
+    res.status(400).json({ error: "Tavallinen käyttäjä on jo luotu." })
     return
   }
 
+  const savedUser = await createUser(username, password, admin, res)
 
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+  res.status(201).json(savedUser)
 
-  const savedPassword = await createUser(username, passwordHash, res)
+})
 
-  res.status(201).json(savedPassword)
+authenticationRouter.post("/reset_password", async (req: Request, res: Response) => {
+  const { html } = req.body
+  /*const user = await getUserByUsername(username, res)
+
+  if (!user || user.admin !== true) {
+    res.status(400).json({ error: "Sähköpostia ei voitu lähettää." })
+    return
+  }*/
+
+  try {
+    await sendMailToUser("katri.laamala@outlook.com", html)
+    res.status(200).json({ message: "Sähköposti lähetetty onnistuneesti." })
+  } catch (error) {
+    console.error("Sähköpostin lähetys epäonnistui:", error)
+    res.status(500).json({ error: "Sähköpostia ei voitu lähettää." })
+  }
 
 })
 
@@ -39,6 +61,15 @@ authenticationRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 })
 
+
+authenticationRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const { username, password } = req.body
+  const updatedUser = await modifyUser(id, username, password, res)
+
+  res.status(200).json(updatedUser)
+
+})
 
 export default authenticationRouter
 

@@ -286,7 +286,6 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
     color: "#333",
   },
-
   statValue: {
     fontWeight: "600",
     color: "#000",
@@ -325,6 +324,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
     zIndex: 10
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   }
 })
-

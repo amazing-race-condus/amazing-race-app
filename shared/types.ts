@@ -51,7 +51,8 @@ export interface Penalty {
 export interface User {
     id: number,
     username: string
-    password?: string
+    token: string
+    admin: boolean
 }
 
 export interface Group {
@@ -84,6 +85,13 @@ export interface Event {
 export interface CustomRequest extends Request {
   token?: string | null
   user?: User | null
+}
+
+export interface Email {
+  from: string,
+  to: string,
+  subject: string,
+  text: string,
 }
 
 export type RouteInfo = { id: number, routeTime: number }

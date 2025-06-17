@@ -7,6 +7,13 @@ import { handleAlert } from "@/utils/handleAlert"
 jest.mock("@/utils/handleAlert", () => ({
   handleAlert: jest.fn()
 }))
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
 
 describe("<ListCheckpointPenalties />", () => {
   let store: any

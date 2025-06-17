@@ -1,24 +1,47 @@
 import express, { Response, Request } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import { getUserByUsername } from "../controllers/authentication.controller"
+import { getUserByAdminRights } from "../controllers/authentication.controller"
 
 
 const loginRouter = express.Router()
 
 
 loginRouter.post("/", async (req: Request, res: Response) => {
-  const { username, password } = req.body
+  const { username, password, admin } = req.body
 
-  if (!username || !password) {
-    res.status(400).json({ error: "Anna käyttäjätunnus sekä salasana." })
+  const user = await getUserByAdminRights(admin)
+
+  if (!user) {
+    res.status(400).json({ error: "Käyttäjää ei löydy." })
+    return
   }
 
-  const user = await getUserByUsername(username)
+  if (user.admin === true) {
+
+    if (!username || !password) {
+      res.status(401).json({ error: "Anna käyttäjätunnus sekä pääkäyttäjän salasana." })
+      return
+    }
+
+    if (username !== user.username) {
+      res.status(401).json({ error: "Virheelliset tunnukset." })
+      return
+
+    }
+
+  } else {
+
+    if (!password) {
+      res.status(401).json({ error: "Anna tavallisen käyttäjän salasana." })
+      return
+    }
+  }
 
   const passwordCorrect = user === null
     ? false
     : await bcrypt.compare(password, user.passwordHash)
+
 
   if (!(user && passwordCorrect)) {
     res.status(401).json({ error: "Virheelliset tunnukset." })
@@ -28,6 +51,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   const userForToken = {
     username: user.username,
     id: user.id,
+    admin: user.admin
   }
   const secret = process.env.SECRET
   if (!secret) {
@@ -41,10 +65,14 @@ loginRouter.post("/", async (req: Request, res: Response) => {
     { expiresIn: 60*60*24 }
   )
 
-
   res
     .status(200)
-    .send({ token, username: user.username })
+    .send({
+      token,
+      username: user.username,
+      id: user.id,
+      admin: user.admin
+    })
 })
 
 export default loginRouter
