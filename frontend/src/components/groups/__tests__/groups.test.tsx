@@ -23,6 +23,14 @@ jest.mock("@/services/groupService", () => ({
   ]),
 }))
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<Groups />", () => {
   afterEach(() => {
     jest.clearAllMocks()

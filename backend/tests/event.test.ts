@@ -30,7 +30,9 @@ describe("Penalties", () => {
   })
 
   it("event is returned as json", async () => {
-    const response = await request(app).get(`/api/event/${EventId}`)
+    const response = await request(app)
+      .get(`/api/event/${EventId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
     expect(response.body).toMatchObject({

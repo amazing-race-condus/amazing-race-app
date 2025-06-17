@@ -5,6 +5,14 @@ import AddEventForm from "../AddEventForm"
 import { createMockStore, events } from "@/utils/testUtils"
 import { Provider } from "react-redux"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<AddEventForm />", () => {
   let store: any
   beforeEach(() => {

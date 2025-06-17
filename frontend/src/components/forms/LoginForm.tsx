@@ -3,7 +3,7 @@ import { Stack } from "expo-router"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Checkbox } from "react-native-paper"
 import { loginUser } from "@/reducers/userSlice"
 
@@ -12,6 +12,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("")
   const [admin, setAdmin] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
+  const passwordInputRef = useRef<TextInput>(null)
 
   const handleLogin = async () => {
     await dispatch(loginUser(username, password, admin))
@@ -41,14 +42,23 @@ const LoginForm = () => {
               style={styles.inputField}
               value={username}
               onChangeText={setUsername}
+              onSubmitEditing={() => {
+                passwordInputRef.current?.focus()
+              }}
+              submitBehavior="submit"
+              returnKeyType="next"
             />
           </>
         )}
         <Text style={styles.formText}>Salasana:</Text>
         <TextInput
+          ref={passwordInputRef}
           style={styles.inputField}
           value={password}
           onChangeText={setPassword}
+          secureTextEntry
+          onSubmitEditing={handleLogin}
+          returnKeyType="done"
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>

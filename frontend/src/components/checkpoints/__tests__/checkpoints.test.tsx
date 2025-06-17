@@ -5,6 +5,14 @@ import Checkpoints from "@/components/checkpoints/Checkpoints"
 import * as expoRouter from "expo-router"
 import { Platform, Alert } from "react-native"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 jest.useFakeTimers()
 
 jest.mock("expo-router", () => ({

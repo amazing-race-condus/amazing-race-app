@@ -6,6 +6,14 @@ import { Provider } from "react-redux"
 import { createMockStore, checkpoint } from "@/utils/testUtils"
 import { editCheckpoint } from "@/services/checkpointService"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 jest.mock("@/services/checkpointService", () => ({
   editCheckpoint: jest.fn()
 }))

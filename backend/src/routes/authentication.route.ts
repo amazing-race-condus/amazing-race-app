@@ -1,5 +1,5 @@
 import express, { Response, Request } from "express"
-import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, getUserByUsername, sendMailToUser } from "../controllers/authentication.controller"
+import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, sendMailToUser } from "../controllers/authentication.controller"
 import { verifyToken } from "../utils/middleware"
 
 
@@ -32,7 +32,7 @@ authenticationRouter.post("/", async (req: Request, res: Response) => {
 })
 
 authenticationRouter.post("/reset_password", async (req: Request, res: Response) => {
-  const { username, html } = req.body
+  const { html } = req.body
   /*const user = await getUserByUsername(username, res)
 
   if (!user || user.admin !== true) {

@@ -9,6 +9,13 @@ jest.mock("expo-router", () => ({
   ...jest.requireActual("expo-router"),
   usePathname: jest.fn()
 }))
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
 
 describe("<GroupItem />", () => {
   let store: any

@@ -25,3 +25,13 @@ export const generateRoutes = async (eventId: number) => {
   const response = await axiosInstance.put(`/settings/${eventId}/create_routes`)
   return response.data
 }
+
+export const getRoutesInfo = async (eventId: number) => {
+  const response = await axiosInstance.get("/settings/${eventId}/routes_info")
+  return response.data
+}
+
+export const getActiveRoutesInfo = async (eventId: number) => {
+  const response = await axiosInstance.get(`/settings/${eventId}/active_routes_info`)
+  return response.data
+}

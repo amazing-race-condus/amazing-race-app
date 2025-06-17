@@ -3,6 +3,14 @@ import { render, screen, fireEvent } from "@testing-library/react-native"
 import GroupCheckpointItem from "@/components/groups/GroupCheckpointItem"
 import { group, checkpoint, createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupCheckpointItem />", () => {
   let store: any
   let mockCompleteCheckpoint: any

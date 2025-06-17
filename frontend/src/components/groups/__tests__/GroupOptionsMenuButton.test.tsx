@@ -5,6 +5,14 @@ import { createMockStore } from "@/utils/testUtils"
 import { createRef } from "react"
 import BottomSheet from "@gorhom/bottom-sheet"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("<GroupOptionsMenuButton />", () => {
   let store: any
 

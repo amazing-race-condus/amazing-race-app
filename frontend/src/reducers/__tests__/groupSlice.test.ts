@@ -4,6 +4,14 @@ import { createMockStore } from "@/utils/testUtils"
 import { givePenalty, removePenalty } from "@/services/penaltyService"
 import { createGroup, dnfGroup, getAllGroups, giveNextCheckpoint, removeGroup } from "@/services/groupService"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 jest.mock("@/services/groupService", () => ({
   getAllGroups: jest.fn(),
   createGroup: jest.fn(),

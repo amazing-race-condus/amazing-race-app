@@ -51,7 +51,9 @@ describe("Penalties", () => {
   })
 
   it("Penalties are returned as json", async () => {
-    const response = await request(app).get("/api/penalty")
+    const response = await request(app)
+      .get("/api/penalty")
+      .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })

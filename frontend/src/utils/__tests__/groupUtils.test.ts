@@ -1,6 +1,14 @@
 import { Checkpoint, Event, Group } from "@/types"
 import { sortAlphabetically, sortByStatus, sortByTime } from "../groupUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 let groups: Group[]
 let group1: Group
 let group2: Group
