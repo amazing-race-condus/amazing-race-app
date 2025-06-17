@@ -1,12 +1,13 @@
-import store from "@/store/store"
+import { RootState } from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import { Event } from "@/types"
 import { handleAlert } from "@/utils/handleAlert"
 import React from "react"
 import { View, Pressable, Text } from "react-native"
+import { useSelector } from "react-redux"
 
 const EventItem = ({ item, handleEventChange }: { item: Event , handleEventChange: (id : number) => void }) => {
-  const eventId = store.getState().event.id
+  const eventId = useSelector((state: RootState) => state.event.id)
 
   const handleChangeEvent = (id: number) => {
     handleAlert({
