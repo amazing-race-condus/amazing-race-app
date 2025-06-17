@@ -1,31 +1,33 @@
 import { View, Text, TextInput, Pressable } from "react-native"
 import { Stack } from "expo-router"
 import { AxiosError } from "axios"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { styles } from "@/styles/commonStyles"
-import store, { AppDispatch } from "@/store/store"
+import { AppDispatch, RootState } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
 import { getLimits, setLimits } from "@/services/routeService"
 
 const RouteMinMax = () => {
-  const eventId = store.getState().event.id
+  const eventId = useSelector((state: RootState) => state.event.id)
   const [minimum, setMinimum] = useState("")
   const [maximum, setMaximum] = useState("")
   const dispatch = useDispatch<AppDispatch>()
 
   const getInitialLimits = async () => {
-    const initialLimits = await getLimits(eventId)
-    if (initialLimits.minRouteTime && initialLimits.maxRouteTime) {
-      setMinimum(initialLimits.minRouteTime.toString())
-      setMaximum(initialLimits.maxRouteTime.toString())
+    if (eventId !== null) {
+      const initialLimits = await getLimits(eventId)
+      if (initialLimits.minRouteTime && initialLimits.maxRouteTime) {
+        setMinimum(initialLimits.minRouteTime.toString())
+        setMaximum(initialLimits.maxRouteTime.toString())
+      }
     }
   }
-
+  console.log(eventId)
   useEffect(() => {
     getInitialLimits()
-  }, [])
+  }, [eventId])
 
   const updateLimit = async (limit: RouteLimit) => {
     try {
