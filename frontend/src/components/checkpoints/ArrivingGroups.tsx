@@ -8,22 +8,50 @@ import Search from "@/components/ui/Search"
 import { Group } from "@/types"
 import Filter from "../ui/Filter"
 
+const routeCheckpointIds = (group: Group) => {
+  return group.route.map(route => Number(route.id))
+}
+
+const laterCheckpointIds = (group: Group) => {
+  if (group.nextCheckpointId === null)
+    return []
+  const allRouteCheckpointIds = routeCheckpointIds(group)
+  return allRouteCheckpointIds.slice(allRouteCheckpointIds.indexOf(group.nextCheckpointId)+1, allRouteCheckpointIds.length)
+}
+
+const groupsCheckpointStatus = (group: Group, checkpointId: number) => {
+  if (!group.route) {
+    return "no route"
+  }
+  if (!(routeCheckpointIds(group).includes(checkpointId))) {
+    return "never"
+  }
+  if (checkpointId === group.nextCheckpointId) {
+    return "next"
+  }
+  if (laterCheckpointIds(group).includes(checkpointId)) {
+    return "later"
+  }
+  return "visited"
+}
+
 const NextGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
-  const nextGroups = groups.filter(group => group.nextCheckpointId === checkpointId && !group.disqualified && !group.dnf)
+  const nextGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "next" && !group.disqualified && !group.dnf)
   if (nextGroups.length === 0)
     return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
   return <GroupList groups={nextGroups} />
 }
 
 const LaterGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
-  const laterGroups = groups.filter(group => checkpointId in group.route && group.nextCheckpointId !== checkpointId && !group.disqualified && !group.dnf)
+  const laterGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "later" && !group.disqualified && !group.dnf)
+
   if (laterGroups.length === 0)
     return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
   return <GroupList groups={laterGroups} />
 }
 
 const WrongGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
-  const wrongGroups = groups.filter(group => !(checkpointId in group.route))
+  const wrongGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "never")
   if (wrongGroups.length === 0)
     return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
   return <GroupList groups={wrongGroups} />
@@ -48,7 +76,7 @@ const ArrivingGroups = ({ checkpointId = 1 }) => {
         </>
         :
         <>
-          <Filter order={order} setOrder={setOrder} values={["Seuraavaksi saapuvat", "Myöhemmin saapuvat", "Ei tänne"]}/>
+          <Filter order={order} setOrder={setOrder} values={["Seuraavaksi saapuvat", "Myöhemmin saapuvat", "Ei reitillä"]}/>
           { order === 0 && <NextGroups groups={groups} checkpointId={checkpointId} /> }
           { order === 1 && <LaterGroups groups={groups} checkpointId={checkpointId} /> }
           { order === 2 && <WrongGroups groups={groups} checkpointId={checkpointId} /> }
