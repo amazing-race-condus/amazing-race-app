@@ -1,8 +1,9 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, checkpoints, intermediateCheckpoints, users } from "./test_helper"
+import { initialCheckpoints, checkpoints, intermediateCheckpoints, users, initialEvent } from "./test_helper"
 
 let adminToken: string
+let eventId: number
 
 beforeEach(async () => {
   await prisma.user.deleteMany({})
@@ -11,6 +12,13 @@ beforeEach(async () => {
   const adminLoginResponse = await request(app).post("/api/login")
     .send(users[0])
   adminToken = adminLoginResponse.body.token
+})
+
+beforeAll(async () => {
+  const event = await prisma.event.create({
+    data: initialEvent,
+  })
+  eventId = event.id
 })
 
 describe("Get all checkpoints", () => {
@@ -339,37 +347,40 @@ describe("modification of a checkpoint", () => {
     })
   })
 
-  // todo fix later
-  // it("fails with status code 400 and proper error message if modified name already exists", async () => {
+  it("fails with status code 400 and proper error message if modified name already exists", async () => {
 
-  //   const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
 
-  //   const checkpointToModify = checkpointsAtStart[0]
+    const checkpointToModify = checkpointsAtStart[0]
 
-  //   const newcheckpoint = {
-  //     name: "Existing name",
-  //     type: "INTERMEDIATE",
-  //     hint:"http://vihje.com",
-  //     easyHint: "http://helppovihje.com",
-  //     eventId: 1
-  //   }
+    const newcheckpoint = {
+      name: "Existing name",
+      type: "INTERMEDIATE",
+      hint:"http://vihje.com",
+      easyHint: "http://helppovihje.com",
+      eventId: eventId
+    }
 
-  //   await request(app).post("/api/checkpoints").send(newcheckpoint)
+    await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newcheckpoint)
 
-  //   await request(app)
-  //     .put(`/api/checkpoints/${checkpointToModify.id}`)
-  //     .send({
-  //       name: "Existing name",
-  //       type: "INTERMEDIATE",
-  //       hint:"http://vihje12.com",
-  //       easyHint: "http://helppovihje12.com"
-  //     })
-  //     .expect(400)
-  //     .expect("Content-Type", /application\/json/)
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Existing name",
+        type: "INTERMEDIATE",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-  //   //expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
-  //   await prisma.checkpoint.deleteMany({})
-  // })
+    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
+    await prisma.checkpoint.deleteMany({})
+  })
 
   it("fails with status code 400 and proper error message if data is invalid", async () => {
 
@@ -424,6 +435,7 @@ describe("modification of a checkpoint", () => {
 afterAll(async () => {
   await prisma.checkpoint.deleteMany({})
   await prisma.user.deleteMany({})
+  await prisma.event.deleteMany({})
   await prisma.$disconnect()
   server.close()
 })

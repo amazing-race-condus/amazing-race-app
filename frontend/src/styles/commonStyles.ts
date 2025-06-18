@@ -200,6 +200,9 @@ export const styles = StyleSheet.create({
     borderColor: "black",
     fontSize: 20,
     padding: 10,
+    //paddingTop: 20,
+    textAlignVertical: "center",
+    textAlign: "center",
     marginBottom: 10
   },
   error: {
