@@ -1,9 +1,10 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
 import { users } from "./test_helper"
+import jwt from "jsonwebtoken"
 
 
-describe("when there is initially one user at db", () => {
+describe("Login", () => {
 
   beforeEach(async () => {
     await prisma.user.deleteMany({})
@@ -52,7 +53,7 @@ describe("when there is initially one user at db", () => {
       .expect(401)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Virheelliset tunnukset.")
+    expect(result.body.error).toContain("Virheelliset tunnukset")
 
 
   })
@@ -68,7 +69,7 @@ describe("when there is initially one user at db", () => {
       .expect(401)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Virheelliset tunnukset.")
+    expect(result.body.error).toContain("Virheelliset tunnukset")
   })
 
   it("admin can't login without username", async () => {
@@ -82,7 +83,7 @@ describe("when there is initially one user at db", () => {
       .expect(401)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Anna käyttäjätunnus sekä pääkäyttäjän salasana.")
+    expect(result.body.error).toContain("Anna käyttäjätunnus sekä pääkäyttäjän salasana")
   })
 
 
@@ -98,8 +99,155 @@ describe("when there is initially one user at db", () => {
       .expect(401)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Virheelliset tunnukset.")
+    expect(result.body.error).toContain("Virheelliset tunnukset")
   })
+
+})
+
+describe("Changing password", () => {
+  let adminToken: string
+  let userToken: string
+
+  beforeEach(async () => {
+    const secret = process.env.SECRET ?? "ödjaödjaödjaödjaöj"
+    adminToken = jwt.sign(
+      {
+        email: true,
+      },
+      secret,
+      { expiresIn: 15 }
+    )
+    userToken = jwt.sign(
+      {
+        email: false,
+      },
+      secret,
+      { expiresIn: 15 }
+    )
+  })
+
+  it("admin password can be modified with valid token and valid password", async () => {
+
+    const newPassword = {
+      password: "Password123!",
+    }
+    await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const newLoginCredentials = {
+      username: users[0].username,
+      password: "Password123!",
+      admin: users[0].admin
+    }
+
+    await request(app).post("/api/login")
+      .send(newLoginCredentials)
+      .expect(200)
+
+  })
+  it("regular user can't reset admin password with valid token and valid password", async () => {
+
+    const newPassword = {
+      password: "Password123!",
+    }
+    const result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${userToken}`)
+      .send(newPassword)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token invalid")
+
+  })
+
+
+  it("admin can't reset admin password with invalid token", async () => {
+    const invalidToken = "dsfjäspfjwfjwfwfjwp"
+
+    const newPassword = {
+      password: "Password123!",
+    }
+    const result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send(newPassword)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+
+  })
+
+  it("admin can't reset admin password without token", async () => {
+
+    const newPassword = {
+      password: "Password123!",
+    }
+    const result = await request(app).put("/api/authentication/reset_password")
+      .send(newPassword)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing")
+
+  })
+
+  it("admin can't reset admin password with invalid password", async () => {
+
+    const newPassword = {
+      password: "Password",
+    }
+    const result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi numero")
+  })
+
+  it("admin can't reset admin password with invalid password", async () => {
+
+    let newPassword: { password: string } = {
+      password: "Password",
+    }
+    let result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi numero")
+
+    newPassword = {
+      password: "PW",
+    }
+    result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanan tulee olla vähintään 8 kirjainta")
+
+    newPassword = {
+      password: "PASSWORD",
+    }
+    result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi pieni kirjain")
+
+    newPassword = {
+      password: "password",
+    }
+    result = await request(app).put("/api/authentication/reset_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi iso kirjain")
+  })
+
+
 
 })
 
