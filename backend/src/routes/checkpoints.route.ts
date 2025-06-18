@@ -44,8 +44,8 @@ checkpointsRouter.delete("/:id", verifyToken, async (req: Request, res: Response
 
 checkpointsRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = Number(req.params.id)
-  const { name, type, hint, easyHint } = req.body
-  const updatedCheckpoint = await modifyCheckpoint(id, name, type, hint, easyHint, res)
+  const { eventId, name, type, hint, easyHint } = req.body
+  const updatedCheckpoint = await modifyCheckpoint(id, eventId, name, type, hint, easyHint, res)
 
   res.status(200).json(updatedCheckpoint)
 
