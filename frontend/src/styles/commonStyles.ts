@@ -293,7 +293,7 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#000",
   },
-  routeStatsCard: {
+  statsCard: {
     backgroundColor: "#ffffff",
     width: Math.min(screenWidth * 0.8, 355),
     borderRadius: 16,

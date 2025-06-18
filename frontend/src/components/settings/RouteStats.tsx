@@ -16,7 +16,7 @@ const RouteStats: React.FC<RouteStatsProps> = ({ routes, activeRoutes, groupsLen
     : routeTimes[Math.floor(routeTimes.length / 2)]
 
   return (
-    <View style={styles.routeStatsCard}>
+    <View style={styles.statsCard}>
       {routeTimes.length > 0 ?
         <View>
           <View style={styles.statTitle}>

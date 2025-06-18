@@ -5,7 +5,7 @@ import { storageUtil } from "@/utils/storageUtil"
 
 const axiosInstance = axios.create({
   baseURL: url,
-  timeout: 10000,
+  timeout: 45000,
 })
 
 axiosInstance.interceptors.request.use(

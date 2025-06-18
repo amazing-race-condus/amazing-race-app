@@ -4,7 +4,7 @@ import { styles } from "@/styles/commonStyles"
 import { AxiosError } from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { setNotification } from "@/reducers/notificationSlice"
-import store, { AppDispatch, RootState } from "@/store/store"
+import { AppDispatch, RootState } from "@/store/store"
 import { generateRoutes, getActiveRoutesInfo, getRoutesInfo } from "@/services/routeService"
 import { handleAlert } from "@/utils/handleAlert"
 import { RouteInfo } from "@/types"
@@ -15,13 +15,18 @@ const RouteGeneration: React.FC = () => {
   const [routes, setRoutes] = useState<RouteInfo[]>([])
   const [activeRoutes, setActiveRoutes] = useState<RouteInfo[]>([])
   const [loading, setLoading] = useState(false)
-  const eventId = store.getState().event.id
+  const event = useSelector((state: RootState) => state.event)
+  const eventId = event.id
 
   useEffect(() => {
     fetchRoutes()
   }, [eventId])
 
   const createRoutes = async () => {
+    if (event.startTime) {
+      dispatch(setNotification("Peli on käynnissä, joten reittejä ei voi luoda", "error"))
+      return
+    }
     handleAlert({
       confirmText: "Luo reitit",
       title: "Vahvista reittien luonti",
@@ -34,7 +39,7 @@ const RouteGeneration: React.FC = () => {
           const groupsAmount = data.groupsAmount
           await fetchRoutes()
           if (routesAmount >= groupsAmount) {
-            dispatch(setNotification(`${routesAmount} reittiä luotu.`, "success"))
+            dispatch(setNotification(`${routesAmount} reittiä luotu`, "success"))
           } else {
             dispatch(setNotification(
               `${routesAmount} reittiä luotu. Jokaisella ryhmällä ei ole uniikkia reittiä.`,

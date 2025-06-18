@@ -55,7 +55,7 @@ export const setStartReducer = (id : number) => async (dispatch: AppDispatch) =>
     const hours = datetext[0]
     const minutes = datetext[1]
     dispatch(setEvents(updatedEvent))
-    dispatch(setNotification(`Peli aloitettu ${hours}:${minutes}`, "success"))
+    dispatch(setNotification(`Peli ${updatedEvent.name} aloitettu ${hours}:${minutes}`, "success"))
   } catch (error) {
     console.error("Failed to start the game:", error)
     dispatch(setNotification("Pelin aloitus epäonnistui", "error"))
@@ -70,7 +70,7 @@ export const setEndReducer = (id : number) => async (dispatch: AppDispatch) => {
     const hours = datetext[0]
     const minutes = datetext[1]
     dispatch(setEvents(updatedEvent))
-    dispatch(setNotification(`Peli päätetty ${hours}:${minutes}`, "success"))
+    dispatch(setNotification(`Peli ${updatedEvent.name} päätetty ${hours}:${minutes}`, "success"))
   } catch (error) {
     console.error("Failed to end the game:", error)
     dispatch(setNotification("Pelin päätös epäonnistui", "error"))

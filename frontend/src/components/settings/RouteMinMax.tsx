@@ -32,7 +32,7 @@ const RouteMinMax = () => {
   const updateLimit = async (limit: RouteLimit) => {
     try {
       await setLimits(limit)
-      dispatch(setNotification("Minimi- ja maksimiajat päivitetty.", "success"))
+      dispatch(setNotification("Minimi- ja maksimiajat päivitetty", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {
         dispatch(setNotification(
