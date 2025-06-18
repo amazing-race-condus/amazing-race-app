@@ -34,7 +34,7 @@ const RouteGeneration: React.FC = () => {
           const groupsAmount = data.groupsAmount
           await fetchRoutes()
           if (routesAmount >= groupsAmount) {
-            dispatch(setNotification(`${routesAmount} reittiä luotu.`, "success"))
+            dispatch(setNotification(`${routesAmount} reittiä luotu`, "success"))
           } else {
             dispatch(setNotification(
               `${routesAmount} reittiä luotu. Jokaisella ryhmällä ei ole uniikkia reittiä.`,

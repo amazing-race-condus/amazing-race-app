@@ -131,9 +131,9 @@ export const dnfGroupReducer =
 
       dispatch(setGroups(updated))
       if (dnfState) {
-        dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty `, "success"))
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty`, "success"))
       } else {
-        dispatch(setNotification(`Ryhmän '${group.name}' suoritusta jatkettu `, "success"))
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritusta jatkettu`, "success"))
       }
     } catch (error) {
       console.error("Failed to dnf group:", error)
@@ -161,9 +161,9 @@ export const disqualifyGroupReducer =
 
       dispatch(setGroups(updated))
       if (disqualifiedState) {
-        dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty `, "success"))
+        dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty`, "success"))
       } else {
-        dispatch(setNotification(`Ryhmän '${group.name}' hylkäys peruttu `, "success"))
+        dispatch(setNotification(`Ryhmän '${group.name}' hylkäys peruttu`, "success"))
       }
     } catch (error) {
       console.error("Failed to disqualify group:", error)
@@ -187,7 +187,7 @@ export const giveNextCheckpointReducer =
         return currentGroup
       })
       dispatch(setGroups(updated))
-      dispatch(setNotification(`Ryhmä '${updatedGroup.name}' siirtyi seuraavalle rastille `, "success"))
+      dispatch(setNotification(`Ryhmä '${updatedGroup.name}' siirtyi seuraavalle rastille`, "success"))
     } catch (error) {
       console.error("Failed to give next checkpoint to the group:", error)
       dispatch(setNotification("Ryhmän suoritusta ei voitu jatkaa", "error"))
