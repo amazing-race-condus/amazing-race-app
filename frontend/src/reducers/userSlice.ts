@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch } from "@/store/store"
-import { login } from "@/services/loginService"
+import { login } from "@/services/authenticationService"
 import { setNotification } from "./notificationSlice"
 import type { User } from "@/types"
 import { storageUtil } from "@/utils/storageUtil"

@@ -13,19 +13,19 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   const user = await getUserByAdminRights(admin)
 
   if (!user) {
-    res.status(400).json({ error: "Käyttäjää ei löydy." })
+    res.status(400).json({ error: "Käyttäjää ei löydy" })
     return
   }
 
   if (user.admin === true) {
 
     if (!username || !password) {
-      res.status(401).json({ error: "Anna käyttäjätunnus sekä pääkäyttäjän salasana." })
+      res.status(401).json({ error: "Anna käyttäjätunnus sekä pääkäyttäjän salasana" })
       return
     }
 
     if (username !== user.username) {
-      res.status(401).json({ error: "Virheelliset tunnukset." })
+      res.status(401).json({ error: "Virheelliset tunnukset" })
       return
 
     }
@@ -33,7 +33,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   } else {
 
     if (!password) {
-      res.status(401).json({ error: "Anna tavallisen käyttäjän salasana." })
+      res.status(401).json({ error: "Anna tavallisen käyttäjän salasana" })
       return
     }
   }
@@ -44,7 +44,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
 
 
   if (!(user && passwordCorrect)) {
-    res.status(401).json({ error: "Virheelliset tunnukset." })
+    res.status(401).json({ error: "Virheelliset tunnukset" })
     return
   }
 
@@ -55,7 +55,7 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   }
   const secret = process.env.SECRET
   if (!secret) {
-    res.status(500).json({ error: "SECRET is not defined in environment." })
+    res.status(500).json({ error: "SECRET is not defined in environment" })
     return
   }
 

@@ -92,6 +92,7 @@ export interface Email {
   to: string,
   subject: string,
   text: string,
+  html: string
 }
 
 export type RouteInfo = { id: number, routeTime: number }
