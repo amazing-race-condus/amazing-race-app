@@ -89,6 +89,7 @@ function AppContent() {
           </Stack.Protected>
           <Stack.Protected guard={!(user.token)}>
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="resetpassword/[token]" options={{ headerShown: false }} />
           </Stack.Protected>
         </Stack>
       </ThemeProvider>

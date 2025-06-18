@@ -19,6 +19,8 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public/dist")))
 const port = 3000
 
+app.use("/api/authentication", authenticationRouter)
+
 app.use(tokenExtractor)
 
 app.use("/api/checkpoints", checkpointsRouter)
@@ -26,7 +28,6 @@ app.use("/api/groups", groupsRouter)
 app.use("/api/penalty", penaltyRouter)
 app.use("/api/settings", routesRouter)
 app.use("/api/event", eventRouter)
-app.use("/api/authentication", authenticationRouter)
 app.use("/api/login", loginRouter)
 
 app.all("{*splat}", (req, res) => {
