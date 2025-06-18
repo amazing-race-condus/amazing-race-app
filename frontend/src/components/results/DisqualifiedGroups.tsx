@@ -9,19 +9,23 @@ const DisqualifiedGroups = ({ groups, event }: { groups: Group[], event: Event }
 
   return (
     <>
-      <Text style={styles.header}>Diskatut ({disqualifiedGroups.length})</Text>{disqualifiedGroups.map((group) =>
-        <Link
-          key={group.id}
-          href={{
-            pathname: `/(groups)/group/${group.id}`
-          }}
-          asChild
-        >
-          <Pressable style={styles.item}>
-            <Text style={{ color: "maroon" }}>{group.name}</Text>
-            <Text style={{ color: "gray" }}>{PrintableTime({group, event})}</Text>
-          </Pressable>
-        </Link>)}
+      {disqualifiedGroups.length > 0 &&
+        <>
+          <Text style={styles.header}>Diskatut ({disqualifiedGroups.length})</Text>{disqualifiedGroups.map((group) =>
+            <Link
+              key={group.id}
+              href={{
+                pathname: `/(groups)/group/${group.id}`
+              }}
+              asChild
+            >
+              <Pressable style={styles.item}>
+                <Text style={{ color: "maroon" }}>{group.name}</Text>
+                <Text style={{ color: "gray" }}>{PrintableTime({group, event})}</Text>
+              </Pressable>
+            </Link>)}
+        </>
+      }
     </>
   )
 }
