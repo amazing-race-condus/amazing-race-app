@@ -24,7 +24,7 @@ const RouteMinMax = () => {
       }
     }
   }
-  console.log(eventId)
+
   useEffect(() => {
     getInitialLimits()
   }, [eventId])
