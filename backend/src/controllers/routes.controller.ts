@@ -222,7 +222,7 @@ export const createRoutes = async (eventId: number) => {
     const distances = await getDistances(eventId)
     const event = await prisma.event.findUnique({where: {id: eventId }})
     if (!event) {
-      response.message = "Tapahtumaa ei löytynyt annetulla ID:llä."
+      response.message = "Tapahtumaa ei löytynyt annetulla ID:llä"
       return response
     }
 
@@ -231,13 +231,13 @@ export const createRoutes = async (eventId: number) => {
     let errorMessage = ""
 
     if (!min || !max) {
-      errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty."
+      errorMessage = "Minimi- ja maksimiaikoja ei ole määritelty"
     } else if (event.startTime && !event.endTime) {
-      errorMessage = "Reittejä ei voitu luoda. Peli on jo käynnissä."
+      errorMessage = "Reittejä ei voitu luoda. Peli on jo käynnissä"
     } else if (!hasStart || !hasFinish) {
-      errorMessage = "Lähtöä tai maalia ei ole määritelty."
+      errorMessage = "Lähtöä tai maalia ei ole määritelty"
     } else if (!(validateCheckpointDistances(distances, checkpoints))) {
-      errorMessage = "Kaikkien rastien välille ei ole määritelty matka-aikoja."
+      errorMessage = "Kaikkien rastien välille ei ole määritelty matka-aikoja"
     }
     if (errorMessage) {
       response.message = errorMessage
@@ -247,7 +247,7 @@ export const createRoutes = async (eventId: number) => {
     const routes = getValidRoutes(checkpoints, distances, min, max)
 
     if (routes.length === 0) {
-      response.message = "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla."
+      response.message = "Reittejä ei voitu luoda asettamillasi minimi- ja maksimiajoilla"
       return response
     }
 

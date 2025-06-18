@@ -16,7 +16,7 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
     res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta." })
     return false
   }
-  console.log("validator", eventId)
+
   const existingNames = await prisma.checkpoint.findMany({
     where: {
       eventId: eventId,
@@ -26,9 +26,8 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
       }
     }
   })
-  console.log(existingNames)
+
   for (const existingName of existingNames) {
-    console.log(existingName)
     if (existingName && existingName.id !== id) {
       res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi." })
       return false

@@ -5,6 +5,7 @@ import { getLimits, updateLimits, getDistances, updateDistances,
   getActiveRoutesInfo
 } from "../controllers/routes.controller"
 import { verifyToken } from "../utils/middleware"
+import { getEventById } from "../controllers/event.controller"
 
 const routesRouter = express.Router()
 
@@ -66,6 +67,10 @@ routesRouter.put("/:event_id/update_distances", verifyToken, async (req: Request
 
 routesRouter.put("/:event_id/create_routes", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
+  const event = await getEventById(eventId)
+  if (event?.startTime) {
+    res.status(403).json({ error: "Can't create routes when event has started." })
+  }
   const response = await createRoutes(eventId)
   if (response.status === "error") {
     res.status(400).json({error: response.message})
