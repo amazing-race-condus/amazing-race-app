@@ -5,8 +5,8 @@ import { handleAlert } from "@/utils/handleAlert"
 import { View, Pressable, Text, Dimensions, StyleSheet } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import theme from "@/theme"
+import GameReadyBox from "./GameReadyBox"
 
-const EVENTID = 1
 const screenWidth = Dimensions.get("window").width
 
 const GameView = () => {
@@ -19,14 +19,14 @@ const GameView = () => {
         confirmText: "Aloita",
         title: "Vahvista aloitus",
         message: "Oletko varma että haluat aloittaa pelin?",
-        onConfirm: () => dispatch(setStartReducer(EVENTID))
+        onConfirm: () => dispatch(setStartReducer(event.id))
       })
     } else {
       handleAlert({
         confirmText: "Aloita",
         title: "Vahvista aloitus",
         message: "Peli on jo aloitettu. Haluatko varmasti muuttaa aloitusaikaa?",
-        onConfirm: () => dispatch(setStartReducer(EVENTID))
+        onConfirm: () => dispatch(setStartReducer(event.id))
       })
     }
   }
@@ -37,14 +37,14 @@ const GameView = () => {
         confirmText: "Lopeta",
         title: "Vahvista lopetus",
         message: "Oletko varma että haluat lopettaa pelin?",
-        onConfirm: () => dispatch(setEndReducer(EVENTID))
+        onConfirm: () => dispatch(setEndReducer(event.id))
       })
     } else {
       handleAlert({
         confirmText: "Lopeta",
         title: "Vahvista lopetus",
         message: "Peli on jo lopetettu. Haluatko varmasti muuttaa pelin lopetusaikaa?",
-        onConfirm: () => dispatch(setEndReducer(EVENTID))
+        onConfirm: () => dispatch(setEndReducer(event.id))
       })
     }
   }
@@ -58,8 +58,8 @@ const GameView = () => {
 
   return(
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi peliä:</Text>
-
+      <Text style={styles.header}>Hallinnoi peliä</Text>
+      <GameReadyBox />
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
       </Pressable>

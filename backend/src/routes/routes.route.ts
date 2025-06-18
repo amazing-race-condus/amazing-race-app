@@ -2,7 +2,8 @@ import express, { Response, Request } from "express"
 import { getLimits, updateLimits, getDistances, updateDistances,
   createRoutes,
   getRoutesInfo,
-  getActiveRoutesInfo
+  getActiveRoutesInfo,
+  validDistances
 } from "../controllers/routes.controller"
 import { verifyToken } from "../utils/middleware"
 import { getEventById } from "../controllers/event.controller"
@@ -32,6 +33,12 @@ routesRouter.get("/:event_id/distances", verifyToken, async (req: Request, res: 
   const eventId = Number(req.params.event_id)
   const times = await getDistances(eventId)
   res.send(times)
+})
+
+routesRouter.get("/:event_id/distances/validate", verifyToken, async (req: Request, res: Response) => {
+  const eventId = Number(req.params.event_id)
+  const valid = await validDistances(eventId)
+  res.send(valid)
 })
 
 routesRouter.get("/:event_id/routes_info", async (req: Request, res: Response) => {

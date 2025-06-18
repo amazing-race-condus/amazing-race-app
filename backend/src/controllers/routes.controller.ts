@@ -52,6 +52,29 @@ export const getDistances = async (eventId: number) => {
   return times
 }
 
+export const validDistances = async (eventId: number) => {
+  const result = await prisma.checkpointDistance.findMany({
+    select: {fromId: true, toId: true, time: true},
+    where: {eventId: eventId}
+  })
+  const times: Distances = {}
+
+  result.map(row => {
+    if (!(row.fromId in times))
+      times[row.fromId] = {}
+    times[row.fromId][row.toId] = row.time
+  })
+
+  const checkpoints = await prisma.checkpoint.findMany({
+    where: {
+      eventId: eventId
+    }
+  })
+
+  const valid = validateCheckpointDistances(times, checkpoints)
+  return valid
+}
+
 export const updateDistances = async (eventId: number, distances: Distances) => {
   let upserts = 0
   let failures = 0
