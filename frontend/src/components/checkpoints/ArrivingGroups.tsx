@@ -35,29 +35,30 @@ const groupsCheckpointStatus = (group: Group, checkpointId: number) => {
   return "visited"
 }
 
+const NoGroups = () => <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
+
 const NextGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
   const nextGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "next" && !group.disqualified && !group.dnf)
   if (nextGroups.length === 0)
-    return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
+    return <NoGroups />
   return <GroupList groups={nextGroups} />
 }
 
 const LaterGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
   const laterGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "later" && !group.disqualified && !group.dnf)
-
   if (laterGroups.length === 0)
-    return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
+    return <NoGroups />
   return <GroupList groups={laterGroups} />
 }
 
 const WrongGroups = ({ groups, checkpointId }: { groups: Group[], checkpointId: number}) => {
   const wrongGroups = groups.filter(group => groupsCheckpointStatus(group, checkpointId) === "never")
   if (wrongGroups.length === 0)
-    return <Text style={[styles.breadText, {marginVertical: 10, textAlign: "center"}]}>Ei ryhmiä.</Text>
+    return <NoGroups />
   return <GroupList groups={wrongGroups} />
 }
 
-const ArrivingGroups = ({ checkpointId = 1 }) => {
+const ArrivingGroups = ({ checkpointId }: { checkpointId: number}) => {
   const [search, setSearch] = useState<string>("")
   const [order, setOrder] = useState<number>(0)
   const groups = useSelector((state: RootState) => state.groups)
