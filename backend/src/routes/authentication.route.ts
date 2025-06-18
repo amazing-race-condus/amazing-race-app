@@ -46,11 +46,10 @@ authenticationRouter.post("/reset_password", async (req: Request, res: Response)
     return
   }
 
-  const userForToken = {
-    username: user.username,
-    id: user.id,
-    admin: user.admin
+  const tokenForEmail = {
+    email: true,
   }
+
   const secret = process.env.SECRET
   if (!secret) {
     res.status(500).json({ error: "SECRET is not defined in environment" })
@@ -58,7 +57,7 @@ authenticationRouter.post("/reset_password", async (req: Request, res: Response)
   }
 
   const token = jwt.sign(
-    userForToken,
+    tokenForEmail,
     secret,
     { expiresIn: 60*15 }
   )
@@ -99,7 +98,7 @@ authenticationRouter.put("/reset_password", async (req: Request, res: Response) 
     return
   }
   const decodedToken = jwt.verify(token, secret) as JwtPayload
-  if (!decodedToken.id || decodedToken.admin !== true) {
+  if (decodedToken.email !== true) {
     res.status(401).json({ error: "Token invalid" })
     return
   }
