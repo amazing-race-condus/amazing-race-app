@@ -3,7 +3,6 @@ import { styles } from "@/styles/commonStyles"
 import { AppDispatch, RootState } from "@/store/store"
 import { useSelector, useDispatch } from "react-redux"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import RemoveNotification from "./RemoveNotification"
 import { removeNotificationReducer } from "@/reducers/notificationSlice"
 
 const Notification = () => {
@@ -40,8 +39,6 @@ const Notification = () => {
       zIndex: 999,  flexDirection: "row", justifyContent: "space-between",}]}>
       <Pressable onPress={() => handleRemoveNotification()}>
         <Text style={textStyle}>{ message }</Text>
-
-        {/* <RemoveNotification handleRemove={handleRemoveNotification}/> */}
 
       </Pressable>
     </View>

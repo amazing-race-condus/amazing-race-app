@@ -205,20 +205,6 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10
   },
-  removeNotification: {
-    opacity: 0.4,
-    backgroundColor: "white",
-    borderStyle: "solid",
-    borderRadius: 10,
-    borderWidth: 2,
-    maxWidth: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 15,
-    borderColor: "black",
-    padding: 5,
-    //marginBottom: 10
-  },
   error: {
     backgroundColor: theme.colors.errorBackground,
     borderStyle: "solid",
