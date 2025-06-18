@@ -10,6 +10,7 @@ import EventItem from "./eventItem"
 import { AppDispatch } from "@/store/store"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
+import { storageUtil } from "@/utils/storageUtil"
 
 const Events = ({
   events,
@@ -31,6 +32,7 @@ const Events = ({
   }, [setEvents])
 
   const handleEventChange = async (id : number) => {
+    await storageUtil.setEventId(id)
     dispatch(getEventReducer(id))
     dispatch(fetchGroups(id))
     dispatch(fetchCheckpoints(id))
