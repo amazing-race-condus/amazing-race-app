@@ -6,17 +6,30 @@ import { ThemeProvider } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { getDefaultEventReducer } from "@/reducers/eventSlice"
+import { getDefaultEventReducer, getEventReducer } from "@/reducers/eventSlice"
 import Notification from "@/components/ui/Notification"
 import { loadUserFromStorage } from "@/reducers/userSlice"
+import { storageUtil } from "@/utils/storageUtil"
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
   const user = useSelector((state: RootState) => state.user)
-  if (user.token) {
-    store.dispatch(getDefaultEventReducer())
-  }
+
+  useEffect(() => {
+    const initializeEvent = async () => {
+      if (user.token) {
+        const storageEventId = await storageUtil.getEventId()
+        if (storageEventId) {
+          await store.dispatch(getEventReducer(storageEventId))
+        } else {
+          await store.dispatch(getDefaultEventReducer())
+        }
+      }
+    }
+
+    initializeEvent()
+  }, [user.token])
 
   useEffect(() => {
     const refreshData = async () => {

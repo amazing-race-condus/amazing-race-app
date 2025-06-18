@@ -4,11 +4,13 @@ import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { logoutUser } from "@/reducers/userSlice"
+import { storageUtil } from "@/utils/storageUtil"
 
 const Logout = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const handleLogout = async () => {
+    await storageUtil.removeEventId()
     dispatch(logoutUser())
   }
 
