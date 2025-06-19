@@ -74,11 +74,11 @@ const GameReadyBox = () => {
       />
       <GameStartItem
         text="Kaikilla rasteilla on vihjeet"
-        checkBoolean={hints}
+        checkBoolean={hints && checkpoints.length > 0}
       />
       <GameStartItem
         text={`Ryhmiä merkitty aloittaneiksi ${startedGroups.length}/${groups.length}`}
-        checkBoolean={startedGroups.length === groups.length}
+        checkBoolean={startedGroups.length === groups.length && groups.length > 0}
       />
     </View>
   )
