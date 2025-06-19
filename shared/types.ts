@@ -82,10 +82,6 @@ export interface Event {
     penalties: Penalty[]
 }
 
-export interface CustomRequest extends Request {
-  token?: string | null
-  user?: User | null
-}
 
 export interface Email {
   from: string,

@@ -5,6 +5,8 @@ import { users } from "./test_helper"
 describe("Events", () => {
   let EventId: number
   let adminToken: string
+  let userToken: string
+  const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
   beforeAll(async () => {
     await prisma.event.deleteMany({})
@@ -19,6 +21,11 @@ describe("Events", () => {
     const adminLoginResponse = await request(app).post("/api/login")
       .send(users[0])
     adminToken = adminLoginResponse.body.token
+    await request(app).post("/api/authentication")
+      .send(users[1])
+    const userLoginResponse = await request(app).post("/api/login")
+      .send(users[1])
+    userToken = userLoginResponse.body.token
 
     EventId = firstEvent.id
   })
@@ -29,16 +36,54 @@ describe("Events", () => {
     server.close()
   })
 
-  it("event is returned as json", async () => {
+  it("Event is returned as json", async () => {
     const response = await request(app)
       .get(`/api/event/${EventId}`)
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${userToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
     expect(response.body).toMatchObject({
       id: EventId,
       name: "Test Event",
     })
+  })
+
+  it("Event can be created with valid token", async () => {
+    const newEvent = {
+      name: "newEvent"
+    }
+    const response = await request(app)
+      .post("/api/event/create")
+      .send(newEvent)
+      .set("Authorization", `Bearer ${adminToken}`)
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      name: "newEvent",
+    })
+  })
+
+  it("Event can't be created with invalid token", async () => {
+    const newEvent = {
+      name: "newEvent"
+    }
+    const result = await request(app)
+      .post("/api/event/create")
+      .send(newEvent)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("Event can't be created if a valid token belongs to a non-admin user", async () => {
+    const newEvent = {
+      name: "newEvent"
+    }
+    const result = await request(app)
+      .post("/api/event/create")
+      .send(newEvent)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(401)
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
   })
 
   it("Start time is set correctly", async () => {
@@ -67,7 +112,6 @@ describe("Events", () => {
   })
 
   it("Start time or end time can't be set with invalid token", async () => {
-    const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
     let result = await request(app)
       .put(`/api/event/end/${EventId}`)
@@ -80,6 +124,21 @@ describe("Events", () => {
       .set("Authorization", `Bearer ${invalidToken}`)
 
     expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("Start time or end time can't be set if a valid token belongs to a non-admin user", async () => {
+
+    let result = await request(app)
+      .put(`/api/event/end/${EventId}`)
+      .set("Authorization", `Bearer ${userToken}`)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+
+    result = await request(app)
+      .put(`/api/event/start/${EventId}`)
+      .set("Authorization", `Bearer ${userToken}`)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
   })
 
 })

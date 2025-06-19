@@ -3,8 +3,13 @@ import { getGroupById, getAllGroups, getGroupByNextCheckpointId,
   updateNextCheckpoint, createGroup, deleteGroup, toggleDNF,
   toggleDisqualified, modifyGroup } from "../controllers/groups.controller"
 import { verifyToken } from "../utils/middleware"
+import { User } from "@/types"
 
 const groupsRouter = express.Router()
+
+interface CustomRequest extends Request {
+  user?: User
+}
 
 // Used in testing
 groupsRouter.get("/:id", async (req: Request, res: Response) => {
@@ -43,7 +48,12 @@ groupsRouter.put("/next_checkpoint/:id", verifyToken, async (req: Request, res: 
   res.json(arrivingGroups)
 })
 
-groupsRouter.post("/", verifyToken, async (req: Request, res: Response) => {
+groupsRouter.post("/", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
 
   const { name, members, easy, eventId } = req.body
   const group = await createGroup(name, members, easy, eventId, res)
@@ -51,7 +61,12 @@ groupsRouter.post("/", verifyToken, async (req: Request, res: Response) => {
   res.json(group)
 })
 
-groupsRouter.delete("/:id", verifyToken, async (req: Request, res: Response) => {
+groupsRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
   const id = Number(req.params.id)
 
   const group = await deleteGroup(id)
@@ -86,7 +101,12 @@ groupsRouter.put("/:id/disqualify", verifyToken, async (req: Request, res: Respo
   }
 })
 
-groupsRouter.put("/:id", verifyToken, async (req: Request, res: Response) => {
+groupsRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
   const id = Number(req.params.id)
   const { name, members, easy, eventId } = req.body
 
