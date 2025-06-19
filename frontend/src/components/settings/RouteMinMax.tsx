@@ -53,9 +53,6 @@ const RouteMinMax = () => {
 
   return (
     <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
       <Text style={styles.header}>Aseta reiteille aikarajat:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText}>Reittien minimiaika:</Text>
