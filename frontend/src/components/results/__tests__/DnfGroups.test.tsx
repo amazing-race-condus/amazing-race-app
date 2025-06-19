@@ -1,14 +1,6 @@
-import { render, waitFor, fireEvent, screen } from "@testing-library/react-native"
-import { Provider } from "react-redux"
-import testStore from "@/store/testStore"
+import { render, screen } from "@testing-library/react-native"
 import DnfGroups from "../DnfGroups"
 import { group, disqualifiedGroup, dnfGroup, events } from "@/utils/testUtils"
-
-jest.useFakeTimers()
-
-jest.mock("expo-router", () => ({
-  ...jest.requireActual("expo-router"),
-}))
 
 jest.mock("@/utils/storageUtil", () => ({
   storageUtil: {
@@ -20,7 +12,7 @@ jest.mock("@/utils/storageUtil", () => ({
 
 const mockEvent = events[0]
 
-describe("<Groups />", () => {
+describe("<DnfGroups />", () => {
   afterEach(() => {
     jest.clearAllMocks()
     jest.clearAllTimers()
