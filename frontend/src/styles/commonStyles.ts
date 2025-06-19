@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     fontSize: theme.fontSizes.header,
     fontWeight: "bold",
+    textAlign: "center",
     color: theme.colors.textTitle,
   },
   itemHeader: {

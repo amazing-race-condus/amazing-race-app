@@ -32,8 +32,8 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
 
   return (
     <View style={styles.container}>
-      {pathname === "/" && <Text style={styles.title}>Ryhmät</Text>}
-      {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä:</Text>}
+      {pathname === "/" && <Text style={styles.title}>{event.name} | Ryhmät</Text>}
+      {pathname.startsWith("/settings") && <Text style={styles.header}>Hallinnoi ryhmiä {event.name}</Text>}
 
       <Search search={search} setSearch={setSearch} />
       {filteredGroups.length === 0 && <Text style={[styles.breadText, {textAlign: "center"}]}>Ei hakutuloksia.</Text>}
