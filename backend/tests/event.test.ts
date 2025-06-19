@@ -2,7 +2,7 @@ import request from "supertest"
 import { app, server, prisma } from "../src/index"
 import { users } from "./test_helper"
 
-describe("Penalties", () => {
+describe("Events", () => {
   let EventId: number
   let adminToken: string
 
@@ -65,4 +65,21 @@ describe("Penalties", () => {
       endTime: expect.any(String)
     })
   })
+
+  it("Start time or end time can't be set with invalid token", async () => {
+    const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
+
+    let result = await request(app)
+      .put(`/api/event/end/${EventId}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+
+    result = await request(app)
+      .put(`/api/event/start/${EventId}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
 })

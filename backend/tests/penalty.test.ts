@@ -2,6 +2,8 @@ import request from "supertest"
 import { app, server, prisma } from "../src/index"
 import { initialCheckpoints, initialGroups, users } from "./test_helper"
 
+const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
+
 describe("Penalties", () => {
   let groupId: number
   let checkpointId: number
@@ -58,6 +60,14 @@ describe("Penalties", () => {
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
 
+  it("Penalties are not returned with invalid token", async () => {
+    const result = await request(app)
+      .get("/api/penalty")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
   it("Penalty is created", async () => {
     const response = await request(app)
       .post(`/api/penalty/${groupId.toString()}`)
@@ -74,6 +84,21 @@ describe("Penalties", () => {
     expect(response.body.groupId).toBe(groupId)
     expect(response.body.time).toBe(30)
     expect(response.body.type).toBe("SKIP")
+  })
+
+  it("Penalty can't be created with invalid token", async () => {
+    const result = await request(app)
+      .post(`/api/penalty/${groupId.toString()}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        groupId: groupId,
+        type: "SKIP",
+        time: 30,
+        checkpointId: checkpointId,
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
   })
 
   it("Groups has penalty information", async () => {
@@ -97,5 +122,14 @@ describe("Penalties", () => {
 
     expect(response.status).toBe(200)
     expect(response.body.penalty.length).toBe(0)
+  })
+
+  it("Penaltu can't be deleted with invalid token", async () => {
+    const deleteRes = await request(app)
+      .delete(`/api/penalty/${penaltyId.toString()}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(deleteRes.body.error).toContain("Token missing or invalid")
   })
 })

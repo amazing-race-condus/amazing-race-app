@@ -4,6 +4,7 @@ import { initialCheckpoints, checkpoints, intermediateCheckpoints, users, initia
 
 let adminToken: string
 let eventId: number
+const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
 beforeEach(async () => {
   await prisma.user.deleteMany({})
@@ -43,6 +44,16 @@ describe("Get all checkpoints", () => {
       .set("Authorization", `Bearer ${adminToken}`)
     expect(response.body.length).toBe(initialCheckpoints.length)
   })
+
+  it("checkpoints are not returned with invalid token", async () => {
+
+    const result = await request(app)
+      .get("/api/checkpoints")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
 })
 
 describe("Viewing a specific checkpoint", () => {
@@ -78,7 +89,7 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
-  it("succeeds with valid data", async () => {
+  it("succeeds with valid data and valid token", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
       type: "INTERMEDIATE",
@@ -92,7 +103,25 @@ describe("Addition of a new checkpoint", () => {
       .expect(201)
   })
 
-  it("fails with status code 400 if data is missing", async () => {
+  it("fails with status code 401 with valid data and invalid token", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send(newCheckpoint)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+
+
+  it("fails with status code 400 if some required data is missing", async () => {
     const newCheckpoint = {
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
@@ -294,7 +323,7 @@ describe("Deletion of a checkpoint", () => {
     })
   })
 
-  it("succeeds with status code 204 if id is valid", async () => {
+  it("succeeds with status code 204 with valid id and valid token", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
     const checkpointToDelete =checkpointsAtStart[0]
@@ -311,6 +340,18 @@ describe("Deletion of a checkpoint", () => {
     expect(ids).not.toContain(checkpointToDelete.id)
 
   })
+
+  it("fails with status code 401 with valid id and invalid token", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToDelete =checkpointsAtStart[0]
+
+    const result = await request(app).delete(`/api/checkpoints/${checkpointToDelete.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
 })
 
 describe("modification of a checkpoint", () => {
@@ -321,7 +362,7 @@ describe("modification of a checkpoint", () => {
     })
   })
 
-  it("succeeds with status code 200 with valid data and id", async () => {
+  it("succeeds with status code 200 with valid data, id and token", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
 
@@ -345,6 +386,26 @@ describe("modification of a checkpoint", () => {
       hint:"http://vihje.com",
       easyHint: "http://helppovihje.com"
     })
+  })
+
+  it("fails with status code 401 with valid data and invalid token", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "FINISH",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
   })
 
   it("fails with status code 400 and proper error message if modified name already exists", async () => {

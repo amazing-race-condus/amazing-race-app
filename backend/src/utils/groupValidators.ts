@@ -15,18 +15,21 @@ const validateName = async (name: unknown, res: Response, eventId: number, id?: 
     res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
     return false
   }
-  const existingName = await prisma.group.findFirst({
+  const existingNames = await prisma.group.findMany({
     where: {
+      eventId: eventId,
       name: {
         equals: name.trim(),
         mode: "insensitive"
-      },
-      eventId : eventId
+      }
     }
   })
-  if (existingName && existingName.id !== id) {
-    res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
-    return false
+
+  for (const existingName of existingNames) {
+    if (existingName && existingName.id !== id) {
+      res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+      return false
+    }
   }
   return true
 }
