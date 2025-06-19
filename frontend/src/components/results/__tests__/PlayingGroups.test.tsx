@@ -45,7 +45,7 @@ describe("<PlayingGroups />", () => {
   describe("Rendering", () => {
     test("renders nothing when no not started groups exist", () => {
       const groups = [group, finishGroup]
-      
+
       render(
         <PlayingGroups groups={groups} event={mockEvent} />
       )
@@ -58,7 +58,7 @@ describe("<PlayingGroups />", () => {
 
     test("renders finished groups when they exist", () => {
       const groups = [group, finishGroup, playingGroup]
-      
+
       render(
         <PlayingGroups groups={groups} event={mockEvent} />
       )

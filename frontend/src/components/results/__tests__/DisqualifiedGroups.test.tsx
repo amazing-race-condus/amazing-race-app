@@ -16,7 +16,7 @@ describe("<DisqualifiedGroups />", () => {
   describe("Rendering", () => {
     test("renders nothing when no disqualified groups exist", () => {
       const groups = [group, dnfGroup]
-      
+
       render(
         <DisqualifiedGroups groups={groups} event={mockEvent} />
       )
@@ -26,7 +26,7 @@ describe("<DisqualifiedGroups />", () => {
 
     test("renders disqualified groups when they exist", () => {
       const groups = [group, dnfGroup, disqualifiedGroup]
-      
+
       render(
         <DisqualifiedGroups groups={groups} event={mockEvent} />
       )
@@ -38,7 +38,7 @@ describe("<DisqualifiedGroups />", () => {
     test("renders multiple disqualified groups correctly", () => {
       const disqualifiedGroup2 = { ...disqualifiedGroup, id: 2322, name: "Toinen diskattava" }
       const groups = [group, dnfGroup, disqualifiedGroup2, disqualifiedGroup]
-      
+
       render(
         <DisqualifiedGroups groups={groups} event={mockEvent} />
       )

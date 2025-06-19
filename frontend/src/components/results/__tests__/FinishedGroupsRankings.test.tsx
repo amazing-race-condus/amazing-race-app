@@ -45,7 +45,7 @@ describe("<FinishedGroupsRankings />", () => {
   describe("Rendering", () => {
     test("renders nothing when no finished groups exist", () => {
       const groups = [group, dnfGroup]
-      
+
       render(
         <FinishedGroupsRankings groups={groups} event={mockEvent} />
       )
@@ -58,7 +58,7 @@ describe("<FinishedGroupsRankings />", () => {
 
     test("renders finished groups when they exist", () => {
       const groups = [group, dnfGroup, disqualifiedGroup, finishGroup]
-      
+
       render(
         <FinishedGroupsRankings groups={groups} event={mockEvent} />
       )
@@ -72,7 +72,7 @@ describe("<FinishedGroupsRankings />", () => {
 
     test("renders multiple disqualified groups correctly", () => {
       const groups = [group, dnfGroup, finishGroup, finishGroup2]
-      
+
       render(
         <FinishedGroupsRankings groups={groups} event={mockEvent} />
       )
@@ -80,7 +80,7 @@ describe("<FinishedGroupsRankings />", () => {
       expect(screen.getByText("Maaliin tulleet (2)")).toBeTruthy()
       expect(screen.getByText("Voittajat")).toBeTruthy()
       expect(screen.getByText("Toiset")).toBeTruthy()
-      
+
       expect(screen.getByText("1.")).toBeTruthy()
       expect(screen.getByText("2.")).toBeTruthy()
 

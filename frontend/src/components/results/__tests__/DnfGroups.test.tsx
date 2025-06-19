@@ -16,7 +16,7 @@ describe("<DnfGroups />", () => {
   describe("Rendering", () => {
     test("renders nothing when no DNF groups exist", () => {
       const groups = [group, disqualifiedGroup]
-      
+
       render(
         <DnfGroups groups={groups} event={mockEvent} />
       )
@@ -26,7 +26,7 @@ describe("<DnfGroups />", () => {
 
     test("renders DNF groups when they exist", () => {
       const groups = [group, dnfGroup, disqualifiedGroup]
-      
+
       render(
         <DnfGroups groups={groups} event={mockEvent} />
       )
@@ -38,7 +38,7 @@ describe("<DnfGroups />", () => {
     test("renders multiple DNF groups correctly", () => {
       const dnfGroup2 = { ...dnfGroup, id: 2322, name: "Toinen kesken" }
       const groups = [group, dnfGroup, dnfGroup2, disqualifiedGroup]
-      
+
       render(
         <DnfGroups groups={groups} event={mockEvent} />
       )

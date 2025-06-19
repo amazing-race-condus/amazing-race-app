@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react-native";
-import GameStartItem from "../GameStartItem";
+import { render, screen } from "@testing-library/react-native"
+import GameStartItem from "../GameStartItem"
 
 describe("GameStartItem", () => {
   test("renders the text prop", () => {

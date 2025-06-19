@@ -27,10 +27,10 @@ describe("<RouteStats />", () => {
 
   test("renders route statistics when active routes exist", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={mockActiveRoutes} 
-        groupsLength={5} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={mockActiveRoutes}
+        groupsLength={5}
       />
     )
 
@@ -44,10 +44,10 @@ describe("<RouteStats />", () => {
 
   test("displays correct median route time", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={mockActiveRoutes} 
-        groupsLength={5} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={mockActiveRoutes}
+        groupsLength={5}
       />
     )
 
@@ -57,10 +57,10 @@ describe("<RouteStats />", () => {
 
   test("displays shortest and longest route times", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={mockActiveRoutes} 
-        groupsLength={5} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={mockActiveRoutes}
+        groupsLength={5}
       />
     )
 
@@ -72,10 +72,10 @@ describe("<RouteStats />", () => {
 
   test("renders no data message when no active routes exist", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={[]} 
-        groupsLength={5} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={[]}
+        groupsLength={5}
       />
     )
 
@@ -85,11 +85,11 @@ describe("<RouteStats />", () => {
 
   test("handles single active route correctly", () => {
     const singleActiveRoute: RouteInfo[] = [{ id: 1, routeTime: 95 }]
-    
+
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={singleActiveRoute} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={singleActiveRoute}
         groupsLength={3}
       />
     )
@@ -107,12 +107,12 @@ describe("<RouteStats />", () => {
       { id: 3, routeTime: 100 },
       { id: 4, routeTime: 110 }
     ]
-    
+
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={evenActiveRoutes} 
-        groupsLength={6} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={evenActiveRoutes}
+        groupsLength={6}
       />
     )
 
@@ -121,10 +121,10 @@ describe("<RouteStats />", () => {
 
   test("displays correct usage ratio", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={mockActiveRoutes} 
-        groupsLength={8} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={mockActiveRoutes}
+        groupsLength={8}
       />
     )
 
@@ -135,10 +135,10 @@ describe("<RouteStats />", () => {
 
   test("handles zero groups correctly", () => {
     render(
-      <RouteStats 
-        routes={mockRoutes} 
-        activeRoutes={mockActiveRoutes} 
-        groupsLength={0} 
+      <RouteStats
+        routes={mockRoutes}
+        activeRoutes={mockActiveRoutes}
+        groupsLength={0}
       />
     )
 

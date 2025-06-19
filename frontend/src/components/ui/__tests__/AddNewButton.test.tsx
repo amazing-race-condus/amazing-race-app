@@ -1,26 +1,26 @@
-import { render, fireEvent, screen, act } from '@testing-library/react-native'
-import AddNewButton from '../addNewButton'
+import { render, fireEvent, screen, act } from "@testing-library/react-native"
+import AddNewButton from "../addNewButton"
 
-describe('AddNewButton', () => {
+describe("AddNewButton", () => {
   const mockOnPress = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  test('renders correctly', () => {
+  test("renders correctly", () => {
     render(<AddNewButton onPress={mockOnPress} />)
-    
-    const button = screen.getByRole('button')
+
+    const button = screen.getByRole("button")
     expect(button).toBeTruthy()
   })
 
-  test('calls onPress when pressed', async () => {
+  test("calls onPress when pressed", async () => {
     render(<AddNewButton onPress={mockOnPress} />)
-    
-    const button = screen.getByRole('button')
+
+    const button = screen.getByRole("button")
     fireEvent.press(button)
-    
+
     expect(mockOnPress).toHaveBeenCalledTimes(1)
   })
 })
