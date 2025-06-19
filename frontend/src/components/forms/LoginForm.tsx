@@ -1,5 +1,4 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack } from "expo-router"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
@@ -51,13 +50,11 @@ const LoginForm = () => {
 
   return (
     <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
       <Text style={styles.header}>Kirjaudu sisään:</Text>
       <View style={styles.formContainer}>
         <View style={styles.checkboxContainer}>
           <Checkbox
+            testID="admin-checkbox"
             status={admin ? "checked" : "unchecked"}
             onPress={() => setAdmin(!admin)}
           />
@@ -75,6 +72,7 @@ const LoginForm = () => {
               }}
               submitBehavior="submit"
               returnKeyType="next"
+              testID="username"
             />
           </>
         )}
@@ -87,6 +85,7 @@ const LoginForm = () => {
           secureTextEntry
           onSubmitEditing={handleLogin}
           returnKeyType="done"
+          testID="password"
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>
