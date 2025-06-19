@@ -70,6 +70,8 @@ model Group {
   route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
   next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
+
+  @@unique([name, eventId])
 }
 
 model User {
