@@ -43,9 +43,6 @@ const ResetPasswordForm = () => {
   }
   return (
     <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
       <Text style={styles.header}>Vaihda salasana:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText}>Anna uusi salasana:</Text>
@@ -57,6 +54,7 @@ const ResetPasswordForm = () => {
           secureTextEntry
           returnKeyType="next"
           onSubmitEditing={() => nextRef.current?.focus()}
+          testID="new-password"
         />
         <Text style={styles.formText}>Anna salasana uudelleen:</Text>
         <TextInput
@@ -67,6 +65,7 @@ const ResetPasswordForm = () => {
           secureTextEntry
           onSubmitEditing={handleResetPassword}
           returnKeyType="done"
+          testID="new-password-confirm"
         />
         <Pressable style={styles.button} onPress={handleResetPassword}>
           <Text style={styles.buttonText}>Vaihda salasana</Text>

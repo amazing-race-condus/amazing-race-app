@@ -5,6 +5,7 @@ import eventSlice from "@/reducers/eventSlice"
 import notificationSlice from "@/reducers/notificationSlice"
 import groupSlice from "@/reducers/groupSlice"
 import checkpointSlice from "@/reducers/checkpointsSlice"
+import userSlice from "@/reducers/userSlice"
 
 export const checkpoint: Checkpoint = {
   id: 436780235746,
@@ -176,7 +177,8 @@ export const createMockStore = (preloadedState = {}) =>
       groups: groupSlice,
       event: eventSlice,
       notification: notificationSlice,
-      checkpoints: checkpointSlice
+      checkpoints: checkpointSlice,
+      user: userSlice
     },
     preloadedState
   })
