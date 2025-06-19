@@ -148,7 +148,7 @@ describe("Changing password", () => {
       .expect(200)
 
   })
-  it("regular user can't reset admin password with valid token and valid password", async () => {
+  it("admin password can't be modified with invalid token", async () => {
 
     const newPassword = {
       password: "Password123!",
@@ -163,22 +163,7 @@ describe("Changing password", () => {
   })
 
 
-  it("admin can't reset admin password with invalid token", async () => {
-    const invalidToken = "dsfjäspfjwfjwfwfjwp"
-
-    const newPassword = {
-      password: "Password123!",
-    }
-    const result = await request(app).put("/api/authentication/reset_password")
-      .set("Authorization", `Bearer ${invalidToken}`)
-      .send(newPassword)
-      .expect(401)
-
-    expect(result.body.error).toContain("Token missing or invalid")
-
-  })
-
-  it("admin can't reset admin password without token", async () => {
+  it("admin password can't be modified without token", async () => {
 
     const newPassword = {
       password: "Password123!",
@@ -191,20 +176,27 @@ describe("Changing password", () => {
 
   })
 
-  it("admin can't reset admin password with invalid password", async () => {
+  it("admin password can't be modified with login token", async () => {
+
+
+    await request(app).post("/api/authentication")
+      .send(users[0])
+    const adminLoginResponse = await request(app).post("/api/login")
+      .send(users[0])
+    const loginToken = adminLoginResponse.body.token
 
     const newPassword = {
-      password: "Password",
+      password: "Password123!",
     }
     const result = await request(app).put("/api/authentication/reset_password")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${loginToken}`)
       .send(newPassword)
-      .expect(400)
+      .expect(401)
 
-    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi numero")
+    expect(result.body.error).toContain("Token missing")
   })
 
-  it("admin can't reset admin password with invalid password", async () => {
+  it("admin password can't be modified with invalid password", async () => {
 
     let newPassword: { password: string } = {
       password: "Password",
