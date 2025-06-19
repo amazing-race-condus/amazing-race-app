@@ -7,12 +7,12 @@ const validateName = async (name: unknown, res: Response, eventId: number, id?: 
     return false
   }
   if  (name.length > 50 ) {
-    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 50 kirjainta."})
+    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 50 kirjainta"})
     return false
   }
 
   if (name.length < 2 ) {
-    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta."})
+    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta"})
     return false
   }
   const existingNames = await prisma.group.findMany({
@@ -27,7 +27,7 @@ const validateName = async (name: unknown, res: Response, eventId: number, id?: 
 
   for (const existingName of existingNames) {
     if (existingName && existingName.id !== id) {
-      res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi." })
+      res.status(400).json({ error: "Ryhmän nimi on jo käytössä. Syötä uniikki nimi" })
       return false
     }
   }
@@ -45,7 +45,7 @@ const validateMembers = (members: unknown, res: Response) : boolean => {
     return false
   }
   if (Number(members) < 4) {
-    res.status(400).json({ error: "Ryhmässä tulee olla vähintään 4 jäsentä." })
+    res.status(400).json({ error: "Ryhmässä tulee olla vähintään 4 jäsentä" })
     return false
   }
 
