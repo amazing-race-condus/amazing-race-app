@@ -13,7 +13,7 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Asetukset</Text>
-      { user.admin ?
+      { user.admin && (
         <>
           <SettingsItem
             text="Hallinnoi rasteja"
@@ -36,10 +36,8 @@ const Settings = () => {
             link="/settings/users"
           />
         </>
-        :
-        // todo: better styling for this
-        <Logout />
-      }
+
+      )}
       <SettingsItem
         text="Hallinnoi tapahtumia"
         link="/settings/events"
@@ -49,6 +47,8 @@ const Settings = () => {
         link="/settings/results"
         dimmed={!gameFinished}
       />
+      :
+      <Logout />
     </View>
   )
 }
