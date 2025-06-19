@@ -13,7 +13,7 @@ jest.mock("@/utils/storageUtil", () => ({
 
 const mockEvent = events[0]
 
-export const finishGroup: Group = {
+const finishGroup: Group = {
   name: "Voittajat",
   id: 1010353225246231,
   members: 5,
@@ -27,7 +27,7 @@ export const finishGroup: Group = {
   finishTime: new Date("2025-06-25 22:00:00")
 }
 
-export const finishGroup2: Group = {
+const finishGroup2: Group = {
   name: "Toiset",
   id: 1010353225246231,
   members: 5,
