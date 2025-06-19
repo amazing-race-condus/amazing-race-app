@@ -13,15 +13,6 @@ jest.mock("@/utils/storageUtil", () => ({
 const mockEvent = events[0]
 
 describe("<DisqualifiedGroups />", () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-    jest.clearAllTimers()
-  })
-
-  afterAll(() => {
-    jest.restoreAllMocks()
-  })
-
   describe("Rendering", () => {
     test("renders nothing when no disqualified groups exist", () => {
       const groups = [group, dnfGroup]
