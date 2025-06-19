@@ -3,7 +3,9 @@ import { app, server, prisma } from "../src/index"
 import { initialCheckpoints, checkpoints, intermediateCheckpoints, users, initialEvent } from "./test_helper"
 
 let adminToken: string
+let userToken: string
 let eventId: number
+const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
 beforeEach(async () => {
   await prisma.user.deleteMany({})
@@ -12,6 +14,11 @@ beforeEach(async () => {
   const adminLoginResponse = await request(app).post("/api/login")
     .send(users[0])
   adminToken = adminLoginResponse.body.token
+  await request(app).post("/api/authentication")
+    .send(users[1])
+  const userLoginResponse = await request(app).post("/api/login")
+    .send(users[1])
+  userToken = userLoginResponse.body.token
 })
 
 beforeAll(async () => {
@@ -32,7 +39,7 @@ describe("Get all checkpoints", () => {
   it("checkpoints are returned as json", async () => {
     const response = await request(app)
       .get("/api/checkpoints")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${userToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
@@ -40,8 +47,18 @@ describe("Get all checkpoints", () => {
   it("all checkpoints are returned", async () => {
     const response = await request(app)
       .get("/api/checkpoints")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${userToken}`)
     expect(response.body.length).toBe(initialCheckpoints.length)
+  })
+
+  it("checkpoints are not returned with invalid token", async () => {
+
+    const result = await request(app)
+      .get("/api/checkpoints")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
   })
 })
 
@@ -56,10 +73,12 @@ describe("Viewing a specific checkpoint", () => {
   it("succeeds with a valid id", async () => {
     const checkpointsAtStart = await prisma.checkpoint.findMany()
     const checkpointToView = checkpointsAtStart[0]
+
     const response = await request(app)
       .get(`/api/checkpoints/${checkpointToView.id}`)
-      .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.status).toBe(200)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(200)
+
     expect(response.headers["content-type"]).toMatch(/application\/json/)
     expect(response.body).toMatchObject({
       id: checkpointToView.id,
@@ -72,13 +91,23 @@ describe("Viewing a specific checkpoint", () => {
     const invalidId = "5a3d"
     const response = await request(app)
       .get(`/api/checkpoints/${invalidId}`)
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${userToken}`)
     expect(response.status).toBe(400)
+  })
+
+  it("fails with statuscode 401 if token is invalid", async () => {
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToView = checkpointsAtStart[0]
+    const result = await request(app)
+      .get(`/api/checkpoints/${checkpointToView.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+    expect(result.body.error).toContain("Token missing or invalid")
   })
 })
 
 describe("Addition of a new checkpoint", () => {
-  it("succeeds with valid data", async () => {
+  it("succeeds with valid data and valid token", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
       type: "INTERMEDIATE",
@@ -92,7 +121,41 @@ describe("Addition of a new checkpoint", () => {
       .expect(201)
   })
 
-  it("fails with status code 400 if data is missing", async () => {
+  it("fails with status code 401 with valid data and invalid token", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send(newCheckpoint)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("fails with status code 401 if a valid token belongs to a non-admin user", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${userToken}`)
+      .send(newCheckpoint)
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
+
+
+
+  it("fails with status code 400 if some required data is missing", async () => {
     const newCheckpoint = {
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
@@ -294,7 +357,7 @@ describe("Deletion of a checkpoint", () => {
     })
   })
 
-  it("succeeds with status code 204 if id is valid", async () => {
+  it("succeeds with status code 204 with valid id and valid token", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
     const checkpointToDelete =checkpointsAtStart[0]
@@ -311,9 +374,32 @@ describe("Deletion of a checkpoint", () => {
     expect(ids).not.toContain(checkpointToDelete.id)
 
   })
+
+  it("fails with status code 401 with valid id and invalid token", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToDelete =checkpointsAtStart[0]
+
+    const result = await request(app).delete(`/api/checkpoints/${checkpointToDelete.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("fails with status code 401 if a valid token belongs to a non-admin user", async () => {
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToDelete =checkpointsAtStart[0]
+
+    const result = await request(app).delete(`/api/checkpoints/${checkpointToDelete.id}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
 })
 
-describe("modification of a checkpoint", () => {
+describe("Modification of a checkpoint", () => {
   beforeEach(async () => {
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
@@ -321,7 +407,7 @@ describe("modification of a checkpoint", () => {
     })
   })
 
-  it("succeeds with status code 200 with valid data and id", async () => {
+  it("succeeds with status code 200 with valid data, id and token", async () => {
 
     const checkpointsAtStart = await prisma.checkpoint.findMany()
 
@@ -345,6 +431,46 @@ describe("modification of a checkpoint", () => {
       hint:"http://vihje.com",
       easyHint: "http://helppovihje.com"
     })
+  })
+
+  it("fails with status code 401 with valid data and invalid token", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "FINISH",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("fails with status code 401 if a valid token belongs to a non-admin user", async () => {
+
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+
+    const checkpointToModify = checkpointsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/checkpoints/${checkpointToModify.id}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .send({
+        name: "Modified checkpoint",
+        type: "FINISH",
+        hint:"http://vihje.com",
+        easyHint: "http://helppovihje.com"
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
   })
 
   it("fails with status code 400 and proper error message if modified name already exists", async () => {
