@@ -6,14 +6,54 @@ import { View, Pressable, Text, Dimensions, StyleSheet } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import theme from "@/theme"
 import GameReadyBox from "./GameReadyBox"
+import { useEffect, useState } from "react"
+import { setNotification } from "@/reducers/notificationSlice"
 
 const screenWidth = Dimensions.get("window").width
 
 const GameView = () => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const event = useSelector((state: RootState) => state.event)
+  const checkpoints = useSelector((state: RootState) => state.checkpoints)
+  const groups = useSelector((state: RootState) => state.groups)
+  const [hints, setHints] = useState<boolean>(true)
+
+  const start = checkpoints.filter(c => c.type === "START")
+  const finish = checkpoints.filter(c => c.type === "FINISH")
+  const intermediates = checkpoints.filter(c => c.type === "INTERMEDIATE")
+
+  const groupRoutes = groups.filter(g => g.route.length > 0)
+  const startedGroups = groups.filter(g => {
+    if (!g.nextCheckpointId || !g.route) {
+      return false
+    }
+    return g.nextCheckpointId !== g.route[0].id
+  })
+
+  useEffect(() => {
+    for (const checkpoint of checkpoints) {
+      if (checkpoint.hint === "" || checkpoint.easyHint === "") {
+        setHints(false)
+      }
+    }
+  }, [checkpoints])
 
   const handleStart = () => {
+    if (!start || !finish || intermediates.length < 4) {
+      const reasons = [
+        start.length === 0 && "Lähtörastia ei määritetty",
+        finish.length === 0 && "Maalirastia ei määritetty",
+        intermediates.length < 4 && "Välirasteja on vähemmän kuin 4",
+        groups.length > groupRoutes.length && "Kaikilla ryhmillä ei ole reittiä (luo reitit)",
+        groups.length === 0 && "Ei ole yhtään ryhmää"
+      ].filter(Boolean).join("\n")
+
+      dispatch(setNotification(`Peliä ei voida aloittaa:\n${reasons}`, "error"))
+      return
+    }
+    if (!hints) {
+      dispatch(setNotification("Kaikilla rasteilla ei ole vihjettä", "warning"))
+    }
     if (!event.startTime) {
       handleAlert({
         confirmText: "Aloita",
@@ -59,7 +99,16 @@ const GameView = () => {
   return(
     <View style={styles.content}>
       <Text style={styles.header}>Hallinnoi peliä</Text>
-      <GameReadyBox />
+      <GameReadyBox
+        checkpoints={checkpoints}
+        groups={groups}
+        start={start}
+        finish={finish}
+        intermediates={intermediates}
+        hints={hints}
+        groupRoutes={groupRoutes}
+        startedGroups={startedGroups}
+      />
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
       </Pressable>
