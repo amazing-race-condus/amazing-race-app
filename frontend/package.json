@@ -42,7 +42,9 @@
     "react-qr-code": "^2.0.15",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
-    "@react-native-async-storage/async-storage": "2.1.2"
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "expo-file-system": "~18.1.10",
+    "expo-sharing": "~13.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
