@@ -16,6 +16,11 @@ export const getDistances = async (eventId: number) => {
   return response.data
 }
 
+export const validateDistances = async (eventId: number) => {
+  const response = await axiosInstance.get(`settings/${eventId}/distances/validate`)
+  return response.data
+}
+
 export const setDistances = async (distances: Distances, eventId: number) => {
   const response = await axiosInstance.put<Distances>(`/settings/${eventId}/update_distances`, distances)
   return response.data
@@ -27,7 +32,7 @@ export const generateRoutes = async (eventId: number) => {
 }
 
 export const getRoutesInfo = async (eventId: number) => {
-  const response = await axiosInstance.get("/settings/${eventId}/routes_info")
+  const response = await axiosInstance.get(`/settings/${eventId}/routes_info`)
   return response.data
 }
 

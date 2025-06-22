@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/store/store"
 import { Checkpoint, AddCheckpoint, CheckpointType } from "@/types"
 import BottomSheetModal from "../ui/BottomSheetModal"
 import { editCheckpoint } from "@/services/checkpointService"
@@ -33,6 +33,8 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
   const nextRef1 = useRef<TextInput>(null)
   const nextRef2 = useRef<TextInput>(null)
 
+  const event = useSelector((state: RootState) => state.event)
+
   useEffect(() => {
     if (checkpoint) {
       setName(checkpoint.name)
@@ -49,7 +51,7 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
       type: type,
       hint: hintUrl,
       easyHint: easyHintUrl,
-      eventId: null
+      eventId: event.id
     }
     try {
       const updatedCheckpoint: Checkpoint = await editCheckpoint(checkpoint.id, modifiedCheckpoint)

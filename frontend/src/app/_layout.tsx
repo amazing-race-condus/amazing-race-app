@@ -1,19 +1,35 @@
 import { Stack } from "expo-router"
 import { Provider, useDispatch, useSelector } from "react-redux"
-import store, { RootState } from "@/store/store"
+import store, { AppDispatch, RootState } from "@/store/store"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ThemeProvider } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
-import { getDefaultEventReducer } from "@/reducers/eventSlice"
+import { getDefaultEventReducer, getEventReducer } from "@/reducers/eventSlice"
 import Notification from "@/components/ui/Notification"
 import { loadUserFromStorage } from "@/reducers/userSlice"
+import { storageUtil } from "@/utils/storageUtil"
 
 function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
-  store.dispatch(getDefaultEventReducer())
+  const user = useSelector((state: RootState) => state.user)
+
+  useEffect(() => {
+    const initializeEvent = async () => {
+      if (user.token) {
+        const storageEventId = await storageUtil.getEventId()
+        if (storageEventId) {
+          await store.dispatch(getEventReducer(storageEventId))
+        } else {
+          await store.dispatch(getDefaultEventReducer())
+        }
+      }
+    }
+
+    initializeEvent()
+  }, [user.token])
 
   useEffect(() => {
     const refreshData = async () => {
@@ -41,11 +57,11 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const user = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
-    dispatch(loadUserFromStorage()) // todo: this random ts error ???????
+    dispatch(loadUserFromStorage())
   }, [dispatch])
 
   return (
@@ -86,6 +102,7 @@ function AppContent() {
           </Stack.Protected>
           <Stack.Protected guard={!(user.token)}>
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="resetpassword/[token]" options={{ headerShown: false }} />
           </Stack.Protected>
         </Stack>
       </ThemeProvider>

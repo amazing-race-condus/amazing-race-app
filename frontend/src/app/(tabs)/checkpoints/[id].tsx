@@ -22,7 +22,7 @@ const Checkpoint = () => {
   const translatedType = checkpoint?.type ? getType(checkpoint.type) : "välirasti"
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View style={[styles.content, { flex: 1 }]}>
         <Stack.Screen
           options={{ headerShown: false }}
         />

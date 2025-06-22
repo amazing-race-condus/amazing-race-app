@@ -44,7 +44,19 @@ describe("<Groups />", () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/groups")
 
     const store = testStore({
-      groups: []
+      groups: [],
+      event: {
+        id: 1,
+        name: "eventti",
+        startTime: null,
+        endTime: null,
+        minRouteTime: null,
+        maxRouteTime: null,
+        eventDate: null,
+        group: [],
+        checkpoints: [],
+        penalties: []
+      }
     })
 
     render(
@@ -55,7 +67,7 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("Hallinnoi ryhmiä:")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi ryhmiä eventti")).toBeTruthy()
     })
 
   })
@@ -64,7 +76,11 @@ describe("<Groups />", () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/")
 
     const store = testStore({
-      groups: []
+      groups: [],
+      event : {
+        id:1,
+        name: "eventti"
+      }
     })
 
     render(
@@ -75,7 +91,7 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("Ryhmät")).toBeTruthy()
+      expect(screen.getByText("eventti | Ryhmät")).toBeTruthy()
     })
 
     const segmentedControl = screen.getByTestId("RNCSegmentedControl")

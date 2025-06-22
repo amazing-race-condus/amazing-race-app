@@ -56,7 +56,7 @@ model Event {
 
 model Group {
   id                 Int       @id @default(autoincrement())
-  name               String    @unique
+  name               String    
   members            Int       @default(-1)
   eventId            Int?      @map("event_id")
   finishTime         DateTime? @map("finish_time")
@@ -70,6 +70,8 @@ model Group {
   route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
   next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
+
+  @@unique([name, eventId])
 }
 
 model User {

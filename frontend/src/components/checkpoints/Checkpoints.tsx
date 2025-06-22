@@ -2,7 +2,7 @@ import { View, Text, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
-import store, { RootState, AppDispatch } from "@/store/store"
+import { RootState, AppDispatch } from "@/store/store"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 import { sortCheckpoints } from "@/utils/checkpointUtils"
 import { usePathname } from "expo-router"
@@ -11,7 +11,8 @@ import { Checkpoint } from "@/types"
 
 const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Checkpoint) => void }) => {
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
-  const eventId = store.getState().event.id
+  const event = useSelector((state: RootState) => state.event)
+  const eventId = event.id
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
   const pathname = usePathname()
 
@@ -24,10 +25,10 @@ const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Che
   return (
     <View style={[styles.content, { flex: 1 }]}>
       {pathname.startsWith("/settings") && (
-        <Text style={styles.header}>Hallinnoi rasteja:</Text>
+        <Text style={styles.header}>Hallinnoi rasteja {event.name}</Text>
       )}
       {pathname.startsWith("/checkpoints") && (
-        <Text style={styles.title}>Rastit</Text>
+        <Text style={styles.title}>{event.name} | Rastit</Text>
       )}
       <FlatList
         data={sortedCheckpoints}

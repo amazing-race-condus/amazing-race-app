@@ -1,14 +1,20 @@
-import { View, Text } from "react-native"
+import { View, Text, Pressable } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { RootState } from "@/store/store"
-import { useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/store/store"
+import { useSelector, useDispatch } from "react-redux"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { removeNotificationReducer } from "@/reducers/notificationSlice"
 
 const Notification = () => {
+  const dispatch: AppDispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
   const insets = useSafeAreaInsets()
   if (!message) {
     return null
+  }
+
+  const handleRemoveNotification = () => {
+    dispatch(removeNotificationReducer())
   }
 
   let backgroundStyle
@@ -30,8 +36,11 @@ const Notification = () => {
       top: insets.top + 50,
       position: "absolute",
       alignSelf: "center",
-      zIndex: 999, }]}>
-      <Text style={textStyle}>{ message }</Text>
+      zIndex: 999,  flexDirection: "row", justifyContent: "space-between",}]}>
+      <Pressable onPress={() => handleRemoveNotification()}>
+        <Text style={textStyle}>{ message }</Text>
+
+      </Pressable>
     </View>
   )
 }

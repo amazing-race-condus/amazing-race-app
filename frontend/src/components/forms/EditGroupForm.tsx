@@ -34,7 +34,8 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
     const modifiedGroup: AddGroup = {
       name: groupname,
       members: groupMembers,
-      easy: easy
+      easy: easy,
+      eventId: eventId
     }
     try {
       const updatedGroup: Group = await editGroup(group.id, modifiedGroup, eventId)

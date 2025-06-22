@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { setNotification } from "@/reducers/notificationSlice"
 import { AxiosError } from "axios"
-import { changePassword } from "@/services/loginService"
+import { changePassword } from "@/services/authenticationService"
 
 const ChangePasswordForm = () => {
   const dispatch = useDispatch<AppDispatch>()

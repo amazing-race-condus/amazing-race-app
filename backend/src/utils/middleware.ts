@@ -10,7 +10,7 @@ interface CustomRequest extends Request {
 }
 
 const unknownEndpoint = (req: Request, res: Response) => {
-  res.status(404).send({ error: "Unknown endpoint." })
+  res.status(404).send({ error: "Unknown endpoint" })
 }
 
 const errorHandler = (
@@ -20,14 +20,14 @@ const errorHandler = (
   next: NextFunction
 ) => {
   if (error instanceof Error && error.name === "CastError") {
-    res.status(400).json({ error: "Malformatted id." })
+    res.status(400).json({ error: "Malformatted id" })
   } else if (error instanceof Error && error.name === "ValidationError") {
     res.status(400).json({ error: error.message })
   } else if (error instanceof Error && error.name === "JsonWebTokenError") {
-    res.status(401).json({ error: "Token missing or invalid." })
+    res.status(401).json({ error: "Token missing or invalid" })
   } else if (error instanceof Error && error.name === "TokenExpiredError") {
     res.status(401).json({
-      error: "Token expired."
+      error: "Token expired"
     })
   } else if (error instanceof Error && error.name === "PrismaClientKnownRequestError") {
     const lastLine = error.message
@@ -37,11 +37,11 @@ const errorHandler = (
       .at(-1)
     res.status(400).json({ error: lastLine ?? "Unknown Prisma error" })
   } else if (error instanceof Error && error.name === "PrismaClientValidationError") {
-    res.status(400).json({ error: "Validation error from Prisma." })
+    res.status(400).json({ error: "Validation error from Prisma" })
   } else if (error instanceof Error && error.name === "PrismaClientUnknownRequestError") {
-    res.status(500).json({error: "Unknown request error from Prisma."})
+    res.status(500).json({error: "Unknown request error from Prisma"})
   } else {
-    res.status(500).json({ error: "An unexpected error occurred." })
+    res.status(500).json({ error: "An unexpected error occurred" })
   }
   next(error)
 }
@@ -59,7 +59,7 @@ const tokenExtractor = (req: CustomRequest, res: Response, next: NextFunction) =
 const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): void => {
   const secret = process.env.SECRET
   if (!secret) {
-    res.status(500).json({ error: "SECRET is not defined in environment." })
+    res.status(500).json({ error: "SECRET is not defined in environment" })
     return
   }
 
