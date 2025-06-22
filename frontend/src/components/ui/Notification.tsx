@@ -5,7 +5,7 @@ import { useSelector } from "react-redux"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const Notification = () => {
-  const { message, type } = useSelector((state: RootState) => state.message)
+  const { message, type } = useSelector((state: RootState) => state.notification)
   const insets = useSafeAreaInsets()
   if (!message) {
     return null

@@ -25,13 +25,15 @@ const ChangePasswordForm = () => {
           await changePassword(password, confirmPassword)
           dispatch(setNotification("Salasana vaihdettu.", "success"))
         } catch (error) {
-          console.log(error)
           if (error instanceof AxiosError) {
             dispatch(setNotification(
               error.response?.data.error ?? `Salasanaa ei voitu vaihtaa: ${error.message}`,
               "error"
             ))
           }
+        } finally {
+          setPassword("")
+          setConfirmPassword("")
         }
       }
     })

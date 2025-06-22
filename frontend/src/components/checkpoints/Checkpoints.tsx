@@ -14,6 +14,7 @@ const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Che
   const eventId = store.getState().event.id
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
   const pathname = usePathname()
+  console.log("checkpoints", checkpoints)
 
   useEffect(() => {
     dispatch(fetchCheckpoints(eventId))

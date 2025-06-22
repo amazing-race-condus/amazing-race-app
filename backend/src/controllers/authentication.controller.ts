@@ -3,6 +3,7 @@ import { prisma } from "../index"
 import { validatePassword } from "../utils/passwordValidator"
 import bcrypt from "bcrypt"
 import { Mailer } from "../utils/emailUtils"
+import { setPasswordResetTime } from "../utils/middleware"
 
 export const getAllUsers = async () => {
 
@@ -180,6 +181,11 @@ export const changePassword = async (password: string, confirmPassword: string, 
         passwordHash: passwordHash
       }
     })
-    return updatedUser
+    if (updatedUser.count !== 0) {
+      setPasswordResetTime()
+      return true
+    } else {
+      return false
+    }
   }
 }
