@@ -64,19 +64,19 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): voi
   }
 
   try {
-    const decodedToken = jwt.decode(req.token ?? "", {complete: true}) as jwt.JwtPayload
-    if (!decodedToken.payload.id) {
+    console.log(req.token)
+    const decodedToken = jwt.verify(req.token ?? "", secret) as jwt.JwtPayload
+    if (!decodedToken.id) {
       res.status(400).json({ error: "Invalid token" })
       return
-    } else if (!decodedToken.payload.admin && passwordResetTime) {
-      if (passwordResetTime > decodedToken.payload.iat!) {
+    } else if (!decodedToken.admin && passwordResetTime) {
+      if (passwordResetTime > decodedToken.iat!) {
         res.status(400).json({ error: "Invalid token" })
         return
       }
     }
-    const user = jwt.verify(req.token ?? "", secret) as jwt.JwtPayload
 
-    req.user = user as User
+    req.user = decodedToken as User
     next()
   } catch (error) {
     next(error)
