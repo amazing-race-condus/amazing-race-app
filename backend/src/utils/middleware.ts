@@ -64,7 +64,6 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): voi
   }
 
   try {
-    console.log(req.token)
     const decodedToken = jwt.verify(req.token ?? "", secret) as jwt.JwtPayload
     if (!decodedToken.id) {
       res.status(400).json({ error: "Invalid token" })

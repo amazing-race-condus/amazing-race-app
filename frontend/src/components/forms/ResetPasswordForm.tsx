@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack, useRouter, useLocalSearchParams } from "expo-router"
+import { useRouter, useLocalSearchParams } from "expo-router"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"

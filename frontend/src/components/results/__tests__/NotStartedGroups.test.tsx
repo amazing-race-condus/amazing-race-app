@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react-native"
 import NotStartedGroups from "../NotStartedGroups"
-import { group, dnfGroup, events, checkpoint } from "@/utils/testUtils"
+import { group, events, checkpoint } from "@/utils/testUtils"
 import { Group } from "@/types"
 
 jest.mock("@/utils/storageUtil", () => ({

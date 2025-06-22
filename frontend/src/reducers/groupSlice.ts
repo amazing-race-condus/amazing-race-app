@@ -33,7 +33,6 @@ export const fetchGroups = (eventId : number) => async (dispatch: AppDispatch) =
 
     dispatch(setGroups(allGroups))
   } catch (error) {
-    console.log("hephep")
     console.error("Failed to fetch groups:", error)
   }
 }

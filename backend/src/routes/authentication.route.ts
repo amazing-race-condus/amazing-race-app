@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express"
 import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, sendMailToUser, changePassword } from "../controllers/authentication.controller"
-import { verifyToken } from "../utils/middleware"
+import { tokenExtractor, verifyToken } from "../utils/middleware"
 import { User } from "@/types"
 import jwt, { JwtPayload } from "jsonwebtoken"
 
@@ -112,7 +112,7 @@ authenticationRouter.put("/reset_password", async (req: Request, res: Response) 
   res.status(200).json(updatedUser)
 })
 
-authenticationRouter.patch("/change_password", verifyToken, async (req: CustomRequest, res: Response) => {
+authenticationRouter.patch("/change_password", tokenExtractor, verifyToken, async (req: CustomRequest, res: Response) => {
   const user = req.user
   if (user?.admin === true) {
     const { password, confirmPassword } = req.body
