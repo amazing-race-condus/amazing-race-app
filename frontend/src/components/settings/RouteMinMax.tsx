@@ -1,5 +1,4 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack } from "expo-router"
 import { AxiosError } from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { styles } from "@/styles/commonStyles"

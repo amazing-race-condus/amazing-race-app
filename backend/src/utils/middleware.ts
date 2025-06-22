@@ -2,17 +2,16 @@ import { Request, Response, NextFunction } from "express"
 import { User } from "@/types"
 import jwt from "jsonwebtoken"
 
+let passwordResetTime: number | null = null
 
 interface CustomRequest extends Request {
   token?: string | null
   user?: User | null
 }
 
-
 const unknownEndpoint = (req: Request, res: Response) => {
   res.status(404).send({ error: "Unknown endpoint" })
 }
-
 
 const errorHandler = (
   error: unknown,
@@ -69,6 +68,11 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): voi
     if (!decodedToken.id) {
       res.status(400).json({ error: "Invalid token" })
       return
+    } else if (!decodedToken.admin && passwordResetTime) {
+      if (passwordResetTime > decodedToken.iat!) {
+        res.status(400).json({ error: "Invalid token" })
+        return
+      }
     }
 
     req.user = decodedToken as User
@@ -76,6 +80,10 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction): voi
   } catch (error) {
     next(error)
   }
+}
+
+export const setPasswordResetTime = () => {
+  passwordResetTime = Math.floor(Date.now() / 1000)
 }
 
 

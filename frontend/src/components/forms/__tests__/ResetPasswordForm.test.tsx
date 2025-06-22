@@ -1,9 +1,8 @@
 import { render, waitFor, screen, fireEvent } from "@testing-library/react-native"
 import { Provider } from "react-redux"
-import { createMockStore, group } from "@/utils/testUtils"
+import { createMockStore } from "@/utils/testUtils"
 import ResetPasswordForm from "../ResetPasswordForm"
 import { resetPassword } from "@/services/authenticationService"
-import { setNotification } from "@/reducers/notificationSlice"
 
 jest.mock("@/services/authenticationService", () => ({
   resetPassword: jest.fn(),

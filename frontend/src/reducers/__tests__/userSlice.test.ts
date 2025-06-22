@@ -5,7 +5,7 @@ import userReducer, {
   logoutUser,
   loadUserFromStorage,
 } from "@/reducers/userSlice"
-import type { Group, Penalty, User } from "@/types"
+import type { User } from "@/types"
 import { createMockStore } from "@/utils/testUtils"
 import { storageUtil } from "@/utils/storageUtil"
 import * as authenticationService from "@/services/authenticationService"
