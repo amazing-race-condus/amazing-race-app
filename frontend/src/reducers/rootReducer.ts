@@ -5,7 +5,6 @@ import groups from "./groupSlice"
 import checkpoints from "./checkpointsSlice"
 import notification from "./notificationSlice"
 
-// Combine all slice reducers
 const appReducer = combineReducers({
   user,
   event,
@@ -14,7 +13,6 @@ const appReducer = combineReducers({
   notification,
 })
 
-// Optionally handle a RESET action to clear all state
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: any) => {
   if (action.type === "RESET") {
     state = undefined

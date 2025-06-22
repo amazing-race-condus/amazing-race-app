@@ -13,9 +13,8 @@ import { sortAlphabetically, sortByStatus, sortByTime } from "@/utils/groupUtils
 const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   const [search, setSearch] = useState<string>("")
   const [order, setOrder] = useState<number>(0)
-  const groups = useSelector((state: RootState) => state?.groups || [])
+  const groups = useSelector((state: RootState) => state.groups)
   const pathname = usePathname()
-  console.log("groups:", groups)
 
   const event = useSelector((state: RootState) => state.event)
 
