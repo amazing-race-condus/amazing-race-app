@@ -33,7 +33,7 @@ const Team = () => {
 
   const checkpoints = group.route
   const nextCheckpointId = group.nextCheckpointId!
-  const totalPenaltyTime = group.penalty.reduce((total, penalty) => total + penalty.time, 0) || 0
+  const totalPenaltyTime = group.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
 
   const passedIds = group.route
     .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
