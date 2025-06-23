@@ -116,7 +116,7 @@ export const modifyCheckpoint = async (checkpointId: number, eventId: number, na
 
   parsedType = type as Type
 
-  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, checkpointId)
+  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, eventId, checkpointId)
   if (!validCheckpointLayout) {
     return
   }
