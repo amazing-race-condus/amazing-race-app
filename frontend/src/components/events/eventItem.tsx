@@ -58,7 +58,7 @@ const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: 
 
         {item.id !== eventId ? (
           <Pressable
-            style={[ styles.button2, { flex: 1, marginLeft: 8, padding: 7, marginTop: 15 } ]}
+            style={[ styles.button2, { paddingHorizontal:12, padding:5 } ]}
             onPress={() => handleChangeEvent(item.id)}
           >
             <Text style={styles.buttonText}>Tarkastele tapahtumaa</Text>
@@ -68,18 +68,19 @@ const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: 
             flex: 1,
             marginLeft: 0,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            paddingHorizontal:12
           }}>
             <Text style={[styles.buttonText]}>Aktiivinen tapahtuma</Text>
           </View>
         )}
         { user.admin && (
 
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-            <Pressable style={[ styles.button2, { flex: 1, marginLeft: 8, padding: 5, marginTop: 10 } ]} onPress={() => handleRemoveEvent(Number(item.id))}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 5 }}>
+            <Pressable style={styles.button2} onPress={() => handleRemoveEvent(Number(item.id))}>
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8, padding: 5, marginTop: 10 }]} onPress={() => onEditEvent?.(item)}>
+            <Pressable style={styles.button2} onPress={() => onEditEvent?.(item)}>
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>
