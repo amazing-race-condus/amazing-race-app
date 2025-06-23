@@ -5,7 +5,7 @@ import { styles } from "@/styles/commonStyles"
 import Groups from "@/components/groups/Groups"
 import BottomSheet from "@gorhom/bottom-sheet"
 import AddGroupForm from "@/components/forms/AddGroupForm"
-import AddNewButton from "@/components/ui/addNewButton"
+import AddNewButton from "@/components/ui/AddNewButton"
 import { Group } from "@/types"
 import EditGroupForm from "@/components/forms/EditGroupForm"
 
