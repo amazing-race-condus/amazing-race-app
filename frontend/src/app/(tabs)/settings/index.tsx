@@ -47,7 +47,6 @@ const Settings = () => {
         link="/settings/results"
         dimmed={!gameFinished}
       />
-      :
       <Logout />
     </View>
   )

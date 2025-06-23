@@ -58,7 +58,7 @@ const GameView = () => {
 
   return(
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi peliä</Text>
+      <Text style={styles.header}>Hallinnoi peliä {event.name}</Text>
       <GameReadyBox />
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>

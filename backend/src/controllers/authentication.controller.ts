@@ -3,6 +3,7 @@ import { prisma } from "../index"
 import { validatePassword } from "../utils/passwordValidator"
 import bcrypt from "bcrypt"
 import { Mailer } from "../utils/emailUtils"
+import { setPasswordResetTime } from "../utils/middleware"
 
 export const getAllUsers = async () => {
 
@@ -155,4 +156,29 @@ export const sendMailToUser = async (to: string, token: string, res: Response) =
     html: `<p>Vaihda salasanasi klikkaamalla <a href="${resetUrl}">tästä</a>. Linkki on voimassa 15 minuuttia.</p>`
   }
   await Mailer(message)
+}
+
+export const changePassword = async (password: string, confirmPassword: string, res: Response) => {
+  if ((!password || !confirmPassword) || (password !== confirmPassword)) {
+    res.status(400).json({ error: "Salasanat eivät täsmää." })
+    return
+  }
+  if (validatePassword(password, res)) {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const updatedUser = await prisma.user.updateMany({
+      where: {
+        admin: false
+      },
+      data: {
+        passwordHash: passwordHash
+      }
+    })
+    if (updatedUser.count !== 0) {
+      setPasswordResetTime()
+      return true
+    } else {
+      return false
+    }
+  }
 }
