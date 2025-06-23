@@ -1,10 +1,8 @@
 import { Response } from "express"
 import { prisma } from "../index"
 import { Type } from "../../prisma/prisma/"
-import { Checkpoint, CheckpointType } from "@/types"
+import { AddCheckpoint, CheckpointType } from "@/types"
 import { validateName, validateHint, validateCheckpointLayout } from "../utils/checkpointValidators"
-
-type newCheckpoint = Omit<Checkpoint, "id">
 
 export const getAllCheckpoints = async (eventId: number) => {
   const allCheckpoints = await prisma.checkpoint.findMany({
@@ -23,7 +21,7 @@ export const getCheckpointById = async (checkpointId: number) => {
   return checkpoint
 }
 
-export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
+export const createCheckpoint = async (data: AddCheckpoint, res: Response) => {
   if (!data.name || !data.type ) {
     res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
     return
