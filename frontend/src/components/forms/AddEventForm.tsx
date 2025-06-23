@@ -38,8 +38,9 @@ const AddEventForm = ({
         name: eventName,
         eventDate: new Date(String(eventDate))
       }
-      createEvent(newEvent)
-      setEvents(events)
+      const createdEvent: Event = await createEvent(newEvent)
+      const newEvents: Event[] = events.concat(createdEvent)
+      setEvents(newEvents)
       dispatch(setNotification("Tapahtuma luotu", "success"))
     } catch (error) {
       console.error("Failed to create event", error)

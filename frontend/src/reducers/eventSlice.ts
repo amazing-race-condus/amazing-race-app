@@ -13,7 +13,7 @@ const initialState: Event = {
   checkpoints: [],
   minRouteTime: null,
   maxRouteTime: null,
-  eventDate: null,
+  eventDate: new Date(),
   penalties: []
 }
 

@@ -45,7 +45,11 @@ describe("<Checkpoints />", () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/settings/checkpoints")
 
     const store = testStore({
-      checkpoints: []
+      checkpoints: [],
+      event: {
+        id: 1,
+        name: "eventti"
+      }
     })
     render(
       <Provider store={store}>
@@ -53,7 +57,8 @@ describe("<Checkpoints />", () => {
       </Provider>
     )
     await waitFor(() => {
-      expect(screen.getByText("Hallinnoi rasteja:")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi rasteja")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
   })
 
@@ -61,7 +66,11 @@ describe("<Checkpoints />", () => {
     (expoRouter.usePathname as jest.Mock).mockReturnValue("/checkpoints")
 
     const store = testStore({
-      checkpoints: []
+      checkpoints: [],
+      event: {
+        id: 2,
+        name: "eventti"
+      }
     })
     render(
       <Provider store={store}>
@@ -70,6 +79,7 @@ describe("<Checkpoints />", () => {
     )
     await waitFor(() => {
       expect(screen.getByText("Rastit")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
   })
 

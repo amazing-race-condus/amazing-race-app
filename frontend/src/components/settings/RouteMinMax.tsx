@@ -1,5 +1,4 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack } from "expo-router"
 import { AxiosError } from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { styles } from "@/styles/commonStyles"
@@ -53,10 +52,7 @@ const RouteMinMax = () => {
 
   return (
     <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
-      <Text style={styles.header}>Aseta reiteille aikarajat:</Text>
+      <Text style={[styles.header, {fontWeight: "light"}]}>Aseta reiteille aikarajat:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText}>Reittien minimiaika:</Text>
         <TextInput

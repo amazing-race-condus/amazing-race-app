@@ -8,8 +8,8 @@ const SettingsItem = ({ text, link, dimmed=false }: { text: string, link: string
   const style = dimmed ? styles.dimmedItem : styles.item
 
   return (
-    <Link href={link} asChild>
-      <TouchableOpacity style={style}>
+    <Link href={link} asChild role="link">
+      <TouchableOpacity style={style} testID="button">
         <View style={{ flex: 1 }}>
           <Text style={styles.checkpointName}>
             { text }

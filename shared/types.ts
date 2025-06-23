@@ -76,16 +76,12 @@ export interface Event {
     endTime: Date | null,
     minRouteTime: number | null,
     maxRouteTime: number | null,
-    eventDate: Date | null,
+    eventDate: Date,
     group: Group[],
     checkpoints: Checkpoint[],
     penalties: Penalty[]
 }
 
-export interface CustomRequest extends Request {
-  token?: string | null
-  user?: User | null
-}
 
 export interface Email {
   from: string,

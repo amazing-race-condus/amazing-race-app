@@ -14,7 +14,7 @@ const Logout = () => {
     dispatch(logoutUser())
   }
 
-  return <Pressable style={styles.button} onPress={handleLogout}>
+  return <Pressable style={[styles.logoutbutton, {marginTop:50}]} onPress={handleLogout}>
     <Text style={styles.buttonText}>Kirjaudu ulos</Text>
   </Pressable>
 }

@@ -7,7 +7,7 @@ import { removeNotificationReducer } from "@/reducers/notificationSlice"
 
 const Notification = () => {
   const dispatch: AppDispatch = useDispatch()
-  const { message, type } = useSelector((state: RootState) => state.message)
+  const { message, type } = useSelector((state: RootState) => state.notification)
   const insets = useSafeAreaInsets()
   if (!message) {
     return null

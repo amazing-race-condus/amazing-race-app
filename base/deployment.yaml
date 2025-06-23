@@ -26,8 +26,23 @@ spec:
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: condus-db-secret
-              key: API_KEY
+              name: condus-secret
+              key: DB_KEY
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: SECRET
+        - name: EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: EMAIL
+        - name: EMAILPW
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: EMAILPW
         resources:
           limits:
             cpu: 250m

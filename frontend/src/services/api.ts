@@ -1,7 +1,7 @@
 import axios from "axios"
 import { url } from "../config"
-// import { useRouter } from "expo-router"
 import { storageUtil } from "@/utils/storageUtil"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const axiosInstance = axios.create({
   baseURL: url,
@@ -27,12 +27,13 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response
   },
-  (error) => {
-    // const router = useRouter()
-    if (error.response?.status === 401) {
-      // Redirect to login or refresh token
-      // await AsyncStorage.removeItem("user-info")
-      // router.replace("/")
+  async (error) => {
+    if (error.response?.status === 400 || error.response?.status === 401) {
+      if (error.response.data.error === "Invalid token" || error.response.data.error === "Token expired") {
+        await AsyncStorage.removeItem("user")
+        const { default: store } = await import("@/store/store")
+        store.dispatch({ type: "RESET" })
+      }
     }
 
     if (error.response?.status >= 500) {

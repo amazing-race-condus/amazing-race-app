@@ -5,6 +5,7 @@ import eventSlice from "@/reducers/eventSlice"
 import notificationSlice from "@/reducers/notificationSlice"
 import groupSlice from "@/reducers/groupSlice"
 import checkpointSlice from "@/reducers/checkpointsSlice"
+import userSlice from "@/reducers/userSlice"
 
 export const checkpoint: Checkpoint = {
   id: 436780235746,
@@ -55,6 +56,14 @@ export const listCheckpoints: Checkpoint[] = [
     eventId: 1,
     hint: null,
     easyHint: null
+  },
+  {
+    id: 123987436844,
+    name: "Mojave aavikko",
+    type: "INTERMEDIATE",
+    eventId: 1,
+    hint: null,
+    easyHint: null
   }
 ]
 
@@ -89,6 +98,46 @@ export const group: Group = {
   route: [checkpoint],
   finishTime: null
 }
+
+export const groups: Group[] = [{
+  name: "Testers",
+  id: 1010353225246231,
+  members: 5,
+  disqualified: false,
+  dnf: false,
+  penalty: [],
+  easy: false,
+  eventId: 1,
+  nextCheckpointId: 436780236,
+  route: [checkpoint],
+  finishTime: null
+},
+{
+  name: "Testers2",
+  id: 101035321,
+  members: 5,
+  disqualified: false,
+  dnf: false,
+  penalty: [],
+  easy: false,
+  eventId: 1,
+  nextCheckpointId: 436735746,
+  route: [checkpoint],
+  finishTime: null
+},
+{
+  name: "Testers3",
+  id: 10103231,
+  members: 5,
+  disqualified: false,
+  dnf: false,
+  penalty: [],
+  easy: false,
+  eventId: 1,
+  nextCheckpointId: 436735746,
+  route: [checkpoint],
+  finishTime: null
+}]
 
 export const disqualifiedGroup: Group = {
   name: "Diskattavat",
@@ -176,7 +225,8 @@ export const createMockStore = (preloadedState = {}) =>
       groups: groupSlice,
       event: eventSlice,
       notification: notificationSlice,
-      checkpoints: checkpointSlice
+      checkpoints: checkpointSlice,
+      user: userSlice
     },
     preloadedState
   })

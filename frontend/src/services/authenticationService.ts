@@ -20,3 +20,8 @@ export const resetPassword = async (newPassword: string, token: string) => {
   const response = await axios.put(`${url}/authentication/reset_password`, { password: newPassword }, config)
   return response.data
 }
+
+export const changePassword = async (password: string, confirmPassword: string) => {
+  const response = await axiosInstance.patch("/authentication/change_password", {password, confirmPassword})
+  return response.data
+}

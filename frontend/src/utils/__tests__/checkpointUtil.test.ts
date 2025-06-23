@@ -62,6 +62,14 @@ describe("sortCheckpoints returns checkpoints in correct order:", () => {
           easyHint: null
         },
         {
+          id: 123987436844,
+          name: "Mojave aavikko",
+          type: "INTERMEDIATE",
+          eventId: 1,
+          hint: null,
+          easyHint: null
+        },
+        {
           id: 123987123,
           name: "Mongolian erämää",
           type: "INTERMEDIATE",

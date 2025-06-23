@@ -6,7 +6,7 @@ import { getEventReducer } from "@/reducers/eventSlice"
 import { getEvents } from "@/services/eventService"
 import { setNotification } from "@/reducers/notificationSlice"
 import { Event } from "@/types"
-import EventItem from "./eventItem"
+import EventItem from "./EventItem"
 import { AppDispatch } from "@/store/store"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
@@ -14,10 +14,12 @@ import { storageUtil } from "@/utils/storageUtil"
 
 const Events = ({
   events,
-  setEvents
+  setEvents,
+  onEditEvent
 }: {
     events: Event[]
     setEvents: (event: Event[]) => void
+    onEditEvent?: (event: Event) => void
   }) => {
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -39,15 +41,18 @@ const Events = ({
     dispatch(setNotification("Tapahtumanäkymä vaihdettu","success"))
   }
 
+  const sortedEvents = [...events]
+    .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
+
   return (
     <View style={[styles.content, { flex: 1 }]}>
       <Text style={styles.header}>Hallinnoi tapahtumia:</Text>
 
       <FlatList
-        data={events}
+        data={sortedEvents}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
-          <EventItem item={ item } handleEventChange={handleEventChange}/>
+          <EventItem item={ item } setEvents={setEvents} events={events} handleEventChange={handleEventChange} onEditEvent={onEditEvent}/>
         )}
       />
     </View>

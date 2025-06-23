@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: ohtuprojekti-staging
-resources:
-- manifests/secret.yaml
-- manifests/imagestream.yaml
-- manifests/deployment.yaml
-- manifests/service.yaml
-- manifests/route.yaml
