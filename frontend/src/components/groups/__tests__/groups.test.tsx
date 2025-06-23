@@ -67,7 +67,8 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("Hallinnoi ryhmiä eventti")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi ryhmiä")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
 
   })
@@ -91,7 +92,8 @@ describe("<Groups />", () => {
     const textInput = screen.getByPlaceholderText("Hae ryhmiä...")
     expect(textInput).toBeTruthy()
     await waitFor(() => {
-      expect(screen.getByText("eventti | Ryhmät")).toBeTruthy()
+      expect(screen.getByText("Ryhmät")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
 
     const segmentedControl = screen.getByTestId("RNCSegmentedControl")
