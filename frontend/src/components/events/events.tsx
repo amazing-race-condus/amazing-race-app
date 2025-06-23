@@ -52,7 +52,7 @@ const Events = ({
         data={sortedEvents}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
-          <EventItem item={ item } handleEventChange={handleEventChange} onEditEvent={onEditEvent}/>
+          <EventItem item={ item } setEvents={setEvents} events={events} handleEventChange={handleEventChange} onEditEvent={onEditEvent}/>
         )}
       />
     </View>
