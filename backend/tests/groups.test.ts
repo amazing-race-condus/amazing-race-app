@@ -3,7 +3,9 @@ import { app, server, prisma } from "../src/index"
 import { initialEvent, initialGroups, users } from "./test_helper"
 
 let adminToken: string
+let userToken: string
 let eventId: number
+const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
 beforeEach(async () => {
   await prisma.user.deleteMany({})
@@ -12,6 +14,11 @@ beforeEach(async () => {
   const adminLoginResponse = await request(app).post("/api/login")
     .send(users[0])
   adminToken = adminLoginResponse.body.token
+  await request(app).post("/api/authentication")
+    .send(users[1])
+  const userLoginResponse = await request(app).post("/api/login")
+    .send(users[1])
+  userToken = userLoginResponse.body.token
 })
 
 beforeAll(async () => {
@@ -30,16 +37,26 @@ describe("Get Groups", () => {
     server.close()
   })
 
-  it("Groups are returned as json", async () => {
+  it("groups are returned as json", async () => {
     const response = await request(app)
       .get("/api/groups")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${userToken}`)
       .query({ eventId : eventId })
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
   })
 
-  it("Group is created", async () => {
+  it("groups are not returned with invalid token", async () => {
+
+    const result = await request(app)
+      .get("/api/groups")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("group can be created", async () => {
     const response = await request(app)
       .post("/api/groups")
       .set("Authorization", `Bearer ${adminToken}`)
@@ -53,13 +70,42 @@ describe("Get Groups", () => {
     expect(response.body.name).toBe("Test group")
   })
 
-  it("One group is returned", async () => {
+  it("group can't be created with invalid token", async () => {
+    const result = await request(app)
+      .post("/api/groups")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        name: "Test group",
+        members: 4,
+        eventId : eventId
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("group can't be created if a valid token belongs to a non-admin user", async () => {
+    const result = await request(app)
+      .post("/api/groups")
+      .set("Authorization", `Bearer ${userToken}`)
+      .send({
+        name: "Test group",
+        members: 4,
+        eventId : eventId
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
+
+
+  it("one group is returned", async () => {
     const response = await request(app)
       .get(`/api/groups/${groupId}`)
     expect(response.status).toBe(200)
   })
 
-  it("Group is not created with existing name", async () => {
+  it("group is not created with existing name", async () => {
     const response = await request(app)
       .post("/api/groups")
       .set("Authorization", `Bearer ${adminToken}`)
@@ -69,10 +115,10 @@ describe("Get Groups", () => {
         eventId : eventId
       })
     expect(response.status).toBe(400)
-    //expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi.")
+    expect(response.body.error).toBe("Ryhmän nimi on jo käytössä. Syötä uniikki nimi")
   })
 
-  it("Group is deleted", async () => {
+  it("group can be deleted", async () => {
     const response = await request(app)
       .delete(`/api/groups/${groupId}`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -82,7 +128,31 @@ describe("Get Groups", () => {
     expect(response.status).toBe(200)
   })
 
-  it("Group can be specified to have easy hints", async () => {
+  it("group can't be deleted with invalid token", async () => {
+    const result = await request(app)
+      .delete(`/api/groups/${groupId}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        id: groupId
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("group can't be deleted if a valid token belongs to a non-admin user", async () => {
+    const result = await request(app)
+      .delete(`/api/groups/${groupId}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .send({
+        id: groupId
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
+
+  it("group can be specified to have easy hints", async () => {
     const response = await request(app)
       .post("/api/groups")
       .set("Authorization", `Bearer ${adminToken}`)
@@ -97,7 +167,7 @@ describe("Get Groups", () => {
   })
 })
 
-describe("modification of a group", () => {
+describe("Modification of a group", () => {
   beforeEach(async () => {
     const groupsWithEventId = initialGroups.map(group => ({
       ...group,
@@ -138,6 +208,43 @@ describe("modification of a group", () => {
       easy: true
     })
   })
+  it("fails with status code 401 with valid data and invalid token", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send({
+        name: "Modified group",
+        members: 4,
+        easy: true
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+
+  it("fails with status code 401 if a valid token belongs to a non-admin user ", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .send({
+        name: "Modified group",
+        members: 4,
+        easy: true
+      })
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
 
   it("fails with status code 400 and proper error message if modified name already exists", async () => {
     const groupsAtStart = await prisma.group.findMany()
@@ -164,7 +271,7 @@ describe("modification of a group", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Ryhmän nimi on jo käytössä. Syötä uniikki nimi.")
+    expect(result.body.error).toContain("Ryhmän nimi on jo käytössä. Syötä uniikki nimi")
     await prisma.group.deleteMany({})
   })
   it("fails with status code 400 and proper error message if data is invalid", async () => {

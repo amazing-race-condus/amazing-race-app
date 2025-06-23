@@ -82,16 +82,13 @@ export interface Event {
     penalties: Penalty[]
 }
 
-export interface CustomRequest extends Request {
-  token?: string | null
-  user?: User | null
-}
 
 export interface Email {
   from: string,
   to: string,
   subject: string,
   text: string,
+  html: string
 }
 
 export type RouteInfo = { id: number, routeTime: number }

@@ -7,8 +7,13 @@ import { getLimits, updateLimits, getDistances, updateDistances,
 } from "../controllers/routes.controller"
 import { verifyToken } from "../utils/middleware"
 import { getEventById } from "../controllers/event.controller"
+import { User } from "@/types"
 
 const routesRouter = express.Router()
+
+interface CustomRequest extends Request {
+  user?: User
+}
 
 routesRouter.get("/:event_id/limits", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
@@ -16,7 +21,12 @@ routesRouter.get("/:event_id/limits", verifyToken, async (req: Request, res: Res
   res.send(event)
 })
 
-routesRouter.put("/update_limits", verifyToken, async (req: Request, res: Response) => {
+routesRouter.put("/update_limits", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
   const eventId = req.body.id
   const newMinRouteTime = req.body.minRouteTime
   const newMaxRouteTime = req.body.maxRouteTime
@@ -65,14 +75,24 @@ routesRouter.get("/:event_id/routes_info", verifyToken, async (req: Request, res
   res.send(routes)
 })
 
-routesRouter.put("/:event_id/update_distances", verifyToken, async (req: Request, res: Response) => {
+routesRouter.put("/:event_id/update_distances", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
   const distances = req.body
   const eventId = Number(req.params.event_id)
   const result = await updateDistances(eventId, distances)
   res.status(200).json(result)
 })
 
-routesRouter.put("/:event_id/create_routes", verifyToken, async (req: Request, res: Response) => {
+routesRouter.put("/:event_id/create_routes", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
   const eventId = Number(req.params.event_id)
   const event = await getEventById(eventId)
   if (event?.startTime) {

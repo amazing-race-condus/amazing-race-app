@@ -1,11 +1,14 @@
 import { View, Text, TextInput, Pressable } from "react-native"
-import { Stack } from "expo-router"
 import { useDispatch } from "react-redux"
 import { styles } from "@/styles/commonStyles"
 import { AppDispatch } from "@/store/store"
 import { useRef, useState } from "react"
 import { Checkbox } from "react-native-paper"
 import { loginUser } from "@/reducers/userSlice"
+import { handleAlert } from "@/utils/handleAlert"
+import { sendResetPasswordMail } from "@/services/authenticationService"
+import { AxiosError } from "axios"
+import { setNotification } from "@/reducers/notificationSlice"
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -21,15 +24,37 @@ const LoginForm = () => {
     setAdmin(false)
   }
 
+  const handleResetPassword = () => {
+    handleAlert({
+      confirmText: "Lähetä",
+      title: "Salasanan palautus",
+      message:
+        "Linkki salasanan vaihtamista varten lähetetään pääkäyttäjän sähköpostiin. Ongelmatilanteessa tarkista roskapostikansio.",
+      onConfirm: async () => {
+        try {
+          await sendResetPasswordMail()
+          dispatch(setNotification("Sähköposti lähetetty onnistuneesti.", "success"))
+        } catch (error: any) {
+          if (error instanceof AxiosError) {
+            dispatch(
+              setNotification(
+                error.response?.data.error ?? `Sähköpostia ei voitu lähettää: ${error.message}`, "error")
+            )
+          } else {
+            dispatch(setNotification("Odottamaton virhe salasanan palautuksessa.", "error"))
+          }
+        }
+      },
+    })
+  }
+
   return (
     <View style={styles.content}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-      />
       <Text style={styles.header}>Kirjaudu sisään:</Text>
       <View style={styles.formContainer}>
         <View style={styles.checkboxContainer}>
           <Checkbox
+            testID="admin-checkbox"
             status={admin ? "checked" : "unchecked"}
             onPress={() => setAdmin(!admin)}
           />
@@ -47,6 +72,7 @@ const LoginForm = () => {
               }}
               submitBehavior="submit"
               returnKeyType="next"
+              testID="username"
             />
           </>
         )}
@@ -59,11 +85,27 @@ const LoginForm = () => {
           secureTextEntry
           onSubmitEditing={handleLogin}
           returnKeyType="done"
+          testID="password"
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Kirjaudu sisään</Text>
         </Pressable>
+        {admin && (
+          <>
+            <Pressable
+              onPress={handleResetPassword}
+              style={{
+                backgroundColor: "orange",
+                padding: 8,
+                borderRadius: 8,
+                alignItems: "center",
+                marginTop: 10
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>Unohtuiko salasana?</Text>
+            </Pressable></>
+        )}
       </View>
     </View>
   )

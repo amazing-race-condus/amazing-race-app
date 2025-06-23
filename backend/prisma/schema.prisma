@@ -28,7 +28,7 @@ model Checkpoint {
   easyHint     String?  @map("easy_hint")
   eventId  Int?    @map("event_id")
 
-  event           Event?               @relation(fields: [eventId], references: [id])
+  event           Event?               @relation(fields: [eventId], references: [id], onDelete: Cascade)
   fromDistances   CheckpointDistance[] @relation("FromCheckpoint")
   toDistances     CheckpointDistance[] @relation("ToCheckpoint")
   group           Group[]
@@ -56,7 +56,7 @@ model Event {
 
 model Group {
   id                 Int       @id @default(autoincrement())
-  name               String    @unique
+  name               String    
   members            Int       @default(-1)
   eventId            Int?      @map("event_id")
   finishTime         DateTime? @map("finish_time")
@@ -66,10 +66,12 @@ model Group {
   dnf                Boolean   @default(false)
   easy               Boolean   @default(false)
 
-  event           Event?      @relation(fields: [eventId], references: [id])
+  event           Event?      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   route           Route?      @relation(fields: [routeId], references: [id], onDelete: SetNull)
   next_checkpoint Checkpoint? @relation(fields: [nextCheckpointId], references: [id])
   penalty         Penalty[]
+
+  @@unique([name, eventId])
 }
 
 model User {
@@ -84,7 +86,7 @@ model Route {
   routeTime  Int  @map("route_time")
   eventId    Int? @map("event_id")
 
-  event      Event?            @relation(fields: [eventId], references: [id])
+  event      Event?            @relation(fields: [eventId], references: [id], onDelete: Cascade)
   routeSteps RouteCheckpoint[]
   group      Group[]
 }

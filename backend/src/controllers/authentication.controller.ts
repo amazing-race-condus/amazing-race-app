@@ -3,6 +3,7 @@ import { prisma } from "../index"
 import { validatePassword } from "../utils/passwordValidator"
 import bcrypt from "bcrypt"
 import { Mailer } from "../utils/emailUtils"
+import { setPasswordResetTime } from "../utils/middleware"
 
 export const getAllUsers = async () => {
 
@@ -39,7 +40,7 @@ export const getUserByUsername = async (username: string, res: Response) => {
     }
   })
   if (!user) {
-    res.status(404).json({ error: "Käyttäjää ei löydy." })
+    res.status(404).json({ error: "Käyttäjää ei löydy" })
     return
 
   }
@@ -48,7 +49,7 @@ export const getUserByUsername = async (username: string, res: Response) => {
 
 export const createUser = async (username: string, password: string, admin: boolean, res: Response) => {
   if (!password || !username) {
-    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
+    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu" })
     return
   }
 
@@ -61,9 +62,10 @@ export const createUser = async (username: string, password: string, admin: bool
     }
   })
   if (existingUser) {
-    res.status(400).json({ error: "Käyttäjänimi on jo käytössä." })
+    res.status(400).json({ error: "Käyttäjänimi on jo käytössä" })
     return false
   }
+
   const validPassword = await validatePassword(password, res)
 
   if (!validPassword) {
@@ -96,52 +98,35 @@ export const deleteUser = async (userId: number) => {
   return user
 }
 
-export const modifyUser = async (userId: number, username: string, password: string, res: Response) => {
+export const modifyUser = async (password: string, res: Response) => {
 
-  const id = userId
-
-  const data: Partial<{ username: string, passwordHash: string }> = {}
-
-  const userToModify = await prisma.user.findUnique({
-    where: { id },
-  })
-
+  const userToModify = await getUserByAdminRights(true)
   if (!userToModify) {
-    res.status(404).json({ error: "Käyttäjää ei löydy." })
+    res.status(404).json({ error: "Käyttäjää ei löydy" })
     return
   }
 
-  if (password) {
-    const validPassword = await validatePassword(password, res)
-
-    if (!validPassword) {
-      return
-    }
-
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-    data.passwordHash = passwordHash
+  if (!password) {
+    res.status(400).json({ error: "Salasana puuttuu" })
+    return
   }
 
-  if (username) {
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        username: {
-          equals: username.trim(),
-          mode: "insensitive"
-        }
-      }
-    })
-    if (existingUser && existingUser.id !== userId) {
-      res.status(400).json({ error: "Käyttäjänimi on jo käytössä." })
-      return false
-    }
-    data.username = username
+  const validPassword = await validatePassword(password, res)
+
+  if (!validPassword) {
+    return
   }
+
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
 
   const updatedUser = await prisma.user.update({
-    where: { id },
-    data,
+    where: { id: userToModify.id },
+    data: {
+      passwordHash
+    },
     select: {
       id: true,
       username: true,
@@ -153,13 +138,47 @@ export const modifyUser = async (userId: number, username: string, password: str
 }
 
 
-export const sendMailToUser = async (to: string, html: string) => {
+export const sendMailToUser = async (to: string, token: string, res: Response) => {
+  const url = process.env.FRONTEND_URL
+
+  if (!url) {
+    res.status(500).json({ error: "FRONTEND_URL is not defined in environment." })
+    return
+  }
+
+  const resetUrl = `${url}/resetpassword/${token}`
 
   const message = {
     from: "amazingracecondus@gmail.com",
     to: to,
-    subject: "Salasanan vaihto",
-    text: "Vaihda salasana 15 minuutin kuluessa: " + html
+    subject: "Amazing Race Condus App: Salasanan vaihto",
+    text: "Vaihda salasana 15 minuutin kuluessa: "+ resetUrl,
+    html: `<p>Vaihda salasanasi klikkaamalla <a href="${resetUrl}">tästä</a>. Linkki on voimassa 15 minuuttia.</p>`
   }
   await Mailer(message)
+}
+
+export const changePassword = async (password: string, confirmPassword: string, res: Response) => {
+  if ((!password || !confirmPassword) || (password !== confirmPassword)) {
+    res.status(400).json({ error: "Salasanat eivät täsmää." })
+    return
+  }
+  if (validatePassword(password, res)) {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const updatedUser = await prisma.user.updateMany({
+      where: {
+        admin: false
+      },
+      data: {
+        passwordHash: passwordHash
+      }
+    })
+    if (updatedUser.count !== 0) {
+      setPasswordResetTime()
+      return true
+    } else {
+      return false
+    }
+  }
 }

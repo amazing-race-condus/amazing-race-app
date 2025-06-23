@@ -113,7 +113,7 @@ const GameView = () => {
 
   return(
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi peliä</Text>
+      <Text style={styles.header}>Hallinnoi peliä {event.name}</Text>
       <GameReadyBox
         checkpoints={checkpoints}
         groups={groups}
