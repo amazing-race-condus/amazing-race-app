@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from "@testing-library/react-native"
-import AddNewButton from "../addNewButton"
+import AddNewButton from "../AddNewButton"
 
 describe("AddNewButton", () => {
   const mockOnPress = jest.fn()
