@@ -54,3 +54,20 @@ export const sortByStatus = (groups: Group[]) => {
     return a.name.localeCompare(b.name)
   })
 }
+
+export const getProgress = (group: Group) => {
+  //returns how many checkpoint the group has visited, including start and finish
+
+  if (!group.route)
+    return null
+  if (group.route.length === 0)
+    return null
+  if (group.nextCheckpointId === null && !group.finishTime)
+    return null
+  if (group.nextCheckpointId === null && group.finishTime)
+    return group.route.length
+
+  const routeCheckpointIds = group.route.map(route => route.id)
+
+  return routeCheckpointIds.indexOf(Number(group.nextCheckpointId))
+}

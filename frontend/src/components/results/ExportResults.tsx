@@ -4,7 +4,7 @@ import * as Sharing from "expo-sharing"
 import { Event, Group } from "@/types"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store/store"
-import { sortByTime } from "@/utils/groupUtils"
+import { sortByTime, getProgress } from "@/utils/groupUtils"
 import { getRaceTime } from "@/utils/timeUtils"
 
 const resultRowsText = (event: Event | null, groups: Group[] | null) => {
@@ -17,7 +17,7 @@ const resultRowsText = (event: Event | null, groups: Group[] | null) => {
     const timePrint = (time !== null) ? String(Math.round(time/60*100)/100) + " min" : "-"
     content += statusText(event, group)
     content += "  "
-    content += progress(group) + " rastia"
+    content += getProgress(group) + " rastia"
     content += "  "
     content += timePrint
     content += "  "
@@ -43,23 +43,6 @@ const statusText = (event: Event, group: Group, ranking?: number) => {
   return "Kesken"
 }
 
-const progress = (group: Group) => {
-  //returns how many checkpoint the group has visited, including start and finish
-
-  if (!group.route)
-    return null
-  if (group.route.length === 0)
-    return null
-  if (group.nextCheckpointId === null && !group.finishTime)
-    return null
-  if (group.nextCheckpointId === null && group.finishTime)
-    return group.route.length
-
-  const routeCheckpointIds = group.route.map(route => route.id)
-
-  return routeCheckpointIds.indexOf(Number(group.nextCheckpointId))
-}
-
 const resultsFileContent = (event: Event, groups: Group[]) => {
   const normalGroups = groups.filter(group => !group.easy)
   const easyGroups = groups.filter(group => group.easy)
@@ -74,8 +57,8 @@ const resultsFileContent = (event: Event, groups: Group[]) => {
   const easyOtherGroups = easyGroups.filter(group => (!(group.finishTime && !group.disqualified && !group.dnf && group.nextCheckpointId === null)))
 
   normalOtherGroups.sort((a, b) => {
-    let progressA = progress(a)
-    let progressB = progress(b)
+    let progressA = getProgress(a)
+    let progressB = getProgress(b)
     if (progressA === null)
       progressA = -1
     if (progressB === null)
@@ -84,8 +67,8 @@ const resultsFileContent = (event: Event, groups: Group[]) => {
   })
 
   easyOtherGroups.sort((a, b) => {
-    const progressA = progress(a)
-    const progressB = progress(b)
+    const progressA = getProgress(a)
+    const progressB = getProgress(b)
     if (!progressA || !progressB)
       return 0
     return progressA - progressB
