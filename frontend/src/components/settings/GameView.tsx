@@ -55,13 +55,15 @@ const GameView = () => {
       || intermediates.length < 4
       || groups.length > groupRoutes.length
       || groups.length === 0
+      || !validDistances
     ) {
       const reasons = [
         start.length === 0 && "Lähtörastia ei määritetty",
         finish.length === 0 && "Maalirastia ei määritetty",
         intermediates.length < 4 && "Välirasteja on vähemmän kuin 4",
         groups.length > groupRoutes.length && "Kaikilla ryhmillä ei ole reittiä (luo reitit)",
-        groups.length === 0 && "Ei ole yhtään ryhmää"
+        groups.length === 0 && "Ei ole yhtään ryhmää",
+        !validDistances && "Rastien välisiä etäisyyksiä ei ole määritetty"
       ].filter(Boolean).join("\n")
 
       dispatch(setNotification(`Peliä ei voida aloittaa:\n${reasons}`, "error"))
