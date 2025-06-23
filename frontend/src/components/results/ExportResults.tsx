@@ -12,10 +12,11 @@ const resultRowsText = (event: Event | null, groups: Group[] | null) => {
     return ""
 
   let content = ""
-  groups.forEach(group => {
+
+  groups.forEach((group, i) => {
     const time = getRaceTime(group, event)
     const timePrint = (time !== null) ? String(Math.round(time/60*100)/100) + " min" : "-"
-    content += statusText(event, group)
+    content += statusText(event, group, i+1)
     content += "  "
     content += getProgress(group) + " rastia"
     content += "  "
@@ -27,7 +28,7 @@ const resultRowsText = (event: Event | null, groups: Group[] | null) => {
   return content
 }
 
-const statusText = (event: Event, group: Group, ranking?: number) => {
+const statusText = (event: Event, group: Group, ranking: number) => {
   if (group.disqualified)
     return "Disk."
   if (group.dnf)
@@ -39,7 +40,7 @@ const statusText = (event: Event, group: Group, ranking?: number) => {
   if (group.route[0].id === group.nextCheckpointId)
     return "Ei al."
   if (group.finishTime && !group.disqualified && !group.dnf && group.nextCheckpointId === null)
-    return (event.endTime && ranking) ? "Sija " + ranking : "Sija ?"
+    return event.endTime ? "Sija " + ranking : "Sija ?"
   return "Kesken"
 }
 
