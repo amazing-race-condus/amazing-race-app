@@ -8,6 +8,7 @@ import theme from "@/theme"
 import GameReadyBox from "./GameReadyBox"
 import { useEffect, useState } from "react"
 import { setNotification } from "@/reducers/notificationSlice"
+import { validateDistances } from "@/services/routeService"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -17,6 +18,7 @@ const GameView = () => {
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
   const groups = useSelector((state: RootState) => state.groups)
   const [hints, setHints] = useState<boolean>(true)
+  const [validDistances, setValidDistances] = useState<boolean>(false)
 
   const start = checkpoints.filter(c => c.type === "START")
   const finish = checkpoints.filter(c => c.type === "FINISH")
@@ -38,8 +40,22 @@ const GameView = () => {
     }
   }, [checkpoints])
 
+  useEffect(() => {
+    const checkDistances = async () => {
+      const valid = await validateDistances(event.id)
+      setValidDistances(valid)
+    }
+    checkDistances()
+  }, [event.id, checkpoints])
+
   const handleStart = () => {
-    if (!start || !finish || intermediates.length < 4) {
+    if (
+      !start
+      || !finish
+      || intermediates.length < 4
+      || groups.length > groupRoutes.length
+      || groups.length === 0
+    ) {
       const reasons = [
         start.length === 0 && "Lähtörastia ei määritetty",
         finish.length === 0 && "Maalirastia ei määritetty",
@@ -50,9 +66,6 @@ const GameView = () => {
 
       dispatch(setNotification(`Peliä ei voida aloittaa:\n${reasons}`, "error"))
       return
-    }
-    if (!hints) {
-      dispatch(setNotification("Kaikilla rasteilla ei ole vihjettä", "warning"))
     }
     if (!event.startTime) {
       handleAlert({
@@ -108,6 +121,7 @@ const GameView = () => {
         hints={hints}
         groupRoutes={groupRoutes}
         startedGroups={startedGroups}
+        validDistances={validDistances}
       />
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
