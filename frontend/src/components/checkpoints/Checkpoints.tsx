@@ -27,14 +27,14 @@ const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Che
       {pathname.startsWith("/settings") && (
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           <Text style={styles.header}>Hallinnoi rasteja</Text>
-          <Text style={[styles.title, { fontSize: 12, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={[styles.title, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
 
       )}
       {pathname.startsWith("/checkpoints") && (
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           <Text style={styles.header}>Rastit</Text>
-          <Text style={[styles.title, { fontSize: 12, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={[styles.title, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
       )}
       <FlatList

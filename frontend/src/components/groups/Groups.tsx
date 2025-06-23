@@ -34,13 +34,13 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
       {pathname === "/" && (
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           <Text style={styles.title}> Ryhmät</Text>
-          <Text style={[styles.title, { fontSize: 12, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={[styles.title, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
       )}
       {pathname.startsWith("/settings") && (
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           <Text style={styles.header}>Hallinnoi ryhmiä </Text>
-          <Text style={[styles.title, { fontSize: 12, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={[styles.title, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
       )}
 
