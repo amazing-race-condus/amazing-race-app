@@ -31,12 +31,11 @@ const Team = () => {
     return null
   }
 
-  const checkpoints = group.route
+  const checkpoints = group.route || []
   const nextCheckpointId = group.nextCheckpointId!
-  const totalPenaltyTime = group.penalty.reduce((total, penalty) => total + penalty.time, 0) || 0
+  const totalPenaltyTime = group.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0
 
-  const passedIds = group.route
-    .slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
+  const passedIds = group.route?.slice(0, group.route.findIndex(cp => cp.id === group.nextCheckpointId))
     .map(cp => cp.id)
 
   const completeCheckpoint = (id: number, completeType: CompleteType) => {
@@ -130,7 +129,7 @@ const Team = () => {
         options={{ headerShown: false }}
       />
       <GroupStatusDisplay group={ group } />
-      {(group.route.length === 0) ?
+      {(checkpoints.length === 0) ?
         <>
           <GroupInfoHeader group={ group } totalPenalty={ totalPenaltyTime }/>
           <View style={styles.container}>
