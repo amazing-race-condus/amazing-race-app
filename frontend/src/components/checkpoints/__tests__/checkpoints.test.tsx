@@ -57,7 +57,8 @@ describe("<Checkpoints />", () => {
       </Provider>
     )
     await waitFor(() => {
-      expect(screen.getByText("Hallinnoi rasteja eventti")).toBeTruthy()
+      expect(screen.getByText("Hallinnoi rasteja")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
   })
 
@@ -77,7 +78,8 @@ describe("<Checkpoints />", () => {
       </Provider>
     )
     await waitFor(() => {
-      expect(screen.getByText("eventti | Rastit")).toBeTruthy()
+      expect(screen.getByText("Rastit")).toBeTruthy()
+      expect(screen.getByText("eventti")).toBeTruthy()
     })
   })
 

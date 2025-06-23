@@ -32,3 +32,13 @@ export const createEvent = async (event: AddEvent) => {
   const response = await axiosInstance.post<Event>("/event/create", event)
   return response.data
 }
+
+export const editEvent = async (id: number, newObject: AddEvent) => {
+  const response = await axiosInstance.put(`/event/${id}`, newObject)
+  return response.data
+}
+
+export const removeEvent = async (id: number) => {
+  const response = await axiosInstance.delete(`/event/${id}`)
+  return response.data
+}
