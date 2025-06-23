@@ -104,19 +104,34 @@ const shareResultsFile = async () => {
 
 const exportResults = async (event: Event, groups: Group[]) => {
   const canShare = await Sharing.isAvailableAsync()
-  if (canShare && Platform.OS !== "web") {
+  if (canShare) {
     await saveResultsFile(event, groups)
     await shareResultsFile()
   }
+}
+
+const exportResultsWeb = (event: Event, groups: Group[]) => {
+  const fileName = "amazing-race-tulokset.txt"
+  const file = new File([resultsFileContent(event, groups)], fileName, {type: "text/plain;charset=utf-8"})
+  const fileUrl = URL.createObjectURL(file)
+
+  const a = document.createElement("a")
+  a.href = fileUrl
+  a.download = fileName
+  a.click()
+
+  URL.revokeObjectURL(fileUrl)
 }
 
 const ExportResults = () => {
   const event = useSelector((state: RootState) => state.event)
   const groups = useSelector((state: RootState) => state.groups)
 
-  return (<View style={{ marginVertical: 10 }}>
-    <Button title="Jaa tulokset" onPress={() => exportResults(event, groups)} />
-  </View>)
+  return (
+    <View style={{ marginVertical: 10 }}>
+      {Platform.OS !== "web" && <Button title="Jaa tulokset (.txt)" onPress={() => exportResults(event, groups)} />}
+      {Platform.OS === "web" && <Button title="Lataa tulokset (.txt)" onPress={() => exportResultsWeb(event, groups)} />}
+    </View>)
 }
 
 export default ExportResults
