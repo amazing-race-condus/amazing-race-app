@@ -44,6 +44,8 @@ const EventSettings = () => {
             bottomSheetRef={editBottomSheetRef}
             event={selectedEvent}
             setSelectedEvent={setSelectedEvent}
+            events={events}
+            setEvents={setEvents}
           />
         </>
       )}
