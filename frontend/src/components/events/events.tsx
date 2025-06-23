@@ -42,7 +42,7 @@ const Events = ({
   }
 
   const sortedEvents = [...events]
-    .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
+    .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
 
   return (
     <View style={[styles.content, { flex: 1 }]}>
