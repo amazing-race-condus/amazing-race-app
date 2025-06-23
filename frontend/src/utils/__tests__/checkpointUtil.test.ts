@@ -2,6 +2,14 @@ import { CheckpointType } from "@/types"
 import { getType, sortCheckpoints } from "../checkpointUtils"
 import { listCheckpoints } from "../testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("getType returns correct string back:", () => {
   test("'START' should return 'Lähtö'", () => {
     const result: string = getType("START" as CheckpointType)

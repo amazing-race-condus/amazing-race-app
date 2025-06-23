@@ -1,6 +1,14 @@
 import { handleAlert } from "../handleAlert"
 import { Alert, Platform } from "react-native"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 const mockConfirm = jest.fn()
 Object.defineProperty(window, "confirm", {
   writable: true,

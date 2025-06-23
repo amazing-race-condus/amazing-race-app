@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     fontSize: theme.fontSizes.header,
     fontWeight: "bold",
+    textAlign: "center",
     color: theme.colors.textTitle,
   },
   itemHeader: {
@@ -66,6 +67,19 @@ export const styles = StyleSheet.create({
     height: 30,
     width: Math.min(screenWidth * 0.8, 355),
     backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  logoutbutton: {
+    height: 30,
+    width: Math.min(screenWidth * 0.8, 320),
+    backgroundColor: "orange",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -200,6 +214,9 @@ export const styles = StyleSheet.create({
     borderColor: "black",
     fontSize: 20,
     padding: 10,
+    //paddingTop: 20,
+    textAlignVertical: "center",
+    textAlign: "center",
     marginBottom: 10
   },
   error: {
@@ -286,12 +303,11 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
     color: "#333",
   },
-
   statValue: {
     fontWeight: "600",
     color: "#000",
   },
-  routeStatsCard: {
+  statsCard: {
     backgroundColor: "#ffffff",
     width: Math.min(screenWidth * 0.8, 355),
     borderRadius: 16,
@@ -325,6 +341,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
     zIndex: 10
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   }
 })
-

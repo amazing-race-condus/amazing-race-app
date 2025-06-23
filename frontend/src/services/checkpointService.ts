@@ -1,24 +1,22 @@
-import axios from "axios"
-import { url } from "../config"
+import axiosInstance from "./api"
 import { Checkpoint, AddCheckpoint } from "@/types"
 
 export const getCheckpoint = async (id: string | string[]): Promise<Checkpoint> => {
-  const response = await axios.get<Checkpoint>(`${url}/checkpoints/${id}`)
+  const response = await axiosInstance.get<Checkpoint>(`/checkpoints/${id}`)
   return response.data
 }
 
 export const getAllCheckpoints = async (eventId: number): Promise<Checkpoint[]> => {
-  const response = await axios.get<Checkpoint[]>(`${url}/checkpoints`,{
+  const response = await axiosInstance.get<Checkpoint[]>("/checkpoints", {
     params :{
       eventId: eventId
     }
-  }
-  )
+  })
   return response.data
 }
 
 export const createCheckpoint = async (newObject: AddCheckpoint, eventId: number) => {
-  const response = await axios.post<Checkpoint>(`${url}/checkpoints`, {
+  const response = await axiosInstance.post<Checkpoint>("/checkpoints", {
     ...newObject,
     eventId: eventId
   })
@@ -26,11 +24,11 @@ export const createCheckpoint = async (newObject: AddCheckpoint, eventId: number
 }
 
 export const removeCheckpoint = async (id: number) => {
-  const response = await axios.delete(`${url}/checkpoints/${id}`)
+  const response = await axiosInstance.delete(`/checkpoints/${id}`)
   return response.data
 }
 
 export const editCheckpoint = async (id: number, newObject: AddCheckpoint) => {
-  const response = await axios.put(`${url}/checkpoints/${id}`, newObject)
+  const response = await axiosInstance.put(`/checkpoints/${id}`, newObject)
   return response.data
 }

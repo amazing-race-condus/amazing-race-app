@@ -7,9 +7,12 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import AddNewButton from "@/components/ui/addNewButton"
 import Events from "@/components/events/events"
 import { Event } from "@/types"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 
 const EventSettings = () => {
   const [events, setEvents] = useState<Event[]>([])
+  const user = useSelector((state: RootState) => state.user)
 
   const addBottomSheetRef = useRef<BottomSheet>(null)
   const handleAdd = () => {
@@ -19,8 +22,12 @@ const EventSettings = () => {
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Events events={events} setEvents={setEvents}/>
-      <AddNewButton onPress={handleAdd} />
-      <AddEventForm events={events} setEvents={setEvents} bottomSheetRef={addBottomSheetRef}/>
+      { user.admin && (
+        <>
+          <AddNewButton onPress={handleAdd} />
+          <AddEventForm events={events} setEvents={setEvents} bottomSheetRef={addBottomSheetRef}/>
+        </>
+      )}
     </View>
   )
 }

@@ -2,6 +2,14 @@ import notificationReducer, { setMessage, setNotification } from "../notificatio
 import type { Notification } from "@/types"
 import { createMockStore } from "@/utils/testUtils"
 
+jest.mock("@/utils/storageUtil", () => ({
+  storageUtil: {
+    setUser: jest.fn(),
+    getUser: jest.fn(),
+    removeUser: jest.fn(),
+  },
+}))
+
 describe("notificationSlice reducers", () => {
   let store : ReturnType<typeof createMockStore>
 

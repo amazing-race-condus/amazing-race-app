@@ -11,8 +11,7 @@ export const getAllCheckpoints = async (eventId: number) => {
     where: {
       eventId: eventId
     }
-  }
-  )
+  })
   return allCheckpoints
 }
 
@@ -30,6 +29,20 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
     return
   }
 
+  let parsedType: Type | undefined = undefined
+
+  if (!Object.values(Type).includes(data.type)) {
+    res.status(400).json({ error: "Virheellinen tyyppi." })
+    return
+  }
+
+  parsedType = data.type as Type
+
+  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, data.eventId!)
+  if (!validCheckpointLayout) {
+    return
+  }
+
   const validName = await validateName(data.name, res, data.eventId!)
   if (!validName) {
     return
@@ -42,20 +55,6 @@ export const createCheckpoint = async (data: newCheckpoint, res: Response) => {
 
   const validEasyHint = await validateHint(data.hint, res)
   if (!validEasyHint) {
-    return
-  }
-
-  let parsedType: Type | undefined = undefined
-
-  if (!Object.values(Type).includes(data.type)) {
-    res.status(400).json({ error: "Virheellinen tyyppi." })
-    return
-  }
-
-  parsedType = data.type as Type
-
-  const validCheckpointLayout = await validateCheckpointLayout(parsedType, res, data.eventId!)
-  if (!validCheckpointLayout) {
     return
   }
 
@@ -80,11 +79,9 @@ export const deleteCheckpoint = async (checkpointId: number) => {
   })
 }
 
-export const modifyCheckpoint = async (checkpointId: number, name: string, type: CheckpointType, hint: string, easyHint: string, res: Response) => {
-
+export const modifyCheckpoint = async (checkpointId: number, eventId: number, name: string, type: CheckpointType, hint: string, easyHint: string, res: Response) => {
   const id = checkpointId
-
-  const data: Partial<{ name: string, type: CheckpointType, hint: string, easyHint: string}> = {}
+  const data: Partial<{ eventId: number, name: string, type: CheckpointType, hint: string, easyHint: string}> = {}
 
   const checkpointToModify = await prisma.checkpoint.findUnique({
     where: { id },
@@ -95,7 +92,7 @@ export const modifyCheckpoint = async (checkpointId: number, name: string, type:
     return
   }
 
-  const validName = await validateName(name, res, checkpointId)
+  const validName = await validateName(name, res, eventId, checkpointId)
   if (!validName) {
     return
   }
@@ -128,10 +125,12 @@ export const modifyCheckpoint = async (checkpointId: number, name: string, type:
   if (name !== undefined) data.name = name
   if (hint !== undefined) data.hint = hint
   if (easyHint !== undefined) data.easyHint = easyHint
+  data.eventId = eventId
 
   const updatedCheckpoint = await prisma.checkpoint.update({
     where: { id },
     data
   })
+
   return updatedCheckpoint
 }

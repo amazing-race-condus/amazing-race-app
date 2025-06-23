@@ -17,18 +17,21 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
     return false
   }
 
-  const existingName = await prisma.checkpoint.findFirst({
+  const existingNames = await prisma.checkpoint.findMany({
     where: {
-      eventId : eventId,
+      eventId: eventId,
       name: {
         equals: name.trim(),
         mode: "insensitive"
       }
     }
   })
-  if (existingName && existingName.id !== id) {
-    res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi." })
-    return false
+
+  for (const existingName of existingNames) {
+    if (existingName && existingName.id !== id) {
+      res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi." })
+      return false
+    }
   }
 
   return true

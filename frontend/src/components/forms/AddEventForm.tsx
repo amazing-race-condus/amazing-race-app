@@ -30,7 +30,7 @@ const AddEventForm = ({
 
   const addNewEvent = async () => {
     if (eventName === "") {
-      dispatch(setNotification("Ryhmällä täytyy olla nimi.", "error"))
+      dispatch(setNotification("Ryhmällä täytyy olla nimi", "error"))
       return
     }
     try {
@@ -40,7 +40,7 @@ const AddEventForm = ({
       }
       createEvent(newEvent)
       setEvents(events)
-      dispatch(setNotification("Tapahtuma luotu.", "success"))
+      dispatch(setNotification("Tapahtuma luotu", "success"))
     } catch (error) {
       console.error("Failed to create event", error)
       if (error instanceof AxiosError) {

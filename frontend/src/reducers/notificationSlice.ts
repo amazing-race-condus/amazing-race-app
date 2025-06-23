@@ -33,5 +33,14 @@ export const setNotification =
       }, 5000)
     }
 
+export const removeNotificationReducer =
+  () => async (dispatch: AppDispatch) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+    dispatch(setMessage({ message: "", type: null }))
+  }
+
 export const { setMessage } = messageSlice.actions
 export default messageSlice.reducer

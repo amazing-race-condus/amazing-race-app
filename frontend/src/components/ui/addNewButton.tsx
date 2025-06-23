@@ -7,6 +7,7 @@ const AddNewButton = ({ onPress }: { onPress: () => void }) => {
   return (
     <Pressable
       onPress={onPress}
+      role="button"
       style={{
         position: "absolute",
         bottom: 20,

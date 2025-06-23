@@ -20,6 +20,19 @@ export const initialCheckpoints = [
   }
 ]
 
+export const users = [
+  {
+    username: "admin",
+    password: "Admin123",
+    admin: true
+  },
+  {
+    username: "user",
+    password: "User1234",
+    admin: false
+  }
+]
+
 export const checkpoints = [
   {
     name: "Oodi",
