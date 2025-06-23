@@ -51,15 +51,7 @@ routesRouter.get("/:event_id/distances/validate", verifyToken, async (req: Reque
   res.send(valid)
 })
 
-routesRouter.get("/:event_id/routes_info", async (req: Request, res: Response) => {
-  const eventId = Number(req.params.event_id)
-
-  const routes = await getRoutesInfo(eventId)
-
-  res.send(routes)
-})
-
-routesRouter.get("/:event_id/active_routes_info", async (req: Request, res: Response) => {
+routesRouter.get("/:event_id/active_routes_info", verifyToken, async (req: Request, res: Response) => {
   const eventId = Number(req.params.event_id)
 
   const activeRoutes = await getActiveRoutesInfo(eventId)
