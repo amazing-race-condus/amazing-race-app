@@ -1,14 +1,19 @@
-import { RootState } from "@/store/store"
+import store, { AppDispatch, RootState } from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import { Event } from "@/types"
 import { handleAlert } from "@/utils/handleAlert"
-import React from "react"
+import React, { useEffect } from "react"
 import { View, Pressable, Text } from "react-native"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { removeEvent } from "@/services/eventService"
+import { setNotification } from "@/reducers/notificationSlice"
+import { AxiosError } from "axios"
+import { formatDate } from "@/utils/timeUtils"
 
 const EventItem = ({ item, handleEventChange, onEditEvent }: { item: Event, handleEventChange: (id : number) => void,  onEditEvent?: (event: Event) => void }) => {
   const eventId = useSelector((state: RootState) => state.event.id)
   const user = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleChangeEvent = (id: number) => {
     handleAlert({
@@ -19,11 +24,32 @@ const EventItem = ({ item, handleEventChange, onEditEvent }: { item: Event, hand
     })
   }
 
+  const handleRemoveEvent = (id: number) => {
+    handleAlert({
+      confirmText: "Poista",
+      title: "Vahvista poisto",
+      message: "Oletko varma että haluat poistaa tämän tapahtuman? Tapahtuman poistaminen poistaa myös kaikki siihen liittyvät ryhmät, rastit ja tiedot.",
+      onConfirm: async () => {
+        try {
+          await removeEvent(id)
+          dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            dispatch(setNotification( error.response?.data.error ?? `Tapahtumaa ei voi poistaa: ${error.message}`, "error"))
+          }
+        }
+      }
+    })
+  }
+
   return (
     <View style={[styles.item, item.id === eventId ? { backgroundColor: "rgba(0, 254, 51, 0.66)" } : null]}>
       <View style={{ flex: 1 }}>
         <Text style={styles.checkpointName}>
           {item.name}
+        </Text>
+        <Text style={[styles.checkpointName, { fontSize: 12 }]}>
+          {formatDate(new Date(item.eventDate))}
         </Text>
 
         {item.id !== eventId ? (
@@ -44,16 +70,16 @@ const EventItem = ({ item, handleEventChange, onEditEvent }: { item: Event, hand
           </View>
         )}
         { user.admin && (
-          <>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-              <Pressable style={[ styles.button2, { flex: 1, marginLeft: 8, padding: 5, marginTop: 10 } ]} onPress={() => console.log("poistetaan")}>
-                <Text style={styles.buttonText}>Poista</Text>
-              </Pressable>
-              <Pressable style={[styles.button2, { flex:1, marginLeft: 8, padding: 5, marginTop: 10 }]} onPress={() => onEditEvent?.(item)}>
-                <Text style={styles.buttonText}>Muokkaa</Text>
-              </Pressable>
-            </View>
-          </>
+
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
+            <Pressable style={[ styles.button2, { flex: 1, marginLeft: 8, padding: 5, marginTop: 10 } ]} onPress={() => handleRemoveEvent(Number(item.id))}>
+              <Text style={styles.buttonText}>Poista</Text>
+            </Pressable>
+            <Pressable style={[styles.button2, { flex:1, marginLeft: 8, padding: 5, marginTop: 10 }]} onPress={() => onEditEvent?.(item)}>
+              <Text style={styles.buttonText}>Muokkaa</Text>
+            </Pressable>
+          </View>
+
         )}
       </View>
 

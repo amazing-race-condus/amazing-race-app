@@ -41,12 +41,15 @@ const Events = ({
     dispatch(setNotification("Tapahtumanäkymä vaihdettu","success"))
   }
 
+  const sortedEvents = [...events]
+    .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
+
   return (
     <View style={[styles.content, { flex: 1 }]}>
       <Text style={styles.header}>Hallinnoi tapahtumia:</Text>
 
       <FlatList
-        data={events}
+        data={sortedEvents}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
           <EventItem item={ item } handleEventChange={handleEventChange} onEditEvent={onEditEvent}/>
