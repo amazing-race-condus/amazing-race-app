@@ -58,7 +58,10 @@ const GameView = () => {
 
   return(
     <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi peliä {event.name}</Text>
+      <View style={{ flexDirection: "column", justifyContent: "center" }}>
+        <Text style={styles.title}>Hallinnoi peliä</Text>
+        <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+      </View>
       <GameReadyBox />
       <Pressable style={styles.bigButton} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
