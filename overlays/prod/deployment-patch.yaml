@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: condus-amazing-race-dep
+spec:
+  template:
+    spec:
+      containers:
+      - name: condus-amazing-race
+        env:
+        - name: FRONTEND_URL
+          value: https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
