@@ -14,10 +14,12 @@ import { storageUtil } from "@/utils/storageUtil"
 
 const Events = ({
   events,
-  setEvents
+  setEvents,
+  onEditEvent
 }: {
     events: Event[]
     setEvents: (event: Event[]) => void
+    onEditEvent?: (event: Event) => void
   }) => {
 
   const dispatch: AppDispatch = useDispatch<AppDispatch>()
@@ -47,7 +49,7 @@ const Events = ({
         data={events}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
-          <EventItem item={ item } handleEventChange={handleEventChange}/>
+          <EventItem item={ item } handleEventChange={handleEventChange} onEditEvent={onEditEvent}/>
         )}
       />
     </View>

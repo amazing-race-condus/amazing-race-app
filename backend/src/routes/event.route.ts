@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express"
 import { getAllEvents, getEventById, startEvent,
-  endEvent,getDefaultEvent, createEvent} from "../controllers/event.controller"
+  endEvent,getDefaultEvent, createEvent, modifyEvent, deleteEvent } from "../controllers/event.controller"
 import { verifyToken } from "../utils/middleware"
 import { User } from "@/types"
 
@@ -77,7 +77,7 @@ eventRouter.post("/create", verifyToken, async (req: CustomRequest, res: Respons
     res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
     return
   }
-  const event = await createEvent(req.body)
+  const event = await createEvent(req.body, res)
 
   if (event) {
     res.json(event)
@@ -85,6 +85,37 @@ eventRouter.post("/create", verifyToken, async (req: CustomRequest, res: Respons
     res.status(400).json({ error: "Tapahtumaa ei voitu luoda."})
   }
   return
+})
+
+eventRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) => {
+
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
+  const id = Number(req.params.id)
+  const { name, eventDate } = req.body
+  const updatedEvent = await modifyEvent(id, name, eventDate, res)
+
+  res.status(200).json(updatedEvent)
+
+})
+
+eventRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Response) => {
+  const user = req.user
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+    return
+  }
+  const id = Number(req.params.id)
+
+  const event  = await deleteEvent(id)
+  if (event) {
+    res.json(event)
+  } else {
+    res.status(404).end()
+  }
 })
 
 export default eventRouter
