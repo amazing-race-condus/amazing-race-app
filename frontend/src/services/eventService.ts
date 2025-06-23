@@ -29,7 +29,7 @@ export const endGame = async (id: number) => {
 }
 
 export const createEvent = async (event: AddEvent) => {
-  const response = await axiosInstance.post<AddEvent>("/event/create", event)
+  const response = await axiosInstance.post<Event>("/event/create", event)
   return response.data
 }
 
