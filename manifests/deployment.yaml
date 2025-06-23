@@ -26,8 +26,25 @@ spec:
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: condus-db-secret
-              key: API_KEY
+              name: condus-secret
+              key: DB_KEY
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: SECRET
+        - name: EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: EMAIL
+        - name: EMAILPW
+          valueFrom:
+            secretKeyRef:
+              name: condus-secret
+              key: EMAILPW
+        - name: FRONTEND_URL
+          value: https://condus-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi
         resources:
           limits:
             cpu: 250m
