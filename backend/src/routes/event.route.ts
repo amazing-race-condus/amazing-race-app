@@ -18,8 +18,8 @@ eventRouter.get("/", verifyToken, async (_, res: Response) => {
 })
 
 eventRouter.get("/default", verifyToken, async (_, res: Response) => {
-  const events = await getDefaultEvent()
-  res.json(events)
+  const event = await getDefaultEvent()
+  res.json(event)
   return
 })
 

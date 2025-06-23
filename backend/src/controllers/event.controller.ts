@@ -14,7 +14,7 @@ export const getAllEvents = async () => {
 }
 
 export const getDefaultEvent = async () => {
-  const events = await prisma.event.findFirst({
+  const event = await prisma.event.findFirst({
     include: {
       group: true,
       checkpoints: true,
@@ -23,7 +23,7 @@ export const getDefaultEvent = async () => {
       eventDate: "desc"
     }
   })
-  return events
+  return event
 
 }
 
