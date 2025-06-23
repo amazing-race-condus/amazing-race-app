@@ -1,46 +1,9 @@
 import { styles } from "@/styles/commonStyles"
 import { View, Text } from "react-native"
 import { FontAwesome5 } from "@expo/vector-icons"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store/store"
-import { validateDistances } from "@/services/routeService"
-import { useState, useEffect } from "react"
-import GameStartItem from "./GameStartItem"
+import { GameStartItem } from "./GameStartItem"
 
-const GameReadyBox = () => {
-  const checkpoints = useSelector((state: RootState) => state.checkpoints)
-  const groups = useSelector((state: RootState) => state.groups)
-  const event = useSelector((state: RootState) => state.event)
-  const [validDistances, setValidDistances] = useState<boolean>(false)
-  const [hints, setHints] = useState<boolean>(true)
-
-  const start = checkpoints.filter(c => c.type === "START")
-  const finish = checkpoints.filter(c => c.type === "FINISH")
-  const intermediates = checkpoints.filter(c => c.type === "INTERMEDIATE")
-  const groupRoutes = groups.filter(g => g.route?.length > 0)
-  const startedGroups = groups.filter(g => {
-    if (!g.nextCheckpointId || !g.route) {
-      return false
-    }
-    return g.nextCheckpointId !== g.route[0].id
-  })
-
-  useEffect(() => {
-    const checkDistances = async () => {
-      const valid = await validateDistances(event.id)
-      setValidDistances(valid)
-    }
-    checkDistances()
-  }, [event.id, checkpoints])
-
-  useEffect(() => {
-    for (const checkpoint of checkpoints) {
-      if (checkpoint.hint === "" || checkpoint.easyHint === "") {
-        setHints(false)
-      }
-    }
-  }, [checkpoints])
-
+const GameReadyBox = (props: any) => {
   return (
     <View style={styles.statsCard}>
       <View style={styles.statTitle}>
@@ -48,37 +11,43 @@ const GameReadyBox = () => {
         <Text style={styles.statTitle}> Pelin aloitus </Text>
         <FontAwesome5 name="check" size={20} color="#003366" />
       </View>
+      <View style={styles.statTitle}>
+        <Text style={styles.statTitle}>Pakolliset </Text>
+      </View>
       <GameStartItem
         text="Lähtörasti"
-        checkBoolean={start.length > 0}
+        checkBoolean={props.start.length > 0}
       />
       <GameStartItem
         text="Maali"
-        checkBoolean={finish.length > 0}
+        checkBoolean={props.finish.length > 0}
       />
       <GameStartItem
         text="Vähintään 4 välirastia"
-        checkBoolean={intermediates.length > 3}
+        checkBoolean={props.intermediates.length > 3}
       />
       <GameStartItem
         text="Rastien etäisyydet määritetty"
-        checkBoolean={validDistances}
+        checkBoolean={props.validDistances}
       />
       <GameStartItem
         text="Vähintään yksi ryhmä"
-        checkBoolean={groups.length > 0}
+        checkBoolean={props.groups.length > 0}
       />
       <GameStartItem
         text="Jokaisella ryhmällä on reitti"
-        checkBoolean={groups.length > 0 && groups.length === groupRoutes.length}
+        checkBoolean={props.groups.length > 0 && props.groups.length === props.groupRoutes.length}
       />
+      <View style={styles.statTitle}>
+        <Text style={styles.statTitle}>Suositellut </Text>
+      </View>
       <GameStartItem
         text="Kaikilla rasteilla on vihjeet"
-        checkBoolean={hints}
+        checkBoolean={props.hints && props.checkpoints.length > 0}
       />
       <GameStartItem
-        text={`Ryhmiä merkitty aloittaneiksi ${startedGroups.length}/${groups.length}`}
-        checkBoolean={startedGroups.length === groups.length}
+        text={`Ryhmiä merkitty aloittaneiksi ${props.startedGroups.length}/${props.groups.length}`}
+        checkBoolean={props.startedGroups.length === props.groups.length && props.groups.length > 0}
       />
     </View>
   )

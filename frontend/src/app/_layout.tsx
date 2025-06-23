@@ -59,10 +59,13 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
   const user = useSelector((state: RootState) => state.user)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    dispatch(loadUserFromStorage())
+    dispatch(loadUserFromStorage()).finally(() => setLoading(false))
   }, [dispatch])
+
+  if (loading) return null
 
   return (
     <DataRefreshProvider>
