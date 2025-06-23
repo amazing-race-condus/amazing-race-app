@@ -34,7 +34,7 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const refreshData = async () => {
       const eventId = store.getState().event.id
-      if (eventId) {
+      if (eventId && user.token) {
         await Promise.all([
           store.dispatch(fetchGroups(eventId)),
           store.dispatch(fetchCheckpoints(eventId))
@@ -59,10 +59,13 @@ function DataRefreshProvider({ children }: { children: React.ReactNode }) {
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
   const user = useSelector((state: RootState) => state.user)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    dispatch(loadUserFromStorage())
+    dispatch(loadUserFromStorage()).finally(() => setLoading(false))
   }, [dispatch])
+
+  if (loading) return null
 
   return (
     <DataRefreshProvider>
