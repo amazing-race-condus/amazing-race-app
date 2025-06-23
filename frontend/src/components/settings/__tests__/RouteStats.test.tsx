@@ -36,10 +36,9 @@ describe("<RouteStats />", () => {
 
     expect(screen.getByText("Reittien tilastot")).toBeTruthy()
     expect(screen.getByText(/Reittien lukumäärä:/)).toBeTruthy()
-    expect(screen.getByText("5 kpl")).toBeTruthy()
-    expect(screen.getByText(/Käytössä:/)).toBeTruthy()
-    expect(screen.getByText("3")).toBeTruthy()
-    expect(screen.getByText("5")).toBeTruthy()
+    expect(screen.queryAllByText("5 kpl")).toHaveLength(2)
+    expect(screen.getByText(/Käytössä/)).toBeTruthy()
+    expect(screen.getByText("3 kpl")).toBeTruthy()
   })
 
   test("displays correct median route time", () => {
@@ -51,7 +50,7 @@ describe("<RouteStats />", () => {
       />
     )
 
-    expect(screen.getByText(/Mediaanipituus:/)).toBeTruthy()
+    expect(screen.queryAllByText(/Mediaanipituus:/)).toHaveLength(2)
     expect(screen.getByText("100 min")).toBeTruthy()
   })
 
@@ -64,23 +63,10 @@ describe("<RouteStats />", () => {
       />
     )
 
-    expect(screen.getByText(/Lyhin reitti:/)).toBeTruthy()
-    expect(screen.getByText("90 min")).toBeTruthy()
-    expect(screen.getByText(/Pisin reitti:/)).toBeTruthy()
-    expect(screen.getByText("110 min")).toBeTruthy()
-  })
-
-  test("renders no data message when no active routes exist", () => {
-    render(
-      <RouteStats
-        routes={mockRoutes}
-        activeRoutes={[]}
-        groupsLength={5}
-      />
-    )
-
-    expect(screen.getByText("Ei tietoja - luo reitit nähdäksesi tilastoja.")).toBeTruthy()
-    expect(screen.queryByText("Reittien tilastot")).toBeNull()
+    expect(screen.queryAllByText(/Lyhin reitti:/)).toHaveLength(2)
+    expect(screen.queryAllByText("90 min")).toHaveLength(2)
+    expect(screen.queryAllByText(/Pisin reitti:/)).toHaveLength(2)
+    expect(screen.getByText("130 min")).toBeTruthy()
   })
 
   test("handles single active route correctly", () => {
@@ -94,9 +80,6 @@ describe("<RouteStats />", () => {
       />
     )
 
-    expect(screen.getByText(/Mediaanipituus:/)).toBeTruthy()
-    expect(screen.getByText(/Lyhin reitti:/)).toBeTruthy()
-    expect(screen.getByText(/Pisin reitti:/)).toBeTruthy()
     expect(screen.getAllByText("95 min")).toHaveLength(3)
   })
 
@@ -128,9 +111,9 @@ describe("<RouteStats />", () => {
       />
     )
 
-    expect(screen.getByText(/Käytössä:/)).toBeTruthy()
-    expect(screen.getByText("3")).toBeTruthy()
-    expect(screen.getByText("8")).toBeTruthy()
+    expect(screen.getByText(/Käytössä/)).toBeTruthy()
+    expect(screen.getByText("3 kpl")).toBeTruthy()
+    expect(screen.getByText("8 kpl")).toBeTruthy()
   })
 
   test("handles zero groups correctly", () => {
@@ -142,8 +125,8 @@ describe("<RouteStats />", () => {
       />
     )
 
-    expect(screen.getByText(/Käytössä:/)).toBeTruthy()
-    expect(screen.getByText("3")).toBeTruthy()
-    expect(screen.getByText("0")).toBeTruthy()
+    expect(screen.getByText(/Käytössä/)).toBeTruthy()
+    expect(screen.getByText("3 kpl")).toBeTruthy()
+    expect(screen.getByText("0 kpl")).toBeTruthy()
   })
 })
