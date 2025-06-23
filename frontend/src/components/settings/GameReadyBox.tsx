@@ -17,7 +17,7 @@ const GameReadyBox = () => {
   const start = checkpoints.filter(c => c.type === "START")
   const finish = checkpoints.filter(c => c.type === "FINISH")
   const intermediates = checkpoints.filter(c => c.type === "INTERMEDIATE")
-  const groupRoutes = groups.filter(g => g.route.length > 0)
+  const groupRoutes = groups.filter(g => g.route?.length > 0)
   const startedGroups = groups.filter(g => {
     if (!g.nextCheckpointId || !g.route) {
       return false
