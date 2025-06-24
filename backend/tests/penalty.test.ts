@@ -1,6 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, initialGroups, users } from "./test_helper"
+import { initialCheckpoints, initialEvent, initialGroups, users } from "./test_helper"
 
 const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
@@ -9,23 +9,38 @@ describe("Penalties", () => {
   let checkpointId: number
   let penaltyId: number
   let userToken: string
-
+  let eventId: number
 
   beforeAll(async () => {
+    const event = await prisma.event.create({
+      data: initialEvent,
+    })
+    eventId = event.id
+
     await prisma.user.deleteMany({})
     await request(app).post("/api/authentication")
       .send(users[1])
     const userLoginResponse = await request(app).post("/api/login")
       .send(users[1])
     userToken = userLoginResponse.body.token
+
+    const groupsWithEventId = initialGroups.map(group => ({
+      ...group,
+      eventId: eventId
+    }))
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
+
     await prisma.group.deleteMany({})
     await prisma.group.createMany({
-      data: initialGroups,
+      data: groupsWithEventId,
     })
 
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
+      data: checkpointsWithEventId,
     })
 
     const firstGroup = await prisma.group.findFirst({})
@@ -48,6 +63,7 @@ describe("Penalties", () => {
     await prisma.group.deleteMany({})
     await prisma.checkpoint.deleteMany({})
     await prisma.penalty.deleteMany({})
+    await prisma.event.deleteMany({})
     await prisma.$disconnect()
     server.close()
   })

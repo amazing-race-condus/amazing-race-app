@@ -21,12 +21,14 @@ async function main() {
       data: [{
         name: "Eventti",
         minRouteTime: 90,
-        maxRouteTime: 120
+        maxRouteTime: 120,
+        eventDate: new Date(2025, 8, 21)
       },
       {
         name: "Eventti2",
         minRouteTime: 80,
-        maxRouteTime: 100
+        maxRouteTime: 100,
+        eventDate: new Date(2025, 8, 21)
       }]
     })
     console.log("Inserted event")

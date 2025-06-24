@@ -1,6 +1,7 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { users } from "./test_helper"
+import { initialEvent, users } from "./test_helper"
+import { AddEvent } from "@/types"
 
 const newEvent = {
   name: "newEvent",
@@ -18,10 +19,7 @@ describe("Get events", () => {
     await prisma.event.deleteMany({})
     await prisma.user.deleteMany({})
     const firstEvent = await prisma.event.create({
-      data: {
-        name: "Test Event",
-        eventDate: new Date()
-      },
+      data: initialEvent,
     })
     await request(app).post("/api/authentication")
       .send(users[1])
@@ -47,7 +45,7 @@ describe("Get events", () => {
     expect(response.headers["content-type"]).toMatch(/application\/json/)
     expect(response.body).toMatchObject({
       id: EventId,
-      name: "Test Event",
+      name: "eventti1",
     })
   })
 
@@ -92,6 +90,10 @@ describe("Create event", () => {
   })
 
   it("Event can be created with valid token", async () => {
+    const newEvent: AddEvent = {
+      name: "newEvent",
+      eventDate: new Date("2025-01-01")
+    }
     const response = await request(app)
       .post("/api/event/create")
       .send(newEvent)
