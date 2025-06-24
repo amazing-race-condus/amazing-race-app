@@ -69,224 +69,245 @@ describe("Get all checkpoints", () => {
   })
 })
 
-// describe("Viewing a specific checkpoint", () => {
-//   beforeEach(async () => {
-//     await prisma.checkpoint.deleteMany({})
-//     await prisma.checkpoint.createMany({
-//       data: initialCheckpoints,
-//     })
-//   })
+describe("Viewing a specific checkpoint", () => {
+  beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: checkpointsWithEventId,
+    })
+  })
 
-//   it("succeeds with a valid id", async () => {
-//     const checkpointsAtStart = await prisma.checkpoint.findMany()
-//     const checkpointToView = checkpointsAtStart[0]
+  it("succeeds with a valid id", async () => {
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToView = checkpointsAtStart[0]
 
-//     const response = await request(app)
-//       .get(`/api/checkpoints/${checkpointToView.id}`)
-//       .set("Authorization", `Bearer ${userToken}`)
-//       .expect(200)
+    const response = await request(app)
+      .get(`/api/checkpoints/${checkpointToView.id}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(200)
 
-//     expect(response.headers["content-type"]).toMatch(/application\/json/)
-//     expect(response.body).toMatchObject({
-//       id: checkpointToView.id,
-//       name: checkpointToView.name,
-//       type: checkpointToView.type,
-//     })
-//   })
+    expect(response.headers["content-type"]).toMatch(/application\/json/)
+    expect(response.body).toMatchObject({
+      id: checkpointToView.id,
+      name: checkpointToView.name,
+      type: checkpointToView.type,
+    })
+  })
 
-//   it("fails with statuscode 400 if id is invalid", async () => {
-//     const invalidId = "5a3d"
-//     const response = await request(app)
-//       .get(`/api/checkpoints/${invalidId}`)
-//       .set("Authorization", `Bearer ${userToken}`)
-//     expect(response.status).toBe(400)
-//   })
+  it("fails with statuscode 400 if id is invalid", async () => {
+    const invalidId = "5a3d"
+    const response = await request(app)
+      .get(`/api/checkpoints/${invalidId}`)
+      .set("Authorization", `Bearer ${userToken}`)
+    expect(response.status).toBe(400)
+  })
 
-//   it("fails with statuscode 401 if token is invalid", async () => {
-//     const checkpointsAtStart = await prisma.checkpoint.findMany()
-//     const checkpointToView = checkpointsAtStart[0]
-//     const result = await request(app)
-//       .get(`/api/checkpoints/${checkpointToView.id}`)
-//       .set("Authorization", `Bearer ${invalidToken}`)
-//       .expect(401)
-//     expect(result.body.error).toContain("Token missing or invalid")
-//   })
-// })
+  it("fails with statuscode 401 if token is invalid", async () => {
+    const checkpointsAtStart = await prisma.checkpoint.findMany()
+    const checkpointToView = checkpointsAtStart[0]
+    const result = await request(app)
+      .get(`/api/checkpoints/${checkpointToView.id}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .expect(401)
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
+})
 
-// describe("Addition of a new checkpoint", () => {
-//   it("succeeds with valid data and valid token", async () => {
-//     const newCheckpoint = {
-//       name: "Tennispalatsi",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+describe("Addition of a new checkpoint", () => {
+  beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
 
-//     await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(201)
-//   })
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: checkpointsWithEventId,
+    })
+  })
 
-//   it("fails with status code 401 with valid data and invalid token", async () => {
-//     const newCheckpoint = {
-//       name: "Tennispalatsi",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+  it("succeeds with valid data and valid token", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi",
+      eventId: eventId
+    }
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${invalidToken}`)
-//       .send(newCheckpoint)
-//       .expect(401)
+    await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(201)
+  })
 
-//     expect(result.body.error).toContain("Token missing or invalid")
-//   })
+  it("fails with status code 401 with valid data and invalid token", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
 
-//   it("fails with status code 401 if a valid token belongs to a non-admin user", async () => {
-//     const newCheckpoint = {
-//       name: "Tennispalatsi",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${invalidToken}`)
+      .send(newCheckpoint)
+      .expect(401)
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${userToken}`)
-//       .send(newCheckpoint)
-//       .expect(401)
+    expect(result.body.error).toContain("Token missing or invalid")
+  })
 
-//     expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
-//   })
+  it("fails with status code 401 if a valid token belongs to a non-admin user", async () => {
+    const newCheckpoint = {
+      name: "Tennispalatsi",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
+
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${userToken}`)
+      .send(newCheckpoint)
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
 
 
 
-//   it("fails with status code 400 if some required data is missing", async () => {
-//     const newCheckpoint = {
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+  it("fails with status code 400 if some required data is missing", async () => {
+    const newCheckpoint = {
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi"
+    }
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+    const result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-//     expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu.")
-//   })
+    expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu.")
+  })
 
-//   it("fails with status code 400 and proper error message with too long or short name", async () => {
-//     let newCheckpoint = {
-//       name: "S",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+  it("fails with status code 400 and proper error message with too long or short name", async () => {
+    let newCheckpoint = {
+      name: "S",
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi",
+      eventId: eventId
+    }
 
-//     let result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+    let result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-//     expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta.")
-//     let checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     let names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("S")
+    expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta.")
+    let checkpointsAtEnd = await prisma.checkpoint.findMany()
+    let names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("S")
 
-//     newCheckpoint = {
-//       name: "S".repeat(101),
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+    newCheckpoint = {
+      name: "S".repeat(101),
+      type: "INTERMEDIATE",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi",
+      eventId: eventId
+    }
 
-//     result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+    result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-//     expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 100 kirjainta.")
-//     checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("S".repeat(101))
-//   })
+    expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 100 kirjainta.")
+    checkpointsAtEnd = await prisma.checkpoint.findMany()
+    names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("S".repeat(101))
+  })
 
-//   it("fails with status code 400 and proper error message if chekpoint with type start or finish already exists", async () => {
+  it("fails with status code 400 and proper error message if chekpoint with type start or finish already exists", async () => {
+    let newCheckpoint = {
+      name: "Lähtö",
+      type: "START",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi",
+      eventId: eventId
+    }
 
-//     await prisma.checkpoint.createMany({
-//       data: initialCheckpoints
-//     })
+    let result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-//     let newCheckpoint = {
-//       name: "Lähtö",
-//       type: "START",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+    expect(result.body.error).toContain("Lähtörasti on jo luotu.")
 
-//     let result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+    newCheckpoint = {
+      name: "Maali",
+      type: "FINISH",
+      hint: "http://www.google.com",
+      easyHint: "http://www.google.fi",
+      eventId: eventId
+    }
 
-//     expect(result.body.error).toContain("Lähtörasti on jo luotu.")
+    result = await request(app).post("/api/checkpoints")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newCheckpoint)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
 
-//     newCheckpoint = {
-//       name: "Maali",
-//       type: "FINISH",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+    expect(result.body.error).toContain("Maali on jo luotu.")
+    const checkpointsAtEnd = await prisma.checkpoint.findMany()
+    const names = checkpointsAtEnd.map(c => c.name)
+    expect(names).not.toContain("Lähtö")
+    expect(names).not.toContain("Maali")
+  })
 
-//     result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+  // it("fails with status code 400 and proper error message if there is already 8 checkpoints", async () => {
+  //   const checkpointsWithEventId = checkpoints.map(checkpoint => ({
+  //     ...checkpoint,
+  //     eventId: eventId
+  //   }))
+  //   await prisma.checkpoint.createMany({
+  //     data: checkpointsWithEventId,
+  //   })
 
-//     expect(result.body.error).toContain("Maali on jo luotu.")
-//     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     const names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("Lähtö")
-//     expect(names).not.toContain("Maali")
-//     await prisma.checkpoint.deleteMany({})
-//   })
+  //   const newCheckpoint = {
+  //     name: "Välirasti",
+  //     type: "INTERMEDIATE",
+  //     hint: "http://www.google.com",
+  //     easyHint: "http://www.google.fi"
+  //   }
 
-//   it("fails with status code 400 and proper error message if there is already 8 checkpoints", async () => {
-//     await prisma.checkpoint.createMany({
-//       data: checkpoints,
-//     })
+  //   const result = await request(app).post("/api/checkpoints")
+  //     .set("Authorization", `Bearer ${adminToken}`)
+  //     .send(newCheckpoint)
+  //     .expect(400)
+  //     .expect("Content-Type", /application\/json/)
 
-//     const newCheckpoint = {
-//       name: "Välirasti",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
-
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
-
-//     expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia.")
-//     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     const names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("Välirasti")
-//     await prisma.checkpoint.deleteMany({})
-
-//   })
+  //   expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia.")
+  //   const checkpointsAtEnd = await prisma.checkpoint.findMany()
+  //   const names = checkpointsAtEnd.map(c => c.name)
+  //   expect(names).not.toContain("Välirasti")
+  // })
 
 //   it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
+//     const checkpointsWithEventId = intermediateCheckpoints.map(checkpoint => ({
+//       ...checkpoint,
+//       eventId: eventId
+//     }))
 //     await prisma.checkpoint.createMany({
-//       data: intermediateCheckpoints,
+//       data: checkpointsWithEventId,
 //     })
 
 //     const newCheckpoint = {
@@ -354,13 +375,17 @@ describe("Get all checkpoints", () => {
 //     expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
 //     await prisma.checkpoint.deleteMany({})
 //   })
-// })
+})
 
 // describe("Deletion of a checkpoint", () => {
+//   const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+//     ...checkpoint,
+//     eventId: eventId
+//   }))
 //   beforeEach(async () => {
 //     await prisma.checkpoint.deleteMany({})
 //     await prisma.checkpoint.createMany({
-//       data: initialCheckpoints,
+//       data: checkpointsWithEventId,
 //     })
 //   })
 
@@ -407,10 +432,14 @@ describe("Get all checkpoints", () => {
 // })
 
 // describe("Modification of a checkpoint", () => {
+//   const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+//     ...checkpoint,
+//     eventId: eventId
+//   }))
 //   beforeEach(async () => {
 //     await prisma.checkpoint.deleteMany({})
 //     await prisma.checkpoint.createMany({
-//       data: initialCheckpoints,
+//       data: checkpointsWithEventId,
 //     })
 //   })
 
