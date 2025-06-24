@@ -104,7 +104,7 @@ describe("Login", () => {
 
 })
 
-describe("Changing password", () => {
+describe("Changing admin password", () => {
   let adminToken: string
   let userToken: string
 
@@ -238,8 +238,86 @@ describe("Changing password", () => {
 
     expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi iso kirjain")
   })
+})
+describe("Changing regular user's password", () => {
+  let adminToken: string
+  let userToken: string
+
+  beforeEach(async () => {
+    await prisma.user.deleteMany({})
+    await request(app).post("/api/authentication")
+      .send(users[0])
+    const adminLoginResponse = await request(app).post("/api/login")
+      .send(users[0])
+    adminToken = adminLoginResponse.body.token
+    await request(app).post("/api/authentication")
+      .send(users[1])
+    const userLoginResponse = await request(app).post("/api/login")
+      .send(users[1])
+    userToken = userLoginResponse.body.token
+  })
 
 
+  it("regular user's password can be modified with valid token and valid password", async () => {
+
+    const newPassword = { password: "Password123!", confirmPassword: "Password123!" }
+
+    await request(app).patch("/api/authentication/change_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const newLoginCredentials = {
+      username: users[1].username,
+      password: "Password123!",
+      admin: users[1].admin
+    }
+
+    await request(app).post("/api/login")
+      .send(newLoginCredentials)
+      .expect(200)
+  })
+
+  it("regular user's password can't be modified with invalid token", async () => {
+
+    const newPassword = { password: "Password123!", confirmPassword: "Password123!" }
+
+    const result = await request(app).patch("/api/authentication/change_password")
+      .set("Authorization", `Bearer ${userToken}`)
+      .send(newPassword)
+      .expect(401)
+
+    expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+
+  })
+
+
+  it("regular user's password can't be modified without token", async () => {
+
+    const newPassword = { password: "Password123!", confirmPassword: "Password123!" }
+
+    const result = await request(app).patch("/api/authentication/change_password")
+      .send(newPassword)
+      .expect(401)
+
+    expect(result.body.error).toContain("Token missing")
+
+  })
+
+
+  it("regular user's password can't be modified with invalid password", async () => {
+
+    const newPassword = { password: "Password", confirmPassword: "Password" }
+
+    const result = await request(app).patch("/api/authentication/change_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(400)
+
+    expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi numero")
+
+  })
 
 })
 

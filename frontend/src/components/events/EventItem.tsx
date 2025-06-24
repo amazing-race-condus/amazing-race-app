@@ -10,6 +10,9 @@ import { setNotification } from "@/reducers/notificationSlice"
 import { AxiosError } from "axios"
 import { formatDate } from "@/utils/timeUtils"
 import { getDefaultEventReducer } from "@/reducers/eventSlice"
+import { storageUtil } from "@/utils/storageUtil"
+import { fetchGroups } from "@/reducers/groupSlice"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 
 const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: { item: Event, setEvents: (event: Event[]) => void, events: Event[], handleEventChange: (id : number) => void,  onEditEvent?: (event: Event) => void }) => {
   const eventId = useSelector((state: RootState) => state.event.id)
@@ -36,7 +39,12 @@ const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: 
           const updatedEvents = events.filter(event => event.id !== deletedEvent.id)
           setEvents(updatedEvents)
           dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
-          dispatch(getDefaultEventReducer())
+          const newActiveEvent = await dispatch(getDefaultEventReducer())
+          if (newActiveEvent) {
+            await storageUtil.setEventId(newActiveEvent.id)
+            dispatch(fetchGroups(newActiveEvent.id))
+            dispatch(fetchCheckpoints(newActiveEvent.id))
+          }
         } catch (error) {
           if (error instanceof AxiosError) {
             dispatch(setNotification( error.response?.data.error ?? `Tapahtumaa ei voi poistaa: ${error.message}`, "error"))
