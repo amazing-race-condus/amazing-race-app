@@ -70,6 +70,10 @@ const CheckpointDistance = () => {
         ...prev[Number(fromCheckpointId)],
         [Number(toCheckpointId)]: Number(value),
       },
+      [Number(toCheckpointId)]: {
+        ...prev[Number(toCheckpointId)],
+        [Number(fromCheckpointId)]: Number(value),
+      },
     }))
   }
 
