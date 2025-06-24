@@ -81,7 +81,7 @@ const RouteGeneration: React.FC = () => {
           activeRoutes={activeRoutes}
           groupsLength={useSelector((state: RootState) => state.groups.length)}
         />
-        <Pressable style={styles.button} onPress={createRoutes}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={createRoutes}>
           <Text style={styles.buttonText}>Luo reitit</Text>
         </Pressable>
       </View>

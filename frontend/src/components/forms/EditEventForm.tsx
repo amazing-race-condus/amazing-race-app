@@ -80,12 +80,14 @@ const EditEventForm = ({ bottomSheetRef, event, setSelectedEvent, events, setEve
       <Calendar selected={eventDate} setSelected={setEventDate}/>
       <Pressable
         onPress={handleEditEvent}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa tapahtumaa</Text>
       </Pressable>

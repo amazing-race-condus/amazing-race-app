@@ -67,7 +67,7 @@ const ResetPasswordForm = () => {
           returnKeyType="done"
           testID="new-password-confirm"
         />
-        <Pressable style={styles.button} onPress={handleResetPassword}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={handleResetPassword}>
           <Text style={styles.buttonText}>Vaihda salasana</Text>
         </Pressable>
       </View>

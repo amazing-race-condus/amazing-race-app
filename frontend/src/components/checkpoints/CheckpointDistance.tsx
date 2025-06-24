@@ -114,7 +114,7 @@ const CheckpointDistance = () => {
             )}
           </View>
         ))}
-        <Pressable style={styles.button} onPress={() => { setCheckpointDistances() }}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={() => { setCheckpointDistances() }}>
           <Text style={styles.buttonText}>Aseta</Text>
         </Pressable>
       </View>

@@ -32,10 +32,16 @@ const GroupItem = ({ group, onEditGroup }: { group: Group, onEditGroup?: (group:
             style={styles.checkpointName}
           >{group.name}</Text>
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-            <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveGroup(Number(group.id))}>
+            <Pressable
+              style={({pressed}) => [styles.button2, { flex: 1, marginLeft: 8, opacity: pressed? 0.5 : 1 }]}
+              onPress={() => handleRemoveGroup(Number(group.id))}
+            >
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => onEditGroup?.(group)}>
+            <Pressable
+              style={({pressed}) => [styles.button2, { flex: 1, marginLeft: 8, opacity: pressed? 0.5 : 1 }]}
+              onPress={() => onEditGroup?.(group)}
+            >
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>
