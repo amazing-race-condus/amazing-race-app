@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native"
 const StatusBadge = ({ group }: { group: Group }) => {
   const getGroupStatus = (group: Group): { label: string; color: string } | null => {
     if (group.disqualified) return { label: "DSQ", color: "purple" }
-    if (group.nextCheckpointId && group.route) {
+    if (group.nextCheckpointId && group.route.length !== 0) {
       if (group.nextCheckpointId === group.route[0].id) return { label: "DNS", color: "orange" }
     }
     if (group.dnf) return { label: "DNF", color: "red" }

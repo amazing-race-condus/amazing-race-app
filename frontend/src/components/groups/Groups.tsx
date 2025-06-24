@@ -21,7 +21,9 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
   const pathname = usePathname()
 
   useEffect(() => {
-    dispatch(fetchGroups(eventId))
+    if (eventId) {
+      dispatch(fetchGroups(eventId))
+    }
   }, [dispatch, eventId])
 
   const filteredGroups = groups.filter(item =>

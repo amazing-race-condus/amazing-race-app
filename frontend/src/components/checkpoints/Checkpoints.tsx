@@ -17,7 +17,9 @@ const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Che
   const pathname = usePathname()
 
   useEffect(() => {
-    dispatch(fetchCheckpoints(eventId))
+    if (eventId) {
+      dispatch(fetchCheckpoints(eventId))
+    }
   }, [dispatch, eventId])
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
