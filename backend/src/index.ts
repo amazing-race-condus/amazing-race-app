@@ -10,19 +10,36 @@ import eventRouter from "./routes/event.route"
 import authenticationRouter from "./routes/authentication.route"
 import loginRouter from "./routes/login.route"
 import { unknownEndpoint, errorHandler, tokenExtractor } from "./utils/middleware"
+import http from "http"
+import { Server as SocketIOServer } from "socket.io"
 
+const PORT = 3000
 const prisma = new PrismaClient()
 
 const app = express()
+
+const httpServer = http.createServer(app)
+const io = new SocketIOServer(httpServer, {
+  cors: {
+    origin: "*"
+  }
+})
+
+io.on("connection", (socket) => {
+  console.log("connedted:", socket.id)
+
+  socket.on("disconnect", () => {
+    console.log("disconnected", socket.id)
+  })
+})
+
+app.set("io", io)
 app.use(cors())
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public/dist")))
-const port = 3000
-
-app.use("/api/authentication", authenticationRouter)
-
 app.use(tokenExtractor)
 
+app.use("/api/authentication", authenticationRouter)
 app.use("/api/checkpoints", checkpointsRouter)
 app.use("/api/groups", groupsRouter)
 app.use("/api/penalty", penaltyRouter)
@@ -36,11 +53,12 @@ app.all("{*splat}", (req, res) => {
   }
 })
 
-const server = app.listen(port, () => {
-  console.log(`App listening on port ${port}`) // eslint-disable-line no-console
-})
-
 app.use(unknownEndpoint)
 app.use(errorHandler)
+
+const server = httpServer.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`) // eslint-disable-line no-console
+})
+
 
 export { app, server, prisma }

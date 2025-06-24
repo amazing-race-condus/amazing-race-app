@@ -22,6 +22,7 @@
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
     "@gorhom/bottom-sheet": "^5.1.4",
+    "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-segmented-control/segmented-control": "^2.5.7",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.9.0",
@@ -45,7 +46,7 @@
     "react-qr-code": "^2.0.15",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
-    "@react-native-async-storage/async-storage": "2.1.2"
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

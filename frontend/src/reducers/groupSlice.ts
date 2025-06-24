@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup as removeGroupSVC, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
@@ -17,6 +17,9 @@ const groupSlice = createSlice({
     },
     appendGroup(state, action: PayloadAction<Group>) {
       state.push(action.payload)
+    },
+    removeGroup(state, action: PayloadAction<Group>) {
+      return state.filter(group => group.id !== action.payload.id)
     },
     updateGroup(state, action: PayloadAction<Group>) {
       const index = state.findIndex(g => g.id === action.payload.id)
@@ -98,7 +101,7 @@ export const addGroupReducer = (newObject: AddGroup, eventId: number) => async (
 export const removeGroupReducer =
   (id: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
-      const group = await removeGroup(id)
+      const group = await removeGroupSVC(id)
 
       const current = getState().groups
       const updated = current.filter((groups) => groups.id !== id)
@@ -194,5 +197,5 @@ export const giveNextCheckpointReducer =
     }
   }
 
-export const { setGroups , appendGroup, updateGroup } = groupSlice.actions
+export const { setGroups , appendGroup, updateGroup, removeGroup } = groupSlice.actions
 export default groupSlice.reducer
