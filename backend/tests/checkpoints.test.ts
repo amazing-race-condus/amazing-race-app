@@ -1,5 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { initialCheckpoints, checkpoints, intermediateCheckpoints, users, initialEvent } from "./test_helper"
 
 let adminToken: string
@@ -301,76 +302,76 @@ describe("Addition of a new checkpoint", () => {
   //   expect(names).not.toContain("Välirasti")
   // })
 
-//   it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
-//     const checkpointsWithEventId = intermediateCheckpoints.map(checkpoint => ({
-//       ...checkpoint,
-//       eventId: eventId
-//     }))
-//     await prisma.checkpoint.createMany({
-//       data: checkpointsWithEventId,
-//     })
+  //   it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
+  //     const checkpointsWithEventId = intermediateCheckpoints.map(checkpoint => ({
+  //       ...checkpoint,
+  //       eventId: eventId
+  //     }))
+  //     await prisma.checkpoint.createMany({
+  //       data: checkpointsWithEventId,
+  //     })
 
-//     const newCheckpoint = {
-//       name: "Välirasti",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+  //     const newCheckpoint = {
+  //       name: "Välirasti",
+  //       type: "INTERMEDIATE",
+  //       hint: "http://www.google.com",
+  //       easyHint: "http://www.google.fi"
+  //     }
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+  //     const result = await request(app).post("/api/checkpoints")
+  //       .set("Authorization", `Bearer ${adminToken}`)
+  //       .send(newCheckpoint)
+  //       .expect(400)
+  //       .expect("Content-Type", /application\/json/)
 
-//     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     const names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("Välirasti")
-//     expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
-//     await prisma.checkpoint.deleteMany({})
-//   })
+  //     const checkpointsAtEnd = await prisma.checkpoint.findMany()
+  //     const names = checkpointsAtEnd.map(c => c.name)
+  //     expect(names).not.toContain("Välirasti")
+  //     expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
+  //     await prisma.checkpoint.deleteMany({})
+  //   })
 
 
-//   it("fails with status code 400 and proper error message if type is invalid", async () => {
-//     const newCheckpoint = {
-//       name: "Rasti",
-//       type: "INVALID",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi"
-//     }
+  //   it("fails with status code 400 and proper error message if type is invalid", async () => {
+  //     const newCheckpoint = {
+  //       name: "Rasti",
+  //       type: "INVALID",
+  //       hint: "http://www.google.com",
+  //       easyHint: "http://www.google.fi"
+  //     }
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+  //     const result = await request(app).post("/api/checkpoints")
+  //       .set("Authorization", `Bearer ${adminToken}`)
+  //       .send(newCheckpoint)
+  //       .expect(400)
+  //       .expect("Content-Type", /application\/json/)
 
-//     const checkpointsAtEnd = await prisma.checkpoint.findMany()
-//     const names = checkpointsAtEnd.map(c => c.name)
-//     expect(names).not.toContain("Rasti")
-//     expect(result.body.error).toContain("Virheellinen tyyppi.")
-//   })
+  //     const checkpointsAtEnd = await prisma.checkpoint.findMany()
+  //     const names = checkpointsAtEnd.map(c => c.name)
+  //     expect(names).not.toContain("Rasti")
+  //     expect(result.body.error).toContain("Virheellinen tyyppi.")
+  //   })
 
-//   it("fails with status code 400 if checkpoint name already in use", async () => {
+  //   it("fails with status code 400 if checkpoint name already in use", async () => {
 
-//     const newCheckpoint = {
-//       name: "Musiikkitalo",
-//       type: "INTERMEDIATE",
-//       hint: "http://www.google.com",
-//       easyHint: "http://www.google.fi",
-//     }
+  //     const newCheckpoint = {
+  //       name: "Musiikkitalo",
+  //       type: "INTERMEDIATE",
+  //       hint: "http://www.google.com",
+  //       easyHint: "http://www.google.fi",
+  //     }
 
-//     await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(newCheckpoint)
+  //     await request(app).post("/api/checkpoints")
+  //       .set("Authorization", `Bearer ${adminToken}`)
+  //       .send(newCheckpoint)
 
-//     const sameChckpoint = { ...newCheckpoint }
+  //     const sameChckpoint = { ...newCheckpoint }
 
-//     const result = await request(app).post("/api/checkpoints")
-//       .set("Authorization", `Bearer ${adminToken}`)
-//       .send(sameChckpoint)
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/)
+  //     const result = await request(app).post("/api/checkpoints")
+  //       .set("Authorization", `Bearer ${adminToken}`)
+  //       .send(sameChckpoint)
+  //       .expect(400)
+  //       .expect("Content-Type", /application\/json/)
 
 //     expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
 //     await prisma.checkpoint.deleteMany({})
