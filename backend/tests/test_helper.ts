@@ -1,22 +1,26 @@
 import { Type } from "../prisma/prisma/"
-import { Checkpoint, CheckpointType } from "@/types"
+import { Checkpoint, CheckpointType, AddEvent } from "@/types"
 
-export const initialEvent = {
-  name: "eventti1"
+export const initialEvent: AddEvent = {
+  name: "eventti1",
+  eventDate: new Date("2025-01-01")
 }
 
 export const initialCheckpoints = [
   {
     name: "Oodi",
     type: Type.FINISH,
+    eventId: 1
   },
   {
     name: "Tripla",
     type: Type.START,
+    eventId: 1
   },
   {
     name: "Kumpulan kampus",
     type: Type.INTERMEDIATE,
+    eventId: 1
   }
 ]
 
@@ -99,18 +103,16 @@ export const initialGroups = [
   {
     name: "Testiryhmä",
     members: 4,
-    easy: false
   },
   {
     name: "Toinen ryhmä",
     members: 3,
-    easy: true
   },
 ]
 
 export const checkpointsForRoutes1: Checkpoint[] = [ {
   id: 77,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Oodi",
   type: "FINISH" as CheckpointType,
@@ -118,7 +120,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 55,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tripla",
   type: "INTERMEDIATE" as CheckpointType,
@@ -126,7 +128,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 22,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Kumpulan kampus",
   type: "INTERMEDIATE" as CheckpointType,
@@ -134,7 +136,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 11,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Rautatieasema",
   type: "INTERMEDIATE" as CheckpointType,
@@ -142,7 +144,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 66,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkko12",
   type: "INTERMEDIATE" as CheckpointType,
@@ -150,7 +152,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 33,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Esplanadi",
   type: "INTERMEDIATE" as CheckpointType,
@@ -158,7 +160,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 44,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkko",
   type: "INTERMEDIATE" as CheckpointType,
@@ -166,7 +168,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 },
 {
   id: 88,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkk1o",
   type: "START" as CheckpointType,
@@ -176,7 +178,7 @@ export const checkpointsForRoutes1: Checkpoint[] = [ {
 
 export const checkpointsForRoutes2: Checkpoint[] = [ {
   id: 77,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Oodi",
   type: "INTERMEDIATE" as CheckpointType,
@@ -184,7 +186,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 55,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tripla",
   type: "FINISH" as CheckpointType,
@@ -192,7 +194,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 22,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Kumpulan kampus",
   type: "INTERMEDIATE" as CheckpointType,
@@ -200,7 +202,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 11,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Rautatieasema",
   type: "INTERMEDIATE" as CheckpointType,
@@ -208,7 +210,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 66,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkko12",
   type: "INTERMEDIATE" as CheckpointType,
@@ -216,7 +218,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 33,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Esplanadi",
   type: "INTERMEDIATE" as CheckpointType,
@@ -224,7 +226,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 44,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkko",
   type: "INTERMEDIATE" as CheckpointType,
@@ -232,7 +234,7 @@ export const checkpointsForRoutes2: Checkpoint[] = [ {
 },
 {
   id: 88,
-  eventId: null,
+  eventId: 1,
   hint: null,
   name: "Tuomiokirkk1o",
   type: "START" as CheckpointType,

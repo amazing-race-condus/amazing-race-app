@@ -5,7 +5,7 @@ export type CompleteType = "NORMAL" | "SKIP" | "OVERTIME";
 export type Checkpoint = {
     type: CheckpointType;
     id: number;
-    eventId: number | null;
+    eventId: number;
     name: string;
     hint: string | null;
     easyHint: string | null;
@@ -59,7 +59,7 @@ export interface Group {
     id: number,
     name: string,
     members: number,
-    eventId: number | null,
+    eventId: number,
     finishTime: Date | null,
     nextCheckpointId: number | null,
     disqualified: boolean,

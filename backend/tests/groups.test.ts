@@ -1,6 +1,7 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
 import { initialEvent, initialGroups, users } from "./test_helper"
+import { AddGroup } from "@/types"
 
 let adminToken: string
 let userToken: string
@@ -251,9 +252,11 @@ describe("Modification of a group", () => {
 
     const groupToModify = groupsAtStart[0]
 
-    const newGroup = {
+    const newGroup: AddGroup = {
       name: "Existing name",
       members: 4,
+      eventId: eventId,
+      easy: false
     }
 
     await request(app).post("/api/groups")
