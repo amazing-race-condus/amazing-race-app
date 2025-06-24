@@ -17,11 +17,11 @@ const resultRowsText = (event: Event | null, groups: Group[] | null) => {
     const time = getRaceTime(group, event)
     const timePrint = (time !== null) ? String(Math.round(time/60*100)/100) + " min" : "-"
     content += statusText(event, group, i+1)
-    content += "  "
+    content += "\t"
     content += getProgress(group) + " rastia"
-    content += "  "
+    content += "\t"
     content += timePrint
-    content += "  "
+    content += "\t"
     content += group.name
     content += "\n"
   })
