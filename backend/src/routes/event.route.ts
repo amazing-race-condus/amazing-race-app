@@ -112,7 +112,7 @@ eventRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Response
 
   const event  = await deleteEvent(id)
   if (event) {
-    res.json(event)
+    res.status(204).json(event)
   } else {
     res.status(404).end()
   }
