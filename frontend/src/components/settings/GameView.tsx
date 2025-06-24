@@ -50,8 +50,8 @@ const GameView = () => {
 
   const handleStart = () => {
     if (
-      !start
-      || !finish
+      start.length === 0
+      || finish.length === 0
       || intermediates.length < 4
       || groups.length > groupRoutes.length
       || groups.length === 0

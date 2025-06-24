@@ -114,7 +114,9 @@ const resetRoutes = async (eventId: number) => {
   })
   await prisma.penalty.deleteMany({
     where: {
-      eventId : eventId
+      group: {
+        eventId: eventId
+      }
     }
   })
   await prisma.group.updateMany({
