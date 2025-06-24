@@ -26,7 +26,7 @@ const io = new SocketIOServer(httpServer, {
 })
 
 io.on("connection", (socket) => {
-  console.log("connedted:", socket.id)
+  console.log("connected:", socket.id)
 
   socket.on("disconnect", () => {
     console.log("disconnected", socket.id)

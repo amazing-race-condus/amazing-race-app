@@ -12,6 +12,7 @@ import { loadUserFromStorage } from "@/reducers/userSlice"
 import { storageUtil } from "@/utils/storageUtil"
 import { socket } from "@/websocket/config"
 import { cleanupGroupHandlers, setupGroupHandlers } from "@/websocket/groupSocket"
+import { cleanupPenaltyHandlers, setupPenaltyHandlers } from "@/websocket/penaltySocket"
 
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
@@ -68,11 +69,13 @@ function AppContent() {
 
     fetchEventData()
     setupGroupHandlers(socket)
+    setupPenaltyHandlers(socket)
     const intervalId = setInterval(fetchEventData, 90000)
 
     return () => {
       clearInterval(intervalId)
       cleanupGroupHandlers(socket)
+      cleanupPenaltyHandlers(socket)
       socket.off("connect")
       socket.off("disconnect")
     }

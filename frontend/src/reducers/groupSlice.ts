@@ -43,17 +43,15 @@ export const fetchGroups = (eventId : number) => async (dispatch: AppDispatch) =
 export const givePenaltyReducer = (groupId: number, checkpointId: number, penaltyType: PenaltyType, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
     const newPenalty = await givePenalty(groupId, checkpointId, penaltyType, penalty)
-    const updatedGroups = getState().groups.map((group) => {
-      if (group.id === newPenalty.groupId) {
-        return {
-          ...group,
-          penalty: [...group.penalty, newPenalty]
-        }
-      }
-      return group
-    })
+    const groupToUpdate = getState().groups.filter(g => g.id === groupId)[0]
+    const penalizedGroup = {
+      ...groupToUpdate,
+      penalty: groupToUpdate.penalty.some(p => p.id === newPenalty.id)
+        ? groupToUpdate.penalty
+        : [...groupToUpdate.penalty, newPenalty]
+    }
 
-    dispatch(setGroups(updatedGroups))
+    dispatch(updateGroup(penalizedGroup))
     dispatch(setNotification("Ryhmää rangaistu", "success"))
   } catch (error) {
     console.error("Failed to update penalty:", error)
