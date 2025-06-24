@@ -1,22 +1,26 @@
 import { Type } from "../prisma/prisma/"
-import { Checkpoint, CheckpointType } from "@/types"
+import { Checkpoint, CheckpointType, AddEvent } from "@/types"
 
-export const initialEvent = {
-  name: "eventti1"
+export const initialEvent: AddEvent = {
+  name: "eventti1",
+  eventDate: new Date("2025-01-01")
 }
 
 export const initialCheckpoints = [
   {
     name: "Oodi",
     type: Type.FINISH,
+    eventId: 1
   },
   {
     name: "Tripla",
     type: Type.START,
+    eventId: 1
   },
   {
     name: "Kumpulan kampus",
     type: Type.INTERMEDIATE,
+    eventId: 1
   }
 ]
 
@@ -99,12 +103,10 @@ export const initialGroups = [
   {
     name: "Testiryhmä",
     members: 4,
-    easy: false
   },
   {
     name: "Toinen ryhmä",
     members: 3,
-    easy: true
   },
 ]
 
