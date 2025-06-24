@@ -32,11 +32,6 @@ beforeAll(async () => {
 describe("Get Groups", () => {
   let groupId: unknown
 
-  afterAll(async () => {
-    await prisma.group.deleteMany({})
-    await prisma.$disconnect()
-    server.close()
-  })
 
   it("groups are returned as json", async () => {
     const response = await request(app)
@@ -181,12 +176,6 @@ describe("Modification of a group", () => {
     })
   })
 
-  afterAll(async () => {
-    await prisma.group.deleteMany({})
-    await prisma.$disconnect()
-    server.close()
-  })
-
   it("succeeds with status code 200 with valid data and id", async () => {
 
     const groupsAtStart = await prisma.group.findMany()
@@ -283,7 +272,7 @@ describe("Modification of a group", () => {
 
     const groupToModify = groupsAtStart[0]
 
-    const result = await request(app)
+    let result = await request(app)
       .put(`/api/groups/${groupToModify.id}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
@@ -295,8 +284,134 @@ describe("Modification of a group", () => {
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.error).toContain("Syötä jäsenten määrä numeromuodossa")
+
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Invalid data",
+        members: 20.5,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Syötä kokonaisluku")
+
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Invalid data",
+        members: 2,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Ryhmässä tulee olla vähintään 4 jäsentä")
+
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "Invalid data",
+        members: 7,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Ryhmässä voi olla korkeintaan 6 jäsentä")
+
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "S".repeat(51),
+        members: 4,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 50 kirjainta")
+
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "S",
+        members: 4,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta")
+    result = await request(app)
+      .put(`/api/groups/${groupToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: 4,
+        members: 4,
+        easy: true
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("Nimen tulee olla merkkijono")
     await prisma.group.deleteMany({})
   })
+})
+
+describe("Modification of a group's status", () => {
+  beforeEach(async () => {
+    const groupsWithEventId = initialGroups.map(group => ({
+      ...group,
+      eventId
+    }))
+
+    await prisma.group.deleteMany({})
+    await prisma.group.createMany({
+      data: groupsWithEventId,
+    })
+  })
+
+  it("setting group as not started succeeds with status code 200 with valid token and id", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const response = await request(app)
+      .put(`/api/groups/${groupToModify.id}/dnf`)
+      .set("Authorization", `Bearer ${adminToken}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      id: groupToModify.id,
+      dnf: true
+    })
+  })
+
+  it("setting group as disqualified succeeds with status code 200 with valid token and id", async () => {
+
+    const groupsAtStart = await prisma.group.findMany()
+
+    const groupToModify = groupsAtStart[0]
+
+    const response = await request(app)
+      .put(`/api/groups/${groupToModify.id}/disqualify`)
+      .set("Authorization", `Bearer ${adminToken}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      id: groupToModify.id,
+      disqualified: true
+    })
+  })
+
 })
 
 afterAll(async () => {

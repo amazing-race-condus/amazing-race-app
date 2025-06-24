@@ -114,16 +114,18 @@ authenticationRouter.put("/reset_password", async (req: Request, res: Response) 
 
 authenticationRouter.patch("/change_password", tokenExtractor, verifyToken, async (req: CustomRequest, res: Response) => {
   const user = req.user
-  if (user?.admin === true) {
-    const { password, confirmPassword } = req.body
-    const updatedUser = await changePassword(password, confirmPassword, res)
-    if (updatedUser) {
-      res.status(200).json()
-    }
+  if (!user || user.admin !== true) {
+    res.status(401).json({ error:"Tämä toiminto on sallittu vain pääkäyttäjälle"})
+  }
+  const { password, confirmPassword } = req.body
+  const updatedUser = await changePassword(password, confirmPassword, res)
+  if (updatedUser) {
+    res.status(200).json()
   } else {
-    res.status(403).json()
+    res.status(404).json({ error: "Käyttäjää ei löydy" })
   }
 })
+
 
 export default authenticationRouter
 

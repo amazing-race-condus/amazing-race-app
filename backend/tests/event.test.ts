@@ -1,7 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
 import { initialEvent, users } from "./test_helper"
-import { AddEvent } from "@/types"
 
 const newEvent = {
   name: "newEvent",
@@ -90,10 +89,6 @@ describe("Create event", () => {
   })
 
   it("Event can be created with valid token", async () => {
-    const newEvent: AddEvent = {
-      name: "newEvent",
-      eventDate: new Date("2025-01-01")
-    }
     const response = await request(app)
       .post("/api/event/create")
       .send(newEvent)
@@ -272,7 +267,7 @@ describe("Modification of an event", () => {
     expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
   })
 
-  it("fails with status code 400 and proper error message if modified name already exists", async () => {
+  it("fails with status code 400 and proper error message if event name is invalid", async () => {
 
     const eventToModify = await prisma.event.create({
       data: {
@@ -281,7 +276,7 @@ describe("Modification of an event", () => {
       },
     })
 
-    const result = await request(app)
+    let result = await request(app)
       .put(`/api/event/${eventToModify.id}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
@@ -291,6 +286,38 @@ describe("Modification of an event", () => {
       .expect(400)
 
     expect(result.body.error).toContain("Tapahtuman nimi on jo käytössä. Syötä uniikki nimi.")
+
+    result = await request(app)
+      .put(`/api/event/${eventToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "A",
+        eventDate: date
+      })
+      .expect(400)
+
+    expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta")
+    result = await request(app)
+      .put(`/api/event/${eventToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: "S".repeat(51),
+        eventDate: date
+      })
+      .expect(400)
+
+    expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 50 kirjainta")
+
+    result = await request(app)
+      .put(`/api/event/${eventToModify.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        name: 3,
+        eventDate: date
+      })
+      .expect(400)
+
+    expect(result.body.error).toContain("Nimen tulee olla merkkijono")
     await prisma.checkpoint.deleteMany({})
   })
 })
