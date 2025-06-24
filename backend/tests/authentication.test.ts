@@ -239,6 +239,29 @@ describe("Changing password", () => {
     expect(result.body.error).toContain("Salasanassa tulee olla ainakin yksi iso kirjain")
   })
 
+  it("regular user's password can be modified with valid token and valid password", async () => {
+
+    const newPassword = {
+      password: "Password123!",
+      confirmPassword: "Password123!"
+    }
+    await request(app).patch("/api/authentication/change_password")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(newPassword)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const newLoginCredentials = {
+      password: "Password123!",
+      admin: users[1].admin
+    }
+
+    await request(app).post("/api/login")
+      .send(newLoginCredentials)
+      .expect(200)
+
+  })
+
 
 
 })
