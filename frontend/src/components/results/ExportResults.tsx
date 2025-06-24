@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store/store"
 import { sortByTime, getProgress } from "@/utils/groupUtils"
 import { getRaceTime } from "@/utils/timeUtils"
+import exportResult from "@/utils/exportResults"
 
 const resultRowsText = (event: Event | null, groups: Group[] | null) => {
   if (!event || !groups)
@@ -111,17 +112,28 @@ const exportResults = async (event: Event, groups: Group[]) => {
   }
 }
 
-const exportResultsWeb = (event: Event, groups: Group[]) => {
-  const fileName = "amazing-race-tulokset.txt"
-  const file = new File([resultsFileContent(event, groups)], fileName, {type: "text/plain;charset=utf-8"})
-  const fileUrl = URL.createObjectURL(file)
+const exportResultsWeb = async (event: Event, groups: Group[]) => {
+  //const easyGroups = groups.filter(group => group.easy)
+  const blob = await exportResult(groups, event)
+  const url = URL.createObjectURL(blob)
 
-  const a = document.createElement("a")
-  a.href = fileUrl
-  a.download = fileName
-  a.click()
+  const link = document.createElement("a")
+  link.href = url
+  link.download = "MyDocument.docx"
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+  // const fileName = "amazing-race-tulokset.txt"
+  // const file = new File([resultsFileContent(event, groups)], fileName, {type: "text/plain;charset=utf-8"})
+  // const fileUrl = URL.createObjectURL(file)
 
-  URL.revokeObjectURL(fileUrl)
+  // const a = document.createElement("a")
+  // a.href = fileUrl
+  // a.download = fileName
+  // a.click()
+
+  // URL.revokeObjectURL(fileUrl)
 }
 
 const ExportResults = () => {
@@ -130,8 +142,8 @@ const ExportResults = () => {
 
   return (
     <View style={{ marginVertical: 10 }}>
-      {Platform.OS !== "web" && <Button title="Jaa tulokset (.txt)" onPress={() => exportResults(event, groups)} />}
-      {Platform.OS === "web" && <Button title="Lataa tulokset (.txt)" onPress={() => exportResultsWeb(event, groups)} />}
+      {Platform.OS !== "web" && <Button title="Jaa tulokset (.docx)" onPress={() => exportResults(event, groups)} />}
+      {Platform.OS === "web" && <Button title="Lataa tulokset (.docx)" onPress={() => exportResultsWeb(event, groups)} />}
     </View>)
 }
 
