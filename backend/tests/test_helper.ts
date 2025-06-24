@@ -37,6 +37,29 @@ export const users = [
   }
 ]
 
+export const fiveCheckpoints = [
+  {
+    name: "Rautatieasema",
+    type: Type.INTERMEDIATE,
+  },
+  {
+    name: "Esplanadi",
+    type: Type.INTERMEDIATE,
+  },
+  {
+    name: "Tuomiokirkko",
+    type: Type.INTERMEDIATE,
+  },
+  {
+    name: "Kluuvi",
+    type: Type.INTERMEDIATE,
+  },
+  {
+    name: "Kauppatori",
+    type: Type.INTERMEDIATE,
+  },
+]
+
 export const checkpoints = [
   {
     name: "Oodi",

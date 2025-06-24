@@ -63,13 +63,13 @@ async function main() {
     { name: "Luuserit", members: 5, easy: false, eventId: event!.id },
     { name: "Nimetön", members: 4, easy: true, eventId: event!.id },
     { name: "Höhlät", members: 5, easy: false, eventId: event!.id },
-    { name: "Mansikat", members: 7, easy: true, eventId: event!.id },
-    { name: "Kurikan nimipäivät", members: 8, easy: true, eventId: event!.id },
+    { name: "Mansikat", members: 5, easy: true, eventId: event!.id },
+    { name: "Kurikan nimipäivät", members: 6, easy: true, eventId: event!.id },
     { name: "Penat", members: 4, easy: false, eventId: event!.id },
     { name: "Vaivaiset", members: 6, easy: false, eventId: event!.id },
     { name: "Fifit", members: 5, easy: true, eventId: event!.id },
     { name: "Liiallisen pituuden suuret ystävät", members: 4, easy: true, eventId: event!.id },
-    { name: "Draamailijat", members: 7, easy: false, eventId: event!.id }
+    { name: "Draamailijat", members: 5, easy: false, eventId: event!.id }
   ]
 
   await prisma.group.createMany({
