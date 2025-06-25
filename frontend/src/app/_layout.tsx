@@ -20,7 +20,8 @@ import { fetchEvents } from "@/reducers/allEventsSlice"
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
   const user = useSelector((state: RootState) => state.user)
-  const eventId = useSelector((state: RootState) => state.event.id)
+  const event = useSelector((state: RootState) => state.event)
+  const eventId = event.id
   const [userLoaded, setUserLoaded] = useState(false)
   const [eventInitialized, setEventInitialized] = useState(false)
 
