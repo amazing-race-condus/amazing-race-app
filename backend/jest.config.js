@@ -2,6 +2,8 @@ const config = {
   preset: "ts-jest",
   testEnvironment: "node",
   setupFiles: ["./tests/jest.setup.ts"],
+  collectCoverage: true,
+  coveragePathIgnorePatterns: ["prisma[/\\\\]prisma[/\\\\]runtime"]
 }
 
 export default config

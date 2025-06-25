@@ -8,7 +8,11 @@ let userToken: string
 let eventId: number
 const invalidToken = "fjäsfjaäfojafjaqfojoafjf"
 
-beforeEach(async () => {
+beforeAll(async () => {
+  const response = await prisma.event.create({
+    data: initialEvent,
+  })
+  eventId = response.id
   await prisma.user.deleteMany({})
   await request(app).post("/api/authentication")
     .send(users[0])
@@ -22,14 +26,7 @@ beforeEach(async () => {
   userToken = userLoginResponse.body.token
 })
 
-beforeAll(async () => {
-  const response = await prisma.event.create({
-    data: initialEvent,
-  })
-  eventId = response.id
-})
-
-describe("Get Groups", () => {
+describe("Groups", () => {
   let groupId: unknown
 
 
@@ -92,6 +89,19 @@ describe("Get Groups", () => {
       .expect(401)
 
     expect(result.body.error).toContain("Tämä toiminto on sallittu vain pääkäyttäjälle")
+  })
+
+  it("group can't be created with invalid data", async () => {
+    const result = await request(app)
+      .post("/api/groups")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        members: 4,
+        eventId : eventId
+      })
+      .expect(400)
+
+    expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu")
   })
 
 
