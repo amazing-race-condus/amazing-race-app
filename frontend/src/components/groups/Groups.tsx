@@ -1,30 +1,21 @@
 import { View, Text } from "react-native"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "@/store/store"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 import { usePathname } from "expo-router"
 import Search from "@/components/ui/Search"
 import GroupList from "./GroupList"
 import { Group } from "@/types"
 import Filter from "../ui/Filter"
 import { sortAlphabetically, sortByStatus, sortByTime } from "@/utils/groupUtils"
-import { fetchGroups } from "@/reducers/groupSlice"
 
 const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
-  const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const [search, setSearch] = useState<string>("")
   const [order, setOrder] = useState<number>(0)
   const groups = useSelector((state: RootState) => state.groups)
   const event = useSelector((state: RootState) => state.event)
-  const eventId = event.id
   const pathname = usePathname()
-
-  useEffect(() => {
-    if (eventId) {
-      dispatch(fetchGroups(eventId))
-    }
-  }, [dispatch, eventId])
 
   const filteredGroups = groups.filter(item =>
     item.name.toLowerCase().startsWith(search.toLowerCase())
