@@ -81,9 +81,9 @@ export const removePenaltyReducer = (groupId: number, penaltyId:number) => async
   }
 }
 
-export const addGroupReducer = (newObject: AddGroup, eventId: number) => async (dispatch: AppDispatch) => {
+export const addGroupReducer = (newObject: AddGroup) => async (dispatch: AppDispatch) => {
   try {
-    const newGroup = await createGroup(newObject, eventId)
+    const newGroup = await createGroup(newObject)
     dispatch(appendGroup(newGroup))
     dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {

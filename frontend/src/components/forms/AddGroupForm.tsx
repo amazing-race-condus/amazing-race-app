@@ -18,17 +18,17 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   const [easy, setEasy] = useState<boolean>(false)
 
   const addNewGroup = async () => {
+    const eventId = store.getState().event.id
+
     if (groupname.trim()) {
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
         easy: easy,
-        eventId: null
+        eventId: eventId
       }
 
-      const eventId = store.getState().event.id
-
-      dispatch(addGroupReducer(newGroup, eventId))
+      dispatch(addGroupReducer(newGroup))
       setGroupname("")
       setGroupMembers(0)
       setEasy(false)
