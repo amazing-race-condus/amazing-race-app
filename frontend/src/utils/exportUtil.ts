@@ -1,17 +1,27 @@
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, WidthType } from "docx"
 import { getRaceTime, formatDate } from "./timeUtils"
-import { sortByTime } from "./groupUtils"
+import { sortByTime, getPenaltyMinutes } from "./groupUtils"
+import { getAllGroups } from "@/services/groupService"
 import { Event, Group } from "@/types"
 
-const exportResult = (groups: Group[], event: Event, ) => {
-  // TODO: get data from db.
-  const normalGroups = sortByTime(groups.filter(group => !group.easy), event)
-  const easyGroups = sortByTime(groups.filter(group => group.easy), event)
-  const normalTable = createTable(formatData(normalGroups, event))
-  const easyTable = createTable(formatData(easyGroups, event))
+const exportResult = async (event: Event) => {
+  try {
+    const groups = await getAllGroups(event.id)
+    if (!groups) {
+      return null
+    } else if (groups.length === 0) {
+      return null
+    }
+    const normalGroups = sortByTime(groups.filter(group => !group.easy), event)
+    const easyGroups = sortByTime(groups.filter(group => group.easy), event)
+    const normalTable = createTable(formatData(normalGroups, event))
+    const easyTable = createTable(formatData(easyGroups, event))
 
-  const document = createDocument(easyTable, normalTable, event)
-  return document
+    const document = createDocument(easyTable, normalTable, event)
+    return document
+  } catch {
+    return null
+  }
 }
 
 const createDocument = (easyTable: Table, normalTable: Table, event: Event) => {
@@ -31,7 +41,7 @@ const createDocument = (easyTable: Table, normalTable: Table, event: Event) => {
           new Paragraph({
             children: [
               new TextRun({ text: "Tapahtuma: ", bold: true }),
-              new TextRun(event.name ?? "")
+              new TextRun(event.name)
             ]
           }),
           new Paragraph({
@@ -53,11 +63,19 @@ const createDocument = (easyTable: Table, normalTable: Table, event: Event) => {
             ]
           }),
           new Paragraph(""),
-          new Paragraph("Tavalliset ryhmät:"),
+          new Paragraph({
+            text: "Tavalliset ryhmät",
+            alignment: "center",
+            heading: "Heading3"
+          }),
           new Paragraph(""),
           normalTable,
           new Paragraph(""),
-          new Paragraph("Helpotetut ryhmät:"),
+          new Paragraph({
+            text: "Helpotetut ryhmät",
+            alignment: "center",
+            heading: "Heading3"
+          }),
           new Paragraph(""),
           easyTable
         ],
@@ -71,8 +89,9 @@ const createTable = (content: string[][]) => {
   const headerRow = new TableRow({
     children: [
       new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Ryhmän nimi", bold: true })] })] }),
-      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Maaliin saapumisaika", bold: true })] })] }),
       new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Status", bold: true })] })] }),
+      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Rankut minuutteina", bold: true })] })] }),
+      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Maaliin saapumisaika", bold: true })] })] }),
       new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Lopullinen aika", bold: true })] })] }),
     ],
   })
@@ -102,7 +121,7 @@ const createTable = (content: string[][]) => {
 }
 
 const formatData = (groups: Group[], event: Event, ): string[][] => {
-  const content = groups.map(g => [g.name, formatMinutesAndSeconds(g.finishTime), statusText(g), g.finishTime ? formatTime(g, event) : ""])
+  const content = groups.map(g => [g.name, statusText(g), String(getPenaltyMinutes(g)), formatMinutesAndSeconds(g.finishTime), g.finishTime ? formatTime(g, event) : ""])
   return content
 }
 
