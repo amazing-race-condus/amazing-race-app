@@ -128,11 +128,11 @@ const GameView = () => {
         startedGroups={startedGroups}
         validDistances={validDistances}
       />
-      <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed ? 0.5 : 1 }]} onPress={() => handleStart()}>
+      <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.startTime ? 0.5 : 1 }]} onPress={() => handleStart()}>
         <Text style={styles.buttonText}>Aloita peli</Text>
       </Pressable>
 
-      <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed ? 0.5 : 1 }]} onPress={() => handleEnd()}>
+      <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.endTime ? 0.5 : 1 }]} onPress={() => handleEnd()}>
         <Text style={styles.buttonText}>Lopeta peli</Text>
       </Pressable>
       {(event.startTime || event.endTime) &&
