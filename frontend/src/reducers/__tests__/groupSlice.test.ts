@@ -100,10 +100,10 @@ describe("groupSlice reducers", () => {
     expect(store.getState().groups).toEqual([])
   })
 
-  test("Should handle ndf and give next checkpoint", async () => {
+  test("Should handle dnf and give next checkpoint", async () => {
     const mockGroup = returnGroups[0]
     const mockGroupCheckpoint = { ...mockGroup, nextCheckpointId: 2 }
-    ;(dnfGroup as jest.Mock).mockResolvedValue(mockGroup)
+    ;(dnfGroup as jest.Mock).mockResolvedValue({...mockGroup, dnf: !mockGroup.dnf})
     ;(giveNextCheckpoint as jest.Mock).mockResolvedValue(mockGroupCheckpoint)
 
     store.dispatch(setGroups(returnGroups))

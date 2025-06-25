@@ -120,22 +120,9 @@ export const dnfGroupReducer =
     try {
       const group = await dnfGroup(id)
 
-      const currentGroups = getState().groups
-      let dnfState: boolean | undefined
-      const updated = currentGroups.map((currentGroup) => {
-        if (currentGroup.id === id) {
-          dnfState = !currentGroup.dnf
-          return {
-            ...currentGroup,
-            dnf: !currentGroup.dnf
-          }
-        }
-        return currentGroup
-      })
+      dispatch(updateGroup(group))
 
-      // todo: fix later
-      // dispatch(setGroups(updated))
-      if (dnfState) {
+      if (group.dnf) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty`, "success"))
       } else {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritusta jatkettu`, "success"))
@@ -151,22 +138,9 @@ export const disqualifyGroupReducer =
     try {
       const group = await disqualifyGroup(id)
 
-      const currentGroups = getState().groups
-      let disqualifiedState: boolean | undefined
-      const updated = currentGroups.map((currentGroup) => {
-        if (currentGroup.id === id) {
-          disqualifiedState = !currentGroup.disqualified
-          return {
-            ...currentGroup,
-            disqualified: !currentGroup.disqualified
-          }
-        }
-        return currentGroup
-      })
+      dispatch(updateGroup(group))
 
-      // todo: fix later
-      // dispatch(setGroups(updated))
-      if (disqualifiedState) {
+      if (group.disqualified) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty`, "success"))
       } else {
         dispatch(setNotification(`Ryhmän '${group.name}' hylkäys peruttu`, "success"))
