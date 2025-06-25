@@ -88,8 +88,8 @@ const Team = () => {
 
   const handleDNF = () => {
     handleAlert({
-      confirmText: "Poista",
-      title: "Vahvista poisto",
+      confirmText: "Keskeytä",
+      title: "Vahvista keskeytys",
       message: "Oletko varma että haluat keskeyttää ryhmän suorituksen?",
       onConfirm: () => {
         dispatch(dnfGroupReducer(Number(id)))
