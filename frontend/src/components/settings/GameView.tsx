@@ -33,9 +33,13 @@ const GameView = () => {
   })
 
   useEffect(() => {
+    let allHaveHints = true
     for (const checkpoint of checkpoints) {
-      if (checkpoint.hint === "" || checkpoint.easyHint === "") {
-        setHints(false)
+      if (
+        checkpoint.type !== "START" &&
+        (!checkpoint.hint || !checkpoint.easyHint)) {
+        allHaveHints = false
+        setHints(allHaveHints)
       }
     }
   }, [checkpoints])
