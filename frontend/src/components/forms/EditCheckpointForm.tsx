@@ -125,12 +125,14 @@ const EditCheckpointForm = ({ bottomSheetRef, checkpoint, setSelectedCheckpoint 
       </RadioButton.Group>
       <Pressable
         onPress={handleEditCheckpoint}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa rastia</Text>
       </Pressable>

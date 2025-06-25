@@ -8,7 +8,7 @@ const ActionButton = (
   return (
     <Pressable
       onPress={onPress}
-      style={style}
+      style={({ pressed }) => [style, {opacity: pressed ? 0.5 : 1 }]}
     >
       <Text style={styles.buttonText}> {text} {count ? `(${count}x)` : ""} </Text>
     </Pressable>

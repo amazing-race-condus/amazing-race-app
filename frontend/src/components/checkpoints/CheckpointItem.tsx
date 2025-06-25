@@ -35,10 +35,10 @@ const CheckpointItem = ({ item, onEditCheckpoint }: { item: Checkpoint, onEditCh
             )}
           </Text>
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-            <Pressable style={[ styles.button2, { flex: 1 } ]} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
+            <Pressable style={({ pressed }) => [styles.button2, {flex: 1, opacity: pressed ? 0.5 : 1 }]} onPress={() => handleRemoveCheckpoint(item.id, item.name)}>
               <Text style={styles.buttonText}>Poista</Text>
             </Pressable>
-            <Pressable style={[styles.button2, { flex:1, marginLeft: 8 }]} onPress={() => onEditCheckpoint?.(item)}>
+            <Pressable style={({ pressed }) => [styles.button2, {flex: 1, marginLeft: 8, opacity: pressed ? 0.5 : 1 }]} onPress={() => onEditCheckpoint?.(item)}>
               <Text style={styles.buttonText}>Muokkaa</Text>
             </Pressable>
           </View>
