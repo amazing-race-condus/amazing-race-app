@@ -101,7 +101,9 @@ eventRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) =
   const { name, eventDate } = req.body
   const updatedEvent = await modifyEvent(id, name, eventDate, res)
 
-  req.app.get("io").emit("event:updated", updatedEvent)
+  if (updatedEvent) {
+    req.app.get("io").emit("event:updated", updatedEvent)
+  }
 
   res.status(200).json(updatedEvent)
 

@@ -45,7 +45,9 @@ groupsRouter.put("/next_checkpoint/:id", verifyToken, async (req: Request, res: 
 
   const updatedGroup = await updateNextCheckpoint(id, body.nextCheckpointId)
 
-  req.app.get("io").emit("group:updated", updatedGroup)
+  if (updatedGroup) {
+    req.app.get("io").emit("group:updated", updatedGroup)
+  }
 
   res.json(updatedGroup)
 })
@@ -119,7 +121,9 @@ groupsRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) 
 
   const updatedGroup = await modifyGroup(id, name, members, easy, eventId , res)
 
-  req.app.get("io").emit("group:updated", updatedGroup)
+  if (updatedGroup) {
+    req.app.get("io").emit("group:updated", updatedGroup)
+  }
 
   res.status(200).json(updatedGroup)
 })

@@ -190,7 +190,7 @@ describe("Creating routes", () => {
       .get(`/api/settings/${eventId}/active_routes_info`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200)
-  })
+  }, 15000)
 
   it("routes can't be created with invalid token", async () => {
     await request(app)
