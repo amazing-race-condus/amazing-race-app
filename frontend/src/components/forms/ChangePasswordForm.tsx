@@ -66,7 +66,7 @@ const ChangePasswordForm = () => {
           returnKeyType="done"
         />
 
-        <Pressable style={styles.button} onPress={handlePasswordChange}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={handlePasswordChange}>
           <Text style={styles.buttonText}>Vaihda</Text>
         </Pressable>
       </View>

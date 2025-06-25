@@ -10,6 +10,7 @@ import PlayingGroups from "./PlayingGroups"
 import DnfGroups from "./DnfGroups"
 import DisqualifiedGroups from "./DisqualifiedGroups"
 import NotStartedGroups from "./NotStartedGroups"
+import ExportResults from "./ExportResults"
 
 const PassedGroupsResults = () => {
   const event = useSelector((state: RootState) => state.event)
@@ -30,6 +31,8 @@ const PassedGroupsResults = () => {
       {!gameStarted && <Text style={styles.breadText}>Peliä ei ole aloitettu.</Text>}
       {(gameStarted && !gameFinished) && <Text style={styles.breadText}>Peli on käynnissä.</Text>}
       {gameFinished && <Text style={styles.breadText}>Peli on päättynyt.</Text>}
+
+      <ExportResults />
 
       <Filter order={filterOrder} setOrder={setFilterOrder} values={["Tavalliset", "Helpotetut"]} />
 

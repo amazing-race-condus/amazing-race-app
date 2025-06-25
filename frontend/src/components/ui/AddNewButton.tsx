@@ -8,7 +8,7 @@ const AddNewButton = ({ onPress }: { onPress: () => void }) => {
     <Pressable
       onPress={onPress}
       role="button"
-      style={{
+      style={({ pressed }) => [{
         position: "absolute",
         bottom: 20,
         right: 20,
@@ -18,7 +18,9 @@ const AddNewButton = ({ onPress }: { onPress: () => void }) => {
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-      }}
+      }, {
+        opacity: pressed ? 0.5 : 1
+      }]}
     >
       <FontAwesome6 name="plus" size={24} color="white" />
     </Pressable>

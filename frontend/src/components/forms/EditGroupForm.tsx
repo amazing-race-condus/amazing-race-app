@@ -103,12 +103,14 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       </RadioButton.Group>
       <Pressable
         onPress={handleEditGroup}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Muokkaa ryhmää</Text>
       </Pressable>

@@ -28,7 +28,7 @@ const ListCheckpointPenalties = (
           </Text>
           <Pressable
             testID="deleteHintButton"
-            style={styles.deleteButton}
+            style={({ pressed }) => pressed ? styles.deleteButtonPressed : styles.deleteButton}
             onPress={() => {
               handleAlert({
                 confirmText: "Poista rangaistus",
@@ -50,7 +50,7 @@ const ListCheckpointPenalties = (
                 Skip: {usedSkip[0]?.time}min
           </Text>
           <Pressable
-            style={styles.deleteButton}
+            style={({ pressed }) => pressed ? styles.deleteButtonPressed : styles.deleteButton}
             onPress={() => {
               handleAlert({
                 confirmText: "Poista rangaistus",
@@ -72,7 +72,7 @@ const ListCheckpointPenalties = (
                 Yliaika: {usedOvertime[0]?.time}min
           </Text>
           <Pressable
-            style={styles.deleteButton}
+            style={({ pressed }) => pressed ? styles.deleteButtonPressed : styles.deleteButton}
             onPress={() => {
               handleAlert({
                 confirmText: "Poista rangaistus",
@@ -124,5 +124,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     backgroundColor: "rgba(255, 68, 68, 0.1)",
+  },
+  deleteButtonPressed: {
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: "rgba(255, 68, 68, 0.1)",
+    opacity: 0.5
   },
 })

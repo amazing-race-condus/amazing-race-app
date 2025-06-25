@@ -60,12 +60,14 @@ const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       <Calendar selected={eventDate} setSelected={setEventDate}/>
       <Pressable
         onPress={addNewEvent}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää tapahtuma</Text>
       </Pressable>

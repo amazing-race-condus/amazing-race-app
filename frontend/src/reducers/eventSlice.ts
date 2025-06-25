@@ -38,6 +38,7 @@ export const getDefaultEventReducer = () => async (dispatch: AppDispatch) => {
   try {
     const event = await getDefaultEvent()
     dispatch(setEvents(event))
+    return event
   } catch (error) {
     console.error("Failed to fetch event:", error)
     dispatch(setNotification("Tapahtuman haku epäonnistui", "error"))

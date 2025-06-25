@@ -90,12 +90,14 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       </RadioButton.Group>
       <Pressable
         onPress={addNewGroup}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
       </Pressable>

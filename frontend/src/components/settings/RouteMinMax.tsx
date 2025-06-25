@@ -61,7 +61,7 @@ const RouteMinMax = () => {
           onChangeText={(text) => setMaximum(text ? Number(text) : null)}
           maxLength={4}
         />
-        <Pressable style={styles.button} onPress={() => { updateRouteMinMax() }}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={() => { updateRouteMinMax() }}>
           <Text style={styles.buttonText}>Aseta</Text>
         </Pressable>
       </View>

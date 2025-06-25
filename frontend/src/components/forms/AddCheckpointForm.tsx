@@ -104,13 +104,15 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       </RadioButton.Group>
       <Pressable
         onPress={addNewCheckpoint}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
           marginTop: 16,
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää rasti</Text>
       </Pressable>

@@ -9,12 +9,12 @@ export const getAllEvents = async () => {
 }
 
 export const getDefaultEvent = async () => {
-  const events = await prisma.event.findFirst({
+  const event = await prisma.event.findFirst({
     orderBy: {
       eventDate: "desc"
     }
   })
-  return events
+  return event
 
 }
 

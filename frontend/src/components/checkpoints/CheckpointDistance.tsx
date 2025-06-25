@@ -58,19 +58,31 @@ const CheckpointDistance = () => {
     setExpandedIndex(expandedIndex === index ? -1 : index)
   }
 
-  const handleInputChange = (fromCheckpointId: string, toCheckpointId: string, value: string) => {
+  const handleInputChange = (fromCheckpointId: string, toCheckpointId: string, value: string, fromCheckpointType: string, toCheckpointType: string) => {
 
     if (isNaN(Number(fromCheckpointId)) || isNaN(Number(toCheckpointId)) || isNaN((Number(value)))) {
       return
     }
 
-    setFormValues((prev) => ({
-      ...prev,
-      [Number(fromCheckpointId)]: {
-        ...prev[Number(fromCheckpointId)],
-        [Number(toCheckpointId)]: Number(value),
-      },
-    }))
+    if (fromCheckpointType === "START" || toCheckpointType === "FINISH") {
+      setFormValues((prev) => ({
+        ...prev,
+        [Number(fromCheckpointId)]: {
+          ...prev[Number(fromCheckpointId)],
+          [Number(toCheckpointId)]: Number(value),
+        }
+      }))} else {
+      setFormValues((prev) => ({
+        ...prev,
+        [Number(fromCheckpointId)]: {
+          ...prev[Number(fromCheckpointId)],
+          [Number(toCheckpointId)]: Number(value),
+        },
+        [Number(toCheckpointId)]: {
+          ...prev[Number(toCheckpointId)],
+          [Number(fromCheckpointId)]: Number(value),
+        }
+      }))}
   }
 
   return (
@@ -93,7 +105,7 @@ const CheckpointDistance = () => {
                       keyboardType="numeric"
                       style={styles.input}
                       value={String(formValues[Number(fromCheckpoint.id)]?.[Number(toCheckpoint.id)] || "")}
-                      onChangeText={(value) => handleInputChange(fromCheckpoint.id.toString(), toCheckpoint.id.toString(), value)}
+                      onChangeText={(value) => handleInputChange(fromCheckpoint.id.toString(), toCheckpoint.id.toString(), value, fromCheckpoint.type, toCheckpoint.type)}
                       maxLength={4}
                     />
                   </View>
@@ -102,7 +114,7 @@ const CheckpointDistance = () => {
             )}
           </View>
         ))}
-        <Pressable style={styles.button} onPress={() => { setCheckpointDistances() }}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={() => { setCheckpointDistances() }}>
           <Text style={styles.buttonText}>Aseta</Text>
         </Pressable>
       </View>

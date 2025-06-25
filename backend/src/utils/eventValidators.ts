@@ -24,7 +24,7 @@ export const validateName = async (name: unknown, res: Response, id?: number): P
     }
   })
   if (existingName && existingName.id !== id) {
-    res.status(400).json({ error: "Tapahtuman nimi on jo käytössä. Syötä uniikki nimi" })
+    res.status(400).json({ error: "Tapahtuman nimi on jo käytössä. Syötä uniikki nimi." })
     return false
   }
   return true

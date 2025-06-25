@@ -26,10 +26,14 @@
     "@react-native-segmented-control/segmented-control": "^2.5.7",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.9.0",
+    "buffer": "^6.0.3",
+    "docx": "^9.5.1",
     "expo": "~53.0.9",
     "expo-constants": "~17.1.6",
+    "expo-file-system": "~18.1.10",
     "expo-linking": "~7.1.5",
     "expo-router": "~5.1.0",
+    "expo-sharing": "~13.1.5",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -71,6 +75,7 @@
     "json-server": "^1.0.0-beta.3",
     "redux-mock-store": "^1.5.5",
     "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.2",
     "typescript": "~5.8.3"
   },
   "private": true

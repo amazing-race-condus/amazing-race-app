@@ -18,8 +18,8 @@ eventRouter.get("/", verifyToken, async (_, res: Response) => {
 })
 
 eventRouter.get("/default", verifyToken, async (_, res: Response) => {
-  const events = await getDefaultEvent()
-  res.json(events)
+  const event = await getDefaultEvent()
+  res.json(event)
   return
 })
 
@@ -118,7 +118,7 @@ eventRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Response
   const event  = await deleteEvent(id)
   if (event) {
     req.app.get("io").emit("event:deleted", event)
-    res.json(event)
+    res.status(204).json(event)
   } else {
     res.status(404).end()
   }
