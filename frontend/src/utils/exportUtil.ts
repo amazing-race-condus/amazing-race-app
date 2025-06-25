@@ -1,6 +1,7 @@
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, WidthType } from "docx"
 import { getRaceTime, formatDate } from "./timeUtils"
-import { sortByTime, getPenaltyMinutes } from "./groupUtils"
+import { sortByTime } from "./groupUtils"
+import { getPenaltyMinutes } from "./penaltyUtils"
 import { getAllGroups } from "@/services/groupService"
 import { Event, Group } from "@/types"
 

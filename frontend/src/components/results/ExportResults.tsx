@@ -13,6 +13,7 @@ const ExportResults = () => {
     const blob = await exportResult(event)
     if (!blob) {
       dispatch(setNotification("Tulosten lataaminen ei onnistunut", "error"))
+      return
     }
     const url = URL.createObjectURL(blob!)
 
