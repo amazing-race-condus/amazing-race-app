@@ -25,6 +25,13 @@ if [[ $1 != "-w" ]]; then
     else
         echo "EXPO_PUBLIC_BACKEND_URL=$FORWARDING_URL/api" >> ./frontend/.env
     fi
+
+    if grep -q  "EXPO_PUBLIC_SOCKET_URL_MOBILE=" ./frontend/.env; then
+        sed -i "s|EXPO_PUBLIC_SOCKET_URL_MOBILE=.*|EXPO_PUBLIC_SOCKET_URL_MOBILE=$FORWARDING_URL|" ./frontend/.env
+    else
+        echo "EXPO_PUBLIC_SOCKET_URL_MOBILE=$FORWARDING_URL" >> ./frontend/.env
+    fi
+
 fi
 
 # Start backend
