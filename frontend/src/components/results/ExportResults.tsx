@@ -26,12 +26,12 @@ const ExportResults = () => {
   }
 
   return (
-    <View style={{ marginVertical: 10 }}>
+    (event.endTime && <View style={{ marginVertical: 10 }}>
       {Platform.OS === "web"
         ? <Button title="Lataa tulokset (.docx)" onPress={() => exportResultsWeb(event)} />
         : <Text style={{color:"white"}}>Tulosten lataaminen on mahdollista vain selaimessa</Text>
       }
-    </View>
+    </View>)
   )
 }
 
