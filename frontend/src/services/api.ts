@@ -28,8 +28,8 @@ axiosInstance.interceptors.response.use(
     return response
   },
   async (error) => {
-    if (error.response?.status === 400) {
-      if (error.response.data.error === "Invalid token") {
+    if (error.response?.status === 400 || error.response?.status === 401) {
+      if (error.response.data.error === "Invalid token" || error.response.data.error === "Token expired") {
         await AsyncStorage.removeItem("user")
         const { default: store } = await import("@/store/store")
         store.dispatch({ type: "RESET" })

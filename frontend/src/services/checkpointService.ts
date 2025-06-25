@@ -15,11 +15,8 @@ export const getAllCheckpoints = async (eventId: number): Promise<Checkpoint[]> 
   return response.data
 }
 
-export const createCheckpoint = async (newObject: AddCheckpoint, eventId: number) => {
-  const response = await axiosInstance.post<Checkpoint>("/checkpoints", {
-    ...newObject,
-    eventId: eventId
-  })
+export const createCheckpoint = async (newObject: AddCheckpoint) => {
+  const response = await axiosInstance.post<Checkpoint>("/checkpoints", newObject)
   return response.data
 }
 

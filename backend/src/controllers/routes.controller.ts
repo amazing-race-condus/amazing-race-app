@@ -114,7 +114,9 @@ const resetRoutes = async (eventId: number) => {
   })
   await prisma.penalty.deleteMany({
     where: {
-      eventId : eventId
+      group: {
+        eventId: eventId
+      }
     }
   })
   await prisma.group.updateMany({
@@ -176,12 +178,12 @@ const updateRoutes = async (routes: Route[], eventId : number) => {
   await prisma.$transaction(checkpointOperations)
 }
 
-// Sorts routes in order of distance to mean of min and max route time.
-const sortRoutes = (routes: Routes[], mean: number) => {
+// Sorts routes in order of distance to median of route time.
+const sortRoutes = (routes: Routes[], median: number) => {
   const compare = (a: Routes, b: Routes) => {
-    if (Math.abs(a.routeTime - mean) < Math.abs(b.routeTime - mean)) {
+    if (Math.abs(a.routeTime - median) < Math.abs(b.routeTime - median)) {
       return -1
-    } else if (Math.abs(a.routeTime - mean) > Math.abs(b.routeTime - mean)) {
+    } else if (Math.abs(a.routeTime - median) > Math.abs(b.routeTime - median)) {
       return 1
     }
     return 0
@@ -190,7 +192,7 @@ const sortRoutes = (routes: Routes[], mean: number) => {
   return sortedRoutes
 }
 
-const assignRoutesToGroups = async (mean: number, eventId: number) => {
+const assignRoutesToGroups = async (eventId: number) => {
   const unsortedRoutes = await prisma.route.findMany({
     where : {
       eventId : eventId
@@ -203,9 +205,13 @@ const assignRoutesToGroups = async (mean: number, eventId: number) => {
           checkpointOrder: "asc"
         }
       }
+    },
+    orderBy: {
+      routeTime: "asc"
     }
   })
-  const routes = sortRoutes(unsortedRoutes, mean)
+  const median = unsortedRoutes[Math.floor(unsortedRoutes.length / 2)].routeTime
+  const routes = sortRoutes(unsortedRoutes, median)
   const groups = await prisma.group.findMany({
     where : {
       eventId : eventId
@@ -276,7 +282,7 @@ export const createRoutes = async (eventId: number) => {
 
     await resetRoutes(eventId)
     await updateRoutes(routes, eventId)
-    const numberOfGroups = await assignRoutesToGroups((max!+min!)/2, eventId)
+    const numberOfGroups = await assignRoutesToGroups(eventId)
 
     response.status = "success"
     response.values.routeAmount = routes.length

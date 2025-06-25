@@ -59,9 +59,7 @@ beforeEach(() => {
     endTime: new Date("2025-06-12T11:52:31.349Z"),
     minRouteTime: 90,
     maxRouteTime: 100,
-    checkpoints: [],
-    penalties: [],
-    group: []
+    eventDate: new Date()
   }
   group1 = {
     id: 1,

@@ -34,6 +34,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={checkpoint}
           isActive={true}
           isExpanded={true}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />
@@ -53,6 +54,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={checkpoint}
           isActive={true}
           isExpanded={true}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />
@@ -74,6 +76,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={checkpoint}
           isActive={false}
           isExpanded={false}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />
@@ -95,6 +98,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={startCheckpoint}
           isActive={true}
           isExpanded={true}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />
@@ -114,6 +118,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={startCheckpoint}
           isActive={false}
           isExpanded={false}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />
@@ -133,6 +138,7 @@ describe("<GroupCheckpointHeader />", () => {
           checkpoint={finishCheckpoint}
           isActive={true}
           isExpanded={true}
+          isPassed={false}
           openHint={mockOpenHint}
           toggleExpanded={mockToggleExpanded}
         />

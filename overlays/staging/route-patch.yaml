@@ -1,0 +1,6 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: condus-amazing-race-route
+spec:
+  host: condus-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi

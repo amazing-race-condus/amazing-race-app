@@ -3,7 +3,7 @@ import { ScrollView, View, Text } from "react-native"
 import { Stack } from "expo-router"
 import { styles } from "@/styles/commonStyles"
 import RouteMinMax from "@/components/settings/RouteMinMax"
-import CheckpointDistance from "@/components/checkpoints/checkpointDistance"
+import CheckpointDistance from "@/components/checkpoints/CheckpointDistance"
 import RouteGeneration from "@/components/settings/RouteGeneration"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store/store"
@@ -14,7 +14,10 @@ const RouteSettings = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text style={styles.header}>Hallinnoi reittejä {event.name} </Text>
+        <View style={{ flexDirection: "column", justifyContent: "center" }}>
+          <Text style={styles.title}>Hallinnoi reittejä</Text>
+          <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+        </View>
         <RouteMinMax />
         <CheckpointDistance />
         <RouteGeneration />

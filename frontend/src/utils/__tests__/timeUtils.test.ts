@@ -18,9 +18,7 @@ describe("getRaceTime", () => {
       endTime: null,
       minRouteTime: 90,
       maxRouteTime: 100,
-      checkpoints: [],
-      penalties: [],
-      group: []
+      eventDate: new Date()
     }
 
     const group: Group = {
@@ -49,9 +47,7 @@ describe("getRaceTime", () => {
       endTime: new Date("2025-06-12T09:52:31.349Z"),
       minRouteTime: 90,
       maxRouteTime: 100,
-      checkpoints: [],
-      penalties: [],
-      group: []
+      eventDate: new Date()
     }
 
     const group: Group = {
@@ -80,9 +76,7 @@ describe("getRaceTime", () => {
       endTime: new Date("2025-06-12T09:52:31.349Z"),
       minRouteTime: 90,
       maxRouteTime: 100,
-      checkpoints: [],
-      penalties: [],
-      group: []
+      eventDate: new Date()
     }
 
     const group: Group = {
@@ -111,9 +105,7 @@ describe("getRaceTime", () => {
       endTime: new Date("2025-06-12T09:52:31.349Z"),
       minRouteTime: 90,
       maxRouteTime: 100,
-      checkpoints: [],
-      penalties: [],
-      group: []
+      eventDate: new Date()
     }
 
     const group: Group = {

@@ -37,9 +37,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       type: type,
       hint: hintUrl,
       easyHint: easyHintUrl,
-      eventId: null
+      eventId: eventId
     }
-    await dispatch(addCheckpointReducer(newCheckpoint, eventId))
+    await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     setType("INTERMEDIATE")
     setHintUrl("")
@@ -104,13 +104,15 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       </RadioButton.Group>
       <Pressable
         onPress={addNewCheckpoint}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
           marginTop: 16,
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää rasti</Text>
       </Pressable>

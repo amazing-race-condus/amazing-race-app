@@ -18,17 +18,17 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   const [easy, setEasy] = useState<boolean>(false)
 
   const addNewGroup = async () => {
+    const eventId = store.getState().event.id
+
     if (groupname.trim()) {
       const newGroup: AddGroup = {
         name: groupname,
         members: groupMembers,
         easy: easy,
-        eventId: null
+        eventId: eventId
       }
 
-      const eventId = store.getState().event.id
-
-      dispatch(addGroupReducer(newGroup, eventId))
+      dispatch(addGroupReducer(newGroup))
       setGroupname("")
       setGroupMembers(0)
       setEasy(false)
@@ -90,12 +90,14 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       </RadioButton.Group>
       <Pressable
         onPress={addNewGroup}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää ryhmä</Text>
       </Pressable>

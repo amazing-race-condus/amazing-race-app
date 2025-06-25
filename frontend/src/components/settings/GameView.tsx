@@ -2,7 +2,7 @@ import { setStartReducer, setEndReducer } from "@/reducers/eventSlice"
 import { AppDispatch, RootState} from "@/store/store"
 import { styles } from "@/styles/commonStyles"
 import { handleAlert } from "@/utils/handleAlert"
-import { View, Pressable, Text, Dimensions, StyleSheet } from "react-native"
+import { View, Pressable, Text, Dimensions, StyleSheet, ScrollView } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import theme from "@/theme"
 import GameReadyBox from "./GameReadyBox"
@@ -24,7 +24,7 @@ const GameView = () => {
   const finish = checkpoints.filter(c => c.type === "FINISH")
   const intermediates = checkpoints.filter(c => c.type === "INTERMEDIATE")
 
-  const groupRoutes = groups.filter(g => g.route.length > 0)
+  const groupRoutes = groups.filter(g => g.route?.length > 0)
   const startedGroups = groups.filter(g => {
     if (!g.nextCheckpointId || !g.route) {
       return false
@@ -33,9 +33,13 @@ const GameView = () => {
   })
 
   useEffect(() => {
+    let allHaveHints = true
     for (const checkpoint of checkpoints) {
-      if (checkpoint.hint === "" || checkpoint.easyHint === "") {
-        setHints(false)
+      if (
+        checkpoint.type !== "START" &&
+        (!checkpoint.hint || !checkpoint.easyHint)) {
+        allHaveHints = false
+        setHints(allHaveHints)
       }
     }
   }, [checkpoints])
@@ -50,8 +54,8 @@ const GameView = () => {
 
   const handleStart = () => {
     if (
-      !start
-      || !finish
+      start.length === 0
+      || finish.length === 0
       || intermediates.length < 4
       || groups.length > groupRoutes.length
       || groups.length === 0
@@ -112,33 +116,38 @@ const GameView = () => {
   }
 
   return(
-    <View style={styles.content}>
-      <Text style={styles.header}>Hallinnoi peliä {event.name}</Text>
-      <GameReadyBox
-        checkpoints={checkpoints}
-        groups={groups}
-        start={start}
-        finish={finish}
-        intermediates={intermediates}
-        hints={hints}
-        groupRoutes={groupRoutes}
-        startedGroups={startedGroups}
-        validDistances={validDistances}
-      />
-      <Pressable style={styles.bigButton} onPress={() => handleStart()}>
-        <Text style={styles.buttonText}>Aloita peli</Text>
-      </Pressable>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={{ flexDirection: "column", justifyContent: "center" }}>
+          <Text style={styles.title}>Hallinnoi peliä</Text>
+          <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+        </View>
+        <GameReadyBox
+          checkpoints={checkpoints}
+          groups={groups}
+          start={start}
+          finish={finish}
+          intermediates={intermediates}
+          hints={hints}
+          groupRoutes={groupRoutes}
+          startedGroups={startedGroups}
+          validDistances={validDistances}
+        />
+        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.startTime ? 0.5 : 1 }]} onPress={() => handleStart()}>
+          <Text style={styles.buttonText}>Aloita peli</Text>
+        </Pressable>
 
-      <Pressable style={styles.bigButton} onPress={() => handleEnd()}>
-        <Text style={styles.buttonText}>Lopeta peli</Text>
-      </Pressable>
-      {(event.startTime || event.endTime) &&
-      <View style={style.container}>
-        {event.startTime &&
-          <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli aloitettu: {formatTime(new Date(event.startTime!))}</Text>}
-        {event.endTime &&
-          <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli lopetettu: {formatTime(new Date(event.endTime!))}</Text>}
-      </View>}
+        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.endTime ? 0.5 : 1 }]} onPress={() => handleEnd()}>
+          <Text style={styles.buttonText}>Lopeta peli</Text>
+        </Pressable>
+        {(event.startTime || event.endTime) &&
+        <View style={style.container}>
+          {event.startTime &&
+            <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli aloitettu: {formatTime(new Date(event.startTime!))}</Text>}
+          {event.endTime &&
+            <Text style={{fontSize:theme.fontSizes.header, marginVertical:5}}>Peli lopetettu: {formatTime(new Date(event.endTime!))}</Text>}
+        </View>}
+      </ScrollView>
     </View>
   )
 }

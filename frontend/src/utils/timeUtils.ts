@@ -1,10 +1,9 @@
 import { Event, Group } from "@/types"
-import { getPenaltyMinutes } from "./groupUtils"
+import { getPenaltyMinutes } from "./penaltyUtils"
 
 export const getRaceTime = (group: Group, event: Event) => {
   let totalSeconds: number | null = null
   const totalPenalty = getPenaltyMinutes(group)
-
   if (!event) return totalSeconds
 
   if (event.startTime) {
@@ -26,4 +25,12 @@ export const getRaceTime = (group: Group, event: Event) => {
     return totalSeconds
   }
   return totalSeconds
+}
+
+export const formatDate = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+
+  return `${day}.${month}.${year}`
 }

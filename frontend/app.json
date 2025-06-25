@@ -17,12 +17,9 @@
       "bundleIdentifier": "com.condus.amazingrace"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "edgeToEdgeEnabled": true,
-      "package": "com.condus.amazingrace"
+      "package": "com.condus.amazingrace",
+      "icon": "./assets/icon.png"
     },
     "web": {
       "output": "single",
@@ -33,10 +30,7 @@
       "expo-router"
     ],
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "a718c32b-8d5f-4532-84c5-484db2ed0217"
-      }
+      "router": {}
     }
   }
 }

@@ -16,6 +16,7 @@ penaltyRouter.post("/:groupid", verifyToken, async (req: Request, res: Response)
   const newPenalty = await createPenalty(id, body)
 
   if (newPenalty) {
+    req.app.get("io").emit("penalty:created", newPenalty)
     res.json(newPenalty)
   } else {
     res.status(404).end()
@@ -39,6 +40,7 @@ penaltyRouter.delete("/:penaltyid", verifyToken, async (req: Request, res: Respo
   const deletedPenalty = await deletePenalty(id)
 
   if (deletedPenalty) {
+    req.app.get("io").emit("penalty:deleted", deletedPenalty)
     res.status(204).end()
   } else {
     res.status(404).end()

@@ -42,6 +42,8 @@ checkpointsRouter.post("/", verifyToken, async (req: CustomRequest, res: Respons
 
   const savedCheckpoint = await createCheckpoint(body, res)
 
+  req.app.get("io").emit("checkpoint:created", savedCheckpoint)
+
   res.status(201).json(savedCheckpoint)
 })
 
@@ -55,6 +57,8 @@ checkpointsRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Re
 
   deleteCheckpoint(id)
 
+  req.app.get("io").emit("checkpoint:deleted", id)
+
   res.status(204).end()
 })
 
@@ -67,6 +71,10 @@ checkpointsRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Respo
   const id = Number(req.params.id)
   const { eventId, name, type, hint, easyHint } = req.body
   const updatedCheckpoint = await modifyCheckpoint(id, eventId, name, type, hint, easyHint, res)
+
+  if (updatedCheckpoint) {
+    req.app.get("io").emit("checkpoint:updated", updatedCheckpoint)
+  }
 
   res.status(200).json(updatedCheckpoint)
 

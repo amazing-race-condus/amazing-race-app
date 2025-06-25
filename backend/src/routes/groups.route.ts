@@ -43,9 +43,13 @@ groupsRouter.put("/next_checkpoint/:id", verifyToken, async (req: Request, res: 
   const id = Number(req.params.id)
   const body = req.body
 
-  const arrivingGroups = await updateNextCheckpoint(id, body.nextCheckpointId)
+  const updatedGroup = await updateNextCheckpoint(id, body.nextCheckpointId)
 
-  res.json(arrivingGroups)
+  if (updatedGroup) {
+    req.app.get("io").emit("group:updated", updatedGroup)
+  }
+
+  res.json(updatedGroup)
 })
 
 groupsRouter.post("/", verifyToken, async (req: CustomRequest, res: Response) => {
@@ -57,6 +61,8 @@ groupsRouter.post("/", verifyToken, async (req: CustomRequest, res: Response) =>
 
   const { name, members, easy, eventId } = req.body
   const group = await createGroup(name, members, easy, eventId, res)
+
+  req.app.get("io").emit("group:created", group)
 
   res.json(group)
 })
@@ -71,6 +77,7 @@ groupsRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Respons
 
   const group = await deleteGroup(id)
   if (group) {
+    req.app.get("io").emit("group:deleted", group)
     res.json(group)
   } else {
     res.status(404).end()
@@ -83,6 +90,7 @@ groupsRouter.put("/:id/dnf", verifyToken, async (req: Request, res: Response) =>
   const group = await toggleDNF(id)
 
   if (group) {
+    req.app.get("io").emit("group:updated", group)
     res.json(group)
   } else {
     res.status(404).json({ error: "Ryhmää ei löydy" })
@@ -95,6 +103,7 @@ groupsRouter.put("/:id/disqualify", verifyToken, async (req: Request, res: Respo
   const group = await toggleDisqualified(id)
 
   if (group) {
+    req.app.get("io").emit("group:updated", group)
     res.json(group)
   } else {
     res.status(404).json({ error: "Ryhmää ei löydy" })
@@ -112,8 +121,11 @@ groupsRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) 
 
   const updatedGroup = await modifyGroup(id, name, members, easy, eventId , res)
 
-  res.status(200).json(updatedGroup)
+  if (updatedGroup) {
+    req.app.get("io").emit("group:updated", updatedGroup)
+  }
 
+  res.status(200).json(updatedGroup)
 })
 
 export default groupsRouter

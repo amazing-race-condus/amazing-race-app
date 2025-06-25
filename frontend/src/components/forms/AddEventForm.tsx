@@ -5,24 +5,14 @@ import BottomSheetModal from "../ui/BottomSheetModal"
 import { TextInput } from "react-native-gesture-handler"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
-import { createEvent } from "@/services/eventService"
 import Calendar from "../ui/Calendar"
 import { DateType } from "react-native-ui-datepicker"
 import theme from "@/theme"
 import { setNotification } from "@/reducers/notificationSlice"
-import { AddEvent, Event } from "@/types"
-import { AxiosError } from "axios"
+import { AddEvent } from "@/types"
+import { addEventReducer } from "@/reducers/allEventsSlice"
 
-const AddEventForm = ({
-  bottomSheetRef,
-  events,
-  setEvents
-}: {
-    bottomSheetRef: React.RefObject<BottomSheet | null>
-    events: Event[]
-    setEvents: (event: Event[]) => void
-  }) => {
-
+const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheet | null> }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef<TextInput>(null)
   const [eventName, setEventName] = useState<string>("")
@@ -30,25 +20,15 @@ const AddEventForm = ({
 
   const addNewEvent = async () => {
     if (eventName === "") {
-      dispatch(setNotification("Ryhmällä täytyy olla nimi", "error"))
+      dispatch(setNotification("Tapahtumalla täytyy olla nimi", "error"))
       return
     }
-    try {
-      const newEvent: AddEvent = {
-        name: eventName,
-        eventDate: new Date(String(eventDate))
-      }
-      createEvent(newEvent)
-      setEvents(events)
-      dispatch(setNotification("Tapahtuma luotu", "success"))
-    } catch (error) {
-      console.error("Failed to create event", error)
-      if (error instanceof AxiosError) {
-        dispatch(setNotification(
-          error.response?.data.error ?? `Tapahtumaa ei voitu luoda: ${error.message}`, "error"
-        ))
-      }
+    const newEvent: AddEvent = {
+      name: eventName,
+      eventDate: new Date(String(eventDate))
     }
+
+    dispatch(addEventReducer(newEvent))
     setEventName("")
     setEventDate(new Date())
     Keyboard.dismiss()
@@ -80,12 +60,14 @@ const AddEventForm = ({
       <Calendar selected={eventDate} setSelected={setEventDate}/>
       <Pressable
         onPress={addNewEvent}
-        style={{
+        style={({ pressed }) => [{
           backgroundColor: "orange",
           padding: 12,
           borderRadius: 8,
           alignItems: "center",
-        }}
+        }, {
+          opacity: pressed ? 0.5 : 1
+        }]}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>Lisää tapahtuma</Text>
       </Pressable>

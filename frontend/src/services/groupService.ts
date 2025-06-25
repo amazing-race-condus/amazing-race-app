@@ -16,11 +16,8 @@ export const getArrivingGroups = async (checkpointId: number): Promise<Group[]> 
   return response.data
 }
 
-export const createGroup = async (newGroup: AddGroup, eventId: number) => {
-  const response = await axiosInstance.post<Group>("/groups",{
-    ...newGroup,
-    eventId: eventId
-  })
+export const createGroup = async (newGroup: AddGroup) => {
+  const response = await axiosInstance.post<Group>("/groups", newGroup)
   return response.data
 }
 
@@ -44,10 +41,7 @@ export const disqualifyGroup = async (id: number) => {
   return response.data
 }
 
-export const editGroup = async (id: number, newObject: AddGroup, eventId : number) => {
-  const response = await axiosInstance.put(`/groups/${id}`, {
-    ...newObject,
-    eventId: eventId
-  })
+export const editGroup = async (id: number, newObject: AddGroup) => {
+  const response = await axiosInstance.put(`/groups/${id}`, newObject)
   return response.data
 }

@@ -74,14 +74,14 @@ const RouteGeneration: React.FC = () => {
           <ActivityIndicator size="large" color="#003366" />
         </View>
       )}
-      <Text style={styles.header}>Reitit:</Text>
+      <Text style={[styles.header, {fontWeight: "light"}]}>Reitit:</Text>
       <View style={styles.formContainer}>
         <RouteStats
           routes={routes}
           activeRoutes={activeRoutes}
           groupsLength={useSelector((state: RootState) => state.groups.length)}
         />
-        <Pressable style={styles.button} onPress={createRoutes}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={createRoutes}>
           <Text style={styles.buttonText}>Luo reitit</Text>
         </Pressable>
       </View>

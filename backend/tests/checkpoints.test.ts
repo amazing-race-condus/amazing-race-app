@@ -1,6 +1,6 @@
 import request from "supertest"
 import { app, server, prisma } from "../src/index"
-import { initialCheckpoints, checkpoints, intermediateCheckpoints, users, initialEvent } from "./test_helper"
+import { initialCheckpoints, fiveCheckpoints, intermediateCheckpoints, users, initialEvent } from "./test_helper"
 
 let adminToken: string
 let userToken: string
@@ -22,6 +22,7 @@ beforeEach(async () => {
 })
 
 beforeAll(async () => {
+  await prisma.event.deleteMany({})
   const event = await prisma.event.create({
     data: initialEvent,
   })
@@ -30,15 +31,21 @@ beforeAll(async () => {
 
 describe("Get all checkpoints", () => {
   beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
+
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
+      data: checkpointsWithEventId,
     })
   })
 
   it("checkpoints are returned as json", async () => {
     const response = await request(app)
       .get("/api/checkpoints")
+      .query({ eventId: eventId })
       .set("Authorization", `Bearer ${userToken}`)
     expect(response.status).toBe(200)
     expect(response.headers["content-type"]).toMatch(/application\/json/)
@@ -47,14 +54,15 @@ describe("Get all checkpoints", () => {
   it("all checkpoints are returned", async () => {
     const response = await request(app)
       .get("/api/checkpoints")
+      .query({ eventId: eventId })
       .set("Authorization", `Bearer ${userToken}`)
     expect(response.body.length).toBe(initialCheckpoints.length)
   })
 
   it("checkpoints are not returned with invalid token", async () => {
-
     const result = await request(app)
       .get("/api/checkpoints")
+      .query({ eventId: eventId })
       .set("Authorization", `Bearer ${invalidToken}`)
       .expect(401)
 
@@ -64,9 +72,13 @@ describe("Get all checkpoints", () => {
 
 describe("Viewing a specific checkpoint", () => {
   beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
+      data: checkpointsWithEventId,
     })
   })
 
@@ -107,12 +119,25 @@ describe("Viewing a specific checkpoint", () => {
 })
 
 describe("Addition of a new checkpoint", () => {
+  beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
+
+    await prisma.checkpoint.deleteMany({})
+    await prisma.checkpoint.createMany({
+      data: checkpointsWithEventId,
+    })
+  })
+
   it("succeeds with valid data and valid token", async () => {
     const newCheckpoint = {
       name: "Tennispalatsi",
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     await request(app).post("/api/checkpoints")
@@ -176,7 +201,8 @@ describe("Addition of a new checkpoint", () => {
       name: "S",
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -194,7 +220,8 @@ describe("Addition of a new checkpoint", () => {
       name: "S".repeat(101),
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -210,16 +237,12 @@ describe("Addition of a new checkpoint", () => {
   })
 
   it("fails with status code 400 and proper error message if chekpoint with type start or finish already exists", async () => {
-
-    await prisma.checkpoint.createMany({
-      data: initialCheckpoints
-    })
-
     let newCheckpoint = {
       name: "Lähtö",
       type: "START",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     let result = await request(app).post("/api/checkpoints")
@@ -234,7 +257,8 @@ describe("Addition of a new checkpoint", () => {
       name: "Maali",
       type: "FINISH",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     result = await request(app).post("/api/checkpoints")
@@ -248,12 +272,15 @@ describe("Addition of a new checkpoint", () => {
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Lähtö")
     expect(names).not.toContain("Maali")
-    await prisma.checkpoint.deleteMany({})
   })
 
   it("fails with status code 400 and proper error message if there is already 8 checkpoints", async () => {
+    const checkpointsWithEventId = fiveCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
     await prisma.checkpoint.createMany({
-      data: checkpoints,
+      data: checkpointsWithEventId,
     })
 
     const newCheckpoint = {
@@ -273,20 +300,25 @@ describe("Addition of a new checkpoint", () => {
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Välirasti")
-    await prisma.checkpoint.deleteMany({})
-
   })
 
   it("fails with status code 400 and proper error message if there is already 6 intermediate checkpoints", async () => {
+    await prisma.checkpoint.deleteMany({})
+
+    const checkpointsWithEventId = intermediateCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
     await prisma.checkpoint.createMany({
-      data: intermediateCheckpoints,
+      data: checkpointsWithEventId,
     })
 
     const newCheckpoint = {
       name: "Välirasti",
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
-      easyHint: "http://www.google.fi"
+      easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     const result = await request(app).post("/api/checkpoints")
@@ -299,7 +331,6 @@ describe("Addition of a new checkpoint", () => {
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Välirasti")
     expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
-    await prisma.checkpoint.deleteMany({})
   })
 
 
@@ -330,6 +361,7 @@ describe("Addition of a new checkpoint", () => {
       type: "INTERMEDIATE",
       hint: "http://www.google.com",
       easyHint: "http://www.google.fi",
+      eventId: eventId
     }
 
     await request(app).post("/api/checkpoints")
@@ -345,15 +377,18 @@ describe("Addition of a new checkpoint", () => {
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
-    await prisma.checkpoint.deleteMany({})
   })
 })
 
 describe("Deletion of a checkpoint", () => {
   beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
+      data: checkpointsWithEventId,
     })
   })
 
@@ -401,9 +436,13 @@ describe("Deletion of a checkpoint", () => {
 
 describe("Modification of a checkpoint", () => {
   beforeEach(async () => {
+    const checkpointsWithEventId = initialCheckpoints.map(checkpoint => ({
+      ...checkpoint,
+      eventId: eventId
+    }))
     await prisma.checkpoint.deleteMany({})
     await prisma.checkpoint.createMany({
-      data: initialCheckpoints,
+      data: checkpointsWithEventId,
     })
   })
 
@@ -420,7 +459,8 @@ describe("Modification of a checkpoint", () => {
         name: "Modified checkpoint",
         type: "FINISH",
         hint:"http://vihje.com",
-        easyHint: "http://helppovihje.com"
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
       })
       .expect(200)
 
@@ -429,7 +469,8 @@ describe("Modification of a checkpoint", () => {
       name: "Modified checkpoint",
       type: "FINISH",
       hint:"http://vihje.com",
-      easyHint: "http://helppovihje.com"
+      easyHint: "http://helppovihje.com",
+      eventId: eventId
     })
   })
 
@@ -446,7 +487,8 @@ describe("Modification of a checkpoint", () => {
         name: "Modified checkpoint",
         type: "FINISH",
         hint:"http://vihje.com",
-        easyHint: "http://helppovihje.com"
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
       })
       .expect(401)
 
@@ -466,7 +508,8 @@ describe("Modification of a checkpoint", () => {
         name: "Modified checkpoint",
         type: "FINISH",
         hint:"http://vihje.com",
-        easyHint: "http://helppovihje.com"
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
       })
       .expect(401)
 
@@ -505,7 +548,6 @@ describe("Modification of a checkpoint", () => {
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
-    await prisma.checkpoint.deleteMany({})
   })
 
   it("fails with status code 400 and proper error message if data is invalid", async () => {
@@ -521,13 +563,13 @@ describe("Modification of a checkpoint", () => {
         name: "Modified checkpoint",
         type: "TYYPPI",
         hint:"http://vihje.com",
-        easyHint: "http://helppovihje.com"
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
       })
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.error).toContain("Virheellinen tyyppi.")
-    await prisma.checkpoint.deleteMany({})
   })
 
   it("succeeds with status code 200 with same type than before", async () => {
@@ -543,7 +585,8 @@ describe("Modification of a checkpoint", () => {
         name: "Modified checkpoint",
         type: checkpointToModify.type,
         hint:"http://vihje.com",
-        easyHint: "http://helppovihje.com"
+        easyHint: "http://helppovihje.com",
+        eventId: eventId
       })
       .expect(200)
 
@@ -552,9 +595,9 @@ describe("Modification of a checkpoint", () => {
       name: "Modified checkpoint",
       type: checkpointToModify.type,
       hint:"http://vihje.com",
-      easyHint: "http://helppovihje.com"
+      easyHint: "http://helppovihje.com",
+      eventId: eventId
     })
-    await prisma.checkpoint.deleteMany({})
   })
 })
 

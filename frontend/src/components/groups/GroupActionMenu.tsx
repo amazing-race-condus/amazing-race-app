@@ -17,23 +17,26 @@ const GroupActionMenu = (
       ref={ref}
       snapPoints={["25%"]}
     >
-      <Pressable onPress={handleDNF} style={{
+      <Pressable onPress={handleDNF} style={({ pressed }) => [{
         backgroundColor: "#f54254",
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
-      }}>
+      }, {
+        opacity: pressed ? 0.5 : 1
+      }]}>
         <Text>
           {group?.dnf ? "Peru keskeytys" : "Keskeytä suoritus"}
         </Text>
       </Pressable>
-      <Pressable onPress={handleDisqualification} style={{
+      <Pressable onPress={handleDisqualification} style={({ pressed }) => [{
         backgroundColor: "#f54254",
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
-      }}
-      >
+      }, {
+        opacity: pressed ? 0.5 : 1
+      }]}>
         <Text>
           {group?.disqualified ? "Peru diskaus" : "Diskaa ryhmä"}
         </Text>

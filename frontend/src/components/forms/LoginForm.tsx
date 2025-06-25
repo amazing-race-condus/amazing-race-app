@@ -88,20 +88,22 @@ const LoginForm = () => {
           testID="password"
         />
 
-        <Pressable style={styles.button} onPress={handleLogin}>
+        <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={handleLogin}>
           <Text style={styles.buttonText}>Kirjaudu sisään</Text>
         </Pressable>
         {admin && (
           <>
             <Pressable
               onPress={handleResetPassword}
-              style={{
+              style={({ pressed }) => [{
                 backgroundColor: "orange",
                 padding: 8,
                 borderRadius: 8,
                 alignItems: "center",
                 marginTop: 10
-              }}
+              }, {
+                opacity: pressed ? 0.5 : 1
+              }]}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>Unohtuiko salasana?</Text>
             </Pressable></>
