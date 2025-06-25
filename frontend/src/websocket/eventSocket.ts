@@ -1,21 +1,18 @@
 import store from "@/store/store"
-import { updateGroup, removeGroup, appendGroup } from "@/reducers/groupSlice"
-import { Event, Group } from "@/types"
+import { appendEvent, removeEvent, updateEvent } from "@/reducers/allEventsSlice"
+import { Event } from "@/types"
 
 export const setupEventHandlers = (socket: any) => {
   socket.on("event:created", (event: Event) => {
-    console.log("Event created", event)
-    // store.dispatch(appendGroup(group))
+    store.dispatch(appendEvent(event))
   })
 
   socket.on("event:updated", (event: Event) => {
-    console.log("Event updated", event)
-    // store.dispatch(updateGroup(group))
+    store.dispatch(updateEvent(event))
   })
 
   socket.on("event:deleted", (event: Event) => {
-    console.log("Event deleted", event)
-    // store.dispatch(removeGroup(event))
+    store.dispatch(removeEvent(event))
   })
 }
 

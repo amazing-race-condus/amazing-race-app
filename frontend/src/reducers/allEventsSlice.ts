@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { Event } from "@/types"
+import type { AddEvent, Event } from "@/types"
+import { AppDispatch } from "@/store/store"
+import { createEvent, getEvents, removeEvent as removeEventSVC } from "@/services/eventService"
+import { setNotification } from "./notificationSlice"
+import { AxiosError } from "axios"
+import { getDefaultEventReducer } from "./eventSlice"
 
 const initialState: Event[] = []
 
@@ -27,6 +32,45 @@ const allEventsSlice = createSlice({
     }
   },
 })
+
+export const fetchEvents = () => async (dispatch: AppDispatch) => {
+  try {
+    const allEvents = await getEvents()
+    dispatch(setEvents(allEvents))
+  } catch (error) {
+    console.error("Failed to fetch groups:", error)
+  }
+}
+
+export const addEventReducer = (newObject: AddEvent) => async (dispatch: AppDispatch) => {
+  try {
+    const newEvent = await createEvent(newObject)
+    dispatch(appendEvent(newEvent))
+    dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
+  } catch (error) {
+    console.error("Failed to add Group:", error)
+    if (error instanceof AxiosError) {
+      dispatch(setNotification(
+        error.response?.data.error ?? `Tapahtumaa ei voitu luoda: ${error.message}`, "error"
+      ))
+    }
+  }
+}
+
+export const removeEventReducer =
+  (eventId: number) => async (dispatch: AppDispatch) => {
+    try {
+      const event = await removeEventSVC(eventId)
+      dispatch(removeEvent(event))
+      dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
+      dispatch(getDefaultEventReducer())
+    } catch (error) {
+      console.error("Failed to remove event:", error)
+      if (error instanceof AxiosError) {
+        dispatch(setNotification( error.response?.data.error ?? `Tapahtumaa ei voi poistaa: ${error.message}`, "error"))
+      }
+    }
+  }
 
 export const { setEvents, appendEvent, removeEvent, updateEvent } = allEventsSlice.actions
 export default allEventsSlice.reducer

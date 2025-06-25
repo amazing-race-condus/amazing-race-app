@@ -5,13 +5,10 @@ import { handleAlert } from "@/utils/handleAlert"
 import React from "react"
 import { View, Pressable, Text } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import { removeEvent } from "@/services/eventService"
-import { setNotification } from "@/reducers/notificationSlice"
-import { AxiosError } from "axios"
 import { formatDate } from "@/utils/timeUtils"
-import { getDefaultEventReducer } from "@/reducers/eventSlice"
+import { removeEventReducer } from "@/reducers/allEventsSlice"
 
-const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: { item: Event, setEvents: (event: Event[]) => void, events: Event[], handleEventChange: (id : number) => void,  onEditEvent?: (event: Event) => void }) => {
+const EventItem = ({ item, handleEventChange, onEditEvent }: { item: Event, handleEventChange: (id : number) => void,  onEditEvent?: (event: Event) => void }) => {
   const eventId = useSelector((state: RootState) => state.event.id)
   const user = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch<AppDispatch>()
@@ -31,17 +28,7 @@ const EventItem = ({ item, setEvents, events, handleEventChange, onEditEvent }: 
       title: "Vahvista poisto",
       message: "Oletko varma että haluat poistaa tämän tapahtuman? Tapahtuman poistaminen poistaa myös kaikki siihen liittyvät ryhmät, rastit ja tiedot.",
       onConfirm: async () => {
-        try {
-          const deletedEvent = await removeEvent(id)
-          const updatedEvents = events.filter(event => event.id !== deletedEvent.id)
-          setEvents(updatedEvents)
-          dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
-          dispatch(getDefaultEventReducer())
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            dispatch(setNotification( error.response?.data.error ?? `Tapahtumaa ei voi poistaa: ${error.message}`, "error"))
-          }
-        }
+        dispatch(removeEventReducer(id))
       }
     })
   }

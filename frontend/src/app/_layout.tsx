@@ -15,6 +15,7 @@ import { cleanupGroupHandlers, setupGroupHandlers } from "@/websocket/groupSocke
 import { cleanupCheckpointHandlers, setupCheckpointHandlers } from "@/websocket/checkpointSocket"
 import { cleanupEventHandlers, setupEventHandlers } from "@/websocket/eventSocket"
 import { cleanupPenaltyHandlers, setupPenaltyHandlers } from "@/websocket/penaltySocket"
+import { fetchEvents } from "@/reducers/allEventsSlice"
 
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
@@ -63,6 +64,7 @@ function AppContent() {
         await Promise.all([
           dispatch(fetchGroups(eventId)),
           dispatch(fetchCheckpoints(eventId)),
+          dispatch(fetchEvents()),
         ])
       } catch (error) {
         console.error(`Failed to fetch data for event ${eventId}:`, error)
