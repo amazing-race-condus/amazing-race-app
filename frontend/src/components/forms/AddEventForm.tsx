@@ -20,7 +20,7 @@ const AddEventForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
 
   const addNewEvent = async () => {
     if (eventName === "") {
-      dispatch(setNotification("Ryhmällä täytyy olla nimi", "error"))
+      dispatch(setNotification("Tapahtumalla täytyy olla nimi", "error"))
       return
     }
     const newEvent: AddEvent = {

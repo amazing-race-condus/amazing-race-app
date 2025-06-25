@@ -13,7 +13,6 @@ jest.mock("@/services/eventService", () => ({
 describe("<EditEventForm />", () => {
   let store: any
   const setSelectedEvent= jest.fn()
-  const setEvents= jest.fn()
   const bottomSheetRef = createRef<BottomSheet>()
 
   beforeEach(() => {
@@ -29,7 +28,7 @@ describe("<EditEventForm />", () => {
 
     render(
       <Provider store={store}>
-        <EditEventForm bottomSheetRef={bottomSheetRef} event={events[0]} setSelectedEvent={setSelectedEvent} events={events} setEvents={setEvents}/>
+        <EditEventForm bottomSheetRef={bottomSheetRef} event={events[0]} setSelectedEvent={setSelectedEvent} />
       </Provider>
     )
 
@@ -54,7 +53,7 @@ describe("<EditEventForm />", () => {
 
     render(
       <Provider store={store}>
-        <EditEventForm bottomSheetRef={bottomSheetRef} event={events[0]} setSelectedEvent={setSelectedEvent} events={events} setEvents={setEvents}/>
+        <EditEventForm bottomSheetRef={bottomSheetRef} event={events[0]} setSelectedEvent={setSelectedEvent} />
       </Provider>
     )
 
@@ -66,7 +65,7 @@ describe("<EditEventForm />", () => {
 
     await waitFor(() => {
       expect(store.dispatch).toHaveBeenCalledWith(expect.any(Function))
-      expect(store.dispatch).toHaveBeenCalledTimes(1)
+      expect(store.dispatch).toHaveBeenCalledTimes(2)
     })
   })
 })

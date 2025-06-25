@@ -1,6 +1,6 @@
 import groupReducer, { setGroups, appendGroup, updateGroup, fetchGroups, givePenaltyReducer, removePenaltyReducer, addGroupReducer, removeGroupReducer, dnfGroupReducer, giveNextCheckpointReducer } from "../groupSlice"
 import type { Group, Penalty } from "@/types"
-import { createMockStore, events } from "@/utils/testUtils"
+import { createMockStore } from "@/utils/testUtils"
 import { givePenalty, removePenalty } from "@/services/penaltyService"
 import { createGroup, dnfGroup, getAllGroups, giveNextCheckpoint, removeGroup } from "@/services/groupService"
 
@@ -46,8 +46,6 @@ describe("groupSlice reducers", () => {
     groupId: 2,
     checkpointId: 2
   }
-
-  const event = events[0]
 
   test("should set groups", () => {
     const groups = [{ id: 1, name: "Test", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }]

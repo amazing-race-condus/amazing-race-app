@@ -5,6 +5,9 @@ import { createEvent, getEvents, removeEvent as removeEventSVC } from "@/service
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
 import { getDefaultEventReducer } from "./eventSlice"
+import { storageUtil } from "@/utils/storageUtil"
+import { fetchGroups } from "@/reducers/groupSlice"
+import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
 
 const initialState: Event[] = []
 
@@ -38,7 +41,7 @@ export const fetchEvents = () => async (dispatch: AppDispatch) => {
     const allEvents = await getEvents()
     dispatch(setEvents(allEvents))
   } catch (error) {
-    console.error("Failed to fetch groups:", error)
+    console.error("Failed to fetch events:", error)
   }
 }
 
@@ -46,9 +49,9 @@ export const addEventReducer = (newObject: AddEvent) => async (dispatch: AppDisp
   try {
     const newEvent = await createEvent(newObject)
     dispatch(appendEvent(newEvent))
-    dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
+    dispatch(setNotification(`Tapahtuma '${newObject.name}' lisätty`, "success"))
   } catch (error) {
-    console.error("Failed to add Group:", error)
+    console.error("Failed to add event:", error)
     if (error instanceof AxiosError) {
       dispatch(setNotification(
         error.response?.data.error ?? `Tapahtumaa ei voitu luoda: ${error.message}`, "error"
@@ -63,7 +66,12 @@ export const removeEventReducer =
       const event = await removeEventSVC(eventId)
       dispatch(removeEvent(event))
       dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
-      dispatch(getDefaultEventReducer())
+      const newActiveEvent = await dispatch(getDefaultEventReducer())
+      if (newActiveEvent) {
+        await storageUtil.setEventId(newActiveEvent.id)
+        dispatch(fetchGroups(newActiveEvent.id))
+        dispatch(fetchCheckpoints(newActiveEvent.id))
+      }
     } catch (error) {
       console.error("Failed to remove event:", error)
       if (error instanceof AxiosError) {
