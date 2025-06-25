@@ -5,7 +5,8 @@ on:
     secrets:
       SECRET:
         required: true
-
+      CODECOV_TOKEN:
+        required: true
 jobs:
   lint:
     runs-on: ubuntu-24.04
