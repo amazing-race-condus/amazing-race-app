@@ -6,27 +6,18 @@ import { AppDispatch, RootState } from "@/store/store"
 import { useState, useEffect } from "react"
 import { RouteLimit } from "@/types"
 import { setNotification } from "@/reducers/notificationSlice"
-import { getLimits, setLimits } from "@/services/routeService"
+import { setLimits } from "@/services/routeService"
 
 const RouteMinMax = () => {
-  const eventId = useSelector((state: RootState) => state.event.id)
-  const [minimum, setMinimum] = useState("")
-  const [maximum, setMaximum] = useState("")
+  const event = useSelector((state: RootState) => state.event)
+  const [minimum, setMinimum] = useState(event.minRouteTime)
+  const [maximum, setMaximum] = useState(event.maxRouteTime)
   const dispatch = useDispatch<AppDispatch>()
 
-  const getInitialLimits = async () => {
-    if (eventId !== null) {
-      const initialLimits = await getLimits(eventId)
-      if (initialLimits.minRouteTime && initialLimits.maxRouteTime) {
-        setMinimum(initialLimits.minRouteTime.toString())
-        setMaximum(initialLimits.maxRouteTime.toString())
-      }
-    }
-  }
-
   useEffect(() => {
-    getInitialLimits()
-  }, [eventId])
+    setMinimum(event.minRouteTime)
+    setMaximum(event.maxRouteTime)
+  }, [event.minRouteTime, event.maxRouteTime])
 
   const updateLimit = async (limit: RouteLimit) => {
     try {
@@ -43,7 +34,7 @@ const RouteMinMax = () => {
 
   const updateRouteMinMax = () => {
     const data = {
-      id: eventId,
+      id: event.id,
       minRouteTime: Number(minimum),
       maxRouteTime: Number(maximum)
     }
@@ -57,17 +48,17 @@ const RouteMinMax = () => {
         <Text style={styles.formText}>Reittien minimiaika:</Text>
         <TextInput
           style={styles.inputField}
-          value={minimum}
+          value={minimum?.toString()}
           keyboardType="numeric"
-          onChangeText={setMinimum}
+          onChangeText={(text) => setMinimum(text ? Number(text) : null)}
           maxLength={4}
         />
         <Text style={styles.formText}>Reittien maksimiaika:</Text>
         <TextInput
           style={styles.inputField}
-          value={maximum}
+          value={maximum?.toString()}
           keyboardType="numeric"
-          onChangeText={setMaximum}
+          onChangeText={(text) => setMaximum(text ? Number(text) : null)}
           maxLength={4}
         />
         <Pressable style={styles.button} onPress={() => { updateRouteMinMax() }}>
