@@ -1,6 +1,6 @@
 import groupReducer, { setGroups, appendGroup, updateGroup, fetchGroups, givePenaltyReducer, removePenaltyReducer, addGroupReducer, removeGroupReducer, dnfGroupReducer, giveNextCheckpointReducer } from "../groupSlice"
 import type { Group, Penalty } from "@/types"
-import { createMockStore } from "@/utils/testUtils"
+import { createMockStore, events } from "@/utils/testUtils"
 import { givePenalty, removePenalty } from "@/services/penaltyService"
 import { createGroup, dnfGroup, getAllGroups, giveNextCheckpoint, removeGroup } from "@/services/groupService"
 
@@ -35,8 +35,8 @@ describe("groupSlice reducers", () => {
   })
 
   const returnGroups: Group[] = [
-    { id: 1, name: "Group 1", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false },
-    { id: 2, name: "Group 2", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false }
+    { id: 1, name: "Group 1", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false },
+    { id: 2, name: "Group 2", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }
   ]
 
   const returnPenalty : Penalty = {
@@ -47,21 +47,23 @@ describe("groupSlice reducers", () => {
     checkpointId: 2
   }
 
+  const event = events[0]
+
   test("should set groups", () => {
-    const groups = [{ id: 1, name: "Test", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false }]
+    const groups = [{ id: 1, name: "Test", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }]
     const state = groupReducer(initialState, setGroups(groups))
     expect(state).toEqual(groups)
   })
 
   test("should append group", () => {
-    const group = { id: 2, name: "Fernando", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false }
+    const group = { id: 2, name: "Fernando", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }
     const state = groupReducer(initialState, appendGroup(group))
     expect(state).toEqual([group])
   })
 
   test("should update group", () => {
-    const state = [{ id: 3, name: "Hulio", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false }]
-    const updated = { id: 3, name: "Ahulio", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: null, finishTime: null, dnf: false, easy: false }
+    const state = [{ id: 3, name: "Hulio", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }]
+    const updated = { id: 3, name: "Ahulio", penalty: [], disqualified: false, route: [], nextCheckpointId: null, members: 5, eventId: 1, finishTime: null, dnf: false, easy: false }
     const newState = groupReducer(state, updateGroup(updated))
     expect(newState[0].name).toBe("Ahulio")
   })
@@ -69,7 +71,7 @@ describe("groupSlice reducers", () => {
   test("fetchGroups thunk works", async () => {
     (getAllGroups as jest.Mock).mockResolvedValue(returnGroups)
 
-    await store.dispatch<any>(fetchGroups())
+    await store.dispatch<any>(fetchGroups(1))
     expect(store.getState().groups).toEqual(returnGroups)
   })
 
@@ -94,16 +96,16 @@ describe("groupSlice reducers", () => {
     ;(createGroup as jest.Mock).mockResolvedValue(mockGroup)
     ;(removeGroup as jest.Mock).mockResolvedValue(mockGroup)
 
-    await store.dispatch<any>(addGroupReducer({ name: "Group 1", members: 5, easy: false }))
+    await store.dispatch<any>(addGroupReducer({ name: "Group 1", members: 5, easy: false, eventId: 1 }))
     expect(store.getState().groups).toContainEqual(mockGroup)
     await store.dispatch<any>(removeGroupReducer(1))
     expect(store.getState().groups).toEqual([])
   })
 
-  test("Should handle ndf and give next checkpoint", async () => {
+  test("Should handle dnf and give next checkpoint", async () => {
     const mockGroup = returnGroups[0]
     const mockGroupCheckpoint = { ...mockGroup, nextCheckpointId: 2 }
-    ;(dnfGroup as jest.Mock).mockResolvedValue(mockGroup)
+    ;(dnfGroup as jest.Mock).mockResolvedValue({...mockGroup, dnf: !mockGroup.dnf})
     ;(giveNextCheckpoint as jest.Mock).mockResolvedValue(mockGroupCheckpoint)
 
     store.dispatch(setGroups(returnGroups))

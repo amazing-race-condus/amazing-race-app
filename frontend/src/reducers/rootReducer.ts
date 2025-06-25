@@ -4,6 +4,7 @@ import event from "./eventSlice"
 import groups from "./groupSlice"
 import checkpoints from "./checkpointsSlice"
 import notification from "./notificationSlice"
+import allEvents from "./allEventsSlice"
 
 const appReducer = combineReducers({
   user,
@@ -11,6 +12,7 @@ const appReducer = combineReducers({
   groups,
   checkpoints,
   notification,
+  allEvents
 })
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: any) => {

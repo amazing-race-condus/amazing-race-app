@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "@/store/store"
-import { getAllGroups, createGroup, removeGroup, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
+import { getAllGroups, createGroup, removeGroup as removeGroupSVC, dnfGroup, giveNextCheckpoint, disqualifyGroup} from "@/services/groupService"
 import { removePenalty, givePenalty } from "@/services/penaltyService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
@@ -16,7 +16,13 @@ const groupSlice = createSlice({
       return action.payload
     },
     appendGroup(state, action: PayloadAction<Group>) {
-      state.push(action.payload)
+      const groupExists = state.some(group => group.id === action.payload.id)
+      if (!groupExists) {
+        state.push(action.payload)
+      }
+    },
+    removeGroup(state, action: PayloadAction<Group>) {
+      return state.filter(group => group.id !== action.payload.id)
     },
     updateGroup(state, action: PayloadAction<Group>) {
       const index = state.findIndex(g => g.id === action.payload.id)
@@ -40,17 +46,15 @@ export const fetchGroups = (eventId : number) => async (dispatch: AppDispatch) =
 export const givePenaltyReducer = (groupId: number, checkpointId: number, penaltyType: PenaltyType, penalty: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
     const newPenalty = await givePenalty(groupId, checkpointId, penaltyType, penalty)
-    const updatedGroups = getState().groups.map((group) => {
-      if (group.id === newPenalty.groupId) {
-        return {
-          ...group,
-          penalty: [...group.penalty, newPenalty]
-        }
-      }
-      return group
-    })
+    const groupToUpdate = getState().groups.filter(g => g.id === groupId)[0]
+    const penalizedGroup = {
+      ...groupToUpdate,
+      penalty: groupToUpdate.penalty.some(p => p.id === newPenalty.id)
+        ? groupToUpdate.penalty
+        : [...groupToUpdate.penalty, newPenalty]
+    }
 
-    dispatch(setGroups(updatedGroups))
+    dispatch(updateGroup(penalizedGroup))
     dispatch(setNotification("Ryhmää rangaistu", "success"))
   } catch (error) {
     console.error("Failed to update penalty:", error)
@@ -80,9 +84,9 @@ export const removePenaltyReducer = (groupId: number, penaltyId:number) => async
   }
 }
 
-export const addGroupReducer = (newObject: AddGroup, eventId: number) => async (dispatch: AppDispatch) => {
+export const addGroupReducer = (newObject: AddGroup) => async (dispatch: AppDispatch) => {
   try {
-    const newGroup = await createGroup(newObject, eventId)
+    const newGroup = await createGroup(newObject)
     dispatch(appendGroup(newGroup))
     dispatch(setNotification(`Ryhmä '${newObject.name}' lisätty`, "success"))
   } catch (error) {
@@ -98,7 +102,7 @@ export const addGroupReducer = (newObject: AddGroup, eventId: number) => async (
 export const removeGroupReducer =
   (id: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
-      const group = await removeGroup(id)
+      const group = await removeGroupSVC(id)
 
       const current = getState().groups
       const updated = current.filter((groups) => groups.id !== id)
@@ -116,21 +120,9 @@ export const dnfGroupReducer =
     try {
       const group = await dnfGroup(id)
 
-      const currentGroups = getState().groups
-      let dnfState: boolean | undefined
-      const updated = currentGroups.map((currentGroup) => {
-        if (currentGroup.id === id) {
-          dnfState = !currentGroup.dnf
-          return {
-            ...currentGroup,
-            dnf: !currentGroup.dnf
-          }
-        }
-        return currentGroup
-      })
+      dispatch(updateGroup(group))
 
-      dispatch(setGroups(updated))
-      if (dnfState) {
+      if (group.dnf) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty`, "success"))
       } else {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritusta jatkettu`, "success"))
@@ -146,21 +138,9 @@ export const disqualifyGroupReducer =
     try {
       const group = await disqualifyGroup(id)
 
-      const currentGroups = getState().groups
-      let disqualifiedState: boolean | undefined
-      const updated = currentGroups.map((currentGroup) => {
-        if (currentGroup.id === id) {
-          disqualifiedState = !currentGroup.disqualified
-          return {
-            ...currentGroup,
-            disqualified: !currentGroup.disqualified
-          }
-        }
-        return currentGroup
-      })
+      dispatch(updateGroup(group))
 
-      dispatch(setGroups(updated))
-      if (disqualifiedState) {
+      if (group.disqualified) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty`, "success"))
       } else {
         dispatch(setNotification(`Ryhmän '${group.name}' hylkäys peruttu`, "success"))
@@ -194,5 +174,5 @@ export const giveNextCheckpointReducer =
     }
   }
 
-export const { setGroups , appendGroup, updateGroup } = groupSlice.actions
+export const { setGroups , appendGroup, updateGroup, removeGroup } = groupSlice.actions
 export default groupSlice.reducer

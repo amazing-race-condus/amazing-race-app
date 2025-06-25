@@ -46,7 +46,7 @@ describe("checkpointsSlice reducers", () => {
   test("fetchCheckpoints thunk works", async () => {
     (getAllCheckpoints as jest.Mock).mockResolvedValue(returnState)
 
-    await store.dispatch<any>(fetchCheckpoints())
+    await store.dispatch<any>(fetchCheckpoints(1))
 
     expect(store.getState().checkpoints).toEqual(returnState)
   })
@@ -54,7 +54,10 @@ describe("checkpointsSlice reducers", () => {
   test("addCheckpointReducer and removeCheckpointReducer thunks works", async () => {
     const newCheckpoint: AddCheckpoint = {
       name: "Test Checkpoint",
-      type: "INTERMEDIATE"
+      type: "INTERMEDIATE",
+      eventId: 1,
+      hint: null,
+      easyHint: null
     }
     const mockReturn: Checkpoint = returnState[0]
     ;(createCheckpoint as jest.Mock).mockResolvedValue(mockReturn)

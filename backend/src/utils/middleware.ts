@@ -86,7 +86,4 @@ export const setPasswordResetTime = () => {
   passwordResetTime = Math.floor(Date.now() / 1000)
 }
 
-
 export { unknownEndpoint, errorHandler, tokenExtractor, verifyToken }
-
-

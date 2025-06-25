@@ -35,6 +35,7 @@ routesRouter.put("/update_limits", verifyToken, async (req: CustomRequest, res: 
   if (response.status === "error") {
     res.status(400).json({error: response.message})
   } else {
+    req.app.get("io").emit("event:limits_updated", { eventId, newMinRouteTime, newMaxRouteTime })
     res.status(200).json(response)
   }
 })

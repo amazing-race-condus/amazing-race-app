@@ -51,6 +51,7 @@
     "express": "^5.1.0",
     "js-combinatorics": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.3"
+    "nodemailer": "^7.0.3",
+    "socket.io": "^4.8.1"
   }
 }

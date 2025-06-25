@@ -1,26 +1,16 @@
 import { View, Text, FlatList } from "react-native"
 import { styles } from "@/styles/commonStyles"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react"
-import { RootState, AppDispatch } from "@/store/store"
-import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 import { sortCheckpoints } from "@/utils/checkpointUtils"
 import { usePathname } from "expo-router"
 import CheckpointItem from "./CheckpointItem"
 import { Checkpoint } from "@/types"
 
 const Checkpoints = ({ onEditCheckpoint }: { onEditCheckpoint?: (checkpoint: Checkpoint) => void }) => {
-  const dispatch: AppDispatch = useDispatch<AppDispatch>()
   const event = useSelector((state: RootState) => state.event)
-  const eventId = event.id
   const checkpoints = useSelector((state: RootState) => state.checkpoints)
   const pathname = usePathname()
-
-  useEffect(() => {
-    if (eventId) {
-      dispatch(fetchCheckpoints(eventId))
-    }
-  }, [dispatch, eventId])
 
   const sortedCheckpoints = sortCheckpoints(checkpoints)
 

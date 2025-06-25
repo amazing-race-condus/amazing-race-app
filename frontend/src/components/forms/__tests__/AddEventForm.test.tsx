@@ -26,10 +26,9 @@ describe("<AddEventForm />", () => {
 
   test("renders inputs and add button", async () => {
     const bottomSheetRef = createRef<BottomSheet>()
-    const mockSetEvents = jest.fn()
     render(
       <Provider store={store}>
-        <AddEventForm bottomSheetRef={bottomSheetRef} events={events} setEvents={mockSetEvents}/>
+        <AddEventForm bottomSheetRef={bottomSheetRef} />
       </Provider>
     )
 

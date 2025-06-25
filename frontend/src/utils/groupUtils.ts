@@ -1,8 +1,6 @@
 import { Event, Group } from "@/types"
 import { getRaceTime } from "./timeUtils"
-
-export const getPenaltyMinutes = (group: Group) =>
-  (group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0)
+import { getPenaltyMinutes } from "./penaltyUtils"
 
 export const sortAlphabetically = (groups: Group[]) => groups.sort((a, b) => a.name.localeCompare(b.name))
 
@@ -53,4 +51,21 @@ export const sortByStatus = (groups: Group[]) => {
 
     return a.name.localeCompare(b.name)
   })
+}
+
+export const getProgress = (group: Group) => {
+  //returns how many checkpoint the group has visited, including start and finish
+
+  if (!group.route)
+    return null
+  if (group.route.length === 0)
+    return null
+  if (group.nextCheckpointId === null && !group.finishTime)
+    return null
+  if (group.nextCheckpointId === null && group.finishTime)
+    return group.route.length
+
+  const routeCheckpointIds = group.route.map(route => route.id)
+
+  return routeCheckpointIds.indexOf(Number(group.nextCheckpointId))
 }
