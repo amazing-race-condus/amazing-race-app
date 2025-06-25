@@ -10,106 +10,118 @@ import { getDefaultEventReducer, getEventReducer } from "@/reducers/eventSlice"
 import Notification from "@/components/ui/Notification"
 import { loadUserFromStorage } from "@/reducers/userSlice"
 import { storageUtil } from "@/utils/storageUtil"
-
-function DataRefreshProvider({ children }: { children: React.ReactNode }) {
-  const [isReady, setIsReady] = useState(false)
-
-  const user = useSelector((state: RootState) => state.user)
-
-  useEffect(() => {
-    const initializeEvent = async () => {
-      if (user.token) {
-        const storageEventId = await storageUtil.getEventId()
-        if (storageEventId) {
-          await store.dispatch(getEventReducer(storageEventId))
-        } else {
-          await store.dispatch(getDefaultEventReducer())
-        }
-      }
-    }
-
-    initializeEvent()
-  }, [user.token])
-
-  useEffect(() => {
-    const refreshData = async () => {
-      const eventId = store.getState().event.id
-      if (eventId && user.token) {
-        await Promise.all([
-          store.dispatch(fetchGroups(eventId)),
-          store.dispatch(fetchCheckpoints(eventId))
-        ])
-      }
-    }
-
-    refreshData()
-    setIsReady(true)
-
-    const interval = setInterval(refreshData, 10000)
-    return () => clearInterval(interval)
-  }, [])
-
-  if (!isReady) {
-    return null
-  }
-
-  return <>{children}</>
-}
+import { socket } from "@/websocket/config"
+import { cleanupGroupHandlers, setupGroupHandlers } from "@/websocket/groupSocket"
+import { cleanupCheckpointHandlers, setupCheckpointHandlers } from "@/websocket/checkpointSocket"
+import { cleanupEventHandlers, setupEventHandlers } from "@/websocket/eventSocket"
+import { cleanupPenaltyHandlers, setupPenaltyHandlers } from "@/websocket/penaltySocket"
+import { fetchEvents } from "@/reducers/allEventsSlice"
 
 function AppContent() {
   const dispatch = useDispatch<AppDispatch>()
   const user = useSelector((state: RootState) => state.user)
-  const [loading, setLoading] = useState(true)
+  const eventId = useSelector((state: RootState) => state.event.id)
+  const [userLoaded, setUserLoaded] = useState(false)
+  const [eventInitialized, setEventInitialized] = useState(false)
 
   useEffect(() => {
-    dispatch(loadUserFromStorage()).finally(() => setLoading(false))
+    dispatch(loadUserFromStorage()).finally(() => setUserLoaded(true))
   }, [dispatch])
 
-  if (loading) return null
+  useEffect(() => {
+    if (!userLoaded) return
+
+    if (!user.token) {
+      setEventInitialized(true)
+      return
+    }
+
+    const initializeEvent = async () => {
+      try {
+        const storageEventId = await storageUtil.getEventId()
+        if (storageEventId) {
+          await dispatch(getEventReducer(storageEventId))
+        } else {
+          await dispatch(getDefaultEventReducer())
+        }
+      } catch (error) {
+        console.error("Failed to initialize event:", error)
+      } finally {
+        setEventInitialized(true)
+      }
+    }
+
+    initializeEvent()
+  }, [userLoaded, user.token, dispatch])
+
+  useEffect(() => {
+    if (!eventInitialized || !eventId || !user.token) {
+      return
+    }
+
+    const fetchEventData = async () => {
+      try {
+        await Promise.all([
+          dispatch(fetchGroups(eventId)),
+          dispatch(fetchCheckpoints(eventId)),
+          dispatch(fetchEvents()),
+        ])
+      } catch (error) {
+        console.error(`Failed to fetch data for event ${eventId}:`, error)
+      }
+    }
+
+    fetchEventData()
+    setupGroupHandlers(socket)
+    setupCheckpointHandlers(socket)
+    setupEventHandlers(socket)
+    setupPenaltyHandlers(socket)
+    const intervalId = setInterval(fetchEventData, 90000)
+
+    return () => {
+      clearInterval(intervalId)
+      cleanupGroupHandlers(socket)
+      cleanupCheckpointHandlers(socket)
+      cleanupEventHandlers(socket)
+      cleanupPenaltyHandlers(socket)
+      socket.off("connect")
+      socket.off("disconnect")
+    }
+  }, [eventInitialized, eventId, user.token, dispatch])
+
+  if (!userLoaded || !eventInitialized) {
+    return null
+  }
 
   return (
-    <DataRefreshProvider>
-      <ThemeProvider value={{
-        dark: false,
-        colors: {
-          primary: "black",
-          background: "#003366",
-          card: "white",
-          text: "black",
-          border: "white",
-          notification: "white",
-        },
-        fonts: {
-          regular: {
-            fontFamily: "System",
-            fontWeight: "normal",
-          },
-          medium: {
-            fontFamily: "System",
-            fontWeight: "600",
-          },
-          bold: {
-            fontFamily: "System",
-            fontWeight: "bold",
-          },
-          heavy: {
-            fontFamily: "System",
-            fontWeight: "900",
-          },
-        }
-      }}>
-        <Notification />
-        <Stack>
-          <Stack.Protected guard={Boolean(user.token)}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack.Protected>
-          <Stack.Protected guard={!(user.token)}>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="resetpassword/[token]" options={{ headerShown: false }} />
-          </Stack.Protected>
-        </Stack>
-      </ThemeProvider>
-    </DataRefreshProvider>
+    <ThemeProvider value={{
+      dark: false,
+      colors: {
+        primary: "black",
+        background: "#003366",
+        card: "white",
+        text: "black",
+        border: "white",
+        notification: "white",
+      },
+      fonts: {
+        regular: { fontFamily: "System", fontWeight: "normal" },
+        medium: { fontFamily: "System", fontWeight: "600" },
+        bold: { fontFamily: "System", fontWeight: "bold" },
+        heavy: { fontFamily: "System", fontWeight: "900" },
+      }
+    }}>
+      <Notification />
+      <Stack>
+        <Stack.Protected guard={Boolean(user.token)}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!user.token}>
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="resetpassword/[token]" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
+    </ThemeProvider>
   )
 }
 

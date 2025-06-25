@@ -12,9 +12,9 @@ import theme from "@/theme"
 import { setNotification } from "@/reducers/notificationSlice"
 import { AddEvent, Event } from "@/types"
 import { AxiosError } from "axios"
+import { updateEvent } from "@/reducers/allEventsSlice"
 
-const EditEventForm = ({ bottomSheetRef, event, setSelectedEvent, events, setEvents }: { bottomSheetRef: React.RefObject<BottomSheet | null>, event?: Event, setSelectedEvent: React.Dispatch<React.SetStateAction<Event | undefined>>, events: Event[], setEvents: (event: Event[]) => void }) => {
-
+const EditEventForm = ({ bottomSheetRef, event, setSelectedEvent }: { bottomSheetRef: React.RefObject<BottomSheet | null>, event?: Event, setSelectedEvent: React.Dispatch<React.SetStateAction<Event | undefined>> }) => {
   const dispatch = useDispatch<AppDispatch>()
   const nextRef = useRef<TextInput>(null)
   const [eventName, setEventName] = useState<string>("")
@@ -35,8 +35,7 @@ const EditEventForm = ({ bottomSheetRef, event, setSelectedEvent, events, setEve
     }
     try {
       const updatedEvent = await editEvent(event.id, modifiedEvent)
-      const updatedEvents: Event[] = events.map(event => event.id === updatedEvent.id ? updatedEvent : event)
-      setEvents(updatedEvents)
+      dispatch(updateEvent(updatedEvent))
       dispatch(setNotification("Tapahtuman muokkaus onnistui", "success"))
     } catch (error) {
       if (error instanceof AxiosError) {

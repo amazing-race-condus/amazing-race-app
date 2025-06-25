@@ -12,7 +12,6 @@ import { RootState } from "@/store/store"
 import EditEventForm from "@/components/forms/EditEventForm"
 
 const EventSettings = () => {
-  const [events, setEvents] = useState<Event[]>([])
   const user = useSelector((state: RootState) => state.user)
   const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(undefined)
   const editBottomSheetRef = useRef<BottomSheet>(null)
@@ -35,17 +34,15 @@ const EventSettings = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <Events events={events} setEvents={setEvents} onEditEvent={handleEdit}/>
+      <Events onEditEvent={handleEdit}/>
       { user.admin && (
         <>
           <AddNewButton onPress={handleAdd} />
-          <AddEventForm events={events} setEvents={setEvents} bottomSheetRef={addBottomSheetRef}/>
+          <AddEventForm bottomSheetRef={addBottomSheetRef}/>
           <EditEventForm
             bottomSheetRef={editBottomSheetRef}
             event={selectedEvent}
             setSelectedEvent={setSelectedEvent}
-            events={events}
-            setEvents={setEvents}
           />
         </>
       )}

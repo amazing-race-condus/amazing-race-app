@@ -1,8 +1,6 @@
 import { Event, Group } from "@/types"
 import { getRaceTime } from "./timeUtils"
-
-export const getPenaltyMinutes = (group: Group) =>
-  (group?.penalty?.reduce((total, penalty) => total + penalty.time, 0) || 0)
+import { getPenaltyMinutes } from "./penaltyUtils"
 
 export const sortAlphabetically = (groups: Group[]) => groups.sort((a, b) => a.name.localeCompare(b.name))
 

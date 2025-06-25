@@ -46,6 +46,7 @@ eventRouter.put("/start/:id", verifyToken, async (req: CustomRequest, res: Respo
   const event = await startEvent(id)
 
   if (event) {
+    req.app.get("io").emit("event:updated", event)
     res.json(event)
   } else {
     res.status(404).json({ error: "Tapahtumaa ei voitu aloittaa." })
@@ -64,6 +65,7 @@ eventRouter.put("/end/:id", verifyToken, async (req: CustomRequest, res: Respons
   const event = await endEvent(id)
 
   if (event) {
+    req.app.get("io").emit("event:updated", event)
     res.json(event)
   } else {
     res.status(404).json({ error: "Tapahtumaa ei voitu päättää. Onko tapahtuma aloitettu?" })
@@ -80,6 +82,7 @@ eventRouter.post("/create", verifyToken, async (req: CustomRequest, res: Respons
   const event = await createEvent(req.body, res)
 
   if (event) {
+    req.app.get("io").emit("event:created", event)
     res.json(event)
   } else {
     res.status(400).json({ error: "Tapahtumaa ei voitu luoda."})
@@ -98,6 +101,8 @@ eventRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Response) =
   const { name, eventDate } = req.body
   const updatedEvent = await modifyEvent(id, name, eventDate, res)
 
+  req.app.get("io").emit("event:updated", updatedEvent)
+
   res.status(200).json(updatedEvent)
 
 })
@@ -112,6 +117,7 @@ eventRouter.delete("/:id", verifyToken, async (req: CustomRequest, res: Response
 
   const event  = await deleteEvent(id)
   if (event) {
+    req.app.get("io").emit("event:deleted", event)
     res.status(204).json(event)
   } else {
     res.status(404).end()

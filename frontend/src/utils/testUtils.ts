@@ -212,10 +212,7 @@ export const events: Event[] = [
     endTime: null,
     minRouteTime: null,
     maxRouteTime: null,
-    eventDate: new Date("2025-06-25 21:00:00"),
-    group: [],
-    checkpoints: [],
-    penalties: []
+    eventDate: new Date("2025-06-25 21:00:00")
   }
 ]
 

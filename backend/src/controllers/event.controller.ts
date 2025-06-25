@@ -4,21 +4,12 @@ import { validateName } from "../utils/eventValidators"
 import { Response } from "express"
 
 export const getAllEvents = async () => {
-  const events = await prisma.event.findMany({
-    include: {
-      group: true,
-      checkpoints: true,
-    }
-  })
+  const events = await prisma.event.findMany({})
   return events
 }
 
 export const getDefaultEvent = async () => {
   const event = await prisma.event.findFirst({
-    include: {
-      group: true,
-      checkpoints: true,
-    },
     orderBy: {
       eventDate: "desc"
     }
@@ -31,10 +22,6 @@ export const getEventById = async (eventId: number) => {
   const id = eventId
   const event = await prisma.event.findUnique({
     where: { id },
-    include: {
-      group: true,
-      checkpoints: true,
-    }
   })
   return event
 }
@@ -128,7 +115,7 @@ export const modifyEvent = async (eventId: number, name: string, eventDate: Date
 export const deleteEvent = async (eventId: number) => {
   const id = eventId
   const event = await prisma.event.delete({
-    where: { id },
+    where: { id }
   })
   return event
 }

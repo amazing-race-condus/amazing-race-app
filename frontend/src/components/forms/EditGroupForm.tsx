@@ -38,7 +38,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       eventId: eventId
     }
     try {
-      const updatedGroup: Group = await editGroup(group.id, modifiedGroup, eventId)
+      const updatedGroup: Group = await editGroup(group.id, modifiedGroup)
       dispatch(updateGroup(updatedGroup))
       dispatch(setNotification("Ryhmän muokkaus onnistui", "success"))
     } catch (error) {

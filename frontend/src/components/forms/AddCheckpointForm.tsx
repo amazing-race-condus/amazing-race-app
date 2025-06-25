@@ -37,9 +37,9 @@ const AddCheckpointForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject
       type: type,
       hint: hintUrl,
       easyHint: easyHintUrl,
-      eventId: null
+      eventId: eventId
     }
-    await dispatch(addCheckpointReducer(newCheckpoint, eventId))
+    await dispatch(addCheckpointReducer(newCheckpoint))
     setName("")
     setType("INTERMEDIATE")
     setHintUrl("")
