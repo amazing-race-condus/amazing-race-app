@@ -1,7 +1,7 @@
 import { styles } from "@/styles/commonStyles"
 import { View, Text } from "react-native"
 import { FontAwesome5 } from "@expo/vector-icons"
-import { GameStartItem } from "./GameStartItem"
+import GameStartItem from "./GameStartItem"
 
 const GameReadyBox = (props: any) => {
   return (

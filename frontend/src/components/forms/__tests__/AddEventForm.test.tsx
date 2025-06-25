@@ -2,7 +2,7 @@ import React, { createRef } from "react"
 import { render, waitFor, act, screen } from "@testing-library/react-native"
 import BottomSheet from "@gorhom/bottom-sheet"
 import AddEventForm from "../AddEventForm"
-import { createMockStore, events } from "@/utils/testUtils"
+import { createMockStore } from "@/utils/testUtils"
 import { Provider } from "react-redux"
 
 jest.mock("@/utils/storageUtil", () => ({
