@@ -27,10 +27,7 @@ describe("eventSlice reducers", () => {
     endTime: null,
     minRouteTime: null,
     maxRouteTime: null,
-    group: [],
-    checkpoints: [],
-    routeLimits: [],
-    penalties: []
+    eventDate: new Date()
   }
 
   beforeEach(() => {
@@ -46,10 +43,7 @@ describe("eventSlice reducers", () => {
       endTime: null,
       minRouteTime: null,
       maxRouteTime: null,
-      group: [],
-      checkpoints: [],
-      routeLimits: [],
-      penalties: []
+      eventDate: new Date()
     }
     const state = eventReducer(initialState, setEvents(firstEvent))
     expect(state).toEqual(firstEvent)
