@@ -72,7 +72,9 @@ checkpointsRouter.put("/:id", verifyToken, async (req: CustomRequest, res: Respo
   const { eventId, name, type, hint, easyHint } = req.body
   const updatedCheckpoint = await modifyCheckpoint(id, eventId, name, type, hint, easyHint, res)
 
-  req.app.get("io").emit("checkpoint:updated", updatedCheckpoint)
+  if (updatedCheckpoint) {
+    req.app.get("io").emit("checkpoint:updated", updatedCheckpoint)
+  }
 
   res.status(200).json(updatedCheckpoint)
 
