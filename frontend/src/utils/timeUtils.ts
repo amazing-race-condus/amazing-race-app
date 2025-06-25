@@ -4,7 +4,6 @@ import { getPenaltyMinutes } from "./groupUtils"
 export const getRaceTime = (group: Group, event: Event) => {
   let totalSeconds: number | null = null
   const totalPenalty = getPenaltyMinutes(group)
-
   if (!event) return totalSeconds
 
   if (event.startTime) {
