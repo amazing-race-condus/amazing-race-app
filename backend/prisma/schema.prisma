@@ -111,7 +111,7 @@ model CheckpointDistance {
 
   from  Checkpoint @relation("FromCheckpoint", fields: [fromId], references: [id], onDelete: Cascade)
   to    Checkpoint @relation("ToCheckpoint", fields: [toId], references: [id], onDelete: Cascade)
-  event Event      @relation(fields: [eventId], references: [id])
+  event Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([fromId, toId, eventId])
 }
