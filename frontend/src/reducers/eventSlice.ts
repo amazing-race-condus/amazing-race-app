@@ -9,12 +9,9 @@ const initialState: Event = {
   startTime: null,
   endTime: null,
   name: "",
-  group: [],
-  checkpoints: [],
   minRouteTime: null,
   maxRouteTime: null,
-  eventDate: new Date(),
-  penalties: []
+  eventDate: new Date()
 }
 
 const eventSlice = createSlice({
@@ -23,7 +20,7 @@ const eventSlice = createSlice({
   reducers: {
     setEvents(state, action: PayloadAction<Event>) {
       return action.payload
-    }
+    },
   },
 })
 

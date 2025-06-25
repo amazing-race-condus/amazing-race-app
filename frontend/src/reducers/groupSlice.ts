@@ -16,7 +16,10 @@ const groupSlice = createSlice({
       return action.payload
     },
     appendGroup(state, action: PayloadAction<Group>) {
-      state.push(action.payload)
+      const groupExists = state.some(group => group.id === action.payload.id)
+      if (!groupExists) {
+        state.push(action.payload)
+      }
     },
     removeGroup(state, action: PayloadAction<Group>) {
       return state.filter(group => group.id !== action.payload.id)
@@ -130,7 +133,8 @@ export const dnfGroupReducer =
         return currentGroup
       })
 
-      dispatch(setGroups(updated))
+      // todo: fix later
+      // dispatch(setGroups(updated))
       if (dnfState) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus keskeytetty`, "success"))
       } else {
@@ -160,7 +164,8 @@ export const disqualifyGroupReducer =
         return currentGroup
       })
 
-      dispatch(setGroups(updated))
+      // todo: fix later
+      // dispatch(setGroups(updated))
       if (disqualifiedState) {
         dispatch(setNotification(`Ryhmän '${group.name}' suoritus hylätty`, "success"))
       } else {

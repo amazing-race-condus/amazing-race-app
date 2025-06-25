@@ -158,10 +158,29 @@ export const toggleDNF = async (groupId: number) => {
     select: { dnf: true },
   })
 
-  const group = await prisma.group.update({
+  const toggledGroup = await prisma.group.update({
     where: { id },
     data: { dnf: !existingGroup?.dnf },
+    include: {
+      penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: "asc" },
+            include: {
+              checkpoint: true
+            }
+          }
+        }
+      }
+    }
   })
+
+  const group = {
+    ...toggledGroup,
+    route: toggledGroup.route?.routeSteps.map(step => step.checkpoint) ?? []
+  }
+
   return group
 }
 
@@ -172,10 +191,29 @@ export const toggleDisqualified = async (groupId: number) => {
     select: { disqualified: true },
   })
 
-  const group = await prisma.group.update({
+  const toggledGroup = await prisma.group.update({
     where: { id },
     data: { disqualified: !existingGroup?.disqualified },
+    include: {
+      penalty: true,
+      route: {
+        include: {
+          routeSteps: {
+            orderBy: { checkpointOrder: "asc" },
+            include: {
+              checkpoint: true
+            }
+          }
+        }
+      }
+    }
   })
+
+  const group = {
+    ...toggledGroup,
+    route: toggledGroup.route?.routeSteps.map(step => step.checkpoint) ?? []
+  }
+
   return group
 }
 
