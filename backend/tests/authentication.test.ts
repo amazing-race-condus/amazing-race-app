@@ -3,7 +3,6 @@ import { app, server, prisma } from "../src/index"
 import { users } from "./test_helper"
 import jwt from "jsonwebtoken"
 
-
 describe("Login", () => {
 
   beforeEach(async () => {

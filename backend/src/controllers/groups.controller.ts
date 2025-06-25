@@ -118,7 +118,7 @@ export const updateNextCheckpoint = async (id: number, nextCheckpointId: number)
 
 export const createGroup = async (name: string, members: number, easy: boolean, eventId: number,res: Response) => {
   if (!name || !members) {
-    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu."})
+    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu"})
     return
   }
 
