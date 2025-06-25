@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch } from "@/store/store"
-import { startGame, endGame , getEvent, getDefaultEvent } from "@/services/eventService"
+import { startGame, endGame, getEvent, getDefaultEvent } from "@/services/eventService"
 import { setNotification } from "./notificationSlice"
 import { Event } from "@/types"
 
@@ -37,7 +37,9 @@ export const getEventReducer = (id: number) => async (dispatch: AppDispatch) => 
 export const getDefaultEventReducer = () => async (dispatch: AppDispatch) => {
   try {
     const event = await getDefaultEvent()
-    dispatch(setEvents(event))
+    if (event) {
+      dispatch(setEvents(event))
+    }
     return event
   } catch (error) {
     console.error("Failed to fetch event:", error)
@@ -45,7 +47,7 @@ export const getDefaultEventReducer = () => async (dispatch: AppDispatch) => {
   }
 }
 
-export const setStartReducer = (id : number) => async (dispatch: AppDispatch) => {
+export const setStartReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
     const updatedEvent = await startGame(id)
     const time = new Date(updatedEvent.startTime!)
@@ -60,7 +62,7 @@ export const setStartReducer = (id : number) => async (dispatch: AppDispatch) =>
   }
 }
 
-export const setEndReducer = (id : number) => async (dispatch: AppDispatch) => {
+export const setEndReducer = (id: number) => async (dispatch: AppDispatch) => {
   try {
     const updatedEvent = await endGame(id)
     const time = new Date(updatedEvent.endTime!)
