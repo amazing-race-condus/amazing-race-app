@@ -13,7 +13,7 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Asetukset</Text>
-      { user.admin && (
+      { (user.admin && event.id) && (
         <>
           <SettingsItem
             text="Hallinnoi rasteja"
