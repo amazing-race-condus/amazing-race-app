@@ -52,6 +52,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     width: Math.min(screenWidth * 0.8, 355),
     paddingVertical: 7,
+    fontSize: 16,
     marginBottom:10,
     color: theme.colors.textInput,
     backgroundColor: "white",
