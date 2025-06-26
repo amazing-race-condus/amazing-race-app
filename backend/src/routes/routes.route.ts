@@ -89,7 +89,7 @@ routesRouter.put("/:event_id/create_routes", verifyToken, async (req: CustomRequ
   const eventId = Number(req.params.event_id)
   const event = await getEventById(eventId)
   if (event?.startTime) {
-    res.status(403).json({ error: "Can't create routes when event has started." })
+    res.status(403).json({ error: "Reittejä ei voi luoda jos tapahtuma on aloitettu" })
   }
   const response = await createRoutes(eventId)
   if (response.status === "error") {

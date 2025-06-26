@@ -17,6 +17,13 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
   const [groupMembers, setGroupMembers] = useState<number>(0)
   const [easy, setEasy] = useState<boolean>(false)
 
+  const handleGroupNumberChange = (input: string) => {
+    if (isNaN(Number(input))) {
+      return
+    }
+    setGroupMembers(Number(input))
+  }
+
   const addNewGroup = async () => {
     const eventId = store.getState().event.id
 
@@ -61,7 +68,7 @@ const AddGroupForm = ({ bottomSheetRef }: { bottomSheetRef: React.RefObject<Bott
       />
       <BottomSheetTextInput
         ref={nextRef}
-        onChangeText={text => setGroupMembers(Number(text))}
+        onChangeText={text => handleGroupNumberChange(text)}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
         placeholderTextColor={"grey"}

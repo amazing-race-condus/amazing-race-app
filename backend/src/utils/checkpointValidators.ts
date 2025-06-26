@@ -8,12 +8,12 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
     return false
   }
   if  (name.length > 100 ) {
-    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta." })
+    res.status(400).json({ error: "Nimi on liian pitkä. Maksimi pituus on 100 kirjainta" })
     return false
   }
 
   if (name.length < 2 ) {
-    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta." })
+    res.status(400).json({ error: "Nimi on liian lyhyt. Minimi pituus on 2 kirjainta" })
     return false
   }
 
@@ -29,7 +29,7 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
 
   for (const existingName of existingNames) {
     if (existingName && existingName.id !== id) {
-      res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi." })
+      res.status(400).json({ error: "Rastin nimi on jo käytössä. Syötä uniikki nimi" })
       return false
     }
   }
@@ -39,17 +39,17 @@ const validateName = async (name: unknown, res: Response, eventId : number, id?:
 
 const validateHint = async (hint: unknown, res: Response, id?: number): Promise<boolean> => {
   if (typeof hint !== "string") {
-    res.status(400).json({ error: "Vihjeen tulee olla merkkijono." })
+    res.status(400).json({ error: "Vihjeen tulee olla merkkijono" })
     return false
   }
 
   if  (hint.length > 2000 ) {
-    res.status(400).json({ error: "Vihje on liian pitkä. Enimmäispituus on 2000 merkkiä." })
+    res.status(400).json({ error: "Vihje on liian pitkä. Enimmäispituus on 2000 merkkiä" })
     return false
   }
 
   if  (hint !== "" && !(hint.startsWith("http://") || hint.startsWith("https://"))) {
-    res.status(400).json({ error: "Vihjeen tulee alkaa http:// tai https://." })
+    res.status(400).json({ error: "Vihjeen tulee alkaa http:// tai https://" })
     return false
   }
 
@@ -73,7 +73,7 @@ const validateHint = async (hint: unknown, res: Response, id?: number): Promise<
   })
 
   if (existingHint && existingHint.hint !== "" && existingHint.easyHint !== "" && existingHint.id !== id) {
-    res.status(400).json({ error: "Vihje on jo käytössä. Syötä uniikki vihje." })
+    res.status(400).json({ error: "Vihje on jo käytössä. Syötä uniikki vihje" })
     return false
   }
 
@@ -89,7 +89,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
   })
 
   if (allCheckpoints.length >= 8 && !id) {
-    res.status(400).json({ error: "Rastien maksimimäärä on 8 rastia."})
+    res.status(400).json({ error: "Rastien maksimimäärä on 8 rastia"})
     return false
   }
 
@@ -99,7 +99,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
       where: { type: Type.START, eventId : eventId }
     })
     if (existingStart && existingStart.id !== id) {
-      res.status(400).json({ error: "Lähtörasti on jo luotu." })
+      res.status(400).json({ error: "Lähtörasti on jo luotu" })
       return false
     }
   } else if (type === Type.FINISH) {
@@ -107,7 +107,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
       where: { type: Type.FINISH , eventId : eventId}
     })
     if (existingFinish && existingFinish.id !== id) {
-      res.status(400).json({ error: "Maali on jo luotu." })
+      res.status(400).json({ error: "Maali on jo luotu" })
       return false
     }
   } else if (type === Type.INTERMEDIATE) {
@@ -115,7 +115,7 @@ const validateCheckpointLayout = async (type: Type, res: Response, eventId: numb
     if (id && intermediateCheckpoints.some(c => c.id === id)) {
       return true
     } else if (intermediateCheckpoints.length >= 6) {
-      res.status(400).json({ error: "Välirastien maksimimäärä on 6 rastia." })
+      res.status(400).json({ error: "Välirastien maksimimäärä on 6 rastia" })
       return false
     }
   }

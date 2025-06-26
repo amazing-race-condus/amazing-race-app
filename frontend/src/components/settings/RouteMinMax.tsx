@@ -19,6 +19,18 @@ const RouteMinMax = () => {
     setMaximum(event.maxRouteTime)
   }, [event.minRouteTime, event.maxRouteTime])
 
+  const handleMaxChange= (input: string) => {
+    if (isNaN(Number(input))) return
+    if (input === "") setMaximum(null)
+    setMaximum(Number(input))
+  }
+
+  const handleMinChange= (input: string) => {
+    if (isNaN(Number(input))) return
+    if (input === "") setMinimum(null)
+    setMinimum(Number(input))
+  }
+
   const updateLimit = async (limit: RouteLimit) => {
     try {
       await setLimits(limit)
@@ -48,17 +60,17 @@ const RouteMinMax = () => {
         <Text style={styles.formText}>Reittien minimiaika:</Text>
         <TextInput
           style={styles.inputField}
-          value={minimum?.toString()}
+          value={minimum === 0 ? "" : minimum?.toString()}
           keyboardType="numeric"
-          onChangeText={(text) => setMinimum(text ? Number(text) : null)}
+          onChangeText={(text) => handleMinChange(text)}
           maxLength={4}
         />
         <Text style={styles.formText}>Reittien maksimiaika:</Text>
         <TextInput
           style={styles.inputField}
-          value={maximum?.toString()}
+          value={maximum === 0 ? "" : maximum?.toString()}
           keyboardType="numeric"
-          onChangeText={(text) => setMaximum(text ? Number(text) : null)}
+          onChangeText={(text) =>  handleMaxChange(text)}
           maxLength={4}
         />
         <Pressable style={({ pressed }) => [styles.button, {opacity: pressed ? 0.5 : 1 }]} onPress={() => { updateRouteMinMax() }}>

@@ -285,7 +285,7 @@ describe("Modification of an event", () => {
       })
       .expect(400)
 
-    expect(result.body.error).toContain("Tapahtuman nimi on jo käytössä. Syötä uniikki nimi.")
+    expect(result.body.error).toContain("Tapahtuman nimi on jo käytössä. Syötä uniikki nimi")
 
     result = await request(app)
       .put(`/api/event/${eventToModify.id}`)
