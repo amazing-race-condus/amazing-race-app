@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { AddEvent, Event } from "@/types"
-import { AppDispatch } from "@/store/store"
+import { AppDispatch, RootState } from "@/store/store"
 import { createEvent, getEvents, removeEvent as removeEventSVC } from "@/services/eventService"
 import { setNotification } from "./notificationSlice"
 import { AxiosError } from "axios"
@@ -8,6 +8,7 @@ import { getDefaultEventReducer } from "./eventSlice"
 import { storageUtil } from "@/utils/storageUtil"
 import { fetchGroups } from "@/reducers/groupSlice"
 import { fetchCheckpoints } from "@/reducers/checkpointsSlice"
+import { useSelector } from "react-redux"
 
 const initialState: Event[] = []
 
@@ -61,16 +62,18 @@ export const addEventReducer = (newObject: AddEvent) => async (dispatch: AppDisp
 }
 
 export const removeEventReducer =
-  (eventId: number) => async (dispatch: AppDispatch) => {
+  (eventId: number, activeEventId: number) => async (dispatch: AppDispatch) => {
     try {
       const event = await removeEventSVC(eventId)
       dispatch(removeEvent(event))
       dispatch(setNotification("Tapahtuman poisto onnistui", "success"))
-      const newActiveEvent = await dispatch(getDefaultEventReducer())
-      if (newActiveEvent) {
-        await storageUtil.setEventId(newActiveEvent.id)
-        dispatch(fetchGroups(newActiveEvent.id))
-        dispatch(fetchCheckpoints(newActiveEvent.id))
+      if (eventId === activeEventId) {
+        const newActiveEvent = await dispatch(getDefaultEventReducer())
+        if (newActiveEvent) {
+          await storageUtil.setEventId(newActiveEvent.id)
+          dispatch(fetchGroups(newActiveEvent.id))
+          dispatch(fetchCheckpoints(newActiveEvent.id))
+        }
       }
     } catch (error) {
       console.error("Failed to remove event:", error)
