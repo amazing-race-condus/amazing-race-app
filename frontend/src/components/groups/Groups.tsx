@@ -33,7 +33,7 @@ const Groups = ({ onEditGroup }: { onEditGroup?: (group: Group) => void }) => {
     <View style={styles.container}>
       {pathname === "/" && (
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
-          <Text style={styles.title}> Ryhmät</Text>
+          <Text style={styles.header}> Ryhmät</Text>
           <Text style={[styles.title, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
       )}

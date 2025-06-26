@@ -4,7 +4,10 @@ import { Checkpoint } from "@/types"
 
 export const setupCheckpointHandlers = (socket: any) => {
   socket.on("checkpoint:created", (checkpoint: Checkpoint) => {
-    store.dispatch(appendCheckpoint(checkpoint))
+    const currentEventId = store.getState().event.id
+    if (currentEventId === checkpoint.eventId) {
+      store.dispatch(appendCheckpoint(checkpoint))
+    }
   })
 
   socket.on("checkpoint:updated", (checkpoint: Checkpoint) => {

@@ -11,8 +11,6 @@ interface CustomRequest extends Request {
 }
 
 checkpointsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
-
-  // const allCheckpoints = await getAllCheckpoints()
   const eventId = Number(req.query.eventId)
 
   const allCheckpoints = await getAllCheckpoints(eventId)
@@ -42,7 +40,9 @@ checkpointsRouter.post("/", verifyToken, async (req: CustomRequest, res: Respons
 
   const savedCheckpoint = await createCheckpoint(body, res)
 
-  req.app.get("io").emit("checkpoint:created", savedCheckpoint)
+  if (savedCheckpoint) {
+    req.app.get("io").emit("checkpoint:created", savedCheckpoint)
+  }
 
   res.status(201).json(savedCheckpoint)
 })

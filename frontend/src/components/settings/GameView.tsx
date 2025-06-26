@@ -119,8 +119,8 @@ const GameView = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
-          <Text style={styles.title}>Hallinnoi peliä</Text>
-          <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={styles.header}>Hallinnoi peliä</Text>
+          <Text style={[styles.header, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
         </View>
         <GameReadyBox
           checkpoints={checkpoints}
@@ -133,11 +133,11 @@ const GameView = () => {
           startedGroups={startedGroups}
           validDistances={validDistances}
         />
-        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.startTime ? 0.5 : 1 }]} onPress={() => handleStart()}>
+        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.startTime || event.endTime ? 0.5 : 1 }]} onPress={() => handleStart()}>
           <Text style={styles.buttonText}>Aloita peli</Text>
         </Pressable>
 
-        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || event.endTime ? 0.5 : 1 }]} onPress={() => handleEnd()}>
+        <Pressable style={({ pressed }) => [styles.bigButton, {opacity: pressed || !event.startTime || event.endTime ? 0.5 : 1 }]} onPress={() => handleEnd()}>
           <Text style={styles.buttonText}>Lopeta peli</Text>
         </Pressable>
         {(event.startTime || event.endTime) &&

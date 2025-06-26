@@ -59,15 +59,6 @@ describe("Penalties", () => {
     }
   })
 
-  afterAll(async () => {
-    await prisma.group.deleteMany({})
-    await prisma.checkpoint.deleteMany({})
-    await prisma.penalty.deleteMany({})
-    await prisma.event.deleteMany({})
-    await prisma.$disconnect()
-    server.close()
-  })
-
   it("Penalties are returned as json", async () => {
     const response = await request(app)
       .get("/api/penalty")
@@ -121,9 +112,15 @@ describe("Penalties", () => {
     const response = await request(app)
       .get(`/api/groups/${groupId.toString()}`)
 
+    const penaltyResponse = await request(app)
+      .get(`/api/penalty/${groupId.toString()}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(200)
+
     expect(response.status).toBe(200)
     expect(response.body.penalty[0].groupId).toBe(groupId)
     expect(response.body.penalty[0].time).toBe(30)
+    expect(penaltyResponse.body[0].time).toBe(30)
   })
 
   it("Delete a penalty", async () => {
@@ -148,4 +145,45 @@ describe("Penalties", () => {
 
     expect(deleteRes.body.error).toContain("Token missing or invalid")
   })
+
+  it("Group's penalties can be delete concurrently", async () => {
+
+    const response = await request(app)
+      .post(`/api/penalty/${groupId.toString()}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .send({
+        groupId: groupId,
+        type: "SKIP",
+        time: 30,
+        checkpointId: checkpointId,
+      })
+    penaltyId = response.body.id
+
+    expect(response.status).toBe(200)
+    expect(response.body.groupId).toBe(groupId)
+    expect(response.body.time).toBe(30)
+    expect(response.body.type).toBe("SKIP")
+
+
+    const deleteRes = await request(app)
+      .delete(`/api/penalty/all/${groupId.toString()}`)
+      .set("Authorization", `Bearer ${userToken}`)
+      .expect(200)
+
+    expect(response.status).toBe(200)
+    expect(deleteRes.body.count).toBe(1)
+    const groupResponse = await request(app)
+      .get(`/api/groups/${groupId.toString()}`)
+
+    expect(groupResponse.body.penalty.length).toBe(0)
+  })
+})
+
+afterAll(async () => {
+  await prisma.group.deleteMany({})
+  await prisma.checkpoint.deleteMany({})
+  await prisma.penalty.deleteMany({})
+  await prisma.event.deleteMany({})
+  await prisma.$disconnect()
+  server.close()
 })

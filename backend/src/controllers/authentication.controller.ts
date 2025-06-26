@@ -160,7 +160,7 @@ export const sendMailToUser = async (to: string, token: string, res: Response) =
 
 export const changePassword = async (password: string, confirmPassword: string, res: Response) => {
   if ((!password || !confirmPassword) || (password !== confirmPassword)) {
-    res.status(400).json({ error: "Salasanat eivät täsmää." })
+    res.status(400).json({ error: "Salasanat eivät täsmää" })
     return
   }
   if (validatePassword(password, res)) {

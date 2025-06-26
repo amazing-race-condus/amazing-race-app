@@ -193,7 +193,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu.")
+    expect(result.body.error).toContain("Kaikkia vaadittuja tietoja ei ole annettu")
   })
 
   it("fails with status code 400 and proper error message with too long or short name", async () => {
@@ -211,7 +211,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta.")
+    expect(result.body.error).toContain("Nimi on liian lyhyt. Minimi pituus on 2 kirjainta")
     let checkpointsAtEnd = await prisma.checkpoint.findMany()
     let names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("S")
@@ -230,7 +230,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 100 kirjainta.")
+    expect(result.body.error).toContain("Nimi on liian pitkä. Maksimi pituus on 100 kirjainta")
     checkpointsAtEnd = await prisma.checkpoint.findMany()
     names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("S".repeat(101))
@@ -251,7 +251,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Lähtörasti on jo luotu.")
+    expect(result.body.error).toContain("Lähtörasti on jo luotu")
 
     newCheckpoint = {
       name: "Maali",
@@ -267,7 +267,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Maali on jo luotu.")
+    expect(result.body.error).toContain("Maali on jo luotu")
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Lähtö")
@@ -296,7 +296,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia.")
+    expect(result.body.error).toContain("Rastien maksimimäärä on 8 rastia")
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Välirasti")
@@ -330,7 +330,7 @@ describe("Addition of a new checkpoint", () => {
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Välirasti")
-    expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia.")
+    expect(result.body.error).toContain("Välirastien maksimimäärä on 6 rastia")
   })
 
 
@@ -351,7 +351,7 @@ describe("Addition of a new checkpoint", () => {
     const checkpointsAtEnd = await prisma.checkpoint.findMany()
     const names = checkpointsAtEnd.map(c => c.name)
     expect(names).not.toContain("Rasti")
-    expect(result.body.error).toContain("Virheellinen tyyppi.")
+    expect(result.body.error).toContain("Virheellinen tyyppi")
   })
 
   it("fails with status code 400 if checkpoint name already in use", async () => {
@@ -376,7 +376,7 @@ describe("Addition of a new checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
+    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi")
   })
 })
 
@@ -547,7 +547,7 @@ describe("Modification of a checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi.")
+    expect(result.body.error).toContain("Rastin nimi on jo käytössä. Syötä uniikki nimi")
   })
 
   it("fails with status code 400 and proper error message if data is invalid", async () => {
@@ -569,7 +569,7 @@ describe("Modification of a checkpoint", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body.error).toContain("Virheellinen tyyppi.")
+    expect(result.body.error).toContain("Virheellinen tyyppi")
   })
 
   it("succeeds with status code 200 with same type than before", async () => {

@@ -12,6 +12,7 @@ import loginRouter from "./routes/login.route"
 import { unknownEndpoint, errorHandler, tokenExtractor } from "./utils/middleware"
 import http from "http"
 import { Server as SocketIOServer } from "socket.io"
+import { execSync } from "child_process"
 
 const PORT = 3000
 const prisma = new PrismaClient()
@@ -32,6 +33,11 @@ io.on("connection", (socket) => {
     console.log("disconnected", socket.id)
   })
 })
+
+// Run migrations in openshift. Probably not the greatest way to do so but it will do for now
+if (process.env.MIGRATIONS_IN_CODE === "true") {
+  execSync("npx prisma migrate deploy", { stdio: "inherit" })
+}
 
 app.set("io", io)
 app.use(cors())

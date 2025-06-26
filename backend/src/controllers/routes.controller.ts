@@ -30,7 +30,7 @@ export const updateLimits = async (eventId: number, min: number, max: number) =>
       response.status = "success"
       return response
     } catch {
-      response.message = "Järjestelmävirhe. Yritä myöhemmin uudelleen."
+      response.message = "Järjestelmävirhe. Yritä myöhemmin uudelleen"
       return response
     }
   }
@@ -290,7 +290,7 @@ export const createRoutes = async (eventId: number) => {
     return response
   } catch (error) {
     console.error("Unexpected error in /create_routes:", error)
-    response.message =  "Järjestelmävirhe. Yritä myöhemmin uudelleen."
+    response.message =  "Järjestelmävirhe. Yritä myöhemmin uudelleen"
     return response
   }
 }

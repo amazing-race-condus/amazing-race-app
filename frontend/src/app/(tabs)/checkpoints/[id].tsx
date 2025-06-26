@@ -31,7 +31,7 @@ const Checkpoint = () => {
           { translatedType }
         </Text>
         {(checkpoint?.type !== "START") && (
-          <View style={{flexDirection:"row", marginVertical:10, width: Math.min(screenWidth * 0.9, 355)}}>
+          <View style={{flexDirection:"row", marginBottom:0, marginTop: 20, width: Math.min(screenWidth * 0.9, 355)}}>
             <ActionButton
               style={[styles.button, {marginHorizontal:15, flex:1}]}
               onPress={() => hintBottomSheetRef.current?.expand()}
