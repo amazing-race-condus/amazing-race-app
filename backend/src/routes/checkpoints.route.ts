@@ -42,7 +42,9 @@ checkpointsRouter.post("/", verifyToken, async (req: CustomRequest, res: Respons
 
   const savedCheckpoint = await createCheckpoint(body, res)
 
-  req.app.get("io").emit("checkpoint:created", savedCheckpoint)
+  if (savedCheckpoint) {
+    req.app.get("io").emit("checkpoint:created", savedCheckpoint)
+  }
 
   res.status(201).json(savedCheckpoint)
 })

@@ -4,7 +4,10 @@ import { Group } from "@/types"
 
 export const setupGroupHandlers = (socket: any) => {
   socket.on("group:created", (group: Group) => {
-    store.dispatch(appendGroup(group))
+    const currentEventId = store.getState().event.id
+    if (currentEventId === group.eventId) {
+      store.dispatch(appendGroup(group))
+    }
   })
 
   socket.on("group:updated", (group: Group) => {
