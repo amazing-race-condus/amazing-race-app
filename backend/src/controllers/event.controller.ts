@@ -93,12 +93,8 @@ export const modifyEvent = async (eventId: number, name: string, eventDate: Date
     res.status(404).json({ error: "Tapahtumaa ei löydy" })
     return
   }
-  if (name) {
-    const validName = await validateName(name, res, eventId )
-    if (!validName) {
-      return
-    }
-  }
+
+  if (!await validateName(name, res, eventId)) return
 
   if (name !== undefined) data.name = name
   if (eventDate !== undefined) data.eventDate = eventDate
