@@ -30,7 +30,7 @@ export const setNotification =
       timeoutId = setTimeout(() => {
         dispatch(setMessage( { message: "", type: null }))
         timeoutId = null
-      }, 5000)
+      }, 8000)
     }
 
 export const removeNotificationReducer =

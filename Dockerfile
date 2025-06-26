@@ -26,6 +26,7 @@ COPY ./frontend .
 COPY /shared ../shared/
 
 ENV EXPO_PUBLIC_WEB_BACKEND_URL=/api
+ENV EXPO_PUBLIC_SOCKET_URL_WEB=https://condus-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi
 RUN npx expo export --platform web
 
 
@@ -40,6 +41,7 @@ WORKDIR /app
 COPY --from=backend-build /app/package*.json ./
 COPY --from=backend-build /app/dist/app ./dist
 COPY --from=backend-build /app/prisma ./dist/prisma/
+COPY /backend/prisma ./prisma/
 COPY --from=backend-build /app/node_modules/.prisma ./node_modules/.prisma
 
 COPY --from=frontend-build /app/dist ./dist/public/dist/
@@ -55,5 +57,7 @@ RUN npm ci --omit=dev && \
 USER nonroot
 
 EXPOSE 3000
+
+ENV MIGRATIONS_IN_CODE="true"
 
 CMD ["node", "./dist/src/index.js"]
