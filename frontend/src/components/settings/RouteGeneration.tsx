@@ -9,6 +9,7 @@ import { generateRoutes, getActiveRoutesInfo, getRoutesInfo } from "@/services/r
 import { handleAlert } from "@/utils/handleAlert"
 import { RouteInfo } from "@/types"
 import RouteStats from "./RouteStats"
+import { fetchGroups } from "@/reducers/groupSlice"
 
 const RouteGeneration: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -37,7 +38,7 @@ const RouteGeneration: React.FC = () => {
           const data = await generateRoutes(eventId)
           const routesAmount = data.routesAmount
           const groupsAmount = data.groupsAmount
-          await fetchRoutes()
+          fetchGroups(eventId)
           if (routesAmount >= groupsAmount) {
             dispatch(setNotification(`${routesAmount} reittiä luotu`, "success"))
           } else {
