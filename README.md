@@ -12,12 +12,10 @@ Vihjeisiin perustuva vauhdikas kaupunkisuunnistus, jossa kisaillaan muita joukku
 
 Sovellus mahdollistaa Amazing Race -tyyppisen pelin hallinnoinnin, tarjoten toiminnallisuudet muun muassa pelaajien pisteytykseen ja reittien suunnitteluun.
 
-## Sovelluksen käyttö
-
-Sovellus tullaan tulevaisuudessa julkaisemaan sekä selainpohjaisena web-sovelluksena että Android-sovelluksena.
 
 ## Linkit
-[Projektin Wiki](https://github.com/amazing-race-condus/amazing-race-app/wiki)
+
+[Sovelluksen käyttöohjeet ja kuvaus](https://github.com/amazing-race-condus/amazing-race-app/wiki)
 
 [Product backlog ja sprint backlogit](https://github.com/orgs/amazing-race-condus/projects/1)
 
