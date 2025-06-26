@@ -119,8 +119,8 @@ const GameView = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
-          <Text style={styles.title}>Hallinnoi peliä</Text>
-          <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={styles.header}>Hallinnoi peliä</Text>
+          <Text style={[styles.header, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
         </View>
         <GameReadyBox
           checkpoints={checkpoints}

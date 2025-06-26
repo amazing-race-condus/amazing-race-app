@@ -87,7 +87,7 @@ const CheckpointDistance = () => {
 
   return (
     <View style={styles.container2}>
-      <Text style={[styles.header, {fontWeight: "light"}]}>Rastien väliset etäisyydet:</Text>
+      <Text style={[styles.header, {fontWeight: "light", fontSize: 20}]}>Rastien väliset etäisyydet:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText2}>Matka-aika rastista...</Text>
         {checkpoints.filter(fromCheckpoint => fromCheckpoint.type !== "FINISH").map((fromCheckpoint, fromIndex) => (
