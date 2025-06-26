@@ -62,7 +62,9 @@ groupsRouter.post("/", verifyToken, async (req: CustomRequest, res: Response) =>
   const { name, members, easy, eventId } = req.body
   const group = await createGroup(name, members, easy, eventId, res)
 
-  req.app.get("io").emit("group:created", group)
+  if (group) {
+    req.app.get("io").emit("group:created", group)
+  }
 
   res.json(group)
 })
