@@ -79,7 +79,7 @@ const LoginForm = () => {
         <Text style={styles.formText}>Salasana:</Text>
         <TextInput
           ref={passwordInputRef}
-          style={styles.inputField}
+          style={[styles.inputField, { color: "black" }]}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
