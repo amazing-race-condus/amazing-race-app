@@ -29,6 +29,13 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
     }
   }, [group])
 
+  const handleGroupNumberChange = (input: string) => {
+    if (isNaN(Number(input))) {
+      return
+    }
+    setGroupMembers(Number(input))
+  }
+
   const handleEditGroup = async () => {
     if (!group) return
     const modifiedGroup: AddGroup = {
@@ -75,8 +82,8 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
       />
       <BottomSheetTextInput
         ref={nextRef}
-        onChangeText={text => setGroupMembers(Number(text))}
-        value={groupMembers.toString()}
+        onChangeText={text => handleGroupNumberChange(text)}
+        value={groupMembers === 0 ? "" : groupMembers.toString()}
         keyboardType="numeric"
         placeholder="Syötä jäsenten määrä"
         style={{
