@@ -28,7 +28,7 @@ const EventItem = ({ item, handleEventChange, onEditEvent }: { item: Event, hand
       title: "Vahvista poisto",
       message: "Oletko varma että haluat poistaa tämän tapahtuman? Tapahtuman poistaminen poistaa myös kaikki siihen liittyvät ryhmät, rastit ja tiedot.",
       onConfirm: async () => {
-        dispatch(removeEventReducer(id))
+        dispatch(removeEventReducer(id, eventId))
       }
     })
   }
