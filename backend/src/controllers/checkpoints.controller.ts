@@ -23,14 +23,14 @@ export const getCheckpointById = async (checkpointId: number) => {
 
 export const createCheckpoint = async (data: AddCheckpoint, res: Response) => {
   if (!data.name || !data.type ) {
-    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu." })
+    res.status(400).json({ error: "Kaikkia vaadittuja tietoja ei ole annettu" })
     return
   }
 
   let parsedType: Type | undefined = undefined
 
   if (!Object.values(Type).includes(data.type)) {
-    res.status(400).json({ error: "Virheellinen tyyppi." })
+    res.status(400).json({ error: "Virheellinen tyyppi" })
     return
   }
 
@@ -108,7 +108,7 @@ export const modifyCheckpoint = async (checkpointId: number, eventId: number, na
   let parsedType: Type | undefined = undefined
 
   if (!Object.values(Type).includes(type)) {
-    res.status(400).json({ error: "Virheellinen tyyppi." })
+    res.status(400).json({ error: "Virheellinen tyyppi" })
     return
   }
 

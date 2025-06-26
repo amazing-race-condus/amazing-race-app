@@ -2,15 +2,15 @@ import { Distances, Checkpoint } from "@/types"
 
 export const validateMinAndMax = (min: number, max: number): string => {
   if (!(Number.isInteger(min) && Number.isInteger(max))) {
-    return "Syöte on oltava kokonaisluku."
+    return "Syöte on oltava kokonaisluku"
   }
 
   if (min > max) {
-    return "Minimiaika ei voi olla suurempi kuin maksimiaika."
+    return "Minimiaika ei voi olla suurempi kuin maksimiaika"
   }
 
   if (min < 0 || max < 0) {
-    return "Ajat eivät voi olla negatiivisia."
+    return "Ajat eivät voi olla negatiivisia"
   }
   return ""
 }

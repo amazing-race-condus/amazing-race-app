@@ -49,7 +49,7 @@ eventRouter.put("/start/:id", verifyToken, async (req: CustomRequest, res: Respo
     req.app.get("io").emit("event:updated", event)
     res.json(event)
   } else {
-    res.status(404).json({ error: "Tapahtumaa ei voitu aloittaa." })
+    res.status(404).json({ error: "Tapahtumaa ei voitu aloittaa" })
   }
   return
 })
@@ -85,7 +85,7 @@ eventRouter.post("/create", verifyToken, async (req: CustomRequest, res: Respons
     req.app.get("io").emit("event:created", event)
     res.json(event)
   } else {
-    res.status(400).json({ error: "Tapahtumaa ei voitu luoda."})
+    res.status(400).json({ error: "Tapahtumaa ei voitu luoda"})
   }
   return
 })

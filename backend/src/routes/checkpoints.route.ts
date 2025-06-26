@@ -11,8 +11,6 @@ interface CustomRequest extends Request {
 }
 
 checkpointsRouter.get("/", verifyToken, async (req: Request, res: Response) => {
-
-  // const allCheckpoints = await getAllCheckpoints()
   const eventId = Number(req.query.eventId)
 
   const allCheckpoints = await getAllCheckpoints(eventId)
