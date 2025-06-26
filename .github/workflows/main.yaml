@@ -24,7 +24,6 @@
       uses: ./.github/workflows/backend.yaml
       secrets:
         SECRET: ${{ secrets.SECRET }}
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     build-and-push-dev:
       if: |

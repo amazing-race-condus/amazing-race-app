@@ -55,7 +55,7 @@ const RouteMinMax = () => {
 
   return (
     <View style={styles.content}>
-      <Text style={[styles.header, {fontWeight: "light"}]}>Aseta reiteille aikarajat:</Text>
+      <Text style={[styles.header, {fontWeight: "light", fontSize: 20}]}>Aseta reiteille aikarajat:</Text>
       <View style={styles.formContainer}>
         <Text style={styles.formText}>Reittien minimiaika:</Text>
         <TextInput

@@ -74,7 +74,7 @@ const RouteGeneration: React.FC = () => {
           <ActivityIndicator size="large" color="#003366" />
         </View>
       )}
-      <Text style={[styles.header, {fontWeight: "light"}]}>Reitit:</Text>
+      <Text style={[styles.header, {fontWeight: "light", fontSize: 20}]}>Reitit:</Text>
       <View style={styles.formContainer}>
         <RouteStats
           routes={routes}

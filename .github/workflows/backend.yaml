@@ -5,8 +5,7 @@ on:
     secrets:
       SECRET:
         required: true
-      CODECOV_TOKEN:
-        required: true
+
 jobs:
   lint:
     runs-on: ubuntu-24.04
@@ -65,8 +64,4 @@ jobs:
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         SECRET: ${{ secrets.SECRET }}
-      run: npm run test -- --coverage
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      run: npm run test

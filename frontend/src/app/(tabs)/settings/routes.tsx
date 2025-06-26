@@ -15,8 +15,8 @@ const RouteSettings = () => {
       <ScrollView contentContainerStyle={styles.content}>
         <Stack.Screen options={{ headerShown: false }} />
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
-          <Text style={styles.title}>Hallinnoi reittejä</Text>
-          <Text style={[styles.title, { fontSize: 18, marginTop: 0 }]}>{event.name} </Text>
+          <Text style={styles.header}>Hallinnoi reittejä</Text>
+          <Text style={[styles.header, { fontSize: 15, marginTop: 0 }]}>{event.name} </Text>
         </View>
         <RouteMinMax />
         <CheckpointDistance />
