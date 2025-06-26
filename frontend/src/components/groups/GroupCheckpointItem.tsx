@@ -49,7 +49,7 @@ const GroupCheckpointItem = (
             completeCheckpoint={completeCheckpoint}
           />
 
-          { (checkpoint.type !== "START" ) && (checkpoint.type !== "FINISH" ) && isPenalties &&(
+          { (checkpoint.type !== "START" ) && isPenalties &&(
             <ListGroupCheckpointPenalties
               groupId={group.id}
               usedHints={usedHints}

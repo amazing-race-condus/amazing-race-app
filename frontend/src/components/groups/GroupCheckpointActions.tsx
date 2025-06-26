@@ -30,11 +30,31 @@ const GroupCheckpointActions = (
 
   if (checkpoint.type === "FINISH") {
     return (
-      <ActionButton
-        style={styles.button}
-        onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
-        text={"Lopeta"}
-      />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <ActionButton
+          style={styles.button}
+          onPress={() => {
+            if (usedHints.length > 2) {
+              handleAlert({
+                confirmText: "Vihjepuhelin",
+                title: "Vahvista vihjepuhelinrangaistus",
+                message: "Ryhmällä on jo 3 vihjepuhelinsoittoa. Haluatko varmasti antaa neljännen rangaistuksen?",
+                onConfirm: async () => {
+                  dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
+                },
+              })
+            } else {
+              dispatch(givePenaltyReducer(group.id, checkpoint.id, "HINT", 5))
+            }
+          }}
+          text={"Vihjepuhelin"}
+        />
+        <ActionButton
+          style={styles.button}
+          onPress={() => completeCheckpoint(checkpoint.id, "NORMAL")}
+          text={"Lopeta"}
+        />
+      </View>
     )
   }
 
