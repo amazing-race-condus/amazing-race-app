@@ -31,11 +31,12 @@ export const setupEventHandlers = (socket: any) => {
   ) => {
     const currentEvent = store.getState().event
     if (eventId === currentEvent.id) {
-      const newEvent = {
+      const newEvent: Event = {
         ...currentEvent,
         minRouteTime: newMinRouteTime,
         maxRouteTime: newMaxRouteTime,
       }
+      store.dispatch(updateEvent(newEvent))
       store.dispatch(setEvents(newEvent))
     }
   })
