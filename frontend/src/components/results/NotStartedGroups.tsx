@@ -1,7 +1,7 @@
 import { styles } from "@/styles/commonStyles"
 import { Event, Group } from "@/types"
 import { Link } from "expo-router"
-import { Pressable, Text } from "react-native"
+import { Text, TouchableOpacity } from "react-native"
 import PrintableTime from "../groups/GroupPrintableTime"
 
 const NotStartedGroups = ({ groups, event }: { groups: Group[], event: Event }) => {
@@ -23,10 +23,10 @@ const NotStartedGroups = ({ groups, event }: { groups: Group[], event: Event }) 
           }}
           asChild
         >
-          <Pressable style={styles.item}>
+          <TouchableOpacity style={styles.item} activeOpacity={0.5}>
             <Text>{group.name}</Text>
             <Text>{PrintableTime({group, event})}</Text>
-          </Pressable>
+          </TouchableOpacity>
         </Link>)}
     </>
   )
