@@ -12,6 +12,7 @@ Sovellus mahdollistaa Amazing Race -tyyppisen pelin hallinnoinnin, tarjoten toim
 
 
 ## Linkit
+[Sovelluksen asentaminen Android laitteelle](https://github.com/amazing-race-condus/amazing-race-app/wiki/Sovelluksen-asentaminen-Android-laitteelle)
 
 [Sovelluksen käyttöohjeet ja kuvaus](https://github.com/amazing-race-condus/amazing-race-app/wiki)
 
