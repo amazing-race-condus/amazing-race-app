@@ -95,6 +95,7 @@ routesRouter.put("/:event_id/create_routes", verifyToken, async (req: CustomRequ
   if (response.status === "error") {
     res.status(400).json({error: response.message})
   } else {
+    req.app.get("io").emit("groups:routes_generated")
     res.status(200).json({routesAmount: response.values.routeAmount,
       groupsAmount: response.values.groupAmount})
   }

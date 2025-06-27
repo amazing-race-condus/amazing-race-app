@@ -37,9 +37,9 @@ const Notification = () => {
       position: "absolute",
       alignSelf: "center",
       zIndex: 999,  flexDirection: "row", justifyContent: "space-between",}]}>
-      <Pressable onPress={() => handleRemoveNotification()}>
+      <Pressable onPress={() => handleRemoveNotification()} style={{ paddingRight: 25}}>
         <Text style={textStyle}>{ message }</Text>
-
+        <Text style={{position: "absolute", top: 0, right: 0, color: "rgba(255, 255, 255, 0.7)"}}>[X]</Text>
       </Pressable>
     </View>
   )

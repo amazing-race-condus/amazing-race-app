@@ -8,7 +8,7 @@ const Calendar = ({
   selected: DateType
   setSelected: (date: DateType) => void
 }) => {
-  const defaultStyles = useDefaultStyles()
+  const defaultStyles = useDefaultStyles("light")
 
   return (
     <View testID="calendar-wrapper">

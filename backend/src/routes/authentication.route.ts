@@ -1,5 +1,5 @@
 import express, { Response, Request } from "express"
-import { createUser, getAllUsers, deleteUser, getUserByAdminRights, modifyUser, sendMailToUser, changePassword } from "../controllers/authentication.controller"
+import { createUser, getUserByAdminRights, modifyUser, sendMailToUser, changePassword } from "../controllers/authentication.controller"
 import { tokenExtractor, verifyToken } from "../utils/middleware"
 import { User } from "@/types"
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -17,13 +17,6 @@ const getTokenFrom = (req: Request): string | null => {
   }
   return null
 }
-
-authenticationRouter.get("/", async (_, res: Response) => {
-  const allUsers = await getAllUsers()
-
-  res.send(allUsers)
-})
-
 
 authenticationRouter.post("/", async (req: Request, res: Response) => {
   const { username, password, admin } = req.body
@@ -77,18 +70,6 @@ authenticationRouter.post("/reset_password", async (req: Request, res: Response)
   }
 
 })
-
-authenticationRouter.delete("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-
-  const user = await deleteUser(id)
-  if (user) {
-    res.status(204).end()
-  } else {
-    res.status(404).end()
-  }
-})
-
 
 authenticationRouter.put("/reset_password", async (req: Request, res: Response) => {
   const { password } = req.body
