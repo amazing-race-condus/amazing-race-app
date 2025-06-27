@@ -19,3 +19,5 @@ Sovellus mahdollistaa Amazing Race -tyyppisen pelin hallinnoinnin, tarjoten toim
 
 [Lisenssi](https://github.com/amazing-race-condus/amazing-race-app/blob/main/LICENSE)
 
+[Video](https://youtu.be/lssPLfCV2fU)
+
