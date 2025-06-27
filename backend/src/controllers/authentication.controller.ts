@@ -5,18 +5,6 @@ import bcrypt from "bcrypt"
 import { Mailer } from "../utils/emailUtils"
 import { setPasswordResetTime } from "../utils/middleware"
 
-export const getAllUsers = async () => {
-
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      username: true,
-      admin: true
-    }
-  })
-  return users
-}
-
 export const getUserByAdminRights = async (admin: boolean) => {
   const user = await prisma.user.findFirst({
     where: { admin: admin },
@@ -27,23 +15,6 @@ export const getUserByAdminRights = async (admin: boolean) => {
       admin: true
     }
   })
-  return user
-}
-
-export const getUserByUsername = async (username: string, res: Response) => {
-  const user = await prisma.user.findUnique({
-    where: { username: username },
-    select: {
-      id: true,
-      username: true,
-      admin: true
-    }
-  })
-  if (!user) {
-    res.status(404).json({ error: "Käyttäjää ei löydy" })
-    return
-
-  }
   return user
 }
 
@@ -88,14 +59,6 @@ export const createUser = async (username: string, password: string, admin: bool
     }
   })
   return savedUser
-}
-
-export const deleteUser = async (userId: number) => {
-  const id = userId
-  const user = await prisma.user.delete({
-    where: { id },
-  })
-  return user
 }
 
 export const modifyUser = async (password: string, res: Response) => {
