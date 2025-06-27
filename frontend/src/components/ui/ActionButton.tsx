@@ -1,17 +1,17 @@
 import { styles } from "@/styles/commonStyles"
-import { ViewStyle, Pressable, Text } from "react-native"
+import { ViewStyle, Text, TouchableOpacity } from "react-native"
 
 const ActionButton = (
   { onPress, count, text, style }:
   { onPress: () => void, count?: number, text: string, style?: ViewStyle | ViewStyle[]}
 ) => {
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={onPress}
-      style={({ pressed }) => [style, {opacity: pressed ? 0.5 : 1 }]}
+      style={style}
     >
       <Text style={styles.buttonText}> {text} {count ? `(${count}x)` : ""} </Text>
-    </Pressable>
+    </TouchableOpacity>
   )
 }
 
