@@ -70,6 +70,7 @@ const EditEventForm = ({ bottomSheetRef, event, setSelectedEvent }: { bottomShee
           borderRadius: 8,
           padding: 12,
           marginBottom: 16,
+          fontSize: 16
         }}
         returnKeyType="next"
         submitBehavior="submit"

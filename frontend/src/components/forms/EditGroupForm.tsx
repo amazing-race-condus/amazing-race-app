@@ -75,6 +75,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
           borderRadius: 8,
           padding: 12,
           marginBottom: 16,
+          fontSize: 16
         }}
         returnKeyType="next"
         submitBehavior="submit"
@@ -92,6 +93,7 @@ const EditGroupForm = ({ bottomSheetRef, group, setSelectedGroup }: { bottomShee
           borderRadius: 8,
           padding: 12,
           marginBottom: 16,
+          fontSize: 16
         }}
         returnKeyType="done"
         onSubmitEditing={handleEditGroup}
