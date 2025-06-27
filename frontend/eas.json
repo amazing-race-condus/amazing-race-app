@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">= 16.5.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_BACKEND_URL": "https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi/api"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
