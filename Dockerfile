@@ -25,8 +25,10 @@ RUN npm ci
 COPY ./frontend .
 COPY /shared ../shared/
 
+ARG EXPO_PUBLIC_SOCKET_URL_WEB_ARG
+
 ENV EXPO_PUBLIC_WEB_BACKEND_URL=/api
-ENV EXPO_PUBLIC_SOCKET_URL_WEB=https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
+ENV EXPO_PUBLIC_SOCKET_URL_WEB=${EXPO_PUBLIC_SOCKET_URL_WEB_ARG}
 RUN npx expo export --platform web
 
 

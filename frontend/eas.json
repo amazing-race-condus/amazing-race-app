@@ -17,7 +17,9 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi/api"
+        "EXPO_PUBLIC_BACKEND_URL": "https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi/api",
+        "EXPO_PUBLIC_SOCKET_URL_MOBILE": "https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi"
+        
       }
     }
   },
