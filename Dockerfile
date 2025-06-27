@@ -26,7 +26,7 @@ COPY ./frontend .
 COPY /shared ../shared/
 
 ENV EXPO_PUBLIC_WEB_BACKEND_URL=/api
-ENV EXPO_PUBLIC_SOCKET_URL_WEB=https://condus-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi
+ENV EXPO_PUBLIC_SOCKET_URL_WEB=https://condus-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
 RUN npx expo export --platform web
 
 
